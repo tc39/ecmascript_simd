@@ -305,7 +305,7 @@ the lane values in **this**.
 
 **Uint32x4 xor(Uint32x4 other)**
 
-**Uint32x4 neg(Uint32x4 other)**
+**Uint32x4 neg()**
 
 ### Lane Accessors
 
