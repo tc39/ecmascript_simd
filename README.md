@@ -152,6 +152,48 @@ multiplication of **this** and the scalar value **s**.
 
 ### Comparison Operations
 
+**Uint32x4 lessThan(Float32x4 other)**
+
+Create a new `Uint32x4` instance with lane values computed from the lane wise
+comparison of **this** and **other**. Each lane where the comparison is
+true will contain `0xFFFFFFFF`. Each lane where the comparison
+is false will contain `0x0`.
+
+**Uint32x4 lessThanOrEqual(Float32x4 other)**
+
+Create a new `Uint32x4` instance with lane values computed from the lane wise
+comparison of **this** and **other**. Each lane where the comparison is
+true will contain `0xFFFFFFFF`. Each lane where the comparison
+is false will contain `0x0`.
+
+**Uint32x4 equal(Float32x4 other)**
+
+Create a new `Uint32x4` instance with lane values computed from the lane wise
+comparison of **this** and **other**. Each lane where the comparison is
+true will contain `0xFFFFFFFF`. Each lane where the comparison
+is false will contain `0x0`.
+
+**Uint32x4 notEqual(Float32x4 other)**
+
+Create a new `Uint32x4` instance with lane values computed from the lane wise
+comparison of **this** and **other**. Each lane where the comparison is
+true will contain `0xFFFFFFFF`. Each lane where the comparison
+is false will contain `0x0`.
+
+**Uint32x4 greaterThanOrEqual(Float32x4 other)**
+
+Create a new `Uint32x4` instance with lane values computed from the lane wise
+comparison of **this** and **other**. Each lane where the comparison is
+true will contain `0xFFFFFFFF`. Each lane where the comparison
+is false will contain `0x0`.
+
+**Uint32x4 greaterThan(Float32x4 other)**
+
+Create a new `Uint32x4` instance with lane values computed from the lane wise
+comparison of **this** and **other**. Each lane where the comparison is
+true will contain `0xFFFFFFFF`. Each lane where the comparison
+is false will contain `0x0`.
+
 ### Clamping Operations
 
 **Float32x4 clamp(Float32x4 lowerLimit, Float32x4 upperLimit)**
