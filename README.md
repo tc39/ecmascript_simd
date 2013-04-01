@@ -1,7 +1,7 @@
 # ecmascript_simd
 ===============
 
-128-bit SIMD numeric type ECMAScript straw man proposal.
+128-bit SIMD numeric value type ECMAScript straw man proposal.
 
 ## Introduction
 
@@ -31,7 +31,10 @@ types are immutable. Meaning, it is not possible to alter the internal state of
 an instance. In other words, all operations return new instances.
 
 A `Float32x4` holds 4 32-bit single precision floating point values. Data is
-arranged into _lanes_. The lanes are `x`, `y`, `z`, and `w`.
+arranged into _lanes_. The lanes are **x**, **y**, **z**, and **w**.
+
+A `Uint32x4` holds 4 32-bit unsigned integer values. Data is arranged into
+_lanes_. The lanes are **x**, **y**, **z**, and **w**.
 
 <table>
 <thead>
@@ -67,9 +70,31 @@ arranged into _lanes_. The lanes are `x`, `y`, `z`, and `w`.
 </table>
 
 ## Data Types
-==========
 
-`Float32x4` -
+`Float32x4` 128-bits divided into 4 lanes storing single precision floating
+point values.
 
-### Data Type Memory Layout
-===============
+`Uint32x4` 128-bits divided into 4 lanes storing 32-bit unsigned integer values.
+
+## Type Conversion Rules
+
+When converting between a `Float32x4` and a `Uint32x4`, the values cannot
+be altered. No observable difference can be introduced when any `Uint32x4`
+is converted to `Float32x4` and back to `Uint32x4`. Similarly when any
+`Float32x4` is converted to `Uint32x4` and back to `Float32x4`.
+
+## Float32x4
+
+### Constructors
+
+
+### Arithmetic Operations
+
+### Comparison Operations
+
+### Accessors
+
+### Shuffle Operations
+
+## Uint32x4
+
