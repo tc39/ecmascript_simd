@@ -87,14 +87,132 @@ is converted to `Float32x4` and back to `Uint32x4`. Similarly when any
 
 ### Constructors
 
+**Float32x4(double x, double y, double z, double w)**
+
+Create a new `Float32x4` instance with lane values matching the values
+passed in as arguments. The input values are specified in double precision
+floating and are converted to single precision floating point values before
+being stored.
+
+**Float32x4.zero()**
+
+Create a new `Float32x4` instance with all lanes being 0.0.
 
 ### Arithmetic Operations
 
+**Float32x4 add(Float32x4 a, Float32x4 b)**
+
+Create a new `Float32x4` instance with lane values computed from the lane wise
+addition of **a** and **b**.
+
+**Float32x4 sub(Float32x4 a, Float32x4 b)**
+
+Create a new `Float32x4` instance with lane values computed from the lane wise
+subtraction of **a** and **b**.
+
+**Float32x4 mul(Float32x4 a, Float32x4 b)**
+
+Create a new `Float32x4` instance with lane values computed from the lane wise
+multiplication of **a** and **b**.
+
+**Float32x4 div(Float32x4 a, Float32x4 b)**
+
+Create a new `Float32x4` instance with lane values computed from the lane wise
+division of **a** and **b**.
+
+**Float32x4 neg()**
+
+Create a new `Float32x4` instance with lane values computed from the lane wise
+negation of **this**.
+
+**Float32x4 abs()**
+
+Create a new `Float32x4` instance with lane values computed from the lane wise
+absolute value of **this**.
+
+**Float32x4 reciprocal()**
+
+Create a new `Float32x4` instance with lane values computed from the lane wise
+reciprocal **this**.
+
+**Float32x4 reciprocalSqrt()**
+
+Create a new `Float32x4` instance with lane values computed from the lane wise
+square root of the reciprocal **this**.
+
+**Float32x4 sqrt()**
+
+Create a new `Float32x4` instance with lane values computed from the lane wise
+square root of **this**.
+
+**Float32x4 scale(double s)**
+
+Create a new `Float32x4` instance with lane values computed from the lane wise
+multiplication of **this** and the scalar value **s**.
+
 ### Comparison Operations
 
-### Accessors
+### Clamping Operations
+
+**Float32x4 clamp(Float32x4 lowerLimit, Float32x4 upperLimit)**
+
+Create a new `Float32x4` instance with lane values computed from the lane
+wise clamping of **this** between **lowerLimit** and **upperLimit**. Result is
+undefined if any lane in **lowerLimit** is greater than the identical lane
+in **upperLimit**.
+
+**Float32x4 max(Float32x4 other)**
+
+Create a new `Float32x4` instance with lane values computed from the lane
+wise maximum of **this** and **other**.
+
+**Float32x4 min(Float32x4 other)**
+
+Create a new `Float32x4` instance with lane values computed from the lane
+wise minimum of **this** and **other**.
+
+### Lane Accessors
+
+**getter double x**
+
+Access the value stored in the **x** lane. The value will be converted from
+single precision to double precision before being returned.
+
+**getter double y**
+
+Access the value stored in the **y** lane. The value will be converted from
+single precision to double precision before being returned.
+
+**getter double z**
+
+Access the value stored in the **z** lane. The value will be converted from
+single precision to double precision before being returned.
+
+**getter double w**
+
+Access the value stored in the **w** lane. The value will be converted from
+single precision to double precision before being returned.
 
 ### Shuffle Operations
+
+**getter Float32x4 xxxx**
+
+Return a new instance with all lanes having the value of the **x** lane.
+
+**getter Float32x4 yyyy**
+
+Return a new instance with all lanes having the value of the **y** lane.
+
+**getter Float32x4 zzzz**
+
+Return a new instance with all lanes having the value of the **z** lane.
+
+**getter Float32x4 wwww**
+
+Return a new instance with all lanes having the value of the **w** lane.
+
+*NOTE*: All combinations of 4 consecutive **x**, **y**, **z**, or **w** are
+valid shuffle getters. (e.g. **wxyz** and **wzyx** are valid shuffle getters.)
 
 ## Uint32x4
 
