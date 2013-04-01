@@ -6,7 +6,7 @@
 ## Introduction
 
 ECMAScript provides no programmer accessible access to the Single Instruction
-Multiple Data \(**SIMD**\) instruction sets that are available in common CPU
+Multiple Data **(SIMD)** instruction sets that are available in common CPU
 architectures. In this proposal, the **SIMD** data types and operations are
 modeled for both [NEON]
 (http://en.wikipedia.org/wiki/ARM_architecture#Advanced_SIMD_.28NEON.29) (ARMv7)
