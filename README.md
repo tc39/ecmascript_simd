@@ -60,10 +60,10 @@ arranged into _lanes_. The lanes are `x`, `y`, `z`, and `w`.
 <td colspan="16"><i>lanes</i></td>
 </tr>
 <tr>
-<td><b>w</b></td>
-<td><b>z</b></td>
-<td><b>y</b></td>
-<td><b>x</b></td>
+<td colspan="4"><b>w</b></td>
+<td colspan="4"><b>z</b></td>
+<td colspan="4"><b>y</b></td>
+<td colspan="4"><b>x</b></td>
 </table>
 
 ## Data Types
