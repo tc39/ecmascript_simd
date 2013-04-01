@@ -28,7 +28,7 @@ unsigned integer values.
 
 This proposal defines two new data types: `Float32x4` and `Uint32x4`. Both data
 types are immutable. Meaning, it is not possible to alter the internal state of
-an instance. In other words, all operations return new instances.
+an instance. Practically speaking, all operations return a new instance.
 
 A `Float32x4` holds 4 32-bit single precision floating point values. Data is
 arranged into _lanes_. The lanes are **x**, **y**, **z**, and **w**.
@@ -256,5 +256,111 @@ Return a new instance with all lanes having the value of the **w** lane.
 *NOTE*: All combinations of 4 consecutive **x**, **y**, **z**, or **w** are
 valid shuffle getters. (e.g. **wxyz** and **wzyx** are valid shuffle getters.)
 
+### Lane Mutators
+
+**Float32x4 withX(double x)**
+
+Return a new instance with all lane values matching lane values of **this**
+except the the value in the **x** lane being given the value of **x**.
+
+**Float32x4 withY(double y)**
+
+Return a new instance with all lane values matching lane values of **this**
+except the the value in the **y** lane being given the value of **x**.
+
+**Float32x4 withZ(double z)**
+
+Return a new instance with all lane values matching lane values of **this**
+except the the value in the **z** lane being given the value of **x**.
+
+**Float32x4 withW(double w)**
+
+Return a new instance with all lane values matching lane values of **this**
+except the the value in the **w** lane being given the value of **x**.
+
+### Type Conversion
+
+**Uint32x4 toUint32x4()**
+
+Create a new instance of `Uint32x4` with lane values being a bit-wise copy of
+the lane values in **this**.
+
 ## Uint32x4
 
+### Constructors
+
+**Uint32x4(integer x, integer y, integer z, integer w)**
+
+**Uint32x4.bool(boolean x, boolean y, boolean z, boolean w)**
+
+### Selection Operation
+
+**Float32x4 select(Float32x4 trueValue, Float32x4 falseValue)**
+
+### Logical Operations
+
+**Uint32x4 and(Uint32x4 other)**
+**Uint32x4 or(Uint32x4 other)**
+**Uint32x4 xor(Uint32x4 other)**
+**Uint32x4 neg(Uint32x4 other)**
+
+### Lane Accessors
+
+**getter integer x**
+
+Access the value stored in the **x** lane.
+
+**getter integer y**
+
+Access the value stored in the **y** lane.
+
+**getter integer z**
+
+Access the value stored in the **z** lane.
+
+**getter integer w**
+
+Access the value stored in the **w** lane.
+
+**getter boolean flagX**
+
+Access the boolean value stored in the **x** lane. If the **x** lane is not 0
+the boolean value will be true. If the **x** lane is 0 the boolean value will
+be false.
+
+**getter boolean flagY**
+
+Access the boolean value stored in the **y** lane. If the **y** lane is not 0
+the boolean value will be true. If the **y** lane is 0 the boolean value will
+be false.
+
+**getter boolean flagZ**
+
+Access the boolean value stored in the **z** lane. If the **z** lane is not 0
+the boolean value will be true. If the **z** lane is 0 the boolean value will
+be false.
+
+**getter boolean flagW**
+
+Access the boolean value stored in the **w** lane. If the **w** lane is not 0
+the boolean value will be true. If the **w** lane is 0 the boolean value will
+be false.
+
+### Lane Mutators
+
+**Uint32x4 withX(integer x)**
+**Uint32x4 withY(integer y)**
+**Uint32x4 withZ(integer z)**
+**Uint32x4 withW(integer w)**
+
+**Uint32x4 withFlagX(boolean x)**
+**Uint32x4 withFlagY(boolean y)**
+**Uint32x4 withFlagZ(boolean z)**
+**Uint32x4 withFlagW(boolean w)**
+
+### Type Conversion
+
+**Float32x4 toFloat32x4()**
+
+Create a new instance of `Float32x4` with lane values being a bit-wise copy of
+the lane values in **this**.
