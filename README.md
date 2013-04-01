@@ -300,8 +300,11 @@ the lane values in **this**.
 ### Logical Operations
 
 **Uint32x4 and(Uint32x4 other)**
+
 **Uint32x4 or(Uint32x4 other)**
+
 **Uint32x4 xor(Uint32x4 other)**
+
 **Uint32x4 neg(Uint32x4 other)**
 
 ### Lane Accessors
@@ -349,13 +352,19 @@ be false.
 ### Lane Mutators
 
 **Uint32x4 withX(integer x)**
+
 **Uint32x4 withY(integer y)**
+
 **Uint32x4 withZ(integer z)**
+
 **Uint32x4 withW(integer w)**
 
 **Uint32x4 withFlagX(boolean x)**
+
 **Uint32x4 withFlagY(boolean y)**
+
 **Uint32x4 withFlagZ(boolean z)**
+
 **Uint32x4 withFlagW(boolean w)**
 
 ### Type Conversion
