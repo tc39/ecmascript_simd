@@ -6,25 +6,26 @@ almostEqual = function(a, b) {
   ok(false);
 }
 
-test('Float32x4 constructor', function() {
-  notEqual(undefined, Float32x4);  // Type.
-  notEqual(undefined, new Float32x4(1.0, 2.0, 3.0, 4.0));  // New object.
+test('float32x4 constructor', function() {
+  notEqual(undefined, float32x4);  // Type.
+  notEqual(undefined, new float32x4(1.0, 2.0, 3.0, 4.0));  // New object.
 });
 
-test('Float32x4 scalar getters', function() {
-  var a = new Float32x4(1.0, 2.0, 3.0, 4.0);
+test('float32x4 scalar getters', function() {
+  var a = new float32x4(1.0, 2.0, 3.0, 4.0);
   equal(1.0, a.x);
   equal(2.0, a.y);
   equal(3.0, a.z);
   equal(4.0, a.w);
 });
 
-test('Float32x4 vector getters', function() {
-  var a = new Float32x4(4.0, 3.0, 2.0, 1.0);
-  var xxxx = a.xxxx;
-  var yyyy = a.yyyy;
-  var zzzz = a.zzzz;
-  var wwww = a.wwww;
+test('float32x4 vector getters', function() {
+  var a = new float32x4(4.0, 3.0, 2.0, 1.0);
+  var xxxx = SIMD.shuffle(a, SIMD.XXXX);
+  var yyyy = SIMD.shuffle(a, SIMD.YYYY);
+  var zzzz = SIMD.shuffle(a, SIMD.ZZZZ);
+  var wwww = SIMD.shuffle(a, SIMD.WWWW);
+  var wzyx = SIMD.shuffle(a, SIMD.WZYX);
   equal(4.0, xxxx.x);
   equal(4.0, xxxx.y);
   equal(4.0, xxxx.z);
@@ -41,30 +42,34 @@ test('Float32x4 vector getters', function() {
   equal(1.0, wwww.y);
   equal(1.0, wwww.z);
   equal(1.0, wwww.w);
+  equal(1.0, wzyx.x);
+  equal(2.0, wzyx.y);
+  equal(3.0, wzyx.z);
+  equal(4.0, wzyx.w);
 });
 
-test('Float32x4 abs', function() {
-  var a = new Float32x4(-4.0, -3.0, -2.0, -1.0);
+test('float32x4 abs', function() {
+  var a = new float32x4(-4.0, -3.0, -2.0, -1.0);
   var c = SIMD.abs(a);
   equal(4.0, c.x);
   equal(3.0, c.y);
   equal(2.0, c.z);
   equal(1.0, c.w);
-  c = SIMD.abs(new Float32x4(4.0, 3.0, 2.0, 1.0));
+  c = SIMD.abs(new float32x4(4.0, 3.0, 2.0, 1.0));
   equal(4.0, c.x);
   equal(3.0, c.y);
   equal(2.0, c.z);
   equal(1.0, c.w);
 });
 
-test('Float32x4 neg', function() {
-  var a = new Float32x4(-4.0, -3.0, -2.0, -1.0);
+test('float32x4 neg', function() {
+  var a = new float32x4(-4.0, -3.0, -2.0, -1.0);
   var c = SIMD.neg(a);
   equal(4.0, c.x);
   equal(3.0, c.y);
   equal(2.0, c.z);
   equal(1.0, c.w);
-  c = SIMD.neg(new Float32x4(4.0, 3.0, 2.0, 1.0));
+  c = SIMD.neg(new float32x4(4.0, 3.0, 2.0, 1.0));
   equal(-4.0, c.x);
   equal(-3.0, c.y);
   equal(-2.0, c.z);
@@ -72,9 +77,9 @@ test('Float32x4 neg', function() {
 });
 
 
-test('Float32x4 add', function() {
-  var a = new Float32x4(4.0, 3.0, 2.0, 1.0);
-  var b = new Float32x4(10.0, 20.0, 30.0, 40.0);
+test('float32x4 add', function() {
+  var a = new float32x4(4.0, 3.0, 2.0, 1.0);
+  var b = new float32x4(10.0, 20.0, 30.0, 40.0);
   var c = SIMD.add(a, b);
   equal(14.0, c.x);
   equal(23.0, c.y);
@@ -82,9 +87,9 @@ test('Float32x4 add', function() {
   equal(41.0, c.w);
 });
 
-test('Float32x4 sub', function() {
-  var a = new Float32x4(4.0, 3.0, 2.0, 1.0);
-  var b = new Float32x4(10.0, 20.0, 30.0, 40.0);
+test('float32x4 sub', function() {
+  var a = new float32x4(4.0, 3.0, 2.0, 1.0);
+  var b = new float32x4(10.0, 20.0, 30.0, 40.0);
   var c = SIMD.sub(a, b);
   equal(-6.0, c.x);
   equal(-17.0, c.y);
@@ -92,9 +97,9 @@ test('Float32x4 sub', function() {
   equal(-39.0, c.w);
 });
 
-test('Float32x4 mul', function() {
-  var a = new Float32x4(4.0, 3.0, 2.0, 1.0);
-  var b = new Float32x4(10.0, 20.0, 30.0, 40.0);
+test('float32x4 mul', function() {
+  var a = new float32x4(4.0, 3.0, 2.0, 1.0);
+  var b = new float32x4(10.0, 20.0, 30.0, 40.0);
   var c = SIMD.mul(a, b);
   equal(40.0, c.x);
   equal(60.0, c.y);
@@ -102,9 +107,9 @@ test('Float32x4 mul', function() {
   equal(40.0, c.w);
 });
 
-test('Float32x4 div', function() {
-  var a = new Float32x4(4.0, 9.0, 8.0, 1.0);
-  var b = new Float32x4(2.0, 3.0, 1.0, 0.5);
+test('float32x4 div', function() {
+  var a = new float32x4(4.0, 9.0, 8.0, 1.0);
+  var b = new float32x4(2.0, 3.0, 1.0, 0.5);
   var c = SIMD.div(a, b);
   equal(2.0, c.x);
   equal(3.0, c.y);
@@ -112,10 +117,10 @@ test('Float32x4 div', function() {
   equal(2.0, c.w);
 });
 
-test('Float32x4 clamp', function() {
-  var a = new Float32x4(-20.0, 10.0, 30.0, 0.5);
-  var lower = new Float32x4(2.0, 1.0, 50.0, 0.0);
-  var upper = new Float32x4(2.5, 5.0, 55.0, 1.0);
+test('float32x4 clamp', function() {
+  var a = new float32x4(-20.0, 10.0, 30.0, 0.5);
+  var lower = new float32x4(2.0, 1.0, 50.0, 0.0);
+  var upper = new float32x4(2.5, 5.0, 55.0, 1.0);
   var c = SIMD.clamp(a, lower, upper);
   equal(2.0, c.x);
   equal(5.0, c.y);
@@ -123,9 +128,9 @@ test('Float32x4 clamp', function() {
   equal(0.5, c.w);
 });
 
-test('Float32x4 min', function() {
-  var a = new Float32x4(-20.0, 10.0, 30.0, 0.5);
-  var lower = new Float32x4(2.0, 1.0, 50.0, 0.0);
+test('float32x4 min', function() {
+  var a = new float32x4(-20.0, 10.0, 30.0, 0.5);
+  var lower = new float32x4(2.0, 1.0, 50.0, 0.0);
   var c = SIMD.min(a, lower);
   equal(-20.0, c.x);
   equal(1.0, c.y);
@@ -133,9 +138,9 @@ test('Float32x4 min', function() {
   equal(0.0, c.w);
 });
 
-test('Float32x4 max', function() {
-  var a = new Float32x4(-20.0, 10.0, 30.0, 0.5);
-  var upper = new Float32x4(2.5, 5.0, 55.0, 1.0);
+test('float32x4 max', function() {
+  var a = new float32x4(-20.0, 10.0, 30.0, 0.5);
+  var upper = new float32x4(2.5, 5.0, 55.0, 1.0);
   var c = SIMD.max(a, upper);
   equal(2.5, c.x);
   equal(10.0, c.y);
@@ -143,8 +148,8 @@ test('Float32x4 max', function() {
   equal(1.0, c.w);
 });
 
-test('Float32x4 reciprocal', function() {
-  var a = new Float32x4(8.0, 4.0, 2.0, -2.0);
+test('float32x4 reciprocal', function() {
+  var a = new float32x4(8.0, 4.0, 2.0, -2.0);
   var c = SIMD.reciprocal(a);
   equal(0.125, c.x);
   equal(0.250, c.y);
@@ -152,8 +157,8 @@ test('Float32x4 reciprocal', function() {
   equal(-0.5, c.w);
 });
 
-test('Float32x4 reciprocal sqrt', function() {
-  var a = new Float32x4(1.0, 0.25, 0.111111, 0.0625);
+test('float32x4 reciprocal sqrt', function() {
+  var a = new float32x4(1.0, 0.25, 0.111111, 0.0625);
   var c = SIMD.reciprocalSqrt(a);
   almostEqual(1.0, c.x);
   almostEqual(2.0, c.y);
@@ -161,8 +166,8 @@ test('Float32x4 reciprocal sqrt', function() {
   almostEqual(4.0, c.w);
 });
 
-test('Float32x4 scale', function() {
-  var a = new Float32x4(8.0, 4.0, 2.0, -2.0);
+test('float32x4 scale', function() {
+  var a = new float32x4(8.0, 4.0, 2.0, -2.0);
   var c = SIMD.scale(a, 0.5);
   equal(4.0, c.x);
   equal(2.0, c.y);
@@ -170,8 +175,8 @@ test('Float32x4 scale', function() {
   equal(-1.0, c.w);
 });
 
-test('Float32x4 sqrt', function() {
-  var a = new Float32x4(16.0, 9.0, 4.0, 1.0);
+test('float32x4 sqrt', function() {
+  var a = new float32x4(16.0, 9.0, 4.0, 1.0);
   var c = SIMD.sqrt(a);
   equal(4.0, c.x);
   equal(3.0, c.y);
@@ -179,8 +184,8 @@ test('Float32x4 sqrt', function() {
   equal(1.0, c.w);
 });
 
-test('Float32x4 withX', function() {
-    var a = new Float32x4(16.0, 9.0, 4.0, 1.0);
+test('float32x4 withX', function() {
+    var a = new float32x4(16.0, 9.0, 4.0, 1.0);
     var c = SIMD.withX(a, 20.0);
     equal(20.0, c.x);
     equal(9.0, c.y);
@@ -188,8 +193,8 @@ test('Float32x4 withX', function() {
     equal(1.0, c.w);
 });
 
-test('Float32x4 withY', function() {
-    var a = new Float32x4(16.0, 9.0, 4.0, 1.0);
+test('float32x4 withY', function() {
+    var a = new float32x4(16.0, 9.0, 4.0, 1.0);
     var c = SIMD.withY(a, 20.0);
     equal(16.0, c.x);
     equal(20.0, c.y);
@@ -197,8 +202,8 @@ test('Float32x4 withY', function() {
     equal(1.0, c.w);
 });
 
-test('Float32x4 withZ', function() {
-    var a = new Float32x4(16.0, 9.0, 4.0, 1.0);
+test('float32x4 withZ', function() {
+    var a = new float32x4(16.0, 9.0, 4.0, 1.0);
     var c = SIMD.withZ(a, 20.0);
     equal(16.0, c.x);
     equal(9.0, c.y);
@@ -206,8 +211,8 @@ test('Float32x4 withZ', function() {
     equal(1.0, c.w);
 });
 
-test('Float32x4 withW', function() {
-    var a = new Float32x4(16.0, 9.0, 4.0, 1.0);
+test('float32x4 withW', function() {
+    var a = new float32x4(16.0, 9.0, 4.0, 1.0);
     var c = SIMD.withW(a, 20.0);
     equal(16.0, c.x);
     equal(9.0, c.y);
@@ -215,41 +220,41 @@ test('Float32x4 withW', function() {
     equal(20.0, c.w);
 });
 
-test('Float32x4 Uint32x4 conversion', function() {
-  var m = new Uint32x4(0x3F800000, 0x40000000, 0x40400000, 0x40800000);
-  var n = SIMD.toFloat32x4(m);
+test('float32x4 uint32x4 conversion', function() {
+  var m = new uint32x4(0x3F800000, 0x40000000, 0x40400000, 0x40800000);
+  var n = SIMD.bitToFloat32x4(m);
   equal(1.0, n.x);
   equal(2.0, n.y);
   equal(3.0, n.z);
   equal(4.0, n.w);
-  n = new Float32x4(5.0, 6.0, 7.0, 8.0);
-  m = SIMD.toUint32x4(n);
+  n = new float32x4(5.0, 6.0, 7.0, 8.0);
+  m = SIMD.bitToUint32x4(n);
   equal(0x40A00000, m.x);
   equal(0x40C00000, m.y);
   equal(0x40E00000, m.z);
   equal(0x41000000, m.w);
   // Flip sign using bit-wise operators.
-  n = new Float32x4(9.0, 10.0, 11.0, 12.0);
-  m = new Uint32x4(0x80000000, 0x80000000, 0x80000000, 0x80000000);
-  var nMask = SIMD.toUint32x4(n);
+  n = new float32x4(9.0, 10.0, 11.0, 12.0);
+  m = new uint32x4(0x80000000, 0x80000000, 0x80000000, 0x80000000);
+  var nMask = SIMD.bitToUint32x4(n);
   nMask = SIMD.xor(nMask, m); // flip sign.
-  n = SIMD.toFloat32x4(nMask);
+  n = SIMD.bitToFloat32x4(nMask);
   equal(-9.0, n.x);
   equal(-10.0, n.y);
   equal(-11.0, n.z);
   equal(-12.0, n.w);
-  nMask = SIMD.toUint32x4(n);
+  nMask = SIMD.bitToUint32x4(n);
   nMask = SIMD.xor(nMask, m); // flip sign.
-  n = SIMD.toFloat32x4(nMask);
+  n = SIMD.bitToFloat32x4(nMask);
   equal(9.0, n.x);
   equal(10.0, n.y);
   equal(11.0, n.z);
   equal(12.0, n.w);
 });
 
-test('Float32x4 comparisons', function() {
-  var m = new Float32x4(1.0, 2.0, 0.1, 0.001);
-  var n = new Float32x4(2.0, 2.0, 0.001, 0.1);
+test('float32x4 comparisons', function() {
+  var m = new float32x4(1.0, 2.0, 0.1, 0.001);
+  var n = new float32x4(2.0, 2.0, 0.001, 0.1);
   var cmp;
   cmp = SIMD.lessThan(m, n);
   equal(0xFFFFFFFF, cmp.x);
@@ -288,10 +293,10 @@ test('Float32x4 comparisons', function() {
   equal(0x0, cmp.w);
 });
 
-test('Uint32x4 select', function() {
-  var m = Uint32x4.bool(true, true, false, false);
-  var t = new Float32x4(1.0, 2.0, 3.0, 4.0);
-  var f = new Float32x4(5.0, 6.0, 7.0, 8.0);
+test('uint32x4 select', function() {
+  var m = uint32x4.bool(true, true, false, false);
+  var t = new float32x4(1.0, 2.0, 3.0, 4.0);
+  var f = new float32x4(5.0, 6.0, 7.0, 8.0);
   var s = SIMD.select(m, t, f);
   equal(1.0, s.x);
   equal(2.0, s.y);
@@ -299,8 +304,8 @@ test('Uint32x4 select', function() {
   equal(8.0, s.w);
 });
 
-test('Uint32x4 withX', function() {
-    var a = new Uint32x4(1, 2, 3, 4);
+test('uint32x4 withX', function() {
+    var a = new uint32x4(1, 2, 3, 4);
     var c = SIMD.withXu32(a, 20);
     equal(20, c.x);
     equal(2, c.y);
@@ -308,8 +313,8 @@ test('Uint32x4 withX', function() {
     equal(4, c.w);
 });
 
-test('Uint32x4 withY', function() {
-    var a = new Uint32x4(1, 2, 3, 4);
+test('uint32x4 withY', function() {
+    var a = new uint32x4(1, 2, 3, 4);
     var c = SIMD.withYu32(a, 20);
     equal(1, c.x);
     equal(20, c.y);
@@ -317,8 +322,8 @@ test('Uint32x4 withY', function() {
     equal(4, c.w);
 });
 
-test('Uint32x4 withZ', function() {
-    var a = new Uint32x4(1, 2, 3, 4);
+test('uint32x4 withZ', function() {
+    var a = new uint32x4(1, 2, 3, 4);
     var c = SIMD.withZu32(a, 20);
     equal(1, c.x);
     equal(2, c.y);
@@ -326,8 +331,8 @@ test('Uint32x4 withZ', function() {
     equal(4, c.w);
 });
 
-test('Uint32x4 withW', function() {
-    var a = new Uint32x4(1, 2, 3, 4);
+test('uint32x4 withW', function() {
+    var a = new uint32x4(1, 2, 3, 4);
     var c = SIMD.withWu32(a, 20);
     equal(1, c.x);
     equal(2, c.y);
@@ -335,8 +340,8 @@ test('Uint32x4 withW', function() {
     equal(20, c.w);
 });
 
-test('Uint32x4 withFlagX', function() {
-    var a = Uint32x4.bool(true, false, true, false);
+test('uint32x4 withFlagX', function() {
+    var a = uint32x4.bool(true, false, true, false);
     var c = SIMD.withFlagX(a, true);
     equal(true, c.flagX);
     equal(false, c.flagY);
@@ -353,8 +358,8 @@ test('Uint32x4 withFlagX', function() {
     equal(0x0, c.w);
 });
 
-test('Uint32x4 withFlagY', function() {
-    var a = Uint32x4.bool(true, false, true, false);
+test('uint32x4 withFlagY', function() {
+    var a = uint32x4.bool(true, false, true, false);
     var c = SIMD.withFlagY(a, true);
     equal(true, c.flagX);
     equal(true, c.flagY);
@@ -371,8 +376,8 @@ test('Uint32x4 withFlagY', function() {
     equal(0x0, c.w);
 });
 
-test('Uint32x4 withFlagZ', function() {
-    var a = Uint32x4.bool(true, false, true, false);
+test('uint32x4 withFlagZ', function() {
+    var a = uint32x4.bool(true, false, true, false);
     var c = SIMD.withFlagZ(a, true);
     equal(true, c.flagX);
     equal(false, c.flagY);
@@ -389,8 +394,8 @@ test('Uint32x4 withFlagZ', function() {
     equal(0x0, c.w);
 });
 
-test('Uint32x4 withFlagW', function() {
-    var a = Uint32x4.bool(true, false, true, false);
+test('uint32x4 withFlagW', function() {
+    var a = uint32x4.bool(true, false, true, false);
     var c = SIMD.withFlagW(a, true);
     equal(true, c.flagX);
     equal(false, c.flagY);
@@ -407,9 +412,9 @@ test('Uint32x4 withFlagW', function() {
     equal(0x0, c.w);
 });
 
-test('Uint32x4 and', function() {
-  var m = new Uint32x4(0xAAAAAAAA, 0xAAAAAAAA, 0xAAAAAAAA, 0xAAAAAAAA);
-  var n = new Uint32x4(0x55555555, 0x55555555, 0x55555555, 0x55555555);
+test('uint32x4 and', function() {
+  var m = new uint32x4(0xAAAAAAAA, 0xAAAAAAAA, 0xAAAAAAAA, 0xAAAAAAAA);
+  var n = new uint32x4(0x55555555, 0x55555555, 0x55555555, 0x55555555);
   equal(0xAAAAAAAA, m.x);
   equal(0xAAAAAAAA, m.y);
   equal(0xAAAAAAAA, m.z);
@@ -433,9 +438,9 @@ test('Uint32x4 and', function() {
   equal(false, o.flagW);
 });
 
-test('Uint32x4 or', function() {
-  var m = new Uint32x4(0xAAAAAAAA, 0xAAAAAAAA, 0xAAAAAAAA, 0xAAAAAAAA);
-  var n = new Uint32x4(0x55555555, 0x55555555, 0x55555555, 0x55555555);
+test('uint32x4 or', function() {
+  var m = new uint32x4(0xAAAAAAAA, 0xAAAAAAAA, 0xAAAAAAAA, 0xAAAAAAAA);
+  var n = new uint32x4(0x55555555, 0x55555555, 0x55555555, 0x55555555);
   var o = SIMD.or(m,n);  // or
   equal(0xFFFFFFFF, o.x);
   equal(0xFFFFFFFF, o.y);
@@ -447,9 +452,9 @@ test('Uint32x4 or', function() {
   equal(true, o.flagW);
 });
 
-test('Uint32x4 xor', function() {
-  var m = new Uint32x4(0xAAAAAAAA, 0xAAAAAAAA, 0xAAAAAAAA, 0xAAAAAAAA);
-  var n = new Uint32x4(0x55555555, 0x55555555, 0x55555555, 0x55555555);
+test('uint32x4 xor', function() {
+  var m = new uint32x4(0xAAAAAAAA, 0xAAAAAAAA, 0xAAAAAAAA, 0xAAAAAAAA);
+  var n = new uint32x4(0x55555555, 0x55555555, 0x55555555, 0x55555555);
   n = SIMD.withXu32(n, 0xAAAAAAAA);
   n = SIMD.withYu32(n, 0xAAAAAAAA);
   n = SIMD.withZu32(n, 0xAAAAAAAA);
@@ -469,9 +474,9 @@ test('Uint32x4 xor', function() {
   equal(false, o.flagW);
 });
 
-test('Uint32x4 neg', function() {
-  var m = new Uint32x4(0xAAAAAAAA, 0xAAAAAAAA, 0xAAAAAAAA, 0xAAAAAAAA);
-  var n = new Uint32x4(0x55555555, 0x55555555, 0x55555555, 0x55555555);
+test('uint32x4 neg', function() {
+  var m = new uint32x4(0xAAAAAAAA, 0xAAAAAAAA, 0xAAAAAAAA, 0xAAAAAAAA);
+  var n = new uint32x4(0x55555555, 0x55555555, 0x55555555, 0x55555555);
   m = SIMD.negu32(m);
   n = SIMD.negu32(n);
   equal(0xAAAAAAAA, n.x);

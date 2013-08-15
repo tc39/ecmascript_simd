@@ -3,6 +3,14 @@
 
 128-bit SIMD numeric value type ECMAScript straw man proposal.
 
+## Recent Changes
+
+* All operations have been moved from being member methods to module methods
+  on the SIMD module.
+* Types have been renamed to be lower case.
+* The shuffle getters (xxxx...wwww) have been removed. There is now a shuffle SIMD module function.
+
+
 ## Introduction
 
 ECMAScript provides no programmer accessible access to the Single Instruction
@@ -26,14 +34,14 @@ unsigned integer values.
 
 ## Overview
 
-This proposal defines two new data types: `Float32x4` and `Uint32x4`. Both data
+This proposal defines two new data types: `float32x4` and `uint32x4`. Both data
 types are immutable. Meaning, it is not possible to alter the internal state of
 an instance. Practically speaking, all operations return a new instance.
 
-A `Float32x4` holds 4 32-bit single precision floating point values. Data is
+A `float32x4` holds 4 32-bit single precision floating point values. Data is
 arranged into _lanes_. The lanes are **x**, **y**, **z**, and **w**.
 
-A `Uint32x4` holds 4 32-bit unsigned integer values. Data is arranged into
+A `uint32x4` holds 4 32-bit unsigned integer values. Data is arranged into
 _lanes_. The lanes are **x**, **y**, **z**, and **w**.
 
 <table>
@@ -71,146 +79,142 @@ _lanes_. The lanes are **x**, **y**, **z**, and **w**.
 
 ## Data Types
 
-`Float32x4` 128-bits divided into 4 lanes storing single precision floating
+`float32x4` 128-bits divided into 4 lanes storing single precision floating
 point values.
 
-`Uint32x4` 128-bits divided into 4 lanes storing 32-bit unsigned integer values.
+`uint32x4` 128-bits divided into 4 lanes storing 32-bit unsigned integer values.
 
-## Type Conversion Rules
 
-When converting between a `Float32x4` and a `Uint32x4`, the values cannot
-be altered. No observable difference can be introduced when any `Uint32x4`
-is converted to `Float32x4` and back to `Uint32x4`. Similarly when any
-`Float32x4` is converted to `Uint32x4` and back to `Float32x4`.
 
-## Float32x4
+
+## float32x4
 
 ### Constructors
 
-**Float32x4(double x, double y, double z, double w)**
+**float32x4(double x, double y, double z, double w)**
 
-Create a new `Float32x4` instance with lane values matching the values
+Create a new `float32x4` instance with lane values matching the values
 passed in as arguments. The input values are specified in double precision
 floating and are converted to single precision floating point values before
 being stored.
 
-**Float32x4.zero()**
+**float32x4.zero()**
 
-Create a new `Float32x4` instance with all lanes being 0.0.
+Create a new `float32x4` instance with all lanes being 0.0.
 
 ### Arithmetic Operations
 
-**Float32x4 add(Float32x4 a, Float32x4 b)**
+**float32x4 add(float32x4 a, float32x4 b)**
 
-Create a new `Float32x4` instance with lane values computed from the lane wise
+Create a new `float32x4` instance with lane values computed from the lane wise
 addition of **a** and **b**.
 
-**Float32x4 sub(Float32x4 a, Float32x4 b)**
+**float32x4 sub(float32x4 a, float32x4 b)**
 
-Create a new `Float32x4` instance with lane values computed from the lane wise
+Create a new `float32x4` instance with lane values computed from the lane wise
 subtraction of **a** and **b**.
 
-**Float32x4 mul(Float32x4 a, Float32x4 b)**
+**float32x4 mul(float32x4 a, float32x4 b)**
 
-Create a new `Float32x4` instance with lane values computed from the lane wise
+Create a new `float32x4` instance with lane values computed from the lane wise
 multiplication of **a** and **b**.
 
-**Float32x4 div(Float32x4 a, Float32x4 b)**
+**float32x4 div(float32x4 a, float32x4 b)**
 
-Create a new `Float32x4` instance with lane values computed from the lane wise
+Create a new `float32x4` instance with lane values computed from the lane wise
 division of **a** and **b**.
 
-**Float32x4 neg()**
+**float32x4 neg()**
 
-Create a new `Float32x4` instance with lane values computed from the lane wise
+Create a new `float32x4` instance with lane values computed from the lane wise
 negation of **this**.
 
-**Float32x4 abs()**
+**float32x4 abs()**
 
-Create a new `Float32x4` instance with lane values computed from the lane wise
+Create a new `float32x4` instance with lane values computed from the lane wise
 absolute value of **this**.
 
-**Float32x4 reciprocal()**
+**float32x4 reciprocal()**
 
-Create a new `Float32x4` instance with lane values computed from the lane wise
+Create a new `float32x4` instance with lane values computed from the lane wise
 reciprocal **this**.
 
-**Float32x4 reciprocalSqrt()**
+**float32x4 reciprocalSqrt()**
 
-Create a new `Float32x4` instance with lane values computed from the lane wise
+Create a new `float32x4` instance with lane values computed from the lane wise
 square root of the reciprocal **this**.
 
-**Float32x4 sqrt()**
+**float32x4 sqrt()**
 
-Create a new `Float32x4` instance with lane values computed from the lane wise
+Create a new `float32x4` instance with lane values computed from the lane wise
 square root of **this**.
 
-**Float32x4 scale(double s)**
+**float32x4 scale(double s)**
 
-Create a new `Float32x4` instance with lane values computed from the lane wise
+Create a new `float32x4` instance with lane values computed from the lane wise
 multiplication of **this** and the scalar value **s**.
 
 ### Comparison Operations
 
-**Uint32x4 lessThan(Float32x4 other)**
+**uint32x4 lessThan(float32x4 other)**
 
-Create a new `Uint32x4` instance with lane values computed from the lane wise
+Create a new `uint32x4` instance with lane values computed from the lane wise
 comparison of **this** and **other**. Each lane where the comparison is
 true will contain `0xFFFFFFFF`. Each lane where the comparison
 is false will contain `0x0`.
 
-**Uint32x4 lessThanOrEqual(Float32x4 other)**
+**uint32x4 lessThanOrEqual(float32x4 other)**
 
-Create a new `Uint32x4` instance with lane values computed from the lane wise
+Create a new `uint32x4` instance with lane values computed from the lane wise
 comparison of **this** and **other**. Each lane where the comparison is
 true will contain `0xFFFFFFFF`. Each lane where the comparison
 is false will contain `0x0`.
 
-**Uint32x4 equal(Float32x4 other)**
+**uint32x4 equal(float32x4 other)**
 
-Create a new `Uint32x4` instance with lane values computed from the lane wise
+Create a new `uint32x4` instance with lane values computed from the lane wise
 comparison of **this** and **other**. Each lane where the comparison is
 true will contain `0xFFFFFFFF`. Each lane where the comparison
 is false will contain `0x0`.
 
-**Uint32x4 notEqual(Float32x4 other)**
+**uint32x4 notEqual(float32x4 other)**
 
-Create a new `Uint32x4` instance with lane values computed from the lane wise
+Create a new `uint32x4` instance with lane values computed from the lane wise
 comparison of **this** and **other**. Each lane where the comparison is
 true will contain `0xFFFFFFFF`. Each lane where the comparison
 is false will contain `0x0`.
 
-**Uint32x4 greaterThanOrEqual(Float32x4 other)**
+**uint32x4 greaterThanOrEqual(float32x4 other)**
 
-Create a new `Uint32x4` instance with lane values computed from the lane wise
+Create a new `uint32x4` instance with lane values computed from the lane wise
 comparison of **this** and **other**. Each lane where the comparison is
 true will contain `0xFFFFFFFF`. Each lane where the comparison
 is false will contain `0x0`.
 
-**Uint32x4 greaterThan(Float32x4 other)**
+**uint32x4 greaterThan(float32x4 other)**
 
-Create a new `Uint32x4` instance with lane values computed from the lane wise
+Create a new `uint32x4` instance with lane values computed from the lane wise
 comparison of **this** and **other**. Each lane where the comparison is
 true will contain `0xFFFFFFFF`. Each lane where the comparison
 is false will contain `0x0`.
 
 ### Clamping Operations
 
-**Float32x4 clamp(Float32x4 lowerLimit, Float32x4 upperLimit)**
+**float32x4 clamp(float32x4 lowerLimit, float32x4 upperLimit)**
 
-Create a new `Float32x4` instance with lane values computed from the lane
+Create a new `float32x4` instance with lane values computed from the lane
 wise clamping of **this** between **lowerLimit** and **upperLimit**. Result is
 undefined if any lane in **lowerLimit** is greater than the identical lane
 in **upperLimit**.
 
-**Float32x4 max(Float32x4 other)**
+**float32x4 max(float32x4 other)**
 
-Create a new `Float32x4` instance with lane values computed from the lane
+Create a new `float32x4` instance with lane values computed from the lane
 wise maximum of **this** and **other**.
 
-**Float32x4 min(Float32x4 other)**
+**float32x4 min(float32x4 other)**
 
-Create a new `Float32x4` instance with lane values computed from the lane
+Create a new `float32x4` instance with lane values computed from the lane
 wise minimum of **this** and **other**.
 
 ### Lane Accessors
@@ -237,19 +241,19 @@ single precision to double precision before being returned.
 
 ### Shuffle Operations
 
-**getter Float32x4 xxxx**
+**getter float32x4 xxxx**
 
 Return a new instance with all lanes having the value of the **x** lane.
 
-**getter Float32x4 yyyy**
+**getter float32x4 yyyy**
 
 Return a new instance with all lanes having the value of the **y** lane.
 
-**getter Float32x4 zzzz**
+**getter float32x4 zzzz**
 
 Return a new instance with all lanes having the value of the **z** lane.
 
-**getter Float32x4 wwww**
+**getter float32x4 wwww**
 
 Return a new instance with all lanes having the value of the **w** lane.
 
@@ -258,54 +262,54 @@ valid shuffle getters. (e.g. **wxyz** and **wzyx** are valid shuffle getters.)
 
 ### Lane Mutators
 
-**Float32x4 withX(double x)**
+**float32x4 withX(double x)**
 
 Return a new instance with all lane values matching lane values of **this**
 except the the value in the **x** lane being given the value of **x**.
 
-**Float32x4 withY(double y)**
+**float32x4 withY(double y)**
 
 Return a new instance with all lane values matching lane values of **this**
 except the the value in the **y** lane being given the value of **x**.
 
-**Float32x4 withZ(double z)**
+**float32x4 withZ(double z)**
 
 Return a new instance with all lane values matching lane values of **this**
 except the the value in the **z** lane being given the value of **x**.
 
-**Float32x4 withW(double w)**
+**float32x4 withW(double w)**
 
 Return a new instance with all lane values matching lane values of **this**
 except the the value in the **w** lane being given the value of **x**.
 
 ### Type Conversion
 
-**Uint32x4 toUint32x4()**
+**uint32x4 touint32x4()**
 
-Create a new instance of `Uint32x4` with lane values being a bit-wise copy of
+Create a new instance of `uint32x4` with lane values being a bit-wise copy of
 the lane values in **this**.
 
-## Uint32x4
+## uint32x4
 
 ### Constructors
 
-**Uint32x4(integer x, integer y, integer z, integer w)**
+**uint32x4(integer x, integer y, integer z, integer w)**
 
-**Uint32x4.bool(boolean x, boolean y, boolean z, boolean w)**
+**uint32x4.bool(boolean x, boolean y, boolean z, boolean w)**
 
 ### Selection Operation
 
-**Float32x4 select(Float32x4 trueValue, Float32x4 falseValue)**
+**float32x4 select(float32x4 trueValue, float32x4 falseValue)**
 
 ### Logical Operations
 
-**Uint32x4 and(Uint32x4 other)**
+**uint32x4 and(uint32x4 other)**
 
-**Uint32x4 or(Uint32x4 other)**
+**uint32x4 or(uint32x4 other)**
 
-**Uint32x4 xor(Uint32x4 other)**
+**uint32x4 xor(uint32x4 other)**
 
-**Uint32x4 neg()**
+**uint32x4 neg()**
 
 ### Lane Accessors
 
@@ -351,25 +355,25 @@ be false.
 
 ### Lane Mutators
 
-**Uint32x4 withX(integer x)**
+**uint32x4 withX(integer x)**
 
-**Uint32x4 withY(integer y)**
+**uint32x4 withY(integer y)**
 
-**Uint32x4 withZ(integer z)**
+**uint32x4 withZ(integer z)**
 
-**Uint32x4 withW(integer w)**
+**uint32x4 withW(integer w)**
 
-**Uint32x4 withFlagX(boolean x)**
+**uint32x4 withFlagX(boolean x)**
 
-**Uint32x4 withFlagY(boolean y)**
+**uint32x4 withFlagY(boolean y)**
 
-**Uint32x4 withFlagZ(boolean z)**
+**uint32x4 withFlagZ(boolean z)**
 
-**Uint32x4 withFlagW(boolean w)**
+**uint32x4 withFlagW(boolean w)**
 
 ### Type Conversion
 
-**Float32x4 toFloat32x4()**
+**float32x4 tofloat32x4()**
 
-Create a new instance of `Float32x4` with lane values being a bit-wise copy of
+Create a new instance of `float32x4` with lane values being a bit-wise copy of
 the lane values in **this**.
