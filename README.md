@@ -5,6 +5,7 @@
 
 ## Recent Changes (Most recent at the top)
 
+* Initial implementation of Float32x4Array ([] -> getAt, []= -> setAt)
 * Added add, subtract, multiply operations for uint32x4.
 * Add .signMask getter to uint32x4 and float32x4.
 * All operations have been moved from being member methods to module methods
