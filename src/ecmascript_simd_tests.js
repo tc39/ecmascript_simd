@@ -12,11 +12,20 @@ test('float32x4 constructor', function() {
 });
 
 test('float32x4 scalar getters', function() {
-  var a = new float32x4(1.0, 2.0, 3.0, 4.0);
+  var a = float32x4(1.0, 2.0, 3.0, 4.0);
   equal(1.0, a.x);
   equal(2.0, a.y);
   equal(3.0, a.z);
   equal(4.0, a.w);
+});
+
+test('float32x4 signMask getter', function() {
+  var a = float32x4(-1.0, -2.0, -3.0, -4.0);
+  equal(0xf, a.signMask);
+  var b = float32x4(1.0, 2.0, 3.0, 4.0);
+  equal(0x0, b.signMask);
+  var c = float32x4(1.0, -2.0, -3.0, 4.0);
+  equal(0x6, c.signMask);
 });
 
 test('float32x4 vector getters', function() {
@@ -222,13 +231,13 @@ test('float32x4 withW', function() {
 
 test('float32x4 uint32x4 conversion', function() {
   var m = new uint32x4(0x3F800000, 0x40000000, 0x40400000, 0x40800000);
-  var n = SIMD.bitToFloat32x4(m);
+  var n = SIMD.bitsToFloat32x4(m);
   equal(1.0, n.x);
   equal(2.0, n.y);
   equal(3.0, n.z);
   equal(4.0, n.w);
   n = new float32x4(5.0, 6.0, 7.0, 8.0);
-  m = SIMD.bitToUint32x4(n);
+  m = SIMD.bitsToUint32x4(n);
   equal(0x40A00000, m.x);
   equal(0x40C00000, m.y);
   equal(0x40E00000, m.z);
@@ -236,16 +245,16 @@ test('float32x4 uint32x4 conversion', function() {
   // Flip sign using bit-wise operators.
   n = new float32x4(9.0, 10.0, 11.0, 12.0);
   m = new uint32x4(0x80000000, 0x80000000, 0x80000000, 0x80000000);
-  var nMask = SIMD.bitToUint32x4(n);
+  var nMask = SIMD.bitsToUint32x4(n);
   nMask = SIMD.xor(nMask, m); // flip sign.
-  n = SIMD.bitToFloat32x4(nMask);
+  n = SIMD.bitsToFloat32x4(nMask);
   equal(-9.0, n.x);
   equal(-10.0, n.y);
   equal(-11.0, n.z);
   equal(-12.0, n.w);
-  nMask = SIMD.bitToUint32x4(n);
+  nMask = SIMD.bitsToUint32x4(n);
   nMask = SIMD.xor(nMask, m); // flip sign.
-  n = SIMD.bitToFloat32x4(nMask);
+  n = SIMD.bitsToFloat32x4(nMask);
   equal(9.0, n.x);
   equal(10.0, n.y);
   equal(11.0, n.z);
@@ -487,4 +496,44 @@ test('uint32x4 neg', function() {
   equal(0x55555555, m.y);
   equal(0x55555555, m.z);
   equal(0x55555555, m.w);
+});
+
+test('uint32x4 signMask getter', function() {
+  var a = uint32x4(0x80000000, 0x7000000, 0xFFFFFFFF, 0x0);
+  equal(0x5, a.signMask);
+  var b = uint32x4(0x0, 0x0, 0x0, 0x0);
+  equal(0x0, b.signMask);
+  var c = uint32x4(0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF);
+  equal(0xf, c.signMask);
+});
+
+
+test('uint32x4 add', function() {
+  var a = new uint32x4(0xFFFFFFFF, 0xFFFFFFFF, 0x7fffffff, 0x0);
+  var b = uint32x4(0x1, 0xFFFFFFFF, 0x1, 0xFFFFFFFF);
+  var c = SIMD.addu32(a, b);
+  equal(0x0, c.x);
+  equal(0xFFFFFFFE, c.y);
+  equal(0x80000000, c.z);
+  equal(0xFFFFFFFF, c.w);
+});
+
+test('uint32x4 sub', function() {
+  var a = new uint32x4(0xFFFFFFFF, 0xFFFFFFFF, 0x80000000, 0x0);
+  var b = uint32x4(0x1, 0xFFFFFFFF, 0x1, 0xFFFFFFFF);
+  var c = SIMD.subu32(a, b);
+  equal(0xFFFFFFFE, c.x);
+  equal(0x0, c.y);
+  equal(0x7FFFFFFF, c.z);
+  equal(0x1, c.w);
+});
+
+test('uint32x4 mul', function() {
+  var a = new uint32x4(0xFFFFFFFF, 0xFFFFFFFF, 0x80000000, 0x0);
+  var b = uint32x4(0x1, 0xFFFFFFFF, 0x80000000, 0xFFFFFFFF);
+  var c = SIMD.mulu32(a, b);
+  equal(0xFFFFFFFF, c.x);
+  equal(0x1, c.y);
+  equal(0x0, c.z);
+  equal(0x0, c.w);
 });
