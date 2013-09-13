@@ -160,15 +160,53 @@ function isNumber(o) {
     return typeof o == "number" || (typeof o == "object" && o.constructor === Number);
 }
 
+function isTypedArray(o) {
+  return (o instanceof Int8Array) ||
+         (o instanceof Uint8Array) ||
+         (o instanceof Uint8ClampedArray) ||
+         (o instanceof Int16Array) ||
+         (o instanceof Uint16Array) ||
+         (o instanceof Int32Array) ||
+         (o instanceof Uint32Array) ||
+         (o instanceof Float32Array) ||
+         (o instanceof Float64Array) ||
+         (o instanceof Float32x4Array);
+}
+
+function isArrayBuffer(o) {
+  return (o instanceof ArrayBuffer);
+}
+
 function Float32x4Array(a, b, c) {
   if (isNumber(a)) {
     this.storage_ = new Float32Array(a*4);
     this.length_ = a;
     this.byteOffset_ = 0;
     return;
+  } else if (isTypedArray(a)) {
+    if (!(a instanceof Float32x4Array)) {
+      throw "Copying typed array of non-Float32x4Array is unimplemented.";
+    }
+    this.storage_ = new Float32Array(a.length * 4);
+    this.length_ = a.length;
+    this.byteOffset_ = 0;
+    // Copy floats.
+    for (var i = 0; i < a.length*4; i++) {
+      this.storage_[i] = a.storage_[i];
+    }
+  } else if (isArrayBuffer(a)) {
+    if ((b != undefined) && (b % Float32Array.BYTES_PER_ELEMENT) != 0) {
+      throw "byteOffset must be a multiple of 16.";
+    }
+    if (c != undefined) {
+      c *= 4;
+    }
+    this.storage_ = new Float32Array(a, b, c);
+    this.length_ = this.storage_.length / 4;
+    this.byteOffset_ = b != undefined ? b : 0;
+  } else {
+    throw "Unknown type of first argument.";
   }
-  // TODO(johnmccutchan): Add support for views.
-  throw "First parameter must be a number.";
 }
 
 Object.defineProperty(Float32x4Array.prototype, 'length',

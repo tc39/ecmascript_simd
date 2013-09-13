@@ -614,3 +614,203 @@ test('Float32x4Array swap', function() {
   equal(a.getAt(0).z, 15);
   equal(a.getAt(0).w, 16);
 });
+
+test('Float32x4Array copy', function() {
+  var a = new Float32x4Array(4);
+  a.setAt(0, float32x4(1, 2, 3, 4));
+  a.setAt(1, float32x4(5, 6, 7, 8));
+  a.setAt(2, float32x4(9, 10, 11, 12));
+  a.setAt(3, float32x4(13, 14, 15, 16));
+  var b = new Float32x4Array(a);
+  equal(a.getAt(0).x, b.getAt(0).x);
+  equal(a.getAt(0).y, b.getAt(0).y);
+  equal(a.getAt(0).z, b.getAt(0).z);
+  equal(a.getAt(0).w, b.getAt(0).w);
+
+  equal(a.getAt(1).x, b.getAt(1).x);
+  equal(a.getAt(1).y, b.getAt(1).y);
+  equal(a.getAt(1).z, b.getAt(1).z);
+  equal(a.getAt(1).w, b.getAt(1).w);
+
+  equal(a.getAt(2).x, b.getAt(2).x);
+  equal(a.getAt(2).y, b.getAt(2).y);
+  equal(a.getAt(2).z, b.getAt(2).z);
+  equal(a.getAt(2).w, b.getAt(2).w);
+
+  equal(a.getAt(3).x, b.getAt(3).x);
+  equal(a.getAt(3).y, b.getAt(3).y);
+  equal(a.getAt(3).z, b.getAt(3).z);
+  equal(a.getAt(3).w, b.getAt(3).w);
+
+  a.setAt(2, float32x4(17, 18, 19, 20));
+
+  equal(a.getAt(2).x, 17);
+  equal(a.getAt(2).y, 18);
+  equal(a.getAt(2).z, 19);
+  equal(a.getAt(2).w, 20);
+
+  notEqual(a.getAt(2).x, b.getAt(2).x);
+  notEqual(a.getAt(2).y, b.getAt(2).y);
+  notEqual(a.getAt(2).z, b.getAt(2).z);
+  notEqual(a.getAt(2).w, b.getAt(2).w);
+});
+
+test('Float32Array view basic', function() {
+  var a = new Float32Array(8);
+  // view with no offset.
+  var b = new Float32x4Array(a.buffer, 0);
+  // view with offset.
+  var c = new Float32x4Array(a.buffer, 16);
+  // view with no offset but shorter than original list.
+  var d = new Float32x4Array(a.buffer, 0, 1);
+  equal(a.length, 8);
+  equal(b.length, 2);
+  equal(c.length, 1);
+  equal(d.length, 1);
+  equal(a.byteLength, 32);
+  equal(b.byteLength, 32);
+  equal(c.byteLength, 16);
+  equal(d.byteLength, 16)
+  equal(a.byteOffset, 0);
+  equal(b.byteOffset, 0);
+  equal(c.byteOffset, 16);
+  equal(d.byteOffset, 0);
+});
+
+test('Float32Array view values', function() {
+  var a = new Float32Array(8);
+  var b = new Float32x4Array(a.buffer, 0);
+  var c = new Float32x4Array(a.buffer, 16);
+  var d = new Float32x4Array(a.buffer, 0, 1);
+  var start = 100;
+  for (var i = 0; i < b.length; i++) {
+    equal(0.0, b.getAt(i).x);
+    equal(0.0, b.getAt(i).y);
+    equal(0.0, b.getAt(i).z);
+    equal(0.0, b.getAt(i).w);
+  }
+  for (var i = 0; i < c.length; i++) {
+    equal(0.0, c.getAt(i).x);
+    equal(0.0, c.getAt(i).y);
+    equal(0.0, c.getAt(i).z);
+    equal(0.0, c.getAt(i).w);
+  }
+  for (var i = 0; i < d.length; i++) {
+    equal(0.0, d.getAt(i).x);
+    equal(0.0, d.getAt(i).y);
+    equal(0.0, d.getAt(i).z);
+    equal(0.0, d.getAt(i).w);
+  }
+  for (var i = 0; i < a.length; i++) {
+    a[i] = i+start;
+  }
+  for (var i = 0; i < b.length; i++) {
+    notEqual(0.0, b.getAt(i).x);
+    notEqual(0.0, b.getAt(i).y);
+    notEqual(0.0, b.getAt(i).z);
+    notEqual(0.0, b.getAt(i).w);
+  }
+  for (var i = 0; i < c.length; i++) {
+    notEqual(0.0, c.getAt(i).x);
+    notEqual(0.0, c.getAt(i).y);
+    notEqual(0.0, c.getAt(i).z);
+    notEqual(0.0, c.getAt(i).w);
+  }
+  for (var i = 0; i < d.length; i++) {
+    notEqual(0.0, d.getAt(i).x);
+    notEqual(0.0, d.getAt(i).y);
+    notEqual(0.0, d.getAt(i).z);
+    notEqual(0.0, d.getAt(i).w);
+  }
+  equal(start+0, b.getAt(0).x);
+  equal(start+1, b.getAt(0).y);
+  equal(start+2, b.getAt(0).z);
+  equal(start+3, b.getAt(0).w);
+  equal(start+4, b.getAt(1).x);
+  equal(start+5, b.getAt(1).y);
+  equal(start+6, b.getAt(1).z);
+  equal(start+7, b.getAt(1).w);
+
+  equal(start+4, c.getAt(0).x);
+  equal(start+5, c.getAt(0).y);
+  equal(start+6, c.getAt(0).z);
+  equal(start+7, c.getAt(0).w);
+
+  equal(start+0, d.getAt(0).x);
+  equal(start+1, d.getAt(0).y);
+  equal(start+2, d.getAt(0).z);
+  equal(start+3, d.getAt(0).w);
+});
+
+test('Float32x4Array exceptions', function() {
+  var a = new Float32x4Array(4);
+  var b = a.getAt(0);
+  var c = a.getAt(1);
+  var d = a.getAt(2);
+  var e = a.getAt(3);
+  throws(function() {
+    var f = a.getAt(4);
+  });
+  throws(function() {
+    var f = a.getAt(-1);
+  });
+  throws(function() {
+    // Unaligned byte offset.
+    var f = new Float32x4Array(a.buffer, 15);
+  });
+});
+
+test('View on Float32x4Array', function() {
+  var a = new Float32x4Array(4);
+  a.setAt(0, float32x4(1, 2, 3, 4));
+  a.setAt(1, float32x4(5, 6, 7, 8));
+  a.setAt(2, float32x4(9, 10, 11, 12));
+  a.setAt(3, float32x4(13, 14, 15, 16));
+  equal(a.getAt(0).x, 1);
+  equal(a.getAt(0).y, 2);
+  equal(a.getAt(0).z, 3);
+  equal(a.getAt(0).w, 4);
+
+  equal(a.getAt(1).x, 5);
+  equal(a.getAt(1).y, 6);
+  equal(a.getAt(1).z, 7);
+  equal(a.getAt(1).w, 8);
+
+  equal(a.getAt(2).x, 9);
+  equal(a.getAt(2).y, 10);
+  equal(a.getAt(2).z, 11);
+  equal(a.getAt(2).w, 12);
+
+  equal(a.getAt(3).x, 13);
+  equal(a.getAt(3).y, 14);
+  equal(a.getAt(3).z, 15);
+  equal(a.getAt(3).w, 16);
+
+  // Create view on a.
+  var b = new Float32Array(a.buffer);
+  equal(b.length, 16);
+  equal(b.byteLength, 64);
+  b[2] = 99.0;
+  b[6] = 1.0;
+
+  // Observe changes in "a"
+  equal(a.getAt(0).x, 1);
+  equal(a.getAt(0).y, 2);
+  equal(a.getAt(0).z, 99);
+  equal(a.getAt(0).w, 4);
+
+  equal(a.getAt(1).x, 5);
+  equal(a.getAt(1).y, 6);
+  equal(a.getAt(1).z, 1);
+  equal(a.getAt(1).w, 8);
+
+  equal(a.getAt(2).x, 9);
+  equal(a.getAt(2).y, 10);
+  equal(a.getAt(2).z, 11);
+  equal(a.getAt(2).w, 12);
+
+  equal(a.getAt(3).x, 13);
+  equal(a.getAt(3).y, 14);
+  equal(a.getAt(3).z, 15);
+  equal(a.getAt(3).w, 16);
+});

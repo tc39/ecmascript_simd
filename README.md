@@ -5,6 +5,9 @@
 
 ## Recent Changes (Most recent at the top)
 
+* Support for typed array views on Float32x4Array.
+* Support for Float32x4Array views of other typed arrays.
+* Support for Float32x4Array copy constructor.
 * Initial implementation of Float32x4Array ([] -> getAt, []= -> setAt).
 * Added add, subtract, multiply operations for uint32x4.
 * Add .signMask getter to uint32x4 and float32x4.
