@@ -537,3 +537,80 @@ test('uint32x4 mul', function() {
   equal(0x0, c.z);
   equal(0x0, c.w);
 });
+
+test('Float32x4Array simple', function() {
+  var a = new Float32x4Array(1);
+  equal(1, a.length);
+  equal(16, a.byteLength);
+  equal(16, a.BYTES_PER_ELEMENT);
+  equal(16, Float32x4Array.BYTES_PER_ELEMENT);
+  equal(0, a.byteOffset);
+  notEqual(undefined, a.buffer);
+  var b = new Float32x4Array(4);
+  equal(4, b.length);
+  equal(64, b.byteLength);
+  equal(16, b.BYTES_PER_ELEMENT);
+  equal(16, Float32x4Array.BYTES_PER_ELEMENT);
+  equal(0, b.byteOffset);
+  notEqual(undefined, b.buffer);
+});
+
+test('Float32x4Array set and get', function() {
+  var a = new Float32x4Array(4);
+  a.setAt(0, float32x4(1, 2, 3, 4));
+  a.setAt(1, float32x4(5, 6, 7, 8));
+  a.setAt(2, float32x4(9, 10, 11, 12));
+  a.setAt(3, float32x4(13, 14, 15, 16));
+  equal(a.getAt(0).x, 1);
+  equal(a.getAt(0).y, 2);
+  equal(a.getAt(0).z, 3);
+  equal(a.getAt(0).w, 4);
+
+  equal(a.getAt(1).x, 5);
+  equal(a.getAt(1).y, 6);
+  equal(a.getAt(1).z, 7);
+  equal(a.getAt(1).w, 8);
+
+  equal(a.getAt(2).x, 9);
+  equal(a.getAt(2).y, 10);
+  equal(a.getAt(2).z, 11);
+  equal(a.getAt(2).w, 12);
+
+  equal(a.getAt(3).x, 13);
+  equal(a.getAt(3).y, 14);
+  equal(a.getAt(3).z, 15);
+  equal(a.getAt(3).w, 16);
+});
+
+test('Float32x4Array swap', function() {
+  var a = new Float32x4Array(4);
+  a.setAt(0, float32x4(1, 2, 3, 4));
+  a.setAt(1, float32x4(5, 6, 7, 8));
+  a.setAt(2, float32x4(9, 10, 11, 12));
+  a.setAt(3, float32x4(13, 14, 15, 16));
+
+  // Swap element 0 and element 3
+  var t = a.getAt(0);
+  a.setAt(0, a.getAt(3));
+  a.setAt(3, t);
+
+  equal(a.getAt(3).x, 1);
+  equal(a.getAt(3).y, 2);
+  equal(a.getAt(3).z, 3);
+  equal(a.getAt(3).w, 4);
+
+  equal(a.getAt(1).x, 5);
+  equal(a.getAt(1).y, 6);
+  equal(a.getAt(1).z, 7);
+  equal(a.getAt(1).w, 8);
+
+  equal(a.getAt(2).x, 9);
+  equal(a.getAt(2).y, 10);
+  equal(a.getAt(2).z, 11);
+  equal(a.getAt(2).w, 12);
+
+  equal(a.getAt(0).x, 13);
+  equal(a.getAt(0).y, 14);
+  equal(a.getAt(0).z, 15);
+  equal(a.getAt(0).w, 16);
+});

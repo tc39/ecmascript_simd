@@ -156,6 +156,75 @@ Object.defineProperty(uint32x4.prototype, 'signMask', {
   }
 });
 
+function isNumber(o) {
+    return typeof o == "number" || (typeof o == "object" && o.constructor === Number);
+}
+
+function Float32x4Array(a, b, c) {
+  if (isNumber(a)) {
+    this.storage_ = new Float32Array(a*4);
+    this.length_ = a;
+    this.byteOffset_ = 0;
+    return;
+  }
+  // TODO(johnmccutchan): Add support for views.
+  throw "First parameter must be a number.";
+}
+
+Object.defineProperty(Float32x4Array.prototype, 'length',
+  { get: function() { return this.length_; }
+});
+
+Object.defineProperty(Float32x4Array.prototype, 'byteLength',
+  { get: function() { return this.length_ * Float32x4Array.BYTES_PER_ELEMENT; }
+});
+
+Object.defineProperty(Float32x4Array, 'BYTES_PER_ELEMENT',
+  { get: function() { return 16; }
+});
+
+Object.defineProperty(Float32x4Array.prototype, 'BYTES_PER_ELEMENT',
+  { get: function() { return 16; }
+});
+
+Object.defineProperty(Float32x4Array.prototype, 'byteOffset',
+  { get: function() { return this.byteOffset_; }
+});
+
+Object.defineProperty(Float32x4Array.prototype, 'buffer',
+  { get: function() { return this.storage_.buffer; }
+});
+
+Float32x4Array.prototype.getAt = function(i) {
+  if (i < 0) {
+    throw "Index must be >= 0.";
+  }
+  if (i >= this.length) {
+    throw "Index out of bounds.";
+  }
+  var x = this.storage_[i*4+0];
+  var y = this.storage_[i*4+1];
+  var z = this.storage_[i*4+2];
+  var w = this.storage_[i*4+3];
+  return float32x4(x, y, z, w);
+}
+
+Float32x4Array.prototype.setAt = function(i, v) {
+  if (i < 0) {
+    throw "Index must be >= 0.";
+  }
+  if (i >= this.length) {
+    throw "Index out of bounds.";
+  }
+  if (!(v instanceof float32x4)) {
+    throw "Value is not a float32x4.";
+  }
+  this.storage_[i*4+0] = v.x;
+  this.storage_[i*4+1] = v.y;
+  this.storage_[i*4+2] = v.z;
+  this.storage_[i*4+3] = v.w;
+}
+
 var SIMD = (function () {
   return {
     /**
