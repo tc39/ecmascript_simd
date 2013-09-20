@@ -195,13 +195,17 @@ function Float32x4Array(a, b, c) {
       this.storage_[i] = a.storage_[i];
     }
   } else if (isArrayBuffer(a)) {
-    if ((b != undefined) && (b % Float32Array.BYTES_PER_ELEMENT) != 0) {
+    if ((b != undefined) && (b % Float32x4Array.BYTES_PER_ELEMENT) != 0) {
       throw "byteOffset must be a multiple of 16.";
     }
     if (c != undefined) {
       c *= 4;
+      this.storage_ = new Float32Array(a, b, c);
     }
-    this.storage_ = new Float32Array(a, b, c);
+    else {
+      // Note: new Float32Array(a, b) is NOT equivalent to new Float32Array(a, b, undefined)
+      this.storage_ = new Float32Array(a, b);
+    }
     this.length_ = this.storage_.length / 4;
     this.byteOffset_ = b != undefined ? b : 0;
   } else {

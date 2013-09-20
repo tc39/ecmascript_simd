@@ -436,7 +436,7 @@ test('uint32x4 and', function() {
   equal(true, n.flagY);
   equal(true, n.flagZ);
   equal(true, n.flagW);
-  o = SIMD.and(m,n);  // and
+  var o = SIMD.and(m,n);  // and
   equal(0x0, o.x);
   equal(0x0, o.y);
   equal(0x0, o.z);
@@ -472,7 +472,7 @@ test('uint32x4 xor', function() {
   equal(0xAAAAAAAA, n.y);
   equal(0xAAAAAAAA, n.z);
   equal(0xAAAAAAAA, n.w);
-  o = SIMD.xor(m,n);  // xor
+  var o = SIMD.xor(m,n);  // xor
   equal(0x0, o.x);
   equal(0x0, o.y);
   equal(0x0, o.z);
@@ -675,6 +675,7 @@ test('Float32Array view basic', function() {
   equal(b.byteOffset, 0);
   equal(c.byteOffset, 16);
   equal(d.byteOffset, 0);
+
 });
 
 test('Float32Array view values', function() {
@@ -742,21 +743,25 @@ test('Float32Array view values', function() {
   equal(start+3, d.getAt(0).w);
 });
 
-test('Float32x4Array exceptions', function() {
+test('Float32x4Array exceptions', function () {
   var a = new Float32x4Array(4);
   var b = a.getAt(0);
   var c = a.getAt(1);
   var d = a.getAt(2);
   var e = a.getAt(3);
-  throws(function() {
+  throws(function () {
     var f = a.getAt(4);
   });
-  throws(function() {
+  throws(function () {
     var f = a.getAt(-1);
   });
-  throws(function() {
+  throws(function () {
     // Unaligned byte offset.
     var f = new Float32x4Array(a.buffer, 15);
+  });
+  throws(function () {
+    // Unaligned byte offset, but aligned on 4.  Bug
+    var f = new Float32x4Array(a.buffer, 4);
   });
 });
 
