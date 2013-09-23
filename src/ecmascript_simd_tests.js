@@ -391,7 +391,7 @@ test('uint32x4 withFlagZ', function() {
     equal(true, c.flagX);
     equal(false, c.flagY);
     equal(true, c.flagZ);
-    equal(false, c.w);
+    equal(false, c.flagW);
     c = SIMD.withFlagZ(a, false);
     equal(true, c.flagX);
     equal(false, c.flagY);
