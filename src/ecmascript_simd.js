@@ -668,7 +668,7 @@ var SIMD = (function () {
       return a;
     },
     /**
-      * @param {uint32x4} An instance of a float32x4.
+      * @param {float32x4} t An instance of a float32x4.
       * @return {uint32x4} with a integer to double conversion of t.
       */
     toUint32x4: function(t) {
