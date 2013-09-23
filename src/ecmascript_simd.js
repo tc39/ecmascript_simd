@@ -560,7 +560,7 @@ var SIMD = (function () {
       */
     mulu32: function(a, b) {
       return new uint32x4(Math.imul(a.x, b.x), Math.imul(a.y, b.y),
-                          Math.imul(a.z, b.z), Math.imul(a.w * b.w));
+                          Math.imul(a.z, b.z), Math.imul(a.w, b.w));
     },
     /**
       * @param {float32x4}
