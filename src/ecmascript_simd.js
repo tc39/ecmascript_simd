@@ -421,7 +421,7 @@ var SIMD = (function () {
       return new float32x4(t.x, t.y, t.z, w);
     },
     /**
-      * @param {uint32x4} t An instance of a uint32x4.
+      * @param {float32x4} t An instance of a float32x4.
       * @return {uint32x4} a bit-wise copy of t as a uint32x4.
       */
     bitsToUint32x4: function(t) {
