@@ -9,6 +9,7 @@ load ('base.js');
 
 // load individual benchmarks
 load ('kernel-template.js');
+load ('matrix-multiplication.js');
 load ('transform.js');
 load ('average.js');
 load ('mandelbrot.js');
