@@ -14,6 +14,6 @@ window.onload = function() {
   console.log('Running benchmarks.');
   benchmarks.runAll({notifyResult: printResult,
                      notifyError:  printError,
-                     notifyScore:  printScore});
+                     notifyScore:  printScore}, true);
   console.log('Benchmarks completed.');
 }
