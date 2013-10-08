@@ -14,20 +14,23 @@
   };
 
   // Hook up to the harness
-  benchmarks.add (new Benchmark (kernelConfig));
+  benchmarks.add(new Benchmark(kernelConfig));
 
   // Benchmark data, initialization and kernel functions
-  var a = new Float32Array (10000);
+  var a = new Float32Array(10000);
 
-  function initArray () {
+  function initArray() {
+    var j = 0;
     for (var i = 0, l = a.length; i < l; ++i) {
-      a[i] = i;
+      a[i] = 0.1;
     }
-    // Check that the two kernel functions yields the same result
-    return average(1) === simdAverage(1);
+    // Check that the two kernel functions yields the same result, roughly
+    // Account for the fact that the simdAverage() is computed using float32
+    // precision and the average() is using double precision
+    return Math.abs(average(1) - simdAverage(1)) < 0.0001;
   }
 
-  function average (n) {
+  function average(n) {
     for (var i = 0; i < n; ++i) {
       var sum = 0.0;
       for (var j = 0, l = a.length; j < l; ++j) {
@@ -37,15 +40,15 @@
     return sum/a.length;
   }
 
-  function simdAverage (n) {
+  function simdAverage(n) {
     for (var i = 0; i < n; ++i) {
-      var a4   = new Float32x4Array (a.buffer);
-      var sum4 = float32x4.splat (0.0);
+      var a4   = new Float32x4Array(a.buffer);
+      var sum4 = float32x4.splat(0.0);
       for (var j = 0, l = a4.length; j < l; ++j) {
         sum4 = SIMD.add(sum4, a4.getAt(j));
       }
     }
-    return (sum4.x + sum4.y + sum4.z + sum4.w) / a.length;
+    return (sum4.x + sum4.y + sum4.z + sum4.w)/a.length;
   }
 
 } ());
