@@ -41,8 +41,8 @@
   }
 
   function mandelx4(c_re4, c_im4, max_iterations) {
-    var z_re4  = SIMD.toFloat32x4 (c_re4);  // create a clone, rename to .clone() ???
-    var z_im4  = SIMD.toFloat32x4 (c_im4);  // create a clone
+    var z_re4  = c_re4;
+    var z_im4  = c_im4;
     var four4  = float32x4.splat (4.0);
     var two4   = float32x4.splat (2.0);
     var count4 = uint32x4.splat (0);
