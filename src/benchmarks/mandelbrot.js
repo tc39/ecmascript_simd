@@ -62,7 +62,7 @@
       var new_im4 = SIMD.mul (SIMD.mul (two4, z_re4), z_im4);
       z_re4       = SIMD.add (c_re4, new_re4);
       z_im4       = SIMD.add (c_im4, new_im4);
-      count4      = SIMD.add (count4, SIMD.and (mi4, one4));
+      count4      = SIMD.addu32 (count4, SIMD.and (mi4, one4));
     }
     return count4;
   }
