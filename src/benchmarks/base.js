@@ -91,7 +91,7 @@ Benchmarks.prototype.report = function (benchmark, outputFunctions) {
   }
 
   if (!benchmark.ok) {
-    outputFunctions.notifyError(fillRight(benchmark.config.kernelName + ": ", 20) + "FAIL");
+    outputFunctions.notifyError(fillRight(benchmark.config.kernelName + ": ", 23) + "FAIL");
     return;
   }
   var ratio = benchmark.nonSimdTime / benchmark.simdTime;

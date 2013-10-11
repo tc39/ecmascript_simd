@@ -4,6 +4,9 @@ if (typeof SIMD === "undefined") {
 if (typeof Float32x4Array === "undefined") {
   load ('../float32x4array.js');
 }
+if (typeof Uint32x4Array === "undefined") {
+  load ('../uint32x4array.js');
+}
 
 load ('base.js');
 
@@ -13,6 +16,7 @@ load ('average.js');
 load ('mandelbrot.js');
 load ('matrix-multiplication.js');
 load ('transform.js');
+load ('shiftrows.js');
 
 function printResult (str) {
   print (str);
