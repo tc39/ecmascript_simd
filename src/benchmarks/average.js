@@ -43,7 +43,7 @@
   function simdAverage(n) {
     for (var i = 0; i < n; ++i) {
       var a4   = new Float32x4Array(a.buffer);
-      var sum4 = float32x4.splat(0.0);
+      var sum4 = float32x4.zero();
       for (var j = 0, l = a4.length; j < l; ++j) {
         sum4 = SIMD.add(sum4, a4.getAt(j));
       }
