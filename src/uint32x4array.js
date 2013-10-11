@@ -102,8 +102,8 @@ Uint32x4Array.prototype.setAt = function(i, v) {
   if (i >= this.length) {
     throw "Index out of bounds.";
   }
-  if (!(v instanceof float32x4)) {
-    throw "Value is not a float32x4.";
+  if (!(v instanceof uint32x4)) {
+    throw "Value is not a uint32x4.";
   }
   this.storage_[i*4+0] = v.x;
   this.storage_[i*4+1] = v.y;
