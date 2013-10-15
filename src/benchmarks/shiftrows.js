@@ -100,13 +100,13 @@
     for (var r = 1; r < 4; ++r) {
       var rx4 = statex4.getAt(r);
       if (r == 1) {
-        statex4.setAt(r, SIMD.shuffle(rx4, SIMD.YZWX));
+        statex4.setAt(r, SIMD.shuffleu32(rx4, SIMD.YZWX));
       }
       else if (r == 2) {
-        statex4.setAt(r, SIMD.shuffle(rx4, SIMD.ZWXY));
+        statex4.setAt(r, SIMD.shuffleu32(rx4, SIMD.ZWXY));
       }
       else { // r == 3
-        statex4.setAt(r, SIMD.shuffle(rx4, SIMD.WXYZ));
+        statex4.setAt(r, SIMD.shuffleu32(rx4, SIMD.WXYZ));
       }
     }
   }
