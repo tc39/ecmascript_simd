@@ -17,6 +17,7 @@ load ('mandelbrot.js');
 load ('matrix-multiplication.js');
 load ('transform.js');
 load ('shiftrows.js');
+load ('aobench.js');
 
 function printResult (str) {
   print (str);
