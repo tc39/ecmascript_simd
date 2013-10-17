@@ -3,7 +3,7 @@
 
 function Benchmark (config) {
   this.config            = config;
-  this.initOk            = true;
+  this.initOk            = true;    // Initialize all properties used on a Benchmark object
   this.cleanupOk         = true;
   this.useAutoIterations = true;
   this.autoIterations    = 0;
@@ -74,7 +74,11 @@ Benchmarks.prototype.runOne = function (benchmark) {
   benchmark.nonSimdTime = timeKernel(benchmark.config.kernelNonSimd, benchmark.actualIterations);
 
   // Do the final sanity check
-  benchmark.cleanupOk = benchmark.config.kernelCleanup();
+  if (!benchmark.config.kernelCleanup()) {
+    benchmark.cleanupOk = false;
+    return false;
+  }
+
   return true;
 }
 
