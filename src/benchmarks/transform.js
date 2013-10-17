@@ -7,6 +7,7 @@
   var kernelConfig = {
     kernelName:       "VertexTransform",
     kernelInit:       init,
+    kernelCleanup:    cleanup,
     kernelSimd:       simdVertexTransform,
     kernelNonSimd:    vertexTransform,
     kernelIterations: 1000
@@ -41,6 +42,10 @@
     vertexTransform(1);
     return (Outx4.getAt(0).x == Out[0]) && (Outx4.getAt(0).y == Out[1]) &&
            (Outx4.getAt(0).z == Out[2]) && (Outx4.getAt(0).w == Out[3]);
+  }
+
+  function cleanup() {
+    return init(); // Sanity checking before and after are the same
   }
 
   function vertexTransform(n) {

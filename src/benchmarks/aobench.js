@@ -8,6 +8,7 @@
   var kernelConfig = {
     kernelName:       "AOBench",
     kernelInit:       initAobench,
+    kernelCleanup:    cleanupAobench,
     kernelSimd:       simdAobench,
     kernelNonSimd:    nonSimdAobench
   };
@@ -29,6 +30,10 @@
     var A = ambient_occlusion(isect0);
     var B = ambient_occlusion_simd(isect0);
     return ((A.x == B.x) && (A.y == B.y) && (A.z == B.z));
+  }
+
+  function cleanupAobench() {
+    return initAobench();
   }
 
   // Non SIMD version of the kernel

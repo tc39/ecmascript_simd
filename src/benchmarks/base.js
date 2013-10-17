@@ -2,8 +2,14 @@
 // Author: Peter Jensen
 
 function Benchmark (config) {
-  this.config         = config;
-  this.ok             = true;
+  this.config            = config;
+  this.initOk            = true;
+  this.cleanupOk         = true;
+  this.useAutoIterations = true;
+  this.autoIterations    = 0;
+  this.actualIterations  = 0;
+  this.simdTime          = 0;
+  this.nonSimdTime       = 0;
 }
 
 function Benchmarks () {
@@ -33,7 +39,7 @@ Benchmarks.prototype.runOne = function (benchmark) {
     var simdTime = timeKernel(benchmark.config.kernelSimd, testIterations);
     var nonSimdTime = timeKernel(benchmark.config.kernelNonSimd, testIterations);
     var maxTime = simdTime > nonSimdTime ? simdTime : nonSimdTime;
-    while (maxTime < 100) {
+    while (maxTime < 500) {
       testIterations *= 2;
       simdTime = timeKernel(benchmark.config.kernelSimd, testIterations);
       nonSimdTime = timeKernel(benchmark.config.kernelNonSimd, testIterations);
@@ -48,7 +54,7 @@ Benchmarks.prototype.runOne = function (benchmark) {
 
   // Initialize the kernels and check the correctness status
   if (!benchmark.config.kernelInit()) {
-    benchmark.ok = false;
+    benchmark.initOk = false;
     return false;
   }
 
@@ -67,8 +73,8 @@ Benchmarks.prototype.runOne = function (benchmark) {
   // Run the non-SIMD kernel
   benchmark.nonSimdTime = timeKernel(benchmark.config.kernelNonSimd, benchmark.actualIterations);
 
-  // Benchmark kernels ran OK
-  benchmark.ok = true;
+  // Do the final sanity check
+  benchmark.cleanupOk = benchmark.config.kernelCleanup();
   return true;
 }
 
@@ -90,10 +96,15 @@ Benchmarks.prototype.report = function (benchmark, outputFunctions) {
     return str;
   }
 
-  if (!benchmark.ok) {
-    outputFunctions.notifyError(fillRight(benchmark.config.kernelName + ": ", 23) + "FAIL");
+  if (!benchmark.initOk) {
+    outputFunctions.notifyError(fillRight(benchmark.config.kernelName + ": ", 23) + "FAILED INIT");
     return;
   }
+  if (!benchmark.cleanupOk) {
+    outputFunctions.notifyError(fillRight(benchmark.config.kernelName + ": ", 23) + "FAILED CLEANUP");
+    return;
+  }
+
   var ratio = benchmark.nonSimdTime / benchmark.simdTime;
   outputFunctions.notifyResult(
     fillRight(benchmark.config.kernelName + ": ", 23) +

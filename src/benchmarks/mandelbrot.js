@@ -6,6 +6,7 @@
   var kernelConfig = {
     kernelName:       "Mandelbrot",
     kernelInit:       initMandelbrot,
+    kernelCleanup:    cleanupMandelbrot,
     kernelSimd:       simdMandelbrot,
     kernelNonSimd:    nonSimdMandelbrot,
     kernelIterations: 10000
@@ -22,7 +23,7 @@
     return "[" + i4.x + "," + i4.y + "," + i4.z + "," + i4.w + "]";
   }
 
-  function mandelx1 (c_re, c_im, max_iterations) {
+  function mandelx1(c_re, c_im, max_iterations) {
     var z_re = c_re,
         z_im = c_im,
         i;
@@ -58,18 +59,18 @@
         break;
       }
 
-      var new_re4 = SIMD.sub (z_re24, z_im24);
-      var new_im4 = SIMD.mul (SIMD.mul (two4, z_re4), z_im4);
-      z_re4       = SIMD.add (c_re4, new_re4);
-      z_im4       = SIMD.add (c_im4, new_im4);
-      count4      = SIMD.addu32 (count4, SIMD.and (mi4, one4));
+      var new_re4 = SIMD.sub(z_re24, z_im24);
+      var new_im4 = SIMD.mul(SIMD.mul (two4, z_re4), z_im4);
+      z_re4       = SIMD.add(c_re4, new_re4);
+      z_im4       = SIMD.add(c_im4, new_im4);
+      count4      = SIMD.addu32(count4, SIMD.and (mi4, one4));
     }
     return count4;
   }
 
-  function initMandelbrot () {
-    var simd    = simdMandelbrot (1);
-    var nonSimd = nonSimdMandelbrot (1);
+  function sanityCheck() {
+    var simd    = simdMandelbrot(1);
+    var nonSimd = nonSimdMandelbrot(1);
     if (simd.length !== nonSimd.length) {
       return false;
     }
@@ -79,6 +80,14 @@
       }
     }
     return true;
+  }
+
+  function initMandelbrot() {
+    return sanityCheck();
+  }
+
+  function cleanupMandelbrot() {
+    return sanityCheck();
   }
 
   // Non SIMD version of the kernel

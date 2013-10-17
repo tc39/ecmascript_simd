@@ -7,6 +7,7 @@
   var kernelConfig = {
     kernelName:       "ShiftRows",
     kernelInit:       init,
+    kernelCleanup:    cleanup,
     kernelSimd:       simdShiftRowsN,
     kernelNonSimd:    shiftRowsN,
     kernelIterations: 1000
@@ -74,6 +75,10 @@
       return false;
     }
     return true;
+  }
+
+  function cleanup() {
+    return init(); // Sanity checking before and after are the same
   }
 
   // This is the typical implementation of the shiftRows function

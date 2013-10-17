@@ -7,6 +7,7 @@
   var kernelConfig = {
     kernelName:       "MatrixMultiplication",
     kernelInit:       init,
+    kernelCleanup:    cleanup,
     kernelSimd:       simdMultiply,
     kernelNonSimd:    multiply,
     kernelIterations: 1000
@@ -66,6 +67,10 @@
     multiply(1);
     simdMultiply(1);
     return equals(T1, T1x4) && equals(T2, T2x4) && equals(Out, Outx4);
+  }
+
+  function cleanup() {
+    return init(); // Sanity checking before and after are the same
   }
 
   function multiply(n) {
