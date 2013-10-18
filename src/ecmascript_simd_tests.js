@@ -251,13 +251,13 @@ test('float32x4 withW', function() {
 
 test('float32x4 uint32x4 conversion', function() {
   var m = new uint32x4(0x3F800000, 0x40000000, 0x40400000, 0x40800000);
-  var n = SIMD.bitsToFloat32x4(m);
+  var n = SIMD.uint32x4BitsToFloat32x4(m);
   equal(1.0, n.x);
   equal(2.0, n.y);
   equal(3.0, n.z);
   equal(4.0, n.w);
   n = new float32x4(5.0, 6.0, 7.0, 8.0);
-  m = SIMD.bitsToUint32x4(n);
+  m = SIMD.float32x4BitsToUint32x4(n);
   equal(0x40A00000, m.x);
   equal(0x40C00000, m.y);
   equal(0x40E00000, m.z);
@@ -265,16 +265,16 @@ test('float32x4 uint32x4 conversion', function() {
   // Flip sign using bit-wise operators.
   n = new float32x4(9.0, 10.0, 11.0, 12.0);
   m = new uint32x4(0x80000000, 0x80000000, 0x80000000, 0x80000000);
-  var nMask = SIMD.bitsToUint32x4(n);
+  var nMask = SIMD.float32x4BitsToUint32x4(n);
   nMask = SIMD.xor(nMask, m); // flip sign.
-  n = SIMD.bitsToFloat32x4(nMask);
+  n = SIMD.uint32x4BitsToFloat32x4(nMask);
   equal(-9.0, n.x);
   equal(-10.0, n.y);
   equal(-11.0, n.z);
   equal(-12.0, n.w);
-  nMask = SIMD.bitsToUint32x4(n);
+  nMask = SIMD.float32x4BitsToUint32x4(n);
   nMask = SIMD.xor(nMask, m); // flip sign.
-  n = SIMD.bitsToFloat32x4(nMask);
+  n = SIMD.uint32x4BitsToFloat32x4(nMask);
   equal(9.0, n.x);
   equal(10.0, n.y);
   equal(11.0, n.z);
