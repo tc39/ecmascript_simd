@@ -26,7 +26,7 @@
     // If the sanity checks fails the kernels will not be executed
     // Returns:
     //   true:  First run (unoptimized) of the kernels passed
-    //   false: First run (optimized) of the kernels failed
+    //   false: First run (unoptimized) of the kernels failed
     return simd (1) === nonSimd (1);
   }
 
@@ -38,7 +38,7 @@
     // sanity check done during initialization will probably be of the 
     // initial unoptimized version.
     // Returns:
-    //   true:  Last run (unoptimized) of the kernels passed
+    //   true:  Last run (optimized) of the kernels passed
     //   false: last run (optimized) of the kernels failed
     return simd (1) === nonSimd (1);
   }
