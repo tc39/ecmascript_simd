@@ -1,4 +1,4 @@
-// Kernel template
+// Transpose a 4x4 matrix
 // Author: Peter Jensen
 (function () {
 
@@ -79,6 +79,31 @@
     return init();
   }
 
+  // SIMD version of the kernel with SIMD.shuffleMix operation
+  function simdTransposeMix() {
+    var src0     = srcx4.getAt(0);
+    var src1     = srcx4.getAt(1);
+    var src2     = srcx4.getAt(2);
+    var src3     = srcx4.getAt(3);
+    var tmp01;
+    var tmp23;
+
+    tmp01 = SIMD.shuffleMix(src0, src1, SIMD.XYXY);
+    tmp23 = SIMD.shuffleMix(src2, src3, SIMD.XYXY);
+    dst0  = SIMD.shuffleMix(tmp01, tmp23, SIMD.XZXZ);
+    dst1  = SIMD.shuffleMix(tmp01, tmp23, SIMD.YWYW);
+
+    tmp01 = SIMD.shuffleMix(src0, src1, SIMD.ZWZW);
+    tmp23 = SIMD.shuffleMix(src2, src3, SIMD.ZWZW);
+    dst2  = SIMD.shuffleMix(tmp01, tmp23, SIMD.XZXZ);
+    dst3  = SIMD.shuffleMix(tmp01, tmp23, SIMD.YWYW);
+    
+    dstx4.setAt(0, dst0);
+    dstx4.setAt(1, dst1);
+    dstx4.setAt(2, dst2);
+    dstx4.setAt(3, dst3);
+  }
+
   // SIMD version of the kernel
   function simdTranspose() {
     var src0     = srcx4.getAt(0);
@@ -127,6 +152,7 @@
   function simdTransposeN(n) {
     for (var i = 0; i < n; ++i) {
       simdTranspose();
+//      simdTransposeMix();
     }
   }
 
