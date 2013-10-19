@@ -35,7 +35,7 @@ Benchmarks.prototype.runOne = function (benchmark) {
     var desiredRuntime = 1000;  // milliseconds for longest running kernel
     var testIterations = 10;    // iterations used to determine time for desiredRuntime
 
-    // Make the slowest kernel run for at least 100ms
+    // Make the slowest kernel run for at least 500ms
     var simdTime = timeKernel(benchmark.config.kernelSimd, testIterations);
     var nonSimdTime = timeKernel(benchmark.config.kernelNonSimd, testIterations);
     var maxTime = simdTime > nonSimdTime ? simdTime : nonSimdTime;
