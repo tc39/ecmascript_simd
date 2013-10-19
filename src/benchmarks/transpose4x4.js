@@ -85,6 +85,10 @@
     var src1     = srcx4.getAt(1);
     var src2     = srcx4.getAt(2);
     var src3     = srcx4.getAt(3);
+    var dst0;
+    var dst1;
+    var dst2;
+    var dst3;
     var tmp01;
     var tmp23;
 
