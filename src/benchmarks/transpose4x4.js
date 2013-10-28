@@ -159,8 +159,8 @@
 
   function simdTransposeN(n) {
     for (var i = 0; i < n; ++i) {
-      simdTranspose();
-//      simdTransposeMix();
+//      simdTranspose();
+      simdTransposeMix();
     }
   }
 

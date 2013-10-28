@@ -18,7 +18,8 @@ load ('matrix-multiplication.js');
 load ('transform.js');
 load ('shiftrows.js');
 load ('aobench.js');
-//load ('4x4inverse.js');
+load ('transpose4x4.js');
+load ('inverse4x4.js');
 
 function printResult (str) {
   print (str);
