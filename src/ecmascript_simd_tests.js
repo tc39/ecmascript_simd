@@ -213,6 +213,26 @@ test('float32x4 sqrt', function() {
   equal(1.0, c.w);
 });
 
+test('float32x4 shuffleMix', function() {
+  var a    = float32x4(1.0, 2.0, 3.0, 4.0);
+  var b    = float32x4(5.0, 6.0, 7.0, 8.0);
+  var xyxy = SIMD.shuffleMix(a, b, SIMD.XYXY);
+  var zwzw = SIMD.shuffleMix(a, b, SIMD.ZWZW);
+  var xxxx = SIMD.shuffleMix(a, b, SIMD.XXXX);
+  equal(1.0, xyxy.x);
+  equal(2.0, xyxy.y);
+  equal(5.0, xyxy.z);
+  equal(6.0, xyxy.w);
+  equal(3.0, zwzw.x);
+  equal(4.0, zwzw.y);
+  equal(7.0, zwzw.z);
+  equal(8.0, zwzw.w);
+  equal(1.0, xxxx.x);
+  equal(1.0, xxxx.y);
+  equal(5.0, xxxx.z);
+  equal(5.0, xxxx.w);
+});
+
 test('float32x4 withX', function() {
     var a = new float32x4(16.0, 9.0, 4.0, 1.0);
     var c = SIMD.withX(a, 20.0);

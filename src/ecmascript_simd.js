@@ -409,6 +409,20 @@ var SIMD = (function () {
                            t.storage_[_w]);
     },
     /**
+      * @param {float32x4} t1 An instance of float32x4 to be shuffled. XY lanes in result
+      * @param {float32x4} t2 An instance of float32x4 to be shuffled. ZW lanes in result
+      * @param {integer} mask One of the 256 shuffle masks, for example, SIMD.XXXX.
+      * @return {float32x4} New instance of float32x4 with lanes shuffled.
+      */
+    shuffleMix: function(t1, t2, mask) {
+      var _x = (mask) & 0x3;
+      var _y = (mask >> 2) & 0x3;
+      var _z = (mask >> 4) & 0x3;
+      var _w = (mask >> 6) & 0x3;
+      return new float32x4(t1.storage_[_x], t1.storage_[_y], t2.storage_[_z],
+                           t2.storage_[_w]);
+    },
+    /**
       * @param {double} value used for x lane.
       * @return {float32x4} New instance of float32x4 with the values in t and
       * x replaced with {x}.
@@ -573,6 +587,33 @@ var SIMD = (function () {
     mulu32: function(a, b) {
       return new uint32x4(Math.imul(a.x, b.x), Math.imul(a.y, b.y),
                           Math.imul(a.z, b.z), Math.imul(a.w, b.w));
+    },
+    /**
+      * @param {uint32x4} t An instance of float32x4 to be shuffled.
+      * @param {integer} mask One of the 256 shuffle masks, for example, SIMD.XXXX.
+      * @return {uint32x4} New instance of float32x4 with lanes shuffled.
+      */
+    shuffleu32: function(t, mask) {
+      var _x = (mask) & 0x3;
+      var _y = (mask >> 2) & 0x3;
+      var _z = (mask >> 4) & 0x3;
+      var _w = (mask >> 6) & 0x3;
+      return new uint32x4(t.storage_[_x], t.storage_[_y], t.storage_[_z],
+                           t.storage_[_w]);
+    },
+    /**
+      * @param {uint32x4} t1 An instance of float32x4 to be shuffled. XY lanes in result
+      * @param {uint32x4} t2 An instance of float32x4 to be shuffled. ZW lanes in result
+      * @param {integer} mask One of the 256 shuffle masks, for example, SIMD.XXXX.
+      * @return {uint32x4} New instance of float32x4 with lanes shuffled.
+      */
+    shuffleMixu32: function(t1, t2, mask) {
+      var _x = (mask) & 0x3;
+      var _y = (mask >> 2) & 0x3;
+      var _z = (mask >> 4) & 0x3;
+      var _w = (mask >> 6) & 0x3;
+      return new uint32x4(t1.storage_[_x], t1.storage_[_y], t2.storage_[_z],
+                           t2.storage_[_w]);
     },
     /**
       * @param {float32x4}
