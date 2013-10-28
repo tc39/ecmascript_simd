@@ -326,8 +326,11 @@
         ray_sphere_intersect_simd(occIsect, dirx, diry, dirz, orgx, orgy, orgz, spheres[2]);
         ray_plane_intersect_simd (occIsect, dirx, diry, dirz, orgx, orgy, orgz, plane);
         
-        occlusionx4 = SIMD.add(occlusionx4, 
-                               SIMD.bitsToFloat32x4(SIMD.and(occIsect.hit, SIMD.bitsToUint32x4(float32x4.splat(1)))));
+        occlusionx4 = SIMD.add(
+                        occlusionx4, 
+                        SIMD.uint32x4BitsToFloat32x4(
+                          SIMD.and(
+                            occIsect.hit, SIMD.float32x4BitsToUint32x4(float32x4.splat(1)))));
         
       }
     }
@@ -362,42 +365,48 @@
       var cond2 = SIMD.and(SIMD.greaterThan(t2, float32x4.zero()), 
                            SIMD.lessThan(t2, isect.t));
       if (cond2.signMask) {
-        isect.t = SIMD.bitsToFloat32x4(SIMD.or(SIMD.and(cond2, SIMD.bitsToUint32x4(t2)), 
-                                               SIMD.and(SIMD.negu32(cond2), SIMD.bitsToUint32x4(isect.t))));
+        isect.t = SIMD.uint32x4BitsToFloat32x4(
+                    SIMD.or(
+                      SIMD.and(
+                        cond2,
+                        SIMD.float32x4BitsToUint32x4(t2)), 
+                      SIMD.and(
+                       SIMD.negu32(cond2),
+                       SIMD.float32x4BitsToUint32x4(isect.t))));
         isect.hit = SIMD.or(cond2, isect.hit);
-        isect.p.x = SIMD.bitsToFloat32x4(
-        SIMD.or(SIMD.and(cond2, SIMD.bitsToUint32x4(SIMD.add(orgx, SIMD.mul(dirx, isect.t)))),
-                SIMD.and(SIMD.negu32(cond2), SIMD.bitsToUint32x4(isect.p.x)))); 
-        isect.p.y = SIMD.bitsToFloat32x4(
-        SIMD.or(SIMD.and(cond2, SIMD.bitsToUint32x4(SIMD.add(orgx, SIMD.mul(diry, isect.t)))),
-                SIMD.and(SIMD.negu32(cond2), SIMD.bitsToUint32x4(isect.p.y)))); 
-        isect.p.z = SIMD.bitsToFloat32x4(
-        SIMD.or(SIMD.and(cond2, SIMD.bitsToUint32x4(SIMD.add(orgx, SIMD.mul(dirz, isect.t)))),
-                SIMD.and(SIMD.negu32(cond2), SIMD.bitsToUint32x4(isect.p.z)))); 
+        isect.p.x = SIMD.uint32x4BitsToFloat32x4(
+        SIMD.or(SIMD.and(cond2, SIMD.float32x4BitsToUint32x4(SIMD.add(orgx, SIMD.mul(dirx, isect.t)))),
+                SIMD.and(SIMD.negu32(cond2), SIMD.float32x4BitsToUint32x4(isect.p.x)))); 
+        isect.p.y = SIMD.uint32x4BitsToFloat32x4(
+        SIMD.or(SIMD.and(cond2, SIMD.float32x4BitsToUint32x4(SIMD.add(orgx, SIMD.mul(diry, isect.t)))),
+                SIMD.and(SIMD.negu32(cond2), SIMD.float32x4BitsToUint32x4(isect.p.y)))); 
+        isect.p.z = SIMD.uint32x4BitsToFloat32x4(
+        SIMD.or(SIMD.and(cond2, SIMD.float32x4BitsToUint32x4(SIMD.add(orgx, SIMD.mul(dirz, isect.t)))),
+                SIMD.and(SIMD.negu32(cond2), SIMD.float32x4BitsToUint32x4(isect.p.z)))); 
         
-        isect.n.x = SIMD.bitsToFloat32x4(
-          SIMD.or(SIMD.and(cond2, SIMD.bitsToUint32x4(SIMD.sub(isect.p.x, float32x4.splat(sphere.center.x)))),
-                  SIMD.and(SIMD.negu32(cond2), SIMD.bitsToUint32x4(isect.n.x)))); 
-        isect.n.y = SIMD.bitsToFloat32x4(
-          SIMD.or(SIMD.and(cond2, SIMD.bitsToUint32x4(SIMD.sub(isect.p.y, float32x4.splat(sphere.center.y)))),
-                  SIMD.and(SIMD.negu32(cond2), SIMD.bitsToUint32x4(isect.n.y)))); 
-        isect.n.z = SIMD.bitsToFloat32x4(
-          SIMD.or(SIMD.and(cond2, SIMD.bitsToUint32x4(SIMD.sub(isect.p.z, float32x4.splat(sphere.center.z)))),
-                  SIMD.and(SIMD.negu32(cond2), SIMD.bitsToUint32x4(isect.n.z)))); 
+        isect.n.x = SIMD.uint32x4BitsToFloat32x4(
+          SIMD.or(SIMD.and(cond2, SIMD.float32x4BitsToUint32x4(SIMD.sub(isect.p.x, float32x4.splat(sphere.center.x)))),
+                  SIMD.and(SIMD.negu32(cond2), SIMD.float32x4BitsToUint32x4(isect.n.x)))); 
+        isect.n.y = SIMD.uint32x4BitsToFloat32x4(
+          SIMD.or(SIMD.and(cond2, SIMD.float32x4BitsToUint32x4(SIMD.sub(isect.p.y, float32x4.splat(sphere.center.y)))),
+                  SIMD.and(SIMD.negu32(cond2), SIMD.float32x4BitsToUint32x4(isect.n.y)))); 
+        isect.n.z = SIMD.uint32x4BitsToFloat32x4(
+          SIMD.or(SIMD.and(cond2, SIMD.float32x4BitsToUint32x4(SIMD.sub(isect.p.z, float32x4.splat(sphere.center.z)))),
+                  SIMD.and(SIMD.negu32(cond2), SIMD.float32x4BitsToUint32x4(isect.n.z)))); 
         
         var lengths = SIMD.sqrt(SIMD.add(SIMD.mul(isect.n.x, isect.n.x),
                                          SIMD.add(SIMD.mul(isect.n.y, isect.n.y),
                                                   SIMD.mul(isect.n.z, isect.n.z))));
         var cond3 = SIMD.greaterThan(SIMD.abs(lengths), float32x4.splat(1e-17));
-        isect.n.x = SIMD.bitsToFloat32x4(
-          SIMD.or(SIMD.and(cond3, SIMD.bitsToUint32x4(SIMD.div(isect.n.x, lengths))),
-                  SIMD.and(SIMD.negu32(cond3), SIMD.bitsToUint32x4(isect.n.x))));
-        isect.n.y = SIMD.bitsToFloat32x4(
-          SIMD.or(SIMD.and(cond3, SIMD.bitsToUint32x4(SIMD.div(isect.n.y, lengths))),
-                  SIMD.and(SIMD.negu32(cond3), SIMD.bitsToUint32x4(isect.n.y))));
-        isect.n.z = SIMD.bitsToFloat32x4(
-          SIMD.or(SIMD.and(cond3, SIMD.bitsToUint32x4(SIMD.div(isect.n.z, lengths))),
-                  SIMD.and(SIMD.negu32(cond3), SIMD.bitsToUint32x4(isect.n.z))));
+        isect.n.x = SIMD.uint32x4BitsToFloat32x4(
+          SIMD.or(SIMD.and(cond3, SIMD.float32x4BitsToUint32x4(SIMD.div(isect.n.x, lengths))),
+                  SIMD.and(SIMD.negu32(cond3), SIMD.float32x4BitsToUint32x4(isect.n.x))));
+        isect.n.y = SIMD.uint32x4BitsToFloat32x4(
+          SIMD.or(SIMD.and(cond3, SIMD.float32x4BitsToUint32x4(SIMD.div(isect.n.y, lengths))),
+                  SIMD.and(SIMD.negu32(cond3), SIMD.float32x4BitsToUint32x4(isect.n.y))));
+        isect.n.z = SIMD.uint32x4BitsToFloat32x4(
+          SIMD.or(SIMD.and(cond3, SIMD.float32x4BitsToUint32x4(SIMD.div(isect.n.z, lengths))),
+                  SIMD.and(SIMD.negu32(cond3), SIMD.float32x4BitsToUint32x4(isect.n.z))));
       }
     }
   }
@@ -414,31 +423,31 @@
     var dp = SIMD.add(SIMD.mul(orgx, float32x4.splat(plane.n.x)),
                       SIMD.add(SIMD.mul(orgy, float32x4.splat(plane.n.y)),
                                SIMD.mul(orgz, float32x4.splat(plane.n.z))));
-    var t2 = SIMD.bitsToFloat32x4(SIMD.and(cond1, SIMD.bitsToUint32x4(SIMD.div(SIMD.neg(SIMD.add(dp, d)), v))));                              
+    var t2 = SIMD.uint32x4BitsToFloat32x4(SIMD.and(cond1, SIMD.float32x4BitsToUint32x4(SIMD.div(SIMD.neg(SIMD.add(dp, d)), v))));                              
     var cond2 = SIMD.and(SIMD.greaterThan(t2, float32x4.zero()), SIMD.lessThan(t2, isect.t));
     if (cond2.signMask) {
-      isect.t = SIMD.bitsToFloat32x4(SIMD.or(SIMD.and(cond2, SIMD.bitsToUint32x4(t2)),
-                                             SIMD.and(SIMD.negu32(cond2), SIMD.bitsToUint32x4(isect.t))));
+      isect.t = SIMD.uint32x4BitsToFloat32x4(SIMD.or(SIMD.and(cond2, SIMD.float32x4BitsToUint32x4(t2)),
+                                             SIMD.and(SIMD.negu32(cond2), SIMD.float32x4BitsToUint32x4(isect.t))));
       isect.hit = SIMD.or(cond2, isect.hit);
-      isect.p.x = SIMD.bitsToFloat32x4(
-        SIMD.or(SIMD.and(cond2, SIMD.bitsToUint32x4(SIMD.add(orgx, SIMD.mul(dirx, isect.t)))),
-                SIMD.and(SIMD.negu32(cond2), SIMD.bitsToUint32x4(isect.p.x)))); 
-      isect.p.y = SIMD.bitsToFloat32x4(
-        SIMD.or(SIMD.and(cond2, SIMD.bitsToUint32x4(SIMD.add(orgx, SIMD.mul(diry, isect.t)))),
-                SIMD.and(SIMD.negu32(cond2), SIMD.bitsToUint32x4(isect.p.y)))); 
-      isect.p.z = SIMD.bitsToFloat32x4(
-        SIMD.or(SIMD.and(cond2, SIMD.bitsToUint32x4(SIMD.add(orgx, SIMD.mul(dirz, isect.t)))),
-                SIMD.and(SIMD.negu32(cond2), SIMD.bitsToUint32x4(isect.p.z)))); 
+      isect.p.x = SIMD.uint32x4BitsToFloat32x4(
+        SIMD.or(SIMD.and(cond2, SIMD.float32x4BitsToUint32x4(SIMD.add(orgx, SIMD.mul(dirx, isect.t)))),
+                SIMD.and(SIMD.negu32(cond2), SIMD.float32x4BitsToUint32x4(isect.p.x)))); 
+      isect.p.y = SIMD.uint32x4BitsToFloat32x4(
+        SIMD.or(SIMD.and(cond2, SIMD.float32x4BitsToUint32x4(SIMD.add(orgx, SIMD.mul(diry, isect.t)))),
+                SIMD.and(SIMD.negu32(cond2), SIMD.float32x4BitsToUint32x4(isect.p.y)))); 
+      isect.p.z = SIMD.uint32x4BitsToFloat32x4(
+        SIMD.or(SIMD.and(cond2, SIMD.float32x4BitsToUint32x4(SIMD.add(orgx, SIMD.mul(dirz, isect.t)))),
+                SIMD.and(SIMD.negu32(cond2), SIMD.float32x4BitsToUint32x4(isect.p.z)))); 
       
-      isect.n.x = SIMD.bitsToFloat32x4(
-        SIMD.or(SIMD.and(cond2, SIMD.bitsToUint32x4(float32x4.splat(plane.n.x))),
-                SIMD.and(SIMD.negu32(cond2), SIMD.bitsToUint32x4(isect.n.x)))); 
-      isect.n.y = SIMD.bitsToFloat32x4(
-        SIMD.or(SIMD.and(cond2, SIMD.bitsToUint32x4(float32x4.splat(plane.n.y))),
-                SIMD.and(SIMD.negu32(cond2), SIMD.bitsToUint32x4(isect.n.y)))); 
-      isect.n.z = SIMD.bitsToFloat32x4(
-        SIMD.or(SIMD.and(cond2, SIMD.bitsToUint32x4(float32x4.splat(plane.n.z))),
-                SIMD.and(SIMD.negu32(cond2), SIMD.bitsToUint32x4(isect.n.z)))); 
+      isect.n.x = SIMD.uint32x4BitsToFloat32x4(
+        SIMD.or(SIMD.and(cond2, SIMD.float32x4BitsToUint32x4(float32x4.splat(plane.n.x))),
+                SIMD.and(SIMD.negu32(cond2), SIMD.float32x4BitsToUint32x4(isect.n.x)))); 
+      isect.n.y = SIMD.uint32x4BitsToFloat32x4(
+        SIMD.or(SIMD.and(cond2, SIMD.float32x4BitsToUint32x4(float32x4.splat(plane.n.y))),
+                SIMD.and(SIMD.negu32(cond2), SIMD.float32x4BitsToUint32x4(isect.n.y)))); 
+      isect.n.z = SIMD.uint32x4BitsToFloat32x4(
+        SIMD.or(SIMD.and(cond2, SIMD.float32x4BitsToUint32x4(float32x4.splat(plane.n.z))),
+                SIMD.and(SIMD.negu32(cond2), SIMD.float32x4BitsToUint32x4(isect.n.z)))); 
     }
   }
   
