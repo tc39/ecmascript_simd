@@ -79,15 +79,15 @@
 
   function simdVertexTransform(n) {
     for (var i = 0; i < n; i++) {
-      var xxxx = SIMD.shuffle(Vx4.getAt(0), SIMD.XXXX);
+      var xxxx = SIMD.float32x4.shuffle(Vx4.getAt(0), SIMD.XXXX);
       var z = float32x4.zero();
-      z = SIMD.add(z, SIMD.mul(xxxx, Tx4.getAt(0)));
-      var yyyy = SIMD.shuffle(Vx4.getAt(0), SIMD.YYYY);
-      z = SIMD.add(z, SIMD.mul(yyyy, Tx4.getAt(1)));
-      var zzzz = SIMD.shuffle(Vx4.getAt(0), SIMD.ZZZZ);
-      z = SIMD.add(z, SIMD.mul(zzzz, Tx4.getAt(2)));
-      var wwww = SIMD.shuffle(Vx4.getAt(0), SIMD.WWWW);
-      z = SIMD.add(z, SIMD.mul(wwww, Tx4.getAt(3)));
+      z = SIMD.float32x4.add(z, SIMD.float32x4.mul(xxxx, Tx4.getAt(0)));
+      var yyyy = SIMD.float32x4.shuffle(Vx4.getAt(0), SIMD.YYYY);
+      z = SIMD.float32x4.add(z, SIMD.float32x4.mul(yyyy, Tx4.getAt(1)));
+      var zzzz = SIMD.float32x4.shuffle(Vx4.getAt(0), SIMD.ZZZZ);
+      z = SIMD.float32x4.add(z, SIMD.float32x4.mul(zzzz, Tx4.getAt(2)));
+      var wwww = SIMD.float32x4.shuffle(Vx4.getAt(0), SIMD.WWWW);
+      z = SIMD.float32x4.add(z, SIMD.float32x4.mul(wwww, Tx4.getAt(3)));
       Outx4.setAt(0, z);
     }
   }

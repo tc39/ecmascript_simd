@@ -50,20 +50,20 @@
     var one4   = int32x4.splat (1);
 
     for (var i = 0; i < max_iterations; ++i) {
-      var z_re24 = SIMD.mul (z_re4, z_re4);
-      var z_im24 = SIMD.mul (z_im4, z_im4);
+      var z_re24 = SIMD.float32x4.mul (z_re4, z_re4);
+      var z_im24 = SIMD.float32x4.mul (z_im4, z_im4);
 
-      var mi4    = SIMD.lessThanOrEqual (SIMD.add (z_re24, z_im24), four4);
+      var mi4    = SIMD.float32x4.lessThanOrEqual (SIMD.float32x4.add (z_re24, z_im24), four4);
       // if all 4 values are greater than 4.0, there's no reason to continue
       if (mi4.signMask === 0x00) {
         break;
       }
 
-      var new_re4 = SIMD.sub(z_re24, z_im24);
-      var new_im4 = SIMD.mul(SIMD.mul (two4, z_re4), z_im4);
-      z_re4       = SIMD.add(c_re4, new_re4);
-      z_im4       = SIMD.add(c_im4, new_im4);
-      count4      = SIMD.addu32(count4, SIMD.and (mi4, one4));
+      var new_re4 = SIMD.float32x4.sub(z_re24, z_im24);
+      var new_im4 = SIMD.float32x4.mul(SIMD.float32x4.mul (two4, z_re4), z_im4);
+      z_re4       = SIMD.float32x4.add(c_re4, new_re4);
+      z_im4       = SIMD.float32x4.add(c_im4, new_im4);
+      count4      = SIMD.int32x4.add(count4, SIMD.int32x4.and (mi4, one4));
     }
     return count4;
   }

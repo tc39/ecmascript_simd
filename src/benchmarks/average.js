@@ -55,7 +55,7 @@
     for (var i = 0; i < n; ++i) {
       var sum4 = float32x4.zero();
       for (var j = 0; j < ax4_length; ++j) {
-        sum4 = SIMD.add(sum4, ax4.getAt(j));
+        sum4 = SIMD.float32x4.add(sum4, ax4.getAt(j));
       }
     }
     return (sum4.x + sum4.y + sum4.z + sum4.w)/a.length;
