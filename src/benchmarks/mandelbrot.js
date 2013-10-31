@@ -94,10 +94,10 @@
   function nonSimdMandelbrot (n) {
     var result = new Array (4);
     for (var i = 0; i < n; ++i) {
-      result [0] = mandelx1 (0.0, 0.0, 100);
-      result [1] = mandelx1 (0.0, 0.0, 100);
-      result [2] = mandelx1 (0.0, 0.0, 100);
-      result [3] = mandelx1 (0.0, 0.0, 100);
+      result [0] = mandelx1 (0.01, 0.01, 100);
+      result [1] = mandelx1 (0.01, 0.01, 100);
+      result [2] = mandelx1 (0.01, 0.01, 100);
+      result [3] = mandelx1 (0.01, 0.01, 100);
     }
     return result;
   }
@@ -105,9 +105,9 @@
   // SIMD version of the kernel
   function simdMandelbrot (n) {
     var result = new Array (4);
-    var zero4  = float32x4.zero ();
+    var vec0  = float32x4.splat (0.01);
     for (var i = 0; i < n; ++i) {
-      var r = mandelx4 (zero4, zero4, 100);
+      var r = mandelx4 (vec0, vec0, 100);
       result [0] = r.x;
       result [1] = r.y;
       result [2] = r.z;
