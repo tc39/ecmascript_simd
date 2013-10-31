@@ -21,7 +21,7 @@
 "use strict";
 
 /**
-  * Construct a new instance of a float32x4 number.
+  * Construct a new instance of float32x4 number.
   * @param {double} value used for x lane.
   * @param {double} value used for y lane.
   * @param {double} value used for z lane.
@@ -40,7 +40,7 @@ function float32x4(x, y, z, w) {
 }
 
 /**
-  * Construct a new instance of a float32x4 number with 0.0 in all lanes.
+  * Construct a new instance of float32x4 number with 0.0 in all lanes.
   * @constructor
   */
 float32x4.zero = function() {
@@ -48,7 +48,7 @@ float32x4.zero = function() {
 }
 
 /**
-  * Construct a new instance of a float32x4 number with the same value
+  * Construct a new instance of float32x4 number with the same value
   * in all lanes.
   * @param {double} value used for all lanes.
   * @constructor
@@ -87,18 +87,18 @@ Object.defineProperty(float32x4.prototype, 'signMask', {
 });
 
 /**
-  * Construct a new instance of a uint32x4 number.
+  * Construct a new instance of int32x4 number.
   * @param {integer} 32-bit unsigned value used for x lane.
   * @param {integer} 32-bit unsigned value used for y lane.
   * @param {integer} 32-bit unsigned value used for z lane.
   * @param {integer} 32-bit unsigned value used for w lane.
   * @constructor
   */
-function uint32x4(x, y, z, w) {
-  if (!(this instanceof uint32x4)) {
-    return new uint32x4(x, y, z, w);
+function int32x4(x, y, z, w) {
+  if (!(this instanceof int32x4)) {
+    return new int32x4(x, y, z, w);
   }
-  this.storage_ = new Uint32Array(4);
+  this.storage_ = new Int32Array(4);
   this.storage_[0] = x;
   this.storage_[1] = y;
   this.storage_[2] = z;
@@ -106,7 +106,7 @@ function uint32x4(x, y, z, w) {
 }
 
 /**
-  * Construct a new instance of a uint32x4 number with 0xFFFFFFFF or 0x0 in each
+  * Construct a new instance of int32x4 number with 0xFFFFFFFF or 0x0 in each
   * lane, depending on the truth value in x, y, z, and w.
   * @param {boolean} flag used for x lane.
   * @param {boolean} flag used for y lane.
@@ -114,59 +114,59 @@ function uint32x4(x, y, z, w) {
   * @param {boolean} flag used for w lane.
   * @constructor
   */
-uint32x4.bool = function(x, y, z, w) {
-  return uint32x4(x ? 0xFFFFFFFF : 0x0,
-                  y ? 0xFFFFFFFF : 0x0,
-                  z ? 0xFFFFFFFF : 0x0,
-                  w ? 0xFFFFFFFF : 0x0);
+int32x4.bool = function(x, y, z, w) {
+  return int32x4(x ? -1 : 0x0,
+                  y ? -1 : 0x0,
+                  z ? -1 : 0x0,
+                  w ? -1 : 0x0);
 }
 
 /**
-  * Construct a new instance of a uint32x4 number with the same value
+  * Construct a new instance of int32x4 number with the same value
   * in all lanes.
   * @param {integer} value used for all lanes.
   * @constructor
   */
-uint32x4.splat = function(s) {
-  return uint32x4(s, s, s, s);
+int32x4.splat = function(s) {
+  return int32x4(s, s, s, s);
 }
 
-Object.defineProperty(uint32x4.prototype, 'x', {
+Object.defineProperty(int32x4.prototype, 'x', {
   get: function() { return this.storage_[0]; }
 });
 
-Object.defineProperty(uint32x4.prototype, 'y', {
+Object.defineProperty(int32x4.prototype, 'y', {
   get: function() { return this.storage_[1]; }
 });
 
-Object.defineProperty(uint32x4.prototype, 'z', {
+Object.defineProperty(int32x4.prototype, 'z', {
   get: function() { return this.storage_[2]; }
 });
 
-Object.defineProperty(uint32x4.prototype, 'w',
+Object.defineProperty(int32x4.prototype, 'w',
   { get: function() { return this.storage_[3]; }
 });
 
-Object.defineProperty(uint32x4.prototype, 'flagX', {
+Object.defineProperty(int32x4.prototype, 'flagX', {
   get: function() { return this.storage_[0] != 0x0; }
 });
 
-Object.defineProperty(uint32x4.prototype, 'flagY', {
+Object.defineProperty(int32x4.prototype, 'flagY', {
   get: function() { return this.storage_[1] != 0x0; }
 });
 
-Object.defineProperty(uint32x4.prototype, 'flagZ', {
+Object.defineProperty(int32x4.prototype, 'flagZ', {
   get: function() { return this.storage_[2] != 0x0; }
 });
 
-Object.defineProperty(uint32x4.prototype, 'flagW',
+Object.defineProperty(int32x4.prototype, 'flagW',
   { get: function() { return this.storage_[3] != 0x0; }
 });
 
 /**
   * Extract the sign bit from each lane return them in the first 4 bits.
   */
-Object.defineProperty(uint32x4.prototype, 'signMask', {
+Object.defineProperty(int32x4.prototype, 'signMask', {
   get: function() {
     var mx = (this.storage_[0] & 0x80000000) >>> 31;
     var my = (this.storage_[1] & 0x80000000) >>> 31;
@@ -280,6 +280,120 @@ Float32x4Array.prototype.setAt = function(i, v) {
   }
   if (!(v instanceof float32x4)) {
     throw "Value is not a float32x4.";
+  }
+  this.storage_[i*4+0] = v.x;
+  this.storage_[i*4+1] = v.y;
+  this.storage_[i*4+2] = v.z;
+  this.storage_[i*4+3] = v.w;
+}
+
+
+function Int32x4Array(a, b, c) {
+
+  function isNumber(o) {
+      return typeof o == "number" || (typeof o == "object" && o.constructor === Number);
+  }
+
+  function isTypedArray(o) {
+    return (o instanceof Int8Array) ||
+           (o instanceof Uint8Array) ||
+           (o instanceof Uint8ClampedArray) ||
+           (o instanceof Int16Array) ||
+           (o instanceof Uint16Array) ||
+           (o instanceof Int32Array) ||
+           (o instanceof UInt32Array) ||
+           (o instanceof Float32Array) ||
+           (o instanceof Float64Array) ||
+           (o instanceof Int32x4Array) ||
+           (o instanceof Float32x4Array);
+  }
+
+  function isArrayBuffer(o) {
+    return (o instanceof ArrayBuffer);
+  }
+
+  if (isNumber(a)) {
+    this.storage_ = new Int32Array(a*4);
+    this.length_ = a;
+    this.byteOffset_ = 0;
+    return;
+  } else if (isTypedArray(a)) {
+    if (!(a instanceof Int32x4Array)) {
+      throw "Copying typed array of non-Int32x4Array is unimplemented.";
+    }
+    this.storage_ = new Int32Array(a.length * 4);
+    this.length_ = a.length;
+    this.byteOffset_ = 0;
+    // Copy floats.
+    for (var i = 0; i < a.length*4; i++) {
+      this.storage_[i] = a.storage_[i];
+    }
+  } else if (isArrayBuffer(a)) {
+    if ((b != undefined) && (b % Int32x4Array.BYTES_PER_ELEMENT) != 0) {
+      throw "byteOffset must be a multiple of 16.";
+    }
+    if (c != undefined) {
+      c *= 4;
+      this.storage_ = new Int32Array(a, b, c);
+    }
+    else {
+      // Note: new Int32Array(a, b) is NOT equivalent to new Float32Array(a, b, undefined)
+      this.storage_ = new Int32Array(a, b);
+    }
+    this.length_ = this.storage_.length / 4;
+    this.byteOffset_ = b != undefined ? b : 0;
+  } else {
+    throw "Unknown type of first argument.";
+  }
+}
+
+Object.defineProperty(Int32x4Array.prototype, 'length',
+  { get: function() { return this.length_; }
+});
+
+Object.defineProperty(Int32x4Array.prototype, 'byteLength',
+  { get: function() { return this.length_ * Int32x4Array.BYTES_PER_ELEMENT; }
+});
+
+Object.defineProperty(Int32x4Array, 'BYTES_PER_ELEMENT',
+  { get: function() { return 16; }
+});
+
+Object.defineProperty(Int32x4Array.prototype, 'BYTES_PER_ELEMENT',
+  { get: function() { return 16; }
+});
+
+Object.defineProperty(Int32x4Array.prototype, 'byteOffset',
+  { get: function() { return this.byteOffset_; }
+});
+
+Object.defineProperty(Int32x4Array.prototype, 'buffer',
+  { get: function() { return this.storage_.buffer; }
+});
+
+Int32x4Array.prototype.getAt = function(i) {
+  if (i < 0) {
+    throw "Index must be >= 0.";
+  }
+  if (i >= this.length) {
+    throw "Index out of bounds.";
+  }
+  var x = this.storage_[i*4+0];
+  var y = this.storage_[i*4+1];
+  var z = this.storage_[i*4+2];
+  var w = this.storage_[i*4+3];
+  return float32x4(x, y, z, w);
+}
+
+Int32x4Array.prototype.setAt = function(i, v) {
+  if (i < 0) {
+    throw "Index must be >= 0.";
+  }
+  if (i >= this.length) {
+    throw "Index out of bounds.";
+  }
+  if (!(v instanceof int32x4)) {
+    throw "Value is not a int32x4.";
   }
   this.storage_[i*4+0] = v.x;
   this.storage_[i*4+1] = v.y;
@@ -455,9 +569,9 @@ var SIMD = (function () {
       return new float32x4(t.x, t.y, t.z, w);
     },
     /**
-      * @param {float32x4} t An instance of a float32x4.
-      * @param {float32x4} other An instance of a float32x4.
-      * @return {uint32x4} 0xFFFFFFFF or 0x0 in each lane depending on
+      * @param {float32x4} t An instance of float32x4.
+      * @param {float32x4} other An instance of float32x4.
+      * @return {int32x4} 0xFFFFFFFF or 0x0 in each lane depending on
       * the result of t < other.
       */
     lessThan: function(t, other) {
@@ -465,12 +579,12 @@ var SIMD = (function () {
       var cy = t.y < other.y;
       var cz = t.z < other.z;
       var cw = t.w < other.w;
-      return uint32x4.bool(cx, cy, cz, cw);
+      return int32x4.bool(cx, cy, cz, cw);
     },
     /**
-      * @param {float32x4} t An instance of a float32x4.
-      * @param {float32x4} other An instance of a float32x4.
-      * @return {uint32x4} 0xFFFFFFFF or 0x0 in each lane depending on
+      * @param {float32x4} t An instance of float32x4.
+      * @param {float32x4} other An instance of float32x4.
+      * @return {int32x4} 0xFFFFFFFF or 0x0 in each lane depending on
       * the result of t <= other.
       */
     lessThanOrEqual: function(t, other) {
@@ -478,12 +592,12 @@ var SIMD = (function () {
       var cy = t.y <= other.y;
       var cz = t.z <= other.z;
       var cw = t.w <= other.w;
-      return uint32x4.bool(cx, cy, cz, cw);
+      return int32x4.bool(cx, cy, cz, cw);
     },
     /**
-      * @param {float32x4} t An instance of a float32x4.
-      * @param {float32x4} other An instance of a float32x4.
-      * @return {uint32x4} 0xFFFFFFFF or 0x0 in each lane depending on
+      * @param {float32x4} t An instance of float32x4.
+      * @param {float32x4} other An instance of float32x4.
+      * @return {int32x4} 0xFFFFFFFF or 0x0 in each lane depending on
       * the result of t == other.
       */
     equal: function(t, other) {
@@ -491,12 +605,12 @@ var SIMD = (function () {
       var cy = t.y == other.y;
       var cz = t.z == other.z;
       var cw = t.w == other.w;
-      return uint32x4.bool(cx, cy, cz, cw);
+      return int32x4.bool(cx, cy, cz, cw);
     },
     /**
-      * @param {float32x4} t An instance of a float32x4.
-      * @param {float32x4} other An instance of a float32x4.
-      * @return {uint32x4} 0xFFFFFFFF or 0x0 in each lane depending on
+      * @param {float32x4} t An instance of float32x4.
+      * @param {float32x4} other An instance of float32x4.
+      * @return {int32x4} 0xFFFFFFFF or 0x0 in each lane depending on
       * the result of t != other.
       */
     notEqual: function(t, other) {
@@ -504,12 +618,12 @@ var SIMD = (function () {
       var cy = t.y != other.y;
       var cz = t.z != other.z;
       var cw = t.w != other.w;
-      return uint32x4.bool(cx, cy, cz, cw);
+      return int32x4.bool(cx, cy, cz, cw);
     },
     /**
-      * @param {float32x4} t An instance of a float32x4.
-      * @param {float32x4} other An instance of a float32x4.
-      * @return {uint32x4} 0xFFFFFFFF or 0x0 in each lane depending on
+      * @param {float32x4} t An instance of float32x4.
+      * @param {float32x4} other An instance of float32x4.
+      * @return {int32x4} 0xFFFFFFFF or 0x0 in each lane depending on
       * the result of t >= other.
       */
     greaterThanOrEqual: function(t, other) {
@@ -517,12 +631,12 @@ var SIMD = (function () {
       var cy = t.y >= other.y;
       var cz = t.z >= other.z;
       var cw = t.w >= other.w;
-      return uint32x4.bool(cx, cy, cz, cw);
+      return int32x4.bool(cx, cy, cz, cw);
     },
     /**
-      * @param {float32x4} t An instance of a float32x4.
-      * @param {float32x4} other An instance of a float32x4.
-      * @return {uint32x4} 0xFFFFFFFF or 0x0 in each lane depending on
+      * @param {float32x4} t An instance of float32x4.
+      * @param {float32x4} other An instance of float32x4.
+      * @return {int32x4} 0xFFFFFFFF or 0x0 in each lane depending on
       * the result of t > other.
       */
     greaterThan: function(t, other) {
@@ -530,197 +644,204 @@ var SIMD = (function () {
       var cy = t.y > other.y;
       var cz = t.z > other.z;
       var cw = t.w > other.w;
-      return uint32x4.bool(cx, cy, cz, cw);
+      return int32x4.bool(cx, cy, cz, cw);
     },
     /**
-      * @param {uint32x4} a An instance of a uint32x4.
-      * @param {uint32x4} b An instance of a uint32x4.
-      * @return {uint32x4} New instance of uint32x4 with values of a & b.
+      * @param {int32x4} a An instance of int32x4.
+      * @param {int32x4} b An instance of int32x4.
+      * @return {int32x4} New instance of int32x4 with values of a & b.
       */
     and: function(a, b) {
-      return new uint32x4(a.x & b.x, a.y & b.y, a.z & b.z, a.w & b.w);
+      return new int32x4(a.x & b.x, a.y & b.y, a.z & b.z, a.w & b.w);
     },
     /**
-      * @param {uint32x4} a An instance of a uint32x4.
-      * @param {uint32x4} b An instance of a uint32x4.
-      * @return {uint32x4} New instance of uint32x4 with values of a | b.
+      * @param {int32x4} a An instance of int32x4.
+      * @param {int32x4} b An instance of int32x4.
+      * @return {int32x4} New instance of int32x4 with values of a | b.
       */
     or: function(a, b) {
-      return new uint32x4(a.x | b.x, a.y | b.y, a.z | b.z, a.w | b.w);
+      return new int32x4(a.x | b.x, a.y | b.y, a.z | b.z, a.w | b.w);
     },
     /**
-      * @param {uint32x4} a An instance of a uint32x4.
-      * @param {uint32x4} b An instance of a uint32x4.
-      * @return {uint32x4} New instance of uint32x4 with values of a ^ b.
+      * @param {int32x4} a An instance of int32x4.
+      * @param {int32x4} b An instance of int32x4.
+      * @return {int32x4} New instance of int32x4 with values of a ^ b.
       */
     xor: function(a, b) {
-      return new uint32x4(a.x ^ b.x, a.y ^ b.y, a.z ^ b.z, a.w ^ b.w);
+      return new int32x4(a.x ^ b.x, a.y ^ b.y, a.z ^ b.z, a.w ^ b.w);
     },
     /**
-      * @param {uint32x4} t An instance of a uint32x4.
-      * @return {uint32x4} New instance of uint32x4 with values of ~a
+      * @param {int32x4} t An instance of int32x4.
+      * @return {int32x4} New instance of int32x4 with values of ~t
+      */
+    not: function(t) {
+      return new int32x4(~t.x, ~t.y, ~t.z, ~t.w);
+    },
+    /**
+      * @param {int32x4} t An instance of int32x4.
+      * @return {int32x4} New instance of int32x4 with values of -t
       */
     negu32: function(t) {
-      return new uint32x4(~t.x, ~t.y, ~t.z, ~t.w);
+      return new int32x4(-t.x, -t.y, -t.z, -t.w);
     },
     /**
-      * @param {uint32x4} a An instance of uint32x4.
-      * @param {uint32x4} b An instance of uint32x4.
-      * @return {uint32x4} New instance of uint32x4 with values of a + b.
+      * @param {int32x4} a An instance of int32x4.
+      * @param {int32x4} b An instance of int32x4.
+      * @return {int32x4} New instance of int32x4 with values of a + b.
       */
     addu32: function(a, b) {
-      return new uint32x4(a.x + b.x, a.y + b.y, a.z + b.z, a.w + b.w);
+      return new int32x4(a.x + b.x, a.y + b.y, a.z + b.z, a.w + b.w);
     },
     /**
-      * @param {uint32x4} a An instance of uint32x4.
-      * @param {uint32x4} b An instance of uint32x4.
-      * @return {uint32x4} New instance of uint32x4 with values of a - b.
+      * @param {int32x4} a An instance of int32x4.
+      * @param {int32x4} b An instance of int32x4.
+      * @return {int32x4} New instance of int32x4 with values of a - b.
       */
     subu32: function(a, b) {
-      return new uint32x4(a.x - b.x, a.y - b.y, a.z - b.z, a.w - b.w);
+      return new int32x4(a.x - b.x, a.y - b.y, a.z - b.z, a.w - b.w);
     },
     /**
-      * @param {uint32x4} a An instance of uint32x4.
-      * @param {uint32x4} b An instance of uint32x4.
-      * @return {uint32x4} New instance of uint32x4 with values of a * b.
+      * @param {int32x4} a An instance of int32x4.
+      * @param {int32x4} b An instance of int32x4.
+      * @return {int32x4} New instance of int32x4 with values of a * b.
       */
     mulu32: function(a, b) {
-      return new uint32x4(Math.imul(a.x, b.x), Math.imul(a.y, b.y),
+      return new int32x4(Math.imul(a.x, b.x), Math.imul(a.y, b.y),
                           Math.imul(a.z, b.z), Math.imul(a.w, b.w));
     },
     /**
-      * @param {uint32x4} t An instance of float32x4 to be shuffled.
+      * @param {int32x4} t An instance of float32x4 to be shuffled.
       * @param {integer} mask One of the 256 shuffle masks, for example, SIMD.XXXX.
-      * @return {uint32x4} New instance of float32x4 with lanes shuffled.
+      * @return {int32x4} New instance of float32x4 with lanes shuffled.
       */
     shuffleu32: function(t, mask) {
       var _x = (mask) & 0x3;
       var _y = (mask >> 2) & 0x3;
       var _z = (mask >> 4) & 0x3;
       var _w = (mask >> 6) & 0x3;
-      return new uint32x4(t.storage_[_x], t.storage_[_y], t.storage_[_z],
+      return new int32x4(t.storage_[_x], t.storage_[_y], t.storage_[_z],
                            t.storage_[_w]);
     },
     /**
-      * @param {uint32x4} t1 An instance of float32x4 to be shuffled. XY lanes in result
-      * @param {uint32x4} t2 An instance of float32x4 to be shuffled. ZW lanes in result
+      * @param {int32x4} t1 An instance of float32x4 to be shuffled. XY lanes in result
+      * @param {int32x4} t2 An instance of float32x4 to be shuffled. ZW lanes in result
       * @param {integer} mask One of the 256 shuffle masks, for example, SIMD.XXXX.
-      * @return {uint32x4} New instance of float32x4 with lanes shuffled.
+      * @return {int32x4} New instance of float32x4 with lanes shuffled.
       */
     shuffleMixu32: function(t1, t2, mask) {
       var _x = (mask) & 0x3;
       var _y = (mask >> 2) & 0x3;
       var _z = (mask >> 4) & 0x3;
       var _w = (mask >> 6) & 0x3;
-      return new uint32x4(t1.storage_[_x], t1.storage_[_y], t2.storage_[_z],
+      return new int32x4(t1.storage_[_x], t1.storage_[_y], t2.storage_[_z],
                            t2.storage_[_w]);
     },
     /**
       * @param {float32x4}
       */
     select: function(t, trueValue, falseValue) {
-      var tv = SIMD.float32x4BitsToUint32x4(trueValue);
-      var fv = SIMD.float32x4BitsToUint32x4(falseValue);
+      var tv = SIMD.float32x4BitsToInt32x4(trueValue);
+      var fv = SIMD.float32x4BitsToInt32x4(falseValue);
       var tr = SIMD.and(t, tv);
-      var fr = SIMD.and(SIMD.negu32(t), fv);
-      return SIMD.uint32x4BitsToFloat32x4(SIMD.or(tr, fr));
+      var fr = SIMD.and(SIMD.not(t), fv);
+      return SIMD.int32x4BitsToFloat32x4(SIMD.or(tr, fr));
     },
     /**
-      * @param {uint32x4} t An instance of a uint32x4.
+      * @param {int32x4} t An instance of int32x4.
       * @param {integer} 32-bit value used for x lane.
-      * @return {uint32x4} New instance of uint32x4 with the values in t and
+      * @return {int32x4} New instance of int32x4 with the values in t and
       * x lane replaced with {x}.
       */
     withXu32: function(t, x) {
-      return new uint32x4(x, t.y, t.z, t.w);
+      return new int32x4(x, t.y, t.z, t.w);
     },
     /**
-      * param {uint32x4} t An instance of a uint32x4.
+      * param {int32x4} t An instance of int32x4.
       * @param {integer} 32-bit value used for y lane.
-      * @return {uint32x4} New instance of uint32x4 with the values in t and
+      * @return {int32x4} New instance of int32x4 with the values in t and
       * y lane replaced with {y}.
       */
     withYu32: function(t, y) {
-      return new uint32x4(t.x, y, t.z, t.w);
+      return new int32x4(t.x, y, t.z, t.w);
     },
     /**
-      * @param {uint32x4} t An instance of a uint32x4.
+      * @param {int32x4} t An instance of int32x4.
       * @param {integer} 32-bit value used for z lane.
-      * @return {uint32x4} New instance of uint32x4 with the values in t and
+      * @return {int32x4} New instance of int32x4 with the values in t and
       * z lane replaced with {z}.
       */
     withZu32: function(t, z) {
-      return new uint32x4(t.x, t.y, z, t.w);
+      return new int32x4(t.x, t.y, z, t.w);
     },
     /**
       * @param {integer} 32-bit value used for w lane.
-      * @return {uint32x4} New instance of uint32x4 with the values in t and
+      * @return {int32x4} New instance of int32x4 with the values in t and
       * w lane replaced with {w}.
       */
     withWu32: function(t, w) {
-      return new uint32x4(t.x, t.y, t.z, w);
+      return new int32x4(t.x, t.y, t.z, w);
     },
     /**
-      * @param {uint32x4} t An instance of a uint32x4.
+      * @param {int32x4} t An instance of int32x4.
       * @param {boolean} x flag used for x lane.
-      * @return {uint32x4} New instance of uint32x4 with the values in t and
+      * @return {int32x4} New instance of int32x4 with the values in t and
       * x lane replaced with {x}.
       */
     withFlagX: function(t, flagX) {
       var x = flagX ? 0xFFFFFFFF : 0x0;
-      return new uint32x4(x, t.y, t.z, t.w);
+      return new int32x4(x, t.y, t.z, t.w);
     },
     /**
-      * @param {uint32x4} t An instance of a uint32x4.
+      * @param {int32x4} t An instance of int32x4.
       * @param {boolean} y flag used for y lane.
-      * @return {uint32x4} New instance of uint32x4 with the values in t and
+      * @return {int32x4} New instance of int32x4 with the values in t and
       * y lane replaced with {y}.
       */
     withFlagY: function(t, flagY) {
       var y = flagY ? 0xFFFFFFFF : 0x0;
-      return new uint32x4(t.x, y, t.z, t.w);
+      return new int32x4(t.x, y, t.z, t.w);
     },
     /**
-      * @param {uint32x4} t An instance of a uint32x4.
+      * @param {int32x4} t An instance of int32x4.
       * @param {boolean} z flag used for z lane.
-      * @return {uint32x4} New instance of uint32x4 with the values in t and
+      * @return {int32x4} New instance of int32x4 with the values in t and
       * z lane replaced with {z}.
       */
     withFlagZ: function(t, flagZ) {
       var z = flagZ ? 0xFFFFFFFF : 0x0;
-      return new uint32x4(t.x, t.y, z, t.w);
+      return new int32x4(t.x, t.y, z, t.w);
     },
     /**
-      * @param {uint32x4} t An instance of a uint32x4.
+      * @param {int32x4} t An instance of int32x4.
       * @param {boolean} w flag used for w lane.
-      * @return {uint32x4} New instance of uint32x4 with the values in t and
+      * @return {int32x4} New instance of int32x4 with the values in t and
       * w lane replaced with {w}.
       */
     withFlagW: function(t, flagW) {
       var w = flagW ? 0xFFFFFFFF : 0x0;
-      return new uint32x4(t.x, t.y, t.z, w);
+      return new int32x4(t.x, t.y, t.z, w);
     },
     /**
-      * @param {float32x4} t An instance of a float32x4.
-      * @return {uint32x4} a bit-wise copy of t as a uint32x4.
+      * @param {float32x4} t An instance of float32x4.
+      * @return {int32x4} a bit-wise copy of t as a int32x4.
       */
-    float32x4BitsToUint32x4: function(t) {
-      var alias = new Uint32Array(t.storage_.buffer);
-      return new uint32x4(alias[0], alias[1], alias[2], alias[3]);
+    float32x4BitsToInt32x4: function(t) {
+      var alias = new Int32Array(t.storage_.buffer);
+      return new int32x4(alias[0], alias[1], alias[2], alias[3]);
     },
     /**
-      * @param {uint32x4} t An instance of a uint32x4.
+      * @param {int32x4} t An instance of int32x4.
       * @return {float32x4} a bit-wise copy of t as a float32x4.
       */
-    uint32x4BitsToFloat32x4: function(t) {
+    int32x4BitsToFloat32x4: function(t) {
       var alias = new Float32Array(t.storage_.buffer);
       return new float32x4(alias[0], alias[1], alias[2], alias[3]);
     },
     /**
-      * @param {uint32x4} t An instance of a uint32x4.
+      * @param {int32x4} t An instance of int32x4.
       * @return {float32x4} with a float to integer conversion copy of t.
       */
-    uint32x4ToFloat32x4: function(t) {
+    int32x4ToFloat32x4: function(t) {
       var a = float32x4.zero();
       a.storage_[0] = t.storage_[0];
       a.storage_[1] = t.storage_[1];
@@ -729,11 +850,11 @@ var SIMD = (function () {
       return a;
     },
     /**
-      * @param {float32x4} t An instance of a float32x4.
-      * @return {uint32x4} with a integer to float conversion of t.
+      * @param {float32x4} t An instance of float32x4.
+      * @return {int32x4} with a integer to float conversion of t.
       */
-    float32x4ToUint32x4: function(t) {
-      var a = new uint32x4(t.storage_[0], t.storage_[1], t.storage_[2],
+    float32x4ToInt32x4: function(t) {
+      var a = new int32x4(t.storage_[0], t.storage_[1], t.storage_[2],
                            t.storage_[3]);
       return a;
     }

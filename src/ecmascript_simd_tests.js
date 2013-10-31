@@ -269,32 +269,32 @@ test('float32x4 withW', function() {
     equal(20.0, c.w);
 });
 
-test('float32x4 uint32x4 conversion', function() {
-  var m = new uint32x4(0x3F800000, 0x40000000, 0x40400000, 0x40800000);
-  var n = SIMD.uint32x4BitsToFloat32x4(m);
+test('float32x4 int32x4 conversion', function() {
+  var m = new int32x4(0x3F800000, 0x40000000, 0x40400000, 0x40800000);
+  var n = SIMD.int32x4BitsToFloat32x4(m);
   equal(1.0, n.x);
   equal(2.0, n.y);
   equal(3.0, n.z);
   equal(4.0, n.w);
   n = new float32x4(5.0, 6.0, 7.0, 8.0);
-  m = SIMD.float32x4BitsToUint32x4(n);
+  m = SIMD.float32x4BitsToInt32x4(n);
   equal(0x40A00000, m.x);
   equal(0x40C00000, m.y);
   equal(0x40E00000, m.z);
   equal(0x41000000, m.w);
   // Flip sign using bit-wise operators.
   n = new float32x4(9.0, 10.0, 11.0, 12.0);
-  m = new uint32x4(0x80000000, 0x80000000, 0x80000000, 0x80000000);
-  var nMask = SIMD.float32x4BitsToUint32x4(n);
+  m = new int32x4(0x80000000, 0x80000000, 0x80000000, 0x80000000);
+  var nMask = SIMD.float32x4BitsToInt32x4(n);
   nMask = SIMD.xor(nMask, m); // flip sign.
-  n = SIMD.uint32x4BitsToFloat32x4(nMask);
+  n = SIMD.int32x4BitsToFloat32x4(nMask);
   equal(-9.0, n.x);
   equal(-10.0, n.y);
   equal(-11.0, n.z);
   equal(-12.0, n.w);
-  nMask = SIMD.float32x4BitsToUint32x4(n);
+  nMask = SIMD.float32x4BitsToInt32x4(n);
   nMask = SIMD.xor(nMask, m); // flip sign.
-  n = SIMD.uint32x4BitsToFloat32x4(nMask);
+  n = SIMD.int32x4BitsToFloat32x4(nMask);
   equal(9.0, n.x);
   equal(10.0, n.y);
   equal(11.0, n.z);
@@ -306,44 +306,44 @@ test('float32x4 comparisons', function() {
   var n = new float32x4(2.0, 2.0, 0.001, 0.1);
   var cmp;
   cmp = SIMD.lessThan(m, n);
-  equal(0xFFFFFFFF, cmp.x);
+  equal(-1, cmp.x);
   equal(0x0, cmp.y);
   equal(0x0, cmp.z);
-  equal(0xFFFFFFFF, cmp.w);
+  equal(-1, cmp.w);
 
   cmp = SIMD.lessThanOrEqual(m, n);
-  equal(0xFFFFFFFF, cmp.x);
-  equal(0xFFFFFFFF, cmp.y);
+  equal(-1, cmp.x);
+  equal(-1, cmp.y);
   equal(0x0, cmp.z);
-  equal(0xFFFFFFFF, cmp.w);
+  equal(-1, cmp.w);
 
   cmp = SIMD.equal(m, n);
   equal(0x0, cmp.x);
-  equal(0xFFFFFFFF, cmp.y);
+  equal(-1, cmp.y);
   equal(0x0, cmp.z);
   equal(0x0, cmp.w);
 
   cmp = SIMD.notEqual(m, n);
-  equal(0xFFFFFFFF, cmp.x);
+  equal(-1, cmp.x);
   equal(0x0, cmp.y);
-  equal(0xFFFFFFFF, cmp.z);
-  equal(0xFFFFFFFF, cmp.w);
+  equal(-1, cmp.z);
+  equal(-1, cmp.w);
 
   cmp = SIMD.greaterThanOrEqual(m, n);
   equal(0x0, cmp.x);
-  equal(0xFFFFFFFF, cmp.y);
-  equal(0xFFFFFFFF, cmp.z);
+  equal(-1, cmp.y);
+  equal(-1, cmp.z);
   equal(0x0, cmp.w);
 
   cmp = SIMD.greaterThan(m, n);
   equal(0x0, cmp.x);
   equal(0x0, cmp.y);
-  equal(0xFFFFFFFF, cmp.z);
+  equal(-1, cmp.z);
   equal(0x0, cmp.w);
 });
 
-test('uint32x4 select', function() {
-  var m = uint32x4.bool(true, true, false, false);
+test('int32x4 select', function() {
+  var m = int32x4.bool(true, true, false, false);
   var t = new float32x4(1.0, 2.0, 3.0, 4.0);
   var f = new float32x4(5.0, 6.0, 7.0, 8.0);
   var s = SIMD.select(m, t, f);
@@ -353,8 +353,8 @@ test('uint32x4 select', function() {
   equal(8.0, s.w);
 });
 
-test('uint32x4 withX', function() {
-    var a = new uint32x4(1, 2, 3, 4);
+test('int32x4 withX', function() {
+    var a = new int32x4(1, 2, 3, 4);
     var c = SIMD.withXu32(a, 20);
     equal(20, c.x);
     equal(2, c.y);
@@ -362,8 +362,8 @@ test('uint32x4 withX', function() {
     equal(4, c.w);
 });
 
-test('uint32x4 withY', function() {
-    var a = new uint32x4(1, 2, 3, 4);
+test('int32x4 withY', function() {
+    var a = new int32x4(1, 2, 3, 4);
     var c = SIMD.withYu32(a, 20);
     equal(1, c.x);
     equal(20, c.y);
@@ -371,8 +371,8 @@ test('uint32x4 withY', function() {
     equal(4, c.w);
 });
 
-test('uint32x4 withZ', function() {
-    var a = new uint32x4(1, 2, 3, 4);
+test('int32x4 withZ', function() {
+    var a = new int32x4(1, 2, 3, 4);
     var c = SIMD.withZu32(a, 20);
     equal(1, c.x);
     equal(2, c.y);
@@ -380,8 +380,8 @@ test('uint32x4 withZ', function() {
     equal(4, c.w);
 });
 
-test('uint32x4 withW', function() {
-    var a = new uint32x4(1, 2, 3, 4);
+test('int32x4 withW', function() {
+    var a = new int32x4(1, 2, 3, 4);
     var c = SIMD.withWu32(a, 20);
     equal(1, c.x);
     equal(2, c.y);
@@ -389,8 +389,8 @@ test('uint32x4 withW', function() {
     equal(20, c.w);
 });
 
-test('uint32x4 withFlagX', function() {
-    var a = uint32x4.bool(true, false, true, false);
+test('int32x4 withFlagX', function() {
+    var a = int32x4.bool(true, false, true, false);
     var c = SIMD.withFlagX(a, true);
     equal(true, c.flagX);
     equal(false, c.flagY);
@@ -403,12 +403,12 @@ test('uint32x4 withFlagX', function() {
     equal(false, c.flagW);
     equal(0x0, c.x);
     equal(0x0, c.y);
-    equal(0xFFFFFFFF, c.z);
+    equal(-1, c.z);
     equal(0x0, c.w);
 });
 
-test('uint32x4 withFlagY', function() {
-    var a = uint32x4.bool(true, false, true, false);
+test('int32x4 withFlagY', function() {
+    var a = int32x4.bool(true, false, true, false);
     var c = SIMD.withFlagY(a, true);
     equal(true, c.flagX);
     equal(true, c.flagY);
@@ -419,15 +419,16 @@ test('uint32x4 withFlagY', function() {
     equal(false, c.flagY);
     equal(true, c.flagZ);
     equal(false, c.flagW);
-    equal(0xFFFFFFFF, c.x);
+    equal(-1, c.x);
     equal(0x0, c.y);
-    equal(0xFFFFFFFF, c.z);
+    equal(-1, c.z);
     equal(0x0, c.w);
 });
 
-test('uint32x4 withFlagZ', function() {
-    var a = uint32x4.bool(true, false, true, false);
+test('int32x4 withFlagZ', function() {
+    var a = int32x4.bool(true, false, true, false);
     var c = SIMD.withFlagZ(a, true);
+    equal(-1, c.x);
     equal(true, c.flagX);
     equal(false, c.flagY);
     equal(true, c.flagZ);
@@ -437,14 +438,14 @@ test('uint32x4 withFlagZ', function() {
     equal(false, c.flagY);
     equal(false, c.flagZ);
     equal(false, c.flagW);
-    equal(0xFFFFFFFF, c.x);
+    equal(-1, c.x);
     equal(0x0, c.y);
     equal(0x0, c.z);
     equal(0x0, c.w);
 });
 
-test('uint32x4 withFlagW', function() {
-    var a = uint32x4.bool(true, false, true, false);
+test('int32x4 withFlagW', function() {
+    var a = int32x4.bool(true, false, true, false);
     var c = SIMD.withFlagW(a, true);
     equal(true, c.flagX);
     equal(false, c.flagY);
@@ -455,19 +456,19 @@ test('uint32x4 withFlagW', function() {
     equal(false, c.flagY);
     equal(true, c.flagZ);
     equal(false, c.flagW);
-    equal(0xFFFFFFFF, c.x);
+    equal(-1, c.x);
     equal(0x0, c.y);
-    equal(0xFFFFFFFF, c.z);
+    equal(-1, c.z);
     equal(0x0, c.w);
 });
 
-test('uint32x4 and', function() {
-  var m = new uint32x4(0xAAAAAAAA, 0xAAAAAAAA, 0xAAAAAAAA, 0xAAAAAAAA);
-  var n = new uint32x4(0x55555555, 0x55555555, 0x55555555, 0x55555555);
-  equal(0xAAAAAAAA, m.x);
-  equal(0xAAAAAAAA, m.y);
-  equal(0xAAAAAAAA, m.z);
-  equal(0xAAAAAAAA, m.w);
+test('int32x4 and', function() {
+  var m = new int32x4(0xAAAAAAAA, 0xAAAAAAAA, -1431655766, 0xAAAAAAAA);
+  var n = new int32x4(0x55555555, 0x55555555, 0x55555555, 0x55555555);
+  equal(-1431655766, m.x);
+  equal(-1431655766, m.y);
+  equal(-1431655766, m.z);
+  equal(-1431655766, m.w);
   equal(0x55555555, n.x);
   equal(0x55555555, n.y);
   equal(0x55555555, n.z);
@@ -487,31 +488,31 @@ test('uint32x4 and', function() {
   equal(false, o.flagW);
 });
 
-test('uint32x4 or', function() {
-  var m = new uint32x4(0xAAAAAAAA, 0xAAAAAAAA, 0xAAAAAAAA, 0xAAAAAAAA);
-  var n = new uint32x4(0x55555555, 0x55555555, 0x55555555, 0x55555555);
+test('int32x4 or', function() {
+  var m = new int32x4(0xAAAAAAAA, 0xAAAAAAAA, 0xAAAAAAAA, 0xAAAAAAAA);
+  var n = new int32x4(0x55555555, 0x55555555, 0x55555555, 0x55555555);
   var o = SIMD.or(m,n);  // or
-  equal(0xFFFFFFFF, o.x);
-  equal(0xFFFFFFFF, o.y);
-  equal(0xFFFFFFFF, o.z);
-  equal(0xFFFFFFFF, o.w);
+  equal(-1, o.x);
+  equal(-1, o.y);
+  equal(-1, o.z);
+  equal(-1, o.w);
   equal(true, o.flagX);
   equal(true, o.flagY);
   equal(true, o.flagZ);
   equal(true, o.flagW);
 });
 
-test('uint32x4 xor', function() {
-  var m = new uint32x4(0xAAAAAAAA, 0xAAAAAAAA, 0xAAAAAAAA, 0xAAAAAAAA);
-  var n = new uint32x4(0x55555555, 0x55555555, 0x55555555, 0x55555555);
+test('int32x4 xor', function() {
+  var m = new int32x4(0xAAAAAAAA, 0xAAAAAAAA, 0xAAAAAAAA, 0xAAAAAAAA);
+  var n = new int32x4(0x55555555, 0x55555555, 0x55555555, 0x55555555);
   n = SIMD.withXu32(n, 0xAAAAAAAA);
   n = SIMD.withYu32(n, 0xAAAAAAAA);
   n = SIMD.withZu32(n, 0xAAAAAAAA);
   n = SIMD.withWu32(n, 0xAAAAAAAA);
-  equal(0xAAAAAAAA, n.x);
-  equal(0xAAAAAAAA, n.y);
-  equal(0xAAAAAAAA, n.z);
-  equal(0xAAAAAAAA, n.w);
+  equal(-1431655766, n.x);
+  equal(-1431655766, n.y);
+  equal(-1431655766, n.z);
+  equal(-1431655766, n.w);
   var o = SIMD.xor(m,n);  // xor
   equal(0x0, o.x);
   equal(0x0, o.y);
@@ -523,56 +524,56 @@ test('uint32x4 xor', function() {
   equal(false, o.flagW);
 });
 
-test('uint32x4 neg', function() {
-  var m = new uint32x4(0xAAAAAAAA, 0xAAAAAAAA, 0xAAAAAAAA, 0xAAAAAAAA);
-  var n = new uint32x4(0x55555555, 0x55555555, 0x55555555, 0x55555555);
+test('int32x4 neg', function() {
+  var m = new int32x4(16, 32, 64, 128);
+  var n = new int32x4(-1, -2, -3, -4);
   m = SIMD.negu32(m);
   n = SIMD.negu32(n);
-  equal(0xAAAAAAAA, n.x);
-  equal(0xAAAAAAAA, n.y);
-  equal(0xAAAAAAAA, n.z);
-  equal(0xAAAAAAAA, n.w);
-  equal(0x55555555, m.x);
-  equal(0x55555555, m.y);
-  equal(0x55555555, m.z);
-  equal(0x55555555, m.w);
+  equal(-16, m.x);
+  equal(-32, m.y);
+  equal(-64, m.z);
+  equal(-128, m.w);
+  equal(1, n.x);
+  equal(2, n.y);
+  equal(3, n.z);
+  equal(4, n.w);
 });
 
-test('uint32x4 signMask getter', function() {
-  var a = uint32x4(0x80000000, 0x7000000, 0xFFFFFFFF, 0x0);
+test('int32x4 signMask getter', function() {
+  var a = int32x4(0x80000000, 0x7000000, 0xFFFFFFFF, 0x0);
   equal(0x5, a.signMask);
-  var b = uint32x4(0x0, 0x0, 0x0, 0x0);
+  var b = int32x4(0x0, 0x0, 0x0, 0x0);
   equal(0x0, b.signMask);
-  var c = uint32x4(0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF);
+  var c = int32x4(0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF);
   equal(0xf, c.signMask);
 });
 
 
-test('uint32x4 add', function() {
-  var a = new uint32x4(0xFFFFFFFF, 0xFFFFFFFF, 0x7fffffff, 0x0);
-  var b = uint32x4(0x1, 0xFFFFFFFF, 0x1, 0xFFFFFFFF);
+test('int32x4 add', function() {
+  var a = new int32x4(0xFFFFFFFF, 0xFFFFFFFF, 0x7fffffff, 0x0);
+  var b = int32x4(0x1, 0xFFFFFFFF, 0x1, 0xFFFFFFFF);
   var c = SIMD.addu32(a, b);
   equal(0x0, c.x);
-  equal(0xFFFFFFFE, c.y);
-  equal(0x80000000, c.z);
-  equal(0xFFFFFFFF, c.w);
+  equal(-2, c.y);
+  equal(-0x80000000, c.z);
+  equal(-1, c.w);
 });
 
-test('uint32x4 sub', function() {
-  var a = new uint32x4(0xFFFFFFFF, 0xFFFFFFFF, 0x80000000, 0x0);
-  var b = uint32x4(0x1, 0xFFFFFFFF, 0x1, 0xFFFFFFFF);
+test('int32x4 sub', function() {
+  var a = new int32x4(0xFFFFFFFF, 0xFFFFFFFF, 0x80000000, 0x0);
+  var b = int32x4(0x1, 0xFFFFFFFF, 0x1, 0xFFFFFFFF);
   var c = SIMD.subu32(a, b);
-  equal(0xFFFFFFFE, c.x);
+  equal(-2, c.x);
   equal(0x0, c.y);
   equal(0x7FFFFFFF, c.z);
   equal(0x1, c.w);
 });
 
-test('uint32x4 mul', function() {
-  var a = new uint32x4(0xFFFFFFFF, 0xFFFFFFFF, 0x80000000, 0x0);
-  var b = uint32x4(0x1, 0xFFFFFFFF, 0x80000000, 0xFFFFFFFF);
+test('int32x4 mul', function() {
+  var a = new int32x4(0xFFFFFFFF, 0xFFFFFFFF, 0x80000000, 0x0);
+  var b = int32x4(0x1, 0xFFFFFFFF, 0x80000000, 0xFFFFFFFF);
   var c = SIMD.mulu32(a, b);
-  equal(0xFFFFFFFF, c.x);
+  equal(-1, c.x);
   equal(0x1, c.y);
   equal(0x0, c.z);
   equal(0x0, c.w);

@@ -6,15 +6,22 @@
 </head>
 <body>
   <h1>Open the console to see results.</h1>
+  <!-- Polyfill -->
   <script src="../ecmascript_simd.js"></script>
   <script src="../float32x4array.js"></script>
+  <script src="../int32x4array.js"></script>
   <script src="base.js"></script>
   <script src="kernel-template.js"></script>
+  <!-- Benchmarks in alphabetical order -->
+  <script src="aobench.js"></script>
   <script src="average.js"></script>
+  <script src="inverse4x4.js"></script>
   <script src="mandelbrot.js"></script>
   <script src="matrix-multiplication.js"></script>
+  <script src="shiftrows.js"></script>
   <script src="transform.js"></script>
-  <script src="aobench.js"></script>
+  <script src="transpose4x4.js"></script>
+  <!-- Execute -->
   <script src="run_browser.js"></script>
 </body>
 </html>

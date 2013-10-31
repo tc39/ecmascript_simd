@@ -24,7 +24,7 @@
   var tsrc   = new Float32Array(16);
   var tsrcx4 = new Float32x4Array(tsrc.buffer);
 
-  var sel_ttff = uint32x4.bool(true, true, false, false);
+  var sel_ttff = int32x4.bool(true, true, false, false);
 
   function initMatrix(matrix, matrixTransposed) {
     for (var r = 0; r < 4; ++r) {
@@ -56,7 +56,7 @@
     }
     return true;
   }
-      
+
   // Kernel Initializer
   function init () {
     initMatrix(src, tsrc);
@@ -101,7 +101,7 @@
     tmp23 = SIMD.shuffleMix(src2, src3, SIMD.ZWZW);
     dst2  = SIMD.shuffleMix(tmp01, tmp23, SIMD.XZXZ);
     dst3  = SIMD.shuffleMix(tmp01, tmp23, SIMD.YWYW);
-    
+
     dstx4.setAt(0, dst0);
     dstx4.setAt(1, dst1);
     dstx4.setAt(2, dst2);
@@ -130,7 +130,7 @@
     tmp23 = SIMD.select(sel_ttff, SIMD.shuffle(src2, SIMD.ZWXX), src3);
     dst2  = SIMD.select(sel_ttff, SIMD.shuffle(tmp01, SIMD.XZXX), SIMD.shuffle(tmp23, SIMD.XXXZ));
     dst3  = SIMD.select(sel_ttff, SIMD.shuffle(tmp01, SIMD.YWXX), SIMD.shuffle(tmp23, SIMD.XXYW));
-    
+
     dstx4.setAt(0, dst0);
     dstx4.setAt(1, dst1);
     dstx4.setAt(2, dst2);

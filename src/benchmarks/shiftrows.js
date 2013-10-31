@@ -19,9 +19,9 @@
   // Do the object allocations globally, so the performance of the kernel
   // functions aren't overshadowed by object creations
 
-  var state   = new Uint32Array(16);    // 4x4 state matrix
-  var temp    = new Uint32Array (1000); // Big enough for 1000 columns
-  var statex4 = new Uint32x4Array (state.buffer);
+  var state   = new Int32Array(16);    // 4x4 state matrix
+  var temp    = new Int32Array (1000); // Big enough for 1000 columns
+  var statex4 = new Int32x4Array (state.buffer);
 
   function printState() {
     for (var r = 0; r < 4; ++r) {
@@ -45,7 +45,7 @@
     }
   }
 
-  // Verify the result of calling shiftRows(state, 4)  
+  // Verify the result of calling shiftRows(state, 4)
   function checkState() {
     var expected = new Uint32Array(
       [ 0,  1,  2,  3,

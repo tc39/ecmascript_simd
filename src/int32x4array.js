@@ -18,7 +18,10 @@
   3. This notice may not be removed or altered from any source distribution.
 */
 
-function Uint32x4Array(a, b, c) {
+"use strict";
+
+
+function Int32x4Array(a, b, c) {
 
   function isNumber(o) {
       return typeof o == "number" || (typeof o == "object" && o.constructor === Number);
@@ -34,7 +37,7 @@ function Uint32x4Array(a, b, c) {
            (o instanceof Uint32Array) ||
            (o instanceof Float32Array) ||
            (o instanceof Float64Array) ||
-           (o instanceof Uint32x4Array) ||
+           (o instanceof Int32x4Array) ||
            (o instanceof Float32x4Array);
   }
 
@@ -43,15 +46,15 @@ function Uint32x4Array(a, b, c) {
   }
 
   if (isNumber(a)) {
-    this.storage_ = new Uint32Array(a*4);
+    this.storage_ = new Int32Array(a*4);
     this.length_ = a;
     this.byteOffset_ = 0;
     return;
   } else if (isTypedArray(a)) {
-    if (!(a instanceof Uint32x4Array)) {
-      throw "Copying typed array of non-Uint32x4Array is unimplemented.";
+    if (!(a instanceof Int32x4Array)) {
+      throw "Copying typed array of non-Int32x4Array is unimplemented.";
     }
-    this.storage_ = new Uint32Array(a.length * 4);
+    this.storage_ = new Int32Array(a.length * 4);
     this.length_ = a.length;
     this.byteOffset_ = 0;
     // Copy floats.
@@ -59,16 +62,16 @@ function Uint32x4Array(a, b, c) {
       this.storage_[i] = a.storage_[i];
     }
   } else if (isArrayBuffer(a)) {
-    if ((b != undefined) && (b % Uint32x4Array.BYTES_PER_ELEMENT) != 0) {
+    if ((b != undefined) && (b % Int32x4Array.BYTES_PER_ELEMENT) != 0) {
       throw "byteOffset must be a multiple of 16.";
     }
     if (c != undefined) {
       c *= 4;
-      this.storage_ = new Uint32Array(a, b, c);
+      this.storage_ = new Int32Array(a, b, c);
     }
     else {
-      // Note: new Uint32Array(a, b) is NOT equivalent to new Float32Array(a, b, undefined)
-      this.storage_ = new Uint32Array(a, b);
+      // Note: new Int32Array(a, b) is NOT equivalent to new Float32Array(a, b, undefined)
+      this.storage_ = new Int32Array(a, b);
     }
     this.length_ = this.storage_.length / 4;
     this.byteOffset_ = b != undefined ? b : 0;
@@ -77,31 +80,31 @@ function Uint32x4Array(a, b, c) {
   }
 }
 
-Object.defineProperty(Uint32x4Array.prototype, 'length',
+Object.defineProperty(Int32x4Array.prototype, 'length',
   { get: function() { return this.length_; }
 });
 
-Object.defineProperty(Uint32x4Array.prototype, 'byteLength',
-  { get: function() { return this.length_ * Uint32x4Array.BYTES_PER_ELEMENT; }
+Object.defineProperty(Int32x4Array.prototype, 'byteLength',
+  { get: function() { return this.length_ * Int32x4Array.BYTES_PER_ELEMENT; }
 });
 
-Object.defineProperty(Uint32x4Array, 'BYTES_PER_ELEMENT',
+Object.defineProperty(Int32x4Array, 'BYTES_PER_ELEMENT',
   { get: function() { return 16; }
 });
 
-Object.defineProperty(Uint32x4Array.prototype, 'BYTES_PER_ELEMENT',
+Object.defineProperty(Int32x4Array.prototype, 'BYTES_PER_ELEMENT',
   { get: function() { return 16; }
 });
 
-Object.defineProperty(Uint32x4Array.prototype, 'byteOffset',
+Object.defineProperty(Int32x4Array.prototype, 'byteOffset',
   { get: function() { return this.byteOffset_; }
 });
 
-Object.defineProperty(Uint32x4Array.prototype, 'buffer',
+Object.defineProperty(Int32x4Array.prototype, 'buffer',
   { get: function() { return this.storage_.buffer; }
 });
 
-Uint32x4Array.prototype.getAt = function(i) {
+Int32x4Array.prototype.getAt = function(i) {
   if (i < 0) {
     throw "Index must be >= 0.";
   }
@@ -115,15 +118,15 @@ Uint32x4Array.prototype.getAt = function(i) {
   return float32x4(x, y, z, w);
 }
 
-Uint32x4Array.prototype.setAt = function(i, v) {
+Int32x4Array.prototype.setAt = function(i, v) {
   if (i < 0) {
     throw "Index must be >= 0.";
   }
   if (i >= this.length) {
     throw "Index out of bounds.";
   }
-  if (!(v instanceof uint32x4)) {
-    throw "Value is not a uint32x4.";
+  if (!(v instanceof int32x4)) {
+    throw "Value is not a int32x4.";
   }
   this.storage_[i*4+0] = v.x;
   this.storage_[i*4+1] = v.y;

@@ -19,7 +19,7 @@
     return "[" + f4.x + "," + f4.y + "," + f4.z + "," + f4.w + "]";
   }
 
-  function uint32x4ToString (i4) {
+  function int32x4ToString (i4) {
     return "[" + i4.x + "," + i4.y + "," + i4.z + "," + i4.w + "]";
   }
 
@@ -46,8 +46,8 @@
     var z_im4  = c_im4;
     var four4  = float32x4.splat (4.0);
     var two4   = float32x4.splat (2.0);
-    var count4 = uint32x4.splat (0);
-    var one4   = uint32x4.splat (1);
+    var count4 = int32x4.splat (0);
+    var one4   = int32x4.splat (1);
 
     for (var i = 0; i < max_iterations; ++i) {
       var z_re24 = SIMD.mul (z_re4, z_re4);

@@ -18,6 +18,8 @@
   3. This notice may not be removed or altered from any source distribution.
 */
 
+"use strict";
+
 function Float32x4Array(a, b, c) {
 
   float32x4.splat = function(s) {
@@ -39,6 +41,7 @@ function Float32x4Array(a, b, c) {
            (o instanceof Float32Array) ||
            (o instanceof Float64Array) ||
            (o instanceof Float32x4Array);
+           (o instanceof Int32x4Array);
   }
 
   function isArrayBuffer(o) {

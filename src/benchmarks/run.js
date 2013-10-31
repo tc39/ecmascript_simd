@@ -4,8 +4,8 @@ if (typeof SIMD === "undefined") {
 if (typeof Float32x4Array === "undefined") {
   load ('../float32x4array.js');
 }
-if (typeof Uint32x4Array === "undefined") {
-  load ('../uint32x4array.js');
+if (typeof Int32x4Array === "undefined") {
+  load ('../int32x4array.js');
 }
 
 load ('base.js');
