@@ -361,7 +361,7 @@
 
     var cond1 = SIMD.float32x4.greaterThan(D, float32x4.zero());
     if (cond1.signMask) {
-        var t2 = SIMD.int32x4.int32x4BitsToFloat32x4(SIMD.int32x4.and(cond1, SIMD.float32x4.sub(SIMD.float32x4.neg(B), SIMD.float32x4.sqrt(D))));
+      var t2 = SIMD.int32x4.int32x4BitsToFloat32x4(SIMD.int32x4.and(cond1, SIMD.float32x4.float32x4BitsToInt32x4(SIMD.float32x4.sub(SIMD.float32x4.neg(B), SIMD.float32x4.sqrt(D)))));
       var cond2 = SIMD.int32x4.and(SIMD.float32x4.greaterThan(t2, float32x4.zero()),
                            SIMD.float32x4.lessThan(t2, isect.t));
       if (cond2.signMask) {
