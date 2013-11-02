@@ -301,7 +301,7 @@ function Int32x4Array(a, b, c) {
            (o instanceof Int16Array) ||
            (o instanceof Uint16Array) ||
            (o instanceof Int32Array) ||
-           (o instanceof UInt32Array) ||
+           (o instanceof Uint32Array) ||
            (o instanceof Float32Array) ||
            (o instanceof Float64Array) ||
            (o instanceof Int32x4Array) ||
@@ -651,7 +651,7 @@ var SIMD = (function () {
         * @param {float32x4} t An instance of float32x4.
         * @return {int32x4} a bit-wise copy of t as a int32x4.
         */
-      float32x4BitsToInt32x4: function(t) {
+      bitsToInt32x4: function(t) {
         var alias = new Int32Array(t.storage_.buffer);
         return new int32x4(alias[0], alias[1], alias[2], alias[3]);
       },
@@ -659,7 +659,7 @@ var SIMD = (function () {
         * @param {float32x4} t An instance of float32x4.
         * @return {int32x4} with a integer to float conversion of t.
         */
-      float32x4ToInt32x4: function(t) {
+      toInt32x4: function(t) {
         var a = new int32x4(t.storage_[0], t.storage_[1], t.storage_[2],
                              t.storage_[3]);
         return a;
@@ -760,11 +760,11 @@ var SIMD = (function () {
         * @param {float32x4}
         */
       select: function(t, trueValue, falseValue) {
-        var tv = SIMD.float32x4.float32x4BitsToInt32x4(trueValue);
-        var fv = SIMD.float32x4.float32x4BitsToInt32x4(falseValue);
+        var tv = SIMD.float32x4.bitsToInt32x4(trueValue);
+        var fv = SIMD.float32x4.bitsToInt32x4(falseValue);
         var tr = SIMD.int32x4.and(t, tv);
         var fr = SIMD.int32x4.and(SIMD.int32x4.not(t), fv);
-        return SIMD.int32x4.int32x4BitsToFloat32x4(SIMD.int32x4.or(tr, fr));
+        return SIMD.int32x4.bitsToFloat32x4(SIMD.int32x4.or(tr, fr));
       },
       /**
         * @param {int32x4} t An instance of int32x4.
@@ -845,7 +845,7 @@ var SIMD = (function () {
         * @param {int32x4} t An instance of int32x4.
         * @return {float32x4} a bit-wise copy of t as a float32x4.
         */
-      int32x4BitsToFloat32x4: function(t) {
+      bitsToFloat32x4: function(t) {
         var alias = new Float32Array(t.storage_.buffer);
         return new float32x4(alias[0], alias[1], alias[2], alias[3]);
       },
@@ -853,7 +853,7 @@ var SIMD = (function () {
         * @param {int32x4} t An instance of int32x4.
         * @return {float32x4} with a float to integer conversion copy of t.
         */
-      int32x4ToFloat32x4: function(t) {
+      toFloat32x4: function(t) {
         var a = float32x4.zero();
         a.storage_[0] = t.storage_[0];
         a.storage_[1] = t.storage_[1];
