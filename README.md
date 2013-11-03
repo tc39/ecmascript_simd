@@ -5,6 +5,9 @@
 
 ## Recent Changes (Most recent at the top)
 
+* API refactor: all operations bucketed by type (SIMD.float32x4 and SIMD.int32x4)
+* Replaced Uint32x4 and Uint32x4Array with Int32x4 and Int32x4Array.
+* Added Uint32x4Array.
 * Support for typed array views on Float32x4Array.
 * Support for Float32x4Array views of other typed arrays.
 * Support for Float32x4Array copy constructor.
@@ -25,7 +28,7 @@ adding two `float32x4` instances together:
 ```
 var a = float32x4(1.0, 2.0, 3.0, 4.0);
 var b = float32x4(5.0, 6.0, 7.0, 8.0);
-var c = SIMD.add(a,b);
+var c = SIMD.float32x4.add(a,b);
 ```
 
 Will result in `c` having the values `[6.0, 8.0, 10.0, 12.0]`.
@@ -55,14 +58,14 @@ unsigned integer values.
 
 ## Overview
 
-This proposal defines two new data types: `float32x4` and `uint32x4`. Both data
+This proposal defines two new data types: `float32x4` and `int32x4`. Both data
 types are immutable. Meaning, it is not possible to alter the internal state of
 an instance. Practically speaking, all operations return a new instance.
 
 A `float32x4` holds 4 32-bit single precision floating point values. Data is
 arranged into _lanes_. The lanes are **x**, **y**, **z**, and **w**.
 
-A `uint32x4` holds 4 32-bit unsigned integer values. Data is arranged into
+A `int32x4` holds 4 32-bit signed integer values. Data is arranged into
 _lanes_. The lanes are **x**, **y**, **z**, and **w**.
 
 <table>
@@ -103,10 +106,14 @@ _lanes_. The lanes are **x**, **y**, **z**, and **w**.
 `float32x4` 128-bits divided into 4 lanes storing single precision floating
 point values.
 
-`uint32x4` 128-bits divided into 4 lanes storing 32-bit unsigned integer values.
-
 `Float32x4Array` A [typed array](http://www.khronos.org/registry/typedarray/specs/latest/)
 holding float32x4 as packed binary data. Arrays of this type can be aliased using other typed
+arrays and individual bytes can be manipulated using a DataView.
+
+`int32x4` 128-bits divided into 4 lanes storing 32-bit signed integer values.
+
+`Int32x4Array` A [typed array](http://www.khronos.org/registry/typedarray/specs/latest/)
+holding int32x4 as packed binary data. Arrays of this type can be aliased using other typed
 arrays and individual bytes can be manipulated using a DataView.
 
 ## float32x4
@@ -173,27 +180,15 @@ except the the value in the **z** lane being given the value of **x**.
 Return a new instance with all lane values matching lane values of **this**
 except the the value in the **w** lane being given the value of **x**.
 
-### Type Conversion
-
-**uint32x4 bitsToUint32x4()**
-
-Create a new instance of `uint32x4` with lane values being a bit-wise copy of
-the lane values in **this**.
-
-**uint32x4 toUint32x4()**
-
-Convert the lane values from double to integer and return them in a new
-instance of `uint32x4`.
-
-## uint32x4
+## int32x4
 
 ### Constructors
 
-**uint32x4(integer x, integer y, integer z, integer w)**
+**int32x4(integer x, integer y, integer z, integer w)**
 
-**uint32x4.bool(boolean x, boolean y, boolean z, boolean w)**
+**int32x4.bool(boolean x, boolean y, boolean z, boolean w)**
 
-**uint32x4.splat(integer s)**
+**int32x4.splat(integer s)**
 
 ### Selection Operation
 
@@ -243,33 +238,19 @@ be false.
 
 ### Lane Mutators
 
-**uint32x4 withX(integer x)**
+**int32x4 withX(integer x)**
 
-**uint32x4 withY(integer y)**
+**int32x4 withY(integer y)**
 
-**uint32x4 withZ(integer z)**
+**int32x4 withZ(integer z)**
 
-**uint32x4 withW(integer w)**
+**int32x4 withW(integer w)**
 
-**uint32x4 withFlagX(boolean x)**
+**int32x4 withFlagX(boolean x)**
 
-**uint32x4 withFlagY(boolean y)**
+**int32x4 withFlagY(boolean y)**
 
-**uint32x4 withFlagZ(boolean z)**
+**int32x4 withFlagZ(boolean z)**
 
-**uint32x4 withFlagW(boolean w)**
-
-### Type Conversion
-
-**float32x4 bitsToFloat32x4()**
-
-Create a new instance of `float32x4` with lane values being a bit-wise copy of
-the lane values in **this**.
-
-**uint32x4 toFloat32x4()**
-
-Convert the lane values from integer to double and return them in a new
-instance of `uint32x4`.
-
-
+**int32x4 withFlagW(boolean w)**
 
