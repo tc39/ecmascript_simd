@@ -24,15 +24,16 @@ library vector_math_matrix_bench;
 import 'dart:typed_data';
 import 'package:vector_math/vector_math_operations.dart';
 import 'package:benchmark_harness/benchmark_harness.dart';
+import 'benchmark_contrast.dart';
 
-class MatrixMultiplyBenchmark extends BenchmarkBase {
-  const MatrixMultiplyBenchmark() : super("MatrixMultiply");
+class NonSIMDMatrixMultiplyBenchmark extends BenchmarkBase {
+  const NonSIMDMatrixMultiplyBenchmark() : super("NonSIMDMatrixMultiply");
   final Float32List A = new Float32List(16);
   final Float32List B = new Float32List(16);
   final Float32List C = new Float32List(16);
 
   static void main() {
-    new MatrixMultiplyBenchmark().report();
+    new NonSIMDMatrixMultiplyBenchmark().report();
   }
 
   void run() {
@@ -59,43 +60,10 @@ class SIMDMatrixMultiplyBenchmark extends BenchmarkBase {
   }
 }
 
-class VectorTransformBenchmark extends BenchmarkBase {
-  const VectorTransformBenchmark() : super("VectorTransform");
-  final Float32List A = new Float32List(16);
-  final Float32List B = new Float32List(4);
-  final Float32List C = new Float32List(4);
-
-  static void main() {
-    new VectorTransformBenchmark().report();
+class MatrixMultiplyBenchmark {
+  static Object create() {
+    return new BenchmarkContrast("MatrixMultiply",
+                                 new NonSIMDMatrixMultiplyBenchmark(),
+                                 new SIMDMatrixMultiplyBenchmark());
   }
-
-  void run() {
-    for (int i = 0; i < 200; i++) {
-      Matrix44Operations.transform4(C, 0, A, 0, B, 0);
-    }
-  }
-}
-
-class SIMDVectorTransformBenchmark extends BenchmarkBase {
-  const SIMDVectorTransformBenchmark() : super("SIMDVectorTransform");
-  final Float32x4List A = new Float32x4List(4);
-  final Float32x4List B = new Float32x4List(1);
-  final Float32x4List C = new Float32x4List(1);
-
-  static void main() {
-    new SIMDVectorTransformBenchmark().report();
-  }
-
-  void run() {
-    for (int i = 0; i < 200; i++) {
-      Matrix44SIMDOperations.transform4(C, 0, A, 0, B, 0);
-    }
-  }
-}
-
-main() {
-  MatrixMultiplyBenchmark.main();
-  SIMDMatrixMultiplyBenchmark.main();
-  VectorTransformBenchmark.main();
-  SIMDVectorTransformBenchmark.main();
 }
