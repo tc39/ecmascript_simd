@@ -299,6 +299,13 @@ test('float32x4 int32x4 conversion', function() {
   equal(10.0, n.y);
   equal(11.0, n.z);
   equal(12.0, n.w);
+  // Should stay unmodified across bit conversions
+  m = new int32x4(0xFFFFFFFF, 0xFFFF0000, 0x80000000, 0x0);
+  var m2 = SIMD.float32x4.bitsToInt32x4(SIMD.int32x4.bitsToFloat32x4(m));
+  equal(m.x, m2.x);
+  equal(m.y, m2.y);
+  equal(m.z, m2.z);
+  equal(m.w, m2.w);
 });
 
 test('float32x4 comparisons', function() {

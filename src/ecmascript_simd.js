@@ -654,6 +654,11 @@ var SIMD = (function () {
       bitsToInt32x4: function(t) {
         var alias = new Int32Array(t.storage_.buffer);
         return new int32x4(alias[0], alias[1], alias[2], alias[3]);
+        var temp_storage = new Float32Array([t.storage_[0], t.storage_[1], t.storage_[2], t.storage_[3]]);
+        var alias = new Int32Array(temp_storage.buffer);
+        var ix4 = int32x4.splat(0);
+        ix4.storage_ = alias;
+        return ix4;
       },
       /**
         * @param {float32x4} t An instance of float32x4.
@@ -846,8 +851,11 @@ var SIMD = (function () {
         * @return {float32x4} a bit-wise copy of t as a float32x4.
         */
       bitsToFloat32x4: function(t) {
-        var alias = new Float32Array(t.storage_.buffer);
-        return new float32x4(alias[0], alias[1], alias[2], alias[3]);
+        var temp_storage = new Int32Array([t.storage_[0], t.storage_[1], t.storage_[2], t.storage_[3]]);
+        var alias = new Float32Array(temp_storage.buffer);
+        var fx4 = float32x4.zero();
+        fx4.storage_ = alias;
+        return fx4;      
       },
       /**
         * @param {int32x4} t An instance of int32x4.
