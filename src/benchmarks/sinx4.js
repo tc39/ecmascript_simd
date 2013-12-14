@@ -37,8 +37,8 @@
   function cleanup () {
     // Do final sanity check and perform cleanup.
     // This function is called when all the kernel iterations have been
-    // executed, so they should be in their final optimized version.  The 
-    // sanity check done during initialization will probably be of the 
+    // executed, so they should be in their final optimized version.  The
+    // sanity check done during initialization will probably be of the
     // initial unoptimized version.
     // Returns:
     //   true:  Last run (optimized) of the kernels passed

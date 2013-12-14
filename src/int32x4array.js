@@ -115,7 +115,7 @@ Int32x4Array.prototype.getAt = function(i) {
   var y = this.storage_[i*4+1];
   var z = this.storage_[i*4+2];
   var w = this.storage_[i*4+3];
-  return float32x4(x, y, z, w);
+  return int32x4(x, y, z, w);
 }
 
 Int32x4Array.prototype.setAt = function(i, v) {
