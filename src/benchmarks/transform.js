@@ -33,11 +33,11 @@
     V[1] = 2.0;
     V[2] = 3.0;
     V[3] = 1.0;
-    Tx4.setAt(0, float32x4(1.0, 0.0, 0.0, 0.0));
-    Tx4.setAt(1, float32x4(0.0, 1.0, 0.0, 0.0));
-    Tx4.setAt(2, float32x4(0.0, 0.0, 1.0, 0.0));
-    Tx4.setAt(3, float32x4(0.0, 0.0, 0.0, 1.0));
-    Vx4.setAt(0, float32x4(1.0, 2.0, 3.0, 1.0));
+    Tx4.setAt(0, SIMD.float32x4(1.0, 0.0, 0.0, 0.0));
+    Tx4.setAt(1, SIMD.float32x4(0.0, 1.0, 0.0, 0.0));
+    Tx4.setAt(2, SIMD.float32x4(0.0, 0.0, 1.0, 0.0));
+    Tx4.setAt(3, SIMD.float32x4(0.0, 0.0, 0.0, 1.0));
+    Vx4.setAt(0, SIMD.float32x4(1.0, 2.0, 3.0, 1.0));
     simdVertexTransform(1);
     vertexTransform(1);
     return (Outx4.getAt(0).x == Out[0]) && (Outx4.getAt(0).y == Out[1]) &&
@@ -80,7 +80,7 @@
   function simdVertexTransform(n) {
     for (var i = 0; i < n; i++) {
       var xxxx = SIMD.float32x4.shuffle(Vx4.getAt(0), SIMD.XXXX);
-      var z = float32x4.zero();
+      var z = SIMD.float32x4.zero();
       z = SIMD.float32x4.add(z, SIMD.float32x4.mul(xxxx, Tx4.getAt(0)));
       var yyyy = SIMD.float32x4.shuffle(Vx4.getAt(0), SIMD.YYYY);
       z = SIMD.float32x4.add(z, SIMD.float32x4.mul(yyyy, Tx4.getAt(1)));

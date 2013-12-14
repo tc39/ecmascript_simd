@@ -57,7 +57,7 @@ function Int32x4Array(a, b, c) {
     this.storage_ = new Int32Array(a.length * 4);
     this.length_ = a.length;
     this.byteOffset_ = 0;
-    // Copy floats.
+    // Copy integers.
     for (var i = 0; i < a.length*4; i++) {
       this.storage_[i] = a.storage_[i];
     }
@@ -115,7 +115,7 @@ Int32x4Array.prototype.getAt = function(i) {
   var y = this.storage_[i*4+1];
   var z = this.storage_[i*4+2];
   var w = this.storage_[i*4+3];
-  return int32x4(x, y, z, w);
+  return SIMD.int32x4(x, y, z, w);
 }
 
 Int32x4Array.prototype.setAt = function(i, v) {
@@ -125,7 +125,7 @@ Int32x4Array.prototype.setAt = function(i, v) {
   if (i >= this.length) {
     throw "Index out of bounds.";
   }
-  if (!(v instanceof int32x4)) {
+  if (!(v instanceof SIMD.int32x4)) {
     throw "Value is not a int32x4.";
   }
   this.storage_[i*4+0] = v.x;
