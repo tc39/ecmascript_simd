@@ -106,14 +106,22 @@ function int32x4(x, y, z, w) {
 }
 
 /**
-  * Construct a new instance of int32x4 number with 0xFFFFFFFF or 0x0 in each
-  * lane, depending on the truth value in x, y, z, and w.
-  * @param {boolean} flag used for x lane.
-  * @param {boolean} flag used for y lane.
-  * @param {boolean} flag used for z lane.
-  * @param {boolean} flag used for w lane.
-  * @constructor
-  */
+* Construct a new instance of int32x4 number with 0 in all lanes.
+* @constructor
+*/
+int32x4.zero = function () {
+  return int32x4(0, 0, 0, 0);
+}
+
+/**
+* Construct a new instance of int32x4 number with 0xFFFFFFFF or 0x0 in each
+* lane, depending on the truth value in x, y, z, and w.
+* @param {boolean} flag used for x lane.
+* @param {boolean} flag used for y lane.
+* @param {boolean} flag used for z lane.
+* @param {boolean} flag used for w lane.
+* @constructor
+*/
 int32x4.bool = function(x, y, z, w) {
   return int32x4(x ? -1 : 0x0,
                   y ? -1 : 0x0,

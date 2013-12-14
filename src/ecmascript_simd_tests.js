@@ -349,6 +349,22 @@ test('float32x4 comparisons', function() {
   equal(0x0, cmp.w);
 });
 
+test('int32x4 zero constructor', function () {
+  var m = int32x4.zero();
+  equal(0, m.x);
+  equal(0, m.y);
+  equal(0, m.z);
+  equal(0, m.w);
+});
+
+test('int32x4 splat constructor', function () {
+  var m = int32x4.splat(42);
+  equal(42, m.x);
+  equal(42, m.y);
+  equal(42, m.z);
+  equal(42, m.w);
+});
+
 test('int32x4 select', function() {
   var m = int32x4.bool(true, true, false, false);
   var t = new float32x4(1.0, 2.0, 3.0, 4.0);
