@@ -5,6 +5,10 @@
 
 ## Recent Changes (Most recent at the top)
 
+* Added shiftLeft, shiftRightLogical, shiftRightArithmetic on int32x4.
+* Added equals, greaterThan, and lessThan that operate on int32x4.
+* Add bit operations (and, or, xor, and not) that operate directly on float32x4.
+* Moved constructors into SIMD module.
 * API refactor: all operations bucketed by type (SIMD.float32x4 and SIMD.int32x4)
 * Replaced Uint32x4 and Uint32x4Array with Int32x4 and Int32x4Array.
 * Added Uint32x4Array.

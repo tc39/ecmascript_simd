@@ -401,6 +401,48 @@ SIMD.float32x4.toInt32x4 = function(t) {
 }
 
 /**
+  * @param {float32x4} a An instance of float32x4.
+  * @param {float32x4} b An instance of float32x4.
+  * @return {float32x4} New instance of float32x4 with values of a & b.
+  */
+SIMD.float32x4.and = function(a, b) {
+  var aInt = SIMD.float32x4.bitsToInt32x4(a);
+  var bInt = SIMD.float32x4.bitsToInt32x4(b);
+  return SIMD.int32x4.bitsToFloat32x4(SIMD.int32x4.and(aInt, bInt));
+}
+
+/**
+  * @param {float32x4} a An instance of float32x4.
+  * @param {float32x4} b An instance of float32x4.
+  * @return {float32x4} New instance of float32x4 with values of a | b.
+  */
+SIMD.float32x4.or = function(a, b) {
+  var aInt = SIMD.float32x4.bitsToInt32x4(a);
+  var bInt = SIMD.float32x4.bitsToInt32x4(b);
+  return SIMD.int32x4.bitsToFloat32x4(SIMD.int32x4.or(aInt, bInt));
+}
+
+/**
+  * @param {float32x4} a An instance of float32x4.
+  * @param {float32x4} b An instance of float32x4.
+  * @return {float32x4} New instance of float32x4 with values of a ^ b.
+  */
+SIMD.float32x4.xor = function(a, b) {
+  var aInt = SIMD.float32x4.bitsToInt32x4(a);
+  var bInt = SIMD.float32x4.bitsToInt32x4(b);
+  return SIMD.int32x4.bitsToFloat32x4(SIMD.int32x4.xor(aInt, bInt));
+}
+
+/**
+  * @param {float32x4} a An instance of float32x4.
+  * @return {float32x4} New instance of float32x4 with values of ~a.
+  */
+SIMD.float32x4.not = function(a) {
+  var aInt = SIMD.float32x4.bitsToInt32x4(a);
+  return SIMD.int32x4.bitsToFloat32x4(SIMD.int32x4.not(aInt));
+}
+
+/**
   * @param {int32x4} a An instance of int32x4.
   * @param {int32x4} b An instance of int32x4.
   * @return {int32x4} New instance of int32x4 with values of a & b.
@@ -592,6 +634,87 @@ SIMD.int32x4.withFlagZ = function(t, flagZ) {
 SIMD.int32x4.withFlagW = function(t, flagW) {
   var w = flagW ? 0xFFFFFFFF : 0x0;
   return SIMD.int32x4(t.x, t.y, t.z, w);
+}
+
+/**
+  * @param {int32x4} t An instance of int32x4.
+  * @param {int32x4} other An instance of int32x4.
+  * @return {int32x4} 0xFFFFFFFF or 0x0 in each lane depending on
+  * the result of t == other.
+  */
+SIMD.int32x4.equal = function(t, other) {
+  var cx = t.x == other.x;
+  var cy = t.y == other.y;
+  var cz = t.z == other.z;
+  var cw = t.w == other.w;
+  return SIMD.int32x4.bool(cx, cy, cz, cw);
+}
+
+/**
+  * @param {int32x4} t An instance of int32x4.
+  * @param {int32x4} other An instance of int32x4.
+  * @return {int32x4} 0xFFFFFFFF or 0x0 in each lane depending on
+  * the result of t > other.
+  */
+SIMD.int32x4.greaterThan = function(t, other) {
+  var cx = t.x > other.x;
+  var cy = t.y > other.y;
+  var cz = t.z > other.z;
+  var cw = t.w > other.w;
+  return SIMD.int32x4.bool(cx, cy, cz, cw);
+}
+
+/**
+  * @param {int32x4} t An instance of int32x4.
+  * @param {int32x4} other An instance of int32x4.
+  * @return {int32x4} 0xFFFFFFFF or 0x0 in each lane depending on
+  * the result of t < other.
+  */
+SIMD.int32x4.lessThan = function(t, other) {
+  var cx = t.x < other.x;
+  var cy = t.y < other.y;
+  var cz = t.z < other.z;
+  var cw = t.w < other.w;
+  return SIMD.int32x4.bool(cx, cy, cz, cw);
+}
+
+/**
+  * @param {int32x4} a An instance of int32x4.
+  * @param {int} bits Bit count to shift by.
+  * @return {int32x4} lanes in a shifted by bits.
+  */
+SIMD.int32x4.shiftLeft = function(a, bits) {
+  var x = a.x << bits;
+  var y = a.y << bits;
+  var z = a.z << bits;
+  var w = a.w << bits;
+  return SIMD.int32x4(x, y, z, w);
+}
+
+/**
+  * @param {int32x4} a An instance of int32x4.
+  * @param {int} bits Bit count to shift by.
+  * @return {int32x4} lanes in a shifted by bits.
+  */
+SIMD.int32x4.shiftRightLogical = function(a, bits) {
+  var x = a.x >>> bits;
+  var y = a.y >>> bits;
+  var z = a.z >>> bits;
+  var w = a.w >>> bits;
+  return SIMD.int32x4(x, y, z, w);
+}
+
+/**
+  * @param {int32x4} a An instance of int32x4.
+  * @param {int} bits Bit count to shift by.
+  * @return {int32x4} lanes in a shifted by bits.
+  */
+SIMD.int32x4.shiftRightArithmetic = function(a, bits) {
+  var x = a.x >> bits;
+  var y = a.y >> bits;
+  var z = a.z >> bits;
+  var w = a.w >> bits;
+  return SIMD.int32x4(x, y, z, w);
 }
 
 /**
