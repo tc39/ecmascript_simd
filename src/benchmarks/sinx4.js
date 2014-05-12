@@ -66,30 +66,30 @@
   }
 
   function sinx4Test() {
-    var x = float32x4(1.0, 2.0, 3.0, 4.0);
+    var x = SIMD.float32x4(1.0, 2.0, 3.0, 4.0);
     var sinx4 = simdSin(x);
     print (sinx4.x, sinx4.y, sinx4.z, sinx4.w);
     print (Math.sin(x.x), Math.sin(x.y), Math.sin(x.z), Math.sin(x.w));
   }
 
-  var _ps_sign_mask        = int32x4.splat(0x80000000);
+  var _ps_sign_mask        = SIMD.int32x4.splat(0x80000000);
   var _ps_inv_sign_mask    = SIMD.int32x4.not(_ps_sign_mask);
-  var _ps_cephes_FOPI      = float32x4.splat(1.27323954473516);
-  var _pi32_1              = int32x4.splat(1);
+  var _ps_cephes_FOPI      = SIMD.float32x4.splat(1.27323954473516);
+  var _pi32_1              = SIMD.int32x4.splat(1);
   var _pi32_inv1           = SIMD.int32x4.not(_pi32_1);
-  var _pi32_4              = int32x4.splat(4);
-  var _pi32_2              = int32x4.splat(2);
-  var _ps_minus_cephes_DP1 = float32x4.splat(-0.78515625);
-  var _ps_minus_cephes_DP2 = float32x4.splat(-2.4187564849853515625E-4);
-  var _ps_minus_cephes_DP3 = float32x4.splat(-3.77489497744594108E-8);
-  var _ps_coscof_p0        = float32x4.splat(2.443315711809948E-5);
-  var _ps_coscof_p1        = float32x4.splat(-1.388731625493765E-3);
-  var _ps_coscof_p2        = float32x4.splat(4.166664568298827E-2);
-  var _ps_0p5              = float32x4.splat(0.5);
-  var _ps_1                = float32x4.splat(1.0);
-  var _ps_sincof_p0        = float32x4.splat(-1.9515295891E-4);
-  var _ps_sincof_p1        = float32x4.splat(8.3321608736E-3);
-  var _ps_sincof_p2        = float32x4.splat(-1.6666654611E-1);
+  var _pi32_4              = SIMD.int32x4.splat(4);
+  var _pi32_2              = SIMD.int32x4.splat(2);
+  var _ps_minus_cephes_DP1 = SIMD.float32x4.splat(-0.78515625);
+  var _ps_minus_cephes_DP2 = SIMD.float32x4.splat(-2.4187564849853515625E-4);
+  var _ps_minus_cephes_DP3 = SIMD.float32x4.splat(-3.77489497744594108E-8);
+  var _ps_coscof_p0        = SIMD.float32x4.splat(2.443315711809948E-5);
+  var _ps_coscof_p1        = SIMD.float32x4.splat(-1.388731625493765E-3);
+  var _ps_coscof_p2        = SIMD.float32x4.splat(4.166664568298827E-2);
+  var _ps_0p5              = SIMD.float32x4.splat(0.5);
+  var _ps_1                = SIMD.float32x4.splat(1.0);
+  var _ps_sincof_p0        = SIMD.float32x4.splat(-1.9515295891E-4);
+  var _ps_sincof_p1        = SIMD.float32x4.splat(8.3321608736E-3);
+  var _ps_sincof_p2        = SIMD.float32x4.splat(-1.6666654611E-1);
 
   function sinx4 (x) {
     var xmm1;
@@ -121,7 +121,7 @@
     emm0     = SIMD.int32x4.shiftLeft(emm0, 29);
 
     emm2     = SIMD.int32x4.and(emm2, _pi32_2);
-    emm2     = SIMD.int32x4.equal(emm2, int32x4.zero());
+    emm2     = SIMD.int32x4.equal(emm2, SIMD.int32x4.zero());
 
     swap_sign_bit = SIMD.int32x4.bitsToFloat32x4(emm0);
     poly_mask     = SIMD.int32x4.bitsToFloat32x4(emm2);
@@ -174,7 +174,7 @@
     return y;
   }
 
-  var simdInput    = float32x4 (1.0, 2.0, 3.0, 4.0);
+  var simdInput    = SIMD.float32x4 (1.0, 2.0, 3.0, 4.0);
   var nonSimdInput = [1.0, 2.0, 3.0, 4.0];
 
   // SIMD version of the kernel
