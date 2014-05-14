@@ -12,7 +12,8 @@ load ('base.js');
 
 // load individual benchmarks
 load ('kernel-template.js');
-load ('average.js');
+load ('averageFloat32x4.js');
+load ('averageFloat64x2.js');
 load ('mandelbrot.js');
 load ('matrix-multiplication.js');
 load ('transform.js');

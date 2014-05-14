@@ -6,7 +6,7 @@
 
   // Kernel configuration
   var kernelConfig = {
-    kernelName:       "Average",
+    kernelName:       "AverageFloat32x4",
     kernelInit:       initArray,
     kernelCleanup:    cleanup,
     kernelSimd:       simdAverage,
