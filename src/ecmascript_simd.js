@@ -60,6 +60,38 @@ SIMD.float32x4.splat = function(s) {
   return SIMD.float32x4(s, s, s, s);
 }
 
+/**
+  * Construct a new instance of float64x2 number.
+  * @param {double} value used for x lane.
+  * @param {double} value used for y lane.
+  * @constructor
+  */
+SIMD.float64x2 = function(x, y) {
+  if (!(this instanceof SIMD.float64x2)) {
+    return new SIMD.float64x2(x, y);
+  }
+  this.storage_ = new Float64Array(2);
+  this.storage_[0] = x;
+  this.storage_[1] = y;
+}
+
+/**
+  * Construct a new instance of float64x2 number with 0.0 in all lanes.
+  * @constructor
+  */
+SIMD.float64x2.zero = function() {
+  return SIMD.float64x2(0.0, 0.0);
+}
+
+/**
+  * Construct a new instance of float64x2 number with the same value
+  * in all lanes.
+  * @param {double} value used for all lanes.
+  * @constructor
+  */
+SIMD.float64x2.splat = function(s) {
+  return SIMD.float32x4(s, s);
+}
 
 /**
   * Construct a new instance of int32x4 number.
@@ -215,6 +247,7 @@ SIMD.float32x4.reciprocalSqrt = function(t) {
   return SIMD.float32x4(Math.sqrt(1.0 / t.x), Math.sqrt(1.0 / t.y),
                         Math.sqrt(1.0 / t.z), Math.sqrt(1.0 / t.w));
 }
+
 /**
   * @return {float32x4} New instance of float32x4 with values of t
   * scaled by s.
@@ -401,6 +434,16 @@ SIMD.float32x4.toInt32x4 = function(t) {
 }
 
 /**
+  * @param {float32x4} t An instance of float32x4.
+  * @return {float64x2} with a float32 to float64 conversion of
+  * the x and y lanes
+  */
+SIMD.float32x4.toFloat64x2 = function(t) {
+  var a = SIMD.float64x2(t.storage_[0], t.storage_[1]);
+  return a;
+}
+
+/**
   * @param {float32x4} a An instance of float32x4.
   * @param {float32x4} b An instance of float32x4.
   * @return {float32x4} New instance of float32x4 with values of a & b.
@@ -440,6 +483,116 @@ SIMD.float32x4.xor = function(a, b) {
 SIMD.float32x4.not = function(a) {
   var aInt = SIMD.float32x4.bitsToInt32x4(a);
   return SIMD.int32x4.bitsToFloat32x4(SIMD.int32x4.not(aInt));
+}
+
+/**
+* @return {float64x2} New instance of float64x2 with absolute values of
+* t.
+*/
+SIMD.float64x2.abs = function(t) {
+  return SIMD.float64x2(Math.abs(t.x), Math.abs(t.y));
+}
+
+/**
+  * @return {float64x2} New instance of float64x2 with negated values of
+  * t.
+  */
+SIMD.float64x2.neg = function(t) {
+  return SIMD.float64x2(-t.x, -t.y);
+}
+
+/**
+  * @return {float64x2} New instance of float64x2 with a + b.
+  */
+SIMD.float64x2.add = function(a, b) {
+  return SIMD.float64x2(a.x + b.x, a.y + b.y);
+}
+
+/**
+  * @return {float64x2} New instance of float64x2 with a - b.
+  */
+SIMD.float64x2.sub = function(a, b) {
+  return SIMD.float64x2(a.x - b.x, a.y - b.y);
+}
+
+/**
+  * @return {float64x2} New instance of float64x2 with a * b.
+  */
+SIMD.float64x2.mul = function(a, b) {
+  return SIMD.float64x2(a.x * b.x, a.y * b.y);
+}
+
+/**
+  * @return {float64x2} New instance of float64x2 with a / b.
+  */
+SIMD.float64x2.div = function(a, b) {
+  return SIMD.float64x2(a.x / b.x, a.y / b.y);
+}
+
+/**
+  * @return {float64x2} New instance of float64x2 with t's values clamped
+  * between lowerLimit and upperLimit.
+  */
+SIMD.float64x2.clamp = function(t, lowerLimit, upperLimit) {
+  var cx = t.x < lowerLimit.x ? lowerLimit.x : t.x;
+  var cy = t.y < lowerLimit.y ? lowerLimit.y : t.y;
+  cx = cx > upperLimit.x ? upperLimit.x : cx;
+  cy = cy > upperLimit.y ? upperLimit.y : cy;
+  return SIMD.float32x4(cx, cy);
+}
+
+/**
+  * @return {float64x2} New instance of float64x2 with the minimum value of
+  * t and other.
+  */
+SIMD.float64x2.min = function(t, other) {
+  var cx = t.x > other.x ? other.x : t.x;
+  var cy = t.y > other.y ? other.y : t.y;
+  return SIMD.float64x2(cx, cy);
+}
+
+/**
+  * @return {float64x2} New instance of float64x2 with the maximum value of
+  * t and other.
+  */
+SIMD.float64x2.max = function(t, other) {
+  var cx = t.x < other.x ? other.x : t.x;
+  var cy = t.y < other.y ? other.y : t.y;
+  return SIMD.float64x2(cx, cy);
+}
+
+/**
+  * @return {float64x2} New instance of float32x4 with values of t
+  * scaled by s.
+  */
+SIMD.float64x2.scale = function(t, s) {
+  return SIMD.float64x2(s * t.x, s * t.y);
+}
+
+/**
+  * @return {float64x2} New instance of float32x4 with square root of
+  * values of t.
+  */
+SIMD.float64x2.sqrt = function(t) {
+  return SIMD.float64x2(Math.sqrt(t.x), Math.sqrt(t.y));
+}
+
+/**
+  * @param {double} value used for x lane.
+  * @return {float64x2} New instance of float64x2 with the values in t and
+  * x replaced with {x}.
+  */
+SIMD.float64x2.withX = function(t, x) {
+  return SIMD.float64x2(x, t.y);
+}
+
+/**
+  * @param {double} value used for y lane.
+  * @return {float64x2} New instance of float64x2 with the values in t and
+  * y replaced with {y}.
+  */
+SIMD.float64x2.withY = function(t, y) {
+  return SIMD.float64x2(t.x, y);
 }
 
 /**
@@ -1025,6 +1178,25 @@ Object.defineProperty(SIMD.float32x4.prototype, 'signMask', {
     var mz = this.z < 0.0 ? 1 : 0;
     var mw = this.w < 0.0 ? 1 : 0;
     return mx | my << 1 | mz << 2 | mw << 3;
+  }
+});
+
+Object.defineProperty(SIMD.float64x2.prototype, 'x', {
+  get: function() { return this.storage_[0]; }
+});
+
+Object.defineProperty(SIMD.float64x2.prototype, 'y', {
+  get: function() { return this.storage_[1]; }
+});
+
+/**
+  * Extract the sign bit from each lane return them in the first 2 bits.
+  */
+Object.defineProperty(SIMD.float64x2.prototype, 'signMask', {
+  get: function() {
+    var mx = this.x < 0.0 ? 1 : 0;
+    var my = this.y < 0.0 ? 1 : 0;
+    return mx | my << 1;
   }
 });
 
