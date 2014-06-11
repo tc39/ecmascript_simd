@@ -415,6 +415,23 @@ SIMD.float32x4.greaterThan = function(t, other) {
 }
 
 /**
+  * @param {int32x4} t Selector mask. An instance of int32x4 
+  * @param {float32x4} trueValue Pick lane from here if corresponding
+  * selector lane is 0xFFFFFFFF
+  * @param {float32x4} falseValue Pick lane from here if corresponding
+  * selector lane is 0x0
+  * @return {float32x4} Mix of lanes from trueValue or falseValue as
+  * indicated
+  */
+SIMD.float32x4.select = function(t, trueValue, falseValue) {
+  var tv = SIMD.float32x4.bitsToInt32x4(trueValue);
+  var fv = SIMD.float32x4.bitsToInt32x4(falseValue);
+  var tr = SIMD.int32x4.and(t, tv);
+  var fr = SIMD.int32x4.and(SIMD.int32x4.not(t), fv);
+  return SIMD.int32x4.bitsToFloat32x4(SIMD.int32x4.or(tr, fr));
+}
+
+/**
   * @param {float32x4} t An instance of float32x4.
   * @return {int32x4} a bit-wise copy of t as a int32x4.
   */
@@ -562,6 +579,22 @@ SIMD.float64x2.max = function(t, other) {
 }
 
 /**
+  * @return {float64x2} New instance of float64x2 with reciprocal value of
+  * t.
+  */
+SIMD.float64x2.reciprocal = function(t) {
+  return SIMD.float64x2(1.0 / t.x, 1.0 / t.y);
+}
+
+/**
+  * @return {float64x2} New instance of float64x2 with square root of the
+  * reciprocal value of t.
+  */
+SIMD.float64x2.reciprocalSqrt = function(t) {
+  return SIMD.float64x2(Math.sqrt(1.0 / t.x), Math.sqrt(1.0 / t.y));
+}
+
+/**
   * @return {float64x2} New instance of float32x4 with values of t
   * scaled by s.
   */
@@ -575,6 +608,29 @@ SIMD.float64x2.scale = function(t, s) {
   */
 SIMD.float64x2.sqrt = function(t) {
   return SIMD.float64x2(Math.sqrt(t.x), Math.sqrt(t.y));
+}
+
+/**
+  * @param {float64x2} t An instance of float64x2 to be shuffled.
+  * @param {integer} mask One of the 4 shuffle masks, for example, SIMD.XY.
+  * @return {float64x2} New instance of float64x2 with lanes shuffled.
+  */
+SIMD.float64x2.shuffle = function(t, mask) {
+  var _x = (mask) & 0x1;
+  var _y = (mask >> 1) & 0x1;
+  return SIMD.float64x2(t.storage_[_x], t.storage_[_y]);
+}
+
+/**
+  * @param {float64x2} t1 An instance of float64x2 to be shuffled. X lane in result
+  * @param {float64x2} t2 An instance of float64x2 to be shuffled. Y lane in result
+  * @param {integer} mask One of the 4 shuffle masks, for example, SIMD.XY.
+  * @return {float64x2} New instance of float64x2 with lanes shuffled.
+  */
+SIMD.float64x2.shuffleMix = function(t1, t2, mask) {
+  var _x = (mask) & 0x1;
+  var _y = (mask >> 1) & 0x1;
+  return SIMD.float64x2(t1.storage_[_x], t2.storage_[_y]);
 }
 
 /**
@@ -593,6 +649,104 @@ SIMD.float64x2.withX = function(t, x) {
   */
 SIMD.float64x2.withY = function(t, y) {
   return SIMD.float64x2(t.x, y);
+}
+
+/**
+  * @param {float64x2} t An instance of float64x2.
+  * @param {float64x2} other An instance of float64x2.
+  * @return {int32x4} 0xFFFFFFFF or 0x0 in each lane depending on
+  * the result of t < other.
+  */
+SIMD.float64x2.lessThan = function(t, other) {
+  var cx = t.x < other.x;
+  var cy = t.y < other.y;
+  return SIMD.int32x4.bool(cx, cx, cy, cy);
+}
+
+/**
+  * @param {float64x2} t An instance of float64x2.
+  * @param {float64x2} other An instance of float64x2.
+  * @return {int32x4} 0xFFFFFFFF or 0x0 in each lane depending on
+  * the result of t <= other.
+  */
+SIMD.float64x2.lessThanOrEqual = function(t, other) {
+  var cx = t.x <= other.x;
+  var cy = t.y <= other.y;
+  return SIMD.int32x4.bool(cx, cx, cy, cy);
+}
+
+/**
+  * @param {float64x2} t An instance of float64x2.
+  * @param {float64x2} other An instance of float64x2.
+  * @return {int32x4} 0xFFFFFFFF or 0x0 in each lane depending on
+  * the result of t == other.
+  */
+SIMD.float64x2.equal = function(t, other) {
+  var cx = t.x == other.x;
+  var cy = t.y == other.y;
+  return SIMD.int32x4.bool(cx, cx, cy, cy);
+}
+
+/**
+  * @param {float64x2} t An instance of float64x2.
+  * @param {float64x2} other An instance of float64x2.
+  * @return {int32x4} 0xFFFFFFFF or 0x0 in each lane depending on
+  * the result of t != other.
+  */
+SIMD.float64x2.notEqual = function(t, other) {
+  var cx = t.x != other.x;
+  var cy = t.y != other.y;
+  return SIMD.int32x4.bool(cx, cx, cy, cy);
+}
+
+/**
+  * @param {float64x2} t An instance of float64x2.
+  * @param {float64x2} other An instance of float64x2.
+  * @return {int32x4} 0xFFFFFFFF or 0x0 in each lane depending on
+  * the result of t >= other.
+  */
+SIMD.float64x2.greaterThanOrEqual = function(t, other) {
+  var cx = t.x >= other.x;
+  var cy = t.y >= other.y;
+  return SIMD.int32x4.bool(cx, cx, cy, cy);
+}
+
+/**
+  * @param {float64x2} t An instance of float64x2.
+  * @param {float64x2} other An instance of float64x2.
+  * @return {int32x4} 0xFFFFFFFF or 0x0 in each lane depending on
+  * the result of t > other.
+  */
+SIMD.float64x2.greaterThan = function(t, other) {
+  var cx = t.x > other.x;
+  var cy = t.y > other.y;
+  return SIMD.int32x4.bool(cx, cx, cy, cy);
+}
+
+/**
+  * @param {int32x4} t Selector mask. An instance of int32x4 
+  * @param {float64x2} trueValue Pick lane from here if corresponding
+  * selector lanes are 0xFFFFFFFF
+  * @param {float64x2} falseValue Pick lane from here if corresponding
+  * selector lanes are 0x0
+  * @return {float64x2} Mix of lanes from trueValue or falseValue as
+  * indicated
+  */
+SIMD.float64x2.select = function(t, trueValue, falseValue) {
+  var tv = SIMD.float64x2.bitsToInt32x4(trueValue);
+  var fv = SIMD.float64x2.bitsToInt32x4(falseValue);
+  var tr = SIMD.int32x4.and(t, tv);
+  var fr = SIMD.int32x4.and(SIMD.int32x4.not(t), fv);
+  return SIMD.int32x4.bitsToFloat64x2(SIMD.int32x4.or(tr, fr));
+}
+
+/**
+  * @param {float64x2} t An instance of float64x2.
+  * @return {int32x4} a bit-wise copy of t as a int32x4.
+  */
+SIMD.float64x2.bitsToInt32x4 = function(t) {
+  var alias = new Int32Array(t.storage_.buffer);
+  return SIMD.int32x4(alias[0], alias[1], alias[2], alias[3]);
 }
 
 /**
@@ -884,6 +1038,18 @@ SIMD.int32x4.bitsToFloat32x4 = function(t) {
 
 /**
   * @param {int32x4} t An instance of int32x4.
+  * @return {float32x4} a bit-wise copy of t as a float32x4.
+  */
+SIMD.int32x4.bitsToFloat64x2 = function(t) {
+  var temp_storage = new Int32Array([t.storage_[0], t.storage_[1], t.storage_[2], t.storage_[3]]);
+  var alias = new Float64Array(temp_storage.buffer);
+  var fx2 = SIMD.float64x2.zero();
+  fx2.storage_ = alias;
+  return fx2;
+}
+
+/**
+  * @param {int32x4} t An instance of int32x4.
   * @return {float32x4} with a float to integer conversion copy of t.
   */
 SIMD.int32x4.toFloat32x4 = function(t) {
@@ -1151,6 +1317,11 @@ Object.defineProperty(SIMD, 'WWWX', { get: function() { return 0x3F; } });
 Object.defineProperty(SIMD, 'WWWY', { get: function() { return 0x7F; } });
 Object.defineProperty(SIMD, 'WWWZ', { get: function() { return 0xBF; } });
 Object.defineProperty(SIMD, 'WWWW', { get: function() { return 0xFF; } });
+
+Object.defineProperty(SIMD, 'XX',  { get: function() { return 0x0; } });
+Object.defineProperty(SIMD, 'XY',  { get: function() { return 0x2; } });
+Object.defineProperty(SIMD, 'YX',  { get: function() { return 0x1; } });
+Object.defineProperty(SIMD, 'YY',  { get: function() { return 0x3; } });
 
 Object.defineProperty(SIMD.float32x4.prototype, 'x', {
   get: function() { return this.storage_[0]; }
