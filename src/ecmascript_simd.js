@@ -23,6 +23,30 @@
 // SIMD module.
 var SIMD = {};
 
+// private stuff.
+var _PRIVATE = {}
+
+_PRIVATE._f32 = new Float32Array(1);
+_PRIVATE._i32 = new Int32Array(1);
+
+_PRIVATE._f32x4 = new Float32Array(4);
+_PRIVATE._f64x2 = new Float64Array(_PRIVATE._f32x4.buffer);
+_PRIVATE._i32x4 = new Int32Array(_PRIVATE._f32x4.buffer);
+
+_PRIVATE._f32x8 = new Float32Array(8);
+_PRIVATE._f64x4 = new Float64Array(4);
+_PRIVATE._i32x8 = new Int32Array(8);
+
+_PRIVATE.truncatef32 = function(x) {
+  _PRIVATE._f32[0] = x;
+  return _PRIVATE._f32[0];
+}
+
+_PRIVATE.truncatei32 = function(x) {
+  _PRIVATE._i32[0] = x;
+  return _PRIVATE._i32[0];
+}
+
 /**
   * Construct a new instance of float32x4 number.
   * @param {double} value used for x lane.
@@ -35,11 +59,10 @@ SIMD.float32x4 = function(x, y, z, w) {
   if (!(this instanceof SIMD.float32x4)) {
     return new SIMD.float32x4(x, y, z, w);
   }
-  this.storage_ = new Float32Array(4);
-  this.storage_[0] = x;
-  this.storage_[1] = y;
-  this.storage_[2] = z;
-  this.storage_[3] = w;
+  this.x_ = _PRIVATE.truncatef32(x);
+  this.y_ = _PRIVATE.truncatef32(y);
+  this.z_ = _PRIVATE.truncatef32(z);
+  this.w_ = _PRIVATE.truncatef32(w);
 }
 
 /**
@@ -66,8 +89,8 @@ SIMD.float32x4.splat = function(s) {
   */
 SIMD.float32x4.fromFloat64x2 = function(t) {
   var a = SIMD.float32x4.zero();
-  a.storage_[0] = t.storage_[0];
-  a.storage_[1] = t.storage_[1];
+  a.x_ = t.x_;
+  a.y_ = t.y_;
   return a;
 }
 
@@ -77,10 +100,10 @@ SIMD.float32x4.fromFloat64x2 = function(t) {
   */
 SIMD.float32x4.fromInt32x4 = function(t) {
   var a = SIMD.float32x4.zero();
-  a.storage_[0] = t.storage_[0];
-  a.storage_[1] = t.storage_[1];
-  a.storage_[2] = t.storage_[2];
-  a.storage_[3] = t.storage_[3];
+  a.x_ = t.x_;
+  a.y_ = t.y_;
+  a.z_ = t.z_;
+  a.w_ = t.w_;
   return a;
 }
 
@@ -89,11 +112,12 @@ SIMD.float32x4.fromInt32x4 = function(t) {
  * @return {float32x4} a bit-wise copy of t as a float32x4.
  */
 SIMD.float32x4.fromFloat64x2Bits = function(t) {
-  var temp_storage = new Float64Array([t.storage_[0], t.storage_[1]]);
-  var alias = new Float32Array(temp_storage.buffer);
-  var fx4 = SIMD.float32x4.zero();
-  fx4.storage_ = alias;
-  return fx4;
+  _PRIVATE._f64x2[0] = t.x_;
+  _PRIVATE._f64x2[1] = t.y_;
+  return SIMD.float32x4(_PRIVATE._f32x4[0],
+                        _PRIVATE._f32x4[1],
+                        _PRIVATE._f32x4[2],
+                        _PRIVATE._f32x4[3]);
 }
 
 /**
@@ -101,11 +125,14 @@ SIMD.float32x4.fromFloat64x2Bits = function(t) {
  * @return {float32x4} a bit-wise copy of t as a float32x4.
  */
 SIMD.float32x4.fromInt32x4Bits = function(t) {
-  var temp_storage = new Int32Array([t.storage_[0], t.storage_[1], t.storage_[2], t.storage_[3]]);
-  var alias = new Float32Array(temp_storage.buffer);
-  var fx4 = SIMD.float32x4.zero();
-  fx4.storage_ = alias;
-  return fx4;
+  _PRIVATE._i32x4[0] = t.x_;
+  _PRIVATE._i32x4[1] = t.y_;
+  _PRIVATE._i32x4[2] = t.z_;
+  _PRIVATE._i32x4[3] = t.w_;
+  return SIMD.float32x4(_PRIVATE._f32x4[0],
+                        _PRIVATE._f32x4[1],
+                        _PRIVATE._f32x4[2],
+                        _PRIVATE._f32x4[3]);
 }
 
 /**
@@ -118,9 +145,8 @@ SIMD.float64x2 = function(x, y) {
   if (!(this instanceof SIMD.float64x2)) {
     return new SIMD.float64x2(x, y);
   }
-  this.storage_ = new Float64Array(2);
-  this.storage_[0] = x;
-  this.storage_[1] = y;
+  this.x_ = x;
+  this.y_ = y;
 }
 
 /**
@@ -146,7 +172,7 @@ SIMD.float64x2.splat = function(s) {
   * @return {float64x2} A float64x2 with .x and .y from t
   */
 SIMD.float64x2.fromFloat32x4 = function(t) {
-  var a = SIMD.float64x2(t.storage_[0], t.storage_[1]);
+  var a = SIMD.float64x2(t.x_, t.y_);
   return a;
 }
 
@@ -156,8 +182,8 @@ SIMD.float64x2.fromFloat32x4 = function(t) {
   */
 SIMD.float64x2.fromInt32x4 = function(t) {
   var a = SIMD.float64x2.zero();
-  a.storage_[0] = t.storage_[0];
-  a.storage_[1] = t.storage_[1];
+  a.x_ = t.x_;
+  a.y_ = t.y_;
   return a;
 }
 
@@ -166,11 +192,11 @@ SIMD.float64x2.fromInt32x4 = function(t) {
  * @return {float64x2} a bit-wise copy of t as a float64x2.
  */
 SIMD.float64x2.fromFloat32x4Bits = function(t) {
-  var temp_storage = new Float32Array([t.storage_[0], t.storage_[1],  t.storage_[2],  t.storage_[3]]);
-  var alias = new Float64Array(temp_storage.buffer);
-  var fx2 = SIMD.float64x2.zero();
-  fx2.storage_ = alias;
-  return fx2;
+  _PRIVATE._f32x4[0] = t.x_;
+  _PRIVATE._f32x4[1] = t.y_;
+  _PRIVATE._f32x4[2] = t.z_;
+  _PRIVATE._f32x4[3] = t.w_;
+  return SIMD.float64x2(_PRIVATE._f64x2[0], _PRIVATE._f64x2[1]);
 }
 
 /**
@@ -178,11 +204,11 @@ SIMD.float64x2.fromFloat32x4Bits = function(t) {
  * @return {float64x2} a bit-wise copy of t as a float64x2.
  */
 SIMD.float64x2.fromInt32x4Bits = function(t) {
-  var temp_storage = new Int32Array([t.storage_[0], t.storage_[1], t.storage_[2], t.storage_[3]]);
-  var alias = new Float64Array(temp_storage.buffer);
-  var fx2 = SIMD.float64x2.zero();
-  fx2.storage_ = alias;
-  return fx2;
+  _PRIVATE._i32x4[0] = t.x_;
+  _PRIVATE._i32x4[1] = t.y_;
+  _PRIVATE._i32x4[2] = t.z_;
+  _PRIVATE._i32x4[3] = t.w_;
+  return SIMD.float64x2(_PRIVATE._f64x2[0], _PRIVATE._f64x2[1]);
 }
 
 /**
@@ -197,11 +223,10 @@ SIMD.int32x4 = function(x, y, z, w) {
   if (!(this instanceof SIMD.int32x4)) {
     return new SIMD.int32x4(x, y, z, w);
   }
-  this.storage_ = new Int32Array(4);
-  this.storage_[0] = x;
-  this.storage_[1] = y;
-  this.storage_[2] = z;
-  this.storage_[3] = w;
+  this.x_ = _PRIVATE.truncatei32(x);
+  this.y_ = _PRIVATE.truncatei32(y);
+  this.z_ = _PRIVATE.truncatei32(z);
+  this.w_ = _PRIVATE.truncatei32(w);
 }
 
 /**
@@ -243,8 +268,8 @@ SIMD.int32x4.splat = function(s) {
   * @return {int32x4} with a integer to float conversion of t.
   */
 SIMD.int32x4.fromFloat32x4 = function(t) {
-  var a = SIMD.int32x4(Math.floor(t.storage_[0]), Math.floor(t.storage_[1]),
-                       Math.floor(t.storage_[2]), Math.floor(t.storage_[3]));
+  var a = SIMD.int32x4(Math.floor(t.x_), Math.floor(t.y_),
+                       Math.floor(t.z_), Math.floor(t.w_));
   return a;
 }
 
@@ -254,8 +279,8 @@ SIMD.int32x4.fromFloat32x4 = function(t) {
   */
 SIMD.int32x4.fromFloat64x2 = function(t) {
   var a = SIMD.int32x4.zero();
-  a.storage_[0] = Math.floor(t.storage_[0]);
-  a.storage_[1] = Math.floor(t.storage_[1]);
+  a.x_ = Math.floor(t.x_);
+  a.y_ = Math.floor(t.y_);
   return a;
 }
 
@@ -264,7 +289,11 @@ SIMD.int32x4.fromFloat64x2 = function(t) {
   * @return {int32x4} a bit-wise copy of t as a int32x4.
   */
 SIMD.int32x4.fromFloat32x4Bits = function(t) {
-  var alias = new Int32Array(t.storage_.buffer);
+  _PRIVATE._f32x4[0] = t.x_;
+  _PRIVATE._f32x4[1] = t.y_;
+  _PRIVATE._f32x4[2] = t.z_;
+  _PRIVATE._f32x4[3] = t.w_;
+  var alias = _PRIVATE._i32x4;
   return SIMD.int32x4(alias[0], alias[1], alias[2], alias[3]);
 }
 
@@ -273,10 +302,10 @@ SIMD.int32x4.fromFloat32x4Bits = function(t) {
  * @return {int32x4} a bit-wise copy of t as an int32x4.
  */
 SIMD.int32x4.fromFloat64x2Bits = function(t) {
-  var temp_storage = new Float64Array([t.storage_[0], t.storage_[1]]);
-  var alias = new Int32Array(temp_storage.buffer);
-  var ix4 = SIMD.int32x4.zero();
-  ix4.storage_ = alias;
+  _PRIVATE._f64x2[0] = t.x_;
+  _PRIVATE._f64x2[1] = t.y_;
+  var alias = _PRIVATE._i32x4;
+  var ix4 = SIMD.int32x4(alias[0], alias[1], alias[2], alias[3]);
   return ix4;
 }
 
@@ -409,8 +438,12 @@ SIMD.float32x4.shuffle = function(t, mask) {
   var _y = (mask >> 2) & 0x3;
   var _z = (mask >> 4) & 0x3;
   var _w = (mask >> 6) & 0x3;
-  return SIMD.float32x4(t.storage_[_x], t.storage_[_y], t.storage_[_z],
-                        t.storage_[_w]);
+  _PRIVATE._f32x4[0] = t.x_;
+  _PRIVATE._f32x4[1] = t.y_;
+  _PRIVATE._f32x4[2] = t.z_;
+  _PRIVATE._f32x4[3] = t.w_;
+  var storage = _PRIVATE._f32x4;
+  return SIMD.float32x4(storage[_x], storage[_y], storage[_z], storage[_w]);
 }
 
 /**
@@ -424,8 +457,17 @@ SIMD.float32x4.shuffleMix = function(t1, t2, mask) {
   var _y = (mask >> 2) & 0x3;
   var _z = (mask >> 4) & 0x3;
   var _w = (mask >> 6) & 0x3;
-  return SIMD.float32x4(t1.storage_[_x], t1.storage_[_y], t2.storage_[_z],
-                        t2.storage_[_w]);
+  var storage = _PRIVATE._f32x8;
+  storage[0] = t1.x_;
+  storage[1] = t1.y_;
+  storage[2] = t1.z_;
+  storage[3] = t1.w_;
+  storage[4] = t2.x_;
+  storage[5] = t2.y_;
+  storage[6] = t2.z_;
+  storage[7] = t2.w_;
+  return SIMD.float32x4(storage[0 + _x], storage[0 + _y],
+                        storage[4 + _z], storage[4 + _w]);
 }
 
 /**
@@ -549,7 +591,7 @@ SIMD.float32x4.greaterThan = function(t, other) {
 }
 
 /**
-  * @param {int32x4} t Selector mask. An instance of int32x4 
+  * @param {int32x4} t Selector mask. An instance of int32x4
   * @param {float32x4} trueValue Pick lane from here if corresponding
   * selector lane is 0xFFFFFFFF
   * @param {float32x4} falseValue Pick lane from here if corresponding
@@ -723,7 +765,10 @@ SIMD.float64x2.sqrt = function(t) {
 SIMD.float64x2.shuffle = function(t, mask) {
   var _x = (mask) & 0x1;
   var _y = (mask >> 1) & 0x1;
-  return SIMD.float64x2(t.storage_[_x], t.storage_[_y]);
+  var storage = _PRIVATE._f64x2;
+  storage[0] = t.x_;
+  storage[1] = t.y_;
+  return SIMD.float64x2(storage[_x], storage[_y]);
 }
 
 /**
@@ -735,7 +780,12 @@ SIMD.float64x2.shuffle = function(t, mask) {
 SIMD.float64x2.shuffleMix = function(t1, t2, mask) {
   var _x = (mask) & 0x1;
   var _y = (mask >> 1) & 0x1;
-  return SIMD.float64x2(t1.storage_[_x], t2.storage_[_y]);
+  var storage = _PRIVATE._f64x4;
+  storage[0] = t1.x_;
+  storage[1] = t1.y_;
+  storage[2] = t2.x_;
+  storage[3] = t2.y_;
+  return SIMD.float64x2(storage[0 + _x], storage[2 + _y]);
 }
 
 /**
@@ -829,7 +879,7 @@ SIMD.float64x2.greaterThan = function(t, other) {
 }
 
 /**
-  * @param {int32x4} t Selector mask. An instance of int32x4 
+  * @param {int32x4} t Selector mask. An instance of int32x4
   * @param {float64x2} trueValue Pick lane from here if corresponding
   * selector lanes are 0xFFFFFFFF
   * @param {float64x2} falseValue Pick lane from here if corresponding
@@ -838,20 +888,11 @@ SIMD.float64x2.greaterThan = function(t, other) {
   * indicated
   */
 SIMD.float64x2.select = function(t, trueValue, falseValue) {
-  var tv = SIMD.float64x2.bitsToInt32x4(trueValue);
-  var fv = SIMD.float64x2.bitsToInt32x4(falseValue);
+  var tv = SIMD.int32x4.fromFloat64x2Bits(trueValue);
+  var fv = SIMD.int32x4.fromFloat64x2Bits(falseValue);
   var tr = SIMD.int32x4.and(t, tv);
   var fr = SIMD.int32x4.and(SIMD.int32x4.not(t), fv);
-  return SIMD.int32x4.bitsToFloat64x2(SIMD.int32x4.or(tr, fr));
-}
-
-/**
-  * @param {float64x2} t An instance of float64x2.
-  * @return {int32x4} a bit-wise copy of t as a int32x4.
-  */
-SIMD.float64x2.bitsToInt32x4 = function(t) {
-  var alias = new Int32Array(t.storage_.buffer);
-  return SIMD.int32x4(alias[0], alias[1], alias[2], alias[3]);
+  return SIMD.float64x2.fromInt32x4Bits(SIMD.int32x4.or(tr, fr));
 }
 
 /**
@@ -935,8 +976,12 @@ SIMD.int32x4.shuffle = function(t, mask) {
   var _y = (mask >> 2) & 0x3;
   var _z = (mask >> 4) & 0x3;
   var _w = (mask >> 6) & 0x3;
-  return SIMD.int32x4(t.storage_[_x], t.storage_[_y], t.storage_[_z],
-                      t.storage_[_w]);
+  var storage = _PRIVATE._i32x4;
+  storage[0] = t.x_;
+  storage[1] = t.y_;
+  storage[2] = t.z_;
+  storage[3] = t.w_;
+  return SIMD.int32x4(storage[_x], storage[_y], storage[_z], storage[_w]);
 }
 
 /**
@@ -950,12 +995,21 @@ SIMD.int32x4.shuffleMix = function(t1, t2, mask) {
   var _y = (mask >> 2) & 0x3;
   var _z = (mask >> 4) & 0x3;
   var _w = (mask >> 6) & 0x3;
-  return SIMD.int32x4(t1.storage_[_x], t1.storage_[_y], t2.storage_[_z],
-                      t2.storage_[_w]);
+  var storage = _PRIVATE._i32x8;
+  storage[0] = t1.x_;
+  storage[1] = t1.y_;
+  storage[2] = t1.z_;
+  storage[3] = t1.w_;
+  storage[4] = t2.x_;
+  storage[5] = t2.y_;
+  storage[6] = t2.z_;
+  storage[7] = t2.w_;
+  return SIMD.float32x4(storage[0 + _x], storage[0 + _y],
+                        storage[4 + _z], storage[4 + _w]);
 }
 
 /**
-  * @param {int32x4} t Selector mask. An instance of int32x4 
+  * @param {int32x4} t Selector mask. An instance of int32x4
   * @param {int3232x4} trueValue Pick lane from here if corresponding
   * selector lane is 0xFFFFFFFF
   * @param {int32x4} falseValue Pick lane from here if corresponding
@@ -1131,18 +1185,6 @@ SIMD.int32x4.shiftRightArithmetic = function(a, bits) {
   var z = a.z >> bits;
   var w = a.w >> bits;
   return SIMD.int32x4(x, y, z, w);
-}
-
-/**
-  * @param {int32x4} t An instance of int32x4.
-  * @return {float32x4} a bit-wise copy of t as a float32x4.
-  */
-SIMD.int32x4.bitsToFloat64x2 = function(t) {
-  var temp_storage = new Int32Array([t.storage_[0], t.storage_[1], t.storage_[2], t.storage_[3]]);
-  var alias = new Float64Array(temp_storage.buffer);
-  var fx2 = SIMD.float64x2.zero();
-  fx2.storage_ = alias;
-  return fx2;
 }
 
 Object.defineProperty(SIMD, 'XXXX', { get: function() { return 0x0; } });
@@ -1408,19 +1450,19 @@ Object.defineProperty(SIMD, 'YX',  { get: function() { return 0x1; } });
 Object.defineProperty(SIMD, 'YY',  { get: function() { return 0x3; } });
 
 Object.defineProperty(SIMD.float32x4.prototype, 'x', {
-  get: function() { return this.storage_[0]; }
+  get: function() { return this.x_; }
 });
 
 Object.defineProperty(SIMD.float32x4.prototype, 'y', {
-  get: function() { return this.storage_[1]; }
+  get: function() { return this.y_; }
 });
 
 Object.defineProperty(SIMD.float32x4.prototype, 'z', {
-  get: function() { return this.storage_[2]; }
+  get: function() { return this.z_; }
 });
 
 Object.defineProperty(SIMD.float32x4.prototype, 'w',
-  { get: function() { return this.storage_[3]; }
+  { get: function() { return this.w_; }
 });
 
 /**
@@ -1437,11 +1479,11 @@ Object.defineProperty(SIMD.float32x4.prototype, 'signMask', {
 });
 
 Object.defineProperty(SIMD.float64x2.prototype, 'x', {
-  get: function() { return this.storage_[0]; }
+  get: function() { return this.x_; }
 });
 
 Object.defineProperty(SIMD.float64x2.prototype, 'y', {
-  get: function() { return this.storage_[1]; }
+  get: function() { return this.y_; }
 });
 
 /**
@@ -1456,35 +1498,35 @@ Object.defineProperty(SIMD.float64x2.prototype, 'signMask', {
 });
 
 Object.defineProperty(SIMD.int32x4.prototype, 'x', {
-  get: function() { return this.storage_[0]; }
+  get: function() { return this.x_; }
 });
 
 Object.defineProperty(SIMD.int32x4.prototype, 'y', {
-  get: function() { return this.storage_[1]; }
+  get: function() { return this.y_; }
 });
 
 Object.defineProperty(SIMD.int32x4.prototype, 'z', {
-  get: function() { return this.storage_[2]; }
+  get: function() { return this.z_; }
 });
 
 Object.defineProperty(SIMD.int32x4.prototype, 'w',
-  { get: function() { return this.storage_[3]; }
+  { get: function() { return this.w_; }
 });
 
 Object.defineProperty(SIMD.int32x4.prototype, 'flagX', {
-  get: function() { return this.storage_[0] != 0x0; }
+  get: function() { return this.x_ != 0x0; }
 });
 
 Object.defineProperty(SIMD.int32x4.prototype, 'flagY', {
-  get: function() { return this.storage_[1] != 0x0; }
+  get: function() { return this.y_ != 0x0; }
 });
 
 Object.defineProperty(SIMD.int32x4.prototype, 'flagZ', {
-  get: function() { return this.storage_[2] != 0x0; }
+  get: function() { return this.z_ != 0x0; }
 });
 
 Object.defineProperty(SIMD.int32x4.prototype, 'flagW',
-  { get: function() { return this.storage_[3] != 0x0; }
+  { get: function() { return this.w_ != 0x0; }
 });
 
 /**
@@ -1492,10 +1534,10 @@ Object.defineProperty(SIMD.int32x4.prototype, 'flagW',
   */
 Object.defineProperty(SIMD.int32x4.prototype, 'signMask', {
   get: function() {
-    var mx = (this.storage_[0] & 0x80000000) >>> 31;
-    var my = (this.storage_[1] & 0x80000000) >>> 31;
-    var mz = (this.storage_[2] & 0x80000000) >>> 31;
-    var mw = (this.storage_[3] & 0x80000000) >>> 31;
+    var mx = (this.x_ & 0x80000000) >>> 31;
+    var my = (this.y_ & 0x80000000) >>> 31;
+    var mz = (this.z_ & 0x80000000) >>> 31;
+    var mw = (this.w_ & 0x80000000) >>> 31;
     return mx | my << 1 | mz << 2 | mw << 3;
   }
 });
