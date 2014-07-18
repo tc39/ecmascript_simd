@@ -702,7 +702,7 @@ SIMD.float64x2.clamp = function(t, lowerLimit, upperLimit) {
   var cy = t.y < lowerLimit.y ? lowerLimit.y : t.y;
   cx = cx > upperLimit.x ? upperLimit.x : cx;
   cy = cy > upperLimit.y ? upperLimit.y : cy;
-  return SIMD.float32x4(cx, cy);
+  return SIMD.float64x2(cx, cy);
 }
 
 /**
