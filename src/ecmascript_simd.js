@@ -1150,6 +1150,32 @@ SIMD.int32x4.lessThan = function(t, other) {
 
 /**
   * @param {int32x4} a An instance of int32x4.
+  * @param {int} bits Bit count to rotate by.
+  * @return {int32x4} lanes in a rotated left by bits.
+  */
+SIMD.int32x4.rotateLeft = function(a, bits) {
+  var x = a.x << bits ^ a.x >> (32 - bits);
+  var y = a.y << bits ^ a.y >> (32 - bits);
+  var z = a.z << bits ^ a.z >> (32 - bits);
+  var w = a.w << bits ^ a.w >> (32 - bits);
+  return SIMD.int32x4(x, y, z, w);
+}
+
+/**
+  * @param {int32x4} a An instance of int32x4.
+  * @param {int} bits Bit count to rotate by.
+  * @return {int32x4} lanes in a rotated right by bits.
+  */
+SIMD.int32x4.rotateRight = function(a, bits) {
+  var x = a.x >> bits ^ a.x << (32 - bits);
+  var y = a.y >> bits ^ a.y << (32 - bits);
+  var z = a.z >> bits ^ a.z << (32 - bits);
+  var w = a.w >> bits ^ a.w << (32 - bits);
+  return SIMD.int32x4(x, y, z, w);
+}
+
+/**
+  * @param {int32x4} a An instance of int32x4.
   * @param {int} bits Bit count to shift by.
   * @return {int32x4} lanes in a shifted by bits.
   */
