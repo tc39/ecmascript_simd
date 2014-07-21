@@ -355,6 +355,13 @@ SIMD.float32x4.div = function(a, b) {
 }
 
 /**
+ * @return {float32x4} New instance of float32x4 with a * b + c
+ */
+SIMD.float32x4.mad = function(a, b, c) {
+  return SIMD.float32x4(a.x * b.x + c.x, a.y * b.y + c.y, a.z * b.z + c.z, a.w * b.w + c.w);
+}
+
+/**
   * @return {float32x4} New instance of float32x4 with t's values clamped
   * between lowerLimit and upperLimit.
   */
@@ -654,8 +661,6 @@ SIMD.float32x4.not = function(a) {
 * t.
 */
 SIMD.float64x2.abs = function(t) {
-  return SIMD.float64x2(Math.abs(t.x), Math.abs(t.y));
-}
 
 /**
   * @return {float64x2} New instance of float64x2 with negated values of
@@ -691,6 +696,13 @@ SIMD.float64x2.mul = function(a, b) {
   */
 SIMD.float64x2.div = function(a, b) {
   return SIMD.float64x2(a.x / b.x, a.y / b.y);
+}
+
+/**
+ * @return {float32x4} New instance of float32x4 with a * b + c
+ */
+SIMD.float64x2.mad = function(a, b, c) {
+  return SIMD.float64x2(a.x * b.x + c.x, a.y * b.y + c.y);
 }
 
 /**
@@ -1474,6 +1486,8 @@ Object.defineProperty(SIMD, 'XX',  { get: function() { return 0x0; } });
 Object.defineProperty(SIMD, 'XY',  { get: function() { return 0x2; } });
 Object.defineProperty(SIMD, 'YX',  { get: function() { return 0x1; } });
 Object.defineProperty(SIMD, 'YY',  { get: function() { return 0x3; } });
+
+Object.defineProperty(SIMD, 'HAS_FMA', { get: function() { return false; } });
 
 Object.defineProperty(SIMD.float32x4.prototype, 'x', {
   get: function() { return this.x_; }
