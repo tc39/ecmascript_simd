@@ -49,19 +49,19 @@ _PRIVATE.truncatei32 = function(x) {
 
 function checkFloat32x4(t) {
   if (!(t instanceof SIMD.float32x4)) {
-    throw "argument is not a float32x4.";
+    throw new TypeError("argument is not a float32x4.");
   }
 }
 
 function checkFloat64x2(t) {
   if (!(t instanceof SIMD.float64x2)) {
-    throw "argument is not a float64x2.";
+    throw new TypeError("argument is not a float64x2.");
   }
 }
 
 function checkInt32x4(t) {
   if (!(t instanceof SIMD.int32x4)) {
-    throw "argument is not a int32x4.";
+    throw new TypeError("argument is not a int32x4.");
   }
 }
 
