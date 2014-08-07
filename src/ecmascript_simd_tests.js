@@ -508,7 +508,7 @@ test('float64x2 sub', function() {
 test('float64x2 mul', function() {
   var a = SIMD.float64x2(2.0, 1.0);
   var b = SIMD.float64x2(10.0, 20.0);
-  var c = SIMD.float32x4.mul(a, b);
+  var c = SIMD.float64x2.mul(a, b);
   equal(20.0, c.x);
   equal(20.0, c.y);
 });
