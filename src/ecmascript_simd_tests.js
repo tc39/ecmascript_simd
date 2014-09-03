@@ -31,6 +31,23 @@ test('float32x4 constructor', function() {
   notEqual(undefined, SIMD.float32x4(1.0, 2.0, 3.0, 4.0));  // New object.
 });
 
+test('coercive constructors', function() {
+  var x = SIMD.float32x4(1.0, 2.0, 3.0, 4.0);
+  equal(SIMD.float32x4(x), x);
+  throws(function() {SIMD.float32x4(1)});
+  throws(function() {SIMD.float32x4('hi')});
+
+  var y = SIMD.int32x4(1, 2, 3, 4);
+  equal(SIMD.int32x4(y), y);
+  throws(function() {SIMD.int32x4(1)});
+  throws(function() {SIMD.int32x4('hi')});
+
+  var z = SIMD.float64x2(1.0, 2.0);
+  equal(SIMD.float64x2(z), z);
+  throws(function() {SIMD.float64x2(1)});
+  throws(function() {SIMD.float64x2('hi')});
+});
+
 test('float32x4 fromFloat64x2 constructor', function() {
   var m = SIMD.float64x2(1.0, 2.0);
   var n = SIMD.float32x4.fromFloat64x2(m);

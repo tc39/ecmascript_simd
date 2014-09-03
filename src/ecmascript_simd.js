@@ -75,9 +75,15 @@ function checkInt32x4(t) {
   * @constructor
   */
 SIMD.float32x4 = function(x, y, z, w) {
+  if (arguments.length == 1) {
+    checkFloat32x4(x);
+    return x;
+  }
+
   if (!(this instanceof SIMD.float32x4)) {
     return new SIMD.float32x4(x, y, z, w);
   }
+
   this.x_ = _PRIVATE.truncatef32(x);
   this.y_ = _PRIVATE.truncatef32(y);
   this.z_ = _PRIVATE.truncatef32(z);
@@ -165,9 +171,15 @@ SIMD.float32x4.fromInt32x4Bits = function(t) {
   * @constructor
   */
 SIMD.float64x2 = function(x, y) {
+  if (arguments.length == 1) {
+    checkFloat64x2(x);
+    return x;
+  }
+
   if (!(this instanceof SIMD.float64x2)) {
     return new SIMD.float64x2(x, y);
   }
+
   this.x_ = x;
   this.y_ = y;
 }
@@ -247,9 +259,15 @@ SIMD.float64x2.fromInt32x4Bits = function(t) {
   * @constructor
   */
 SIMD.int32x4 = function(x, y, z, w) {
+  if (arguments.length == 1) {
+      checkInt32x4(x);
+      return x;
+  }
+
   if (!(this instanceof SIMD.int32x4)) {
     return new SIMD.int32x4(x, y, z, w);
   }
+
   this.x_ = _PRIVATE.truncatei32(x);
   this.y_ = _PRIVATE.truncatei32(y);
   this.z_ = _PRIVATE.truncatei32(z);
