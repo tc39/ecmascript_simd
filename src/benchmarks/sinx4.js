@@ -107,15 +107,15 @@
     var emm2;
 
     sign_bit = x;
-    x        = SIMD.int32x4.bitsToFloat32x4(SIMD.int32x4.and(SIMD.float32x4.bitsToInt32x4(x), _ps_inv_sign_mask));
-    sign_bit = SIMD.int32x4.bitsToFloat32x4(SIMD.int32x4.and(SIMD.float32x4.bitsToInt32x4(sign_bit), _ps_sign_mask));
+    x        = SIMD.float32x4.fromInt32x4Bits(SIMD.int32x4.and(SIMD.int32x4.fromFloat32x4Bits(x), _ps_inv_sign_mask));
+    sign_bit = SIMD.float32x4.fromInt32x4Bits(SIMD.int32x4.and(SIMD.int32x4.fromFloat32x4Bits(sign_bit), _ps_sign_mask));
     y        = SIMD.float32x4.mul(x, _ps_cephes_FOPI);
     //printFloat32x4 ("Probe 6", y);
-    emm2     = SIMD.float32x4.toInt32x4(y);
+    emm2     = SIMD.int32x4.fromFloat32x4(y);
     emm2     = SIMD.int32x4.add(emm2, _pi32_1);
     emm2     = SIMD.int32x4.and(emm2, _pi32_inv1);
     //printInt32x4 ("Probe 8", emm2);
-    y        = SIMD.int32x4.toFloat32x4(emm2);
+    y        = SIMD.float32x4.fromInt32x4(emm2);
     //printFloat32x4 ("Probe 7", y);
     emm0     = SIMD.int32x4.and(emm2, _pi32_4);
     emm0     = SIMD.int32x4.shiftLeft(emm0, 29);
@@ -123,9 +123,9 @@
     emm2     = SIMD.int32x4.and(emm2, _pi32_2);
     emm2     = SIMD.int32x4.equal(emm2, SIMD.int32x4.zero());
 
-    swap_sign_bit = SIMD.int32x4.bitsToFloat32x4(emm0);
-    poly_mask     = SIMD.int32x4.bitsToFloat32x4(emm2);
-    sign_bit      = SIMD.int32x4.bitsToFloat32x4(SIMD.int32x4.xor(SIMD.float32x4.bitsToInt32x4(sign_bit), SIMD.float32x4.bitsToInt32x4(swap_sign_bit)));
+    swap_sign_bit = SIMD.float32x4.fromInt32x4Bits(emm0);
+    poly_mask     = SIMD.float32x4.fromInt32x4Bits(emm2);
+    sign_bit      = SIMD.float32x4.fromInt32x4Bits(SIMD.int32x4.xor(SIMD.int32x4.fromFloat32x4Bits(sign_bit), SIMD.int32x4.fromFloat32x4Bits(swap_sign_bit)));
     //printFloat32x4 ("Probe 1", sign_bit);
 
     //printFloat32x4 ("Probe 4", y);
@@ -164,13 +164,13 @@
     y2   = SIMD.float32x4.add(y2, x);
 
     xmm3 = poly_mask;
-    y2   = SIMD.int32x4.bitsToFloat32x4(SIMD.int32x4.and(SIMD.float32x4.bitsToInt32x4(xmm3), SIMD.float32x4.bitsToInt32x4(y2)));
+    y2   = SIMD.float32x4.fromInt32x4Bits(SIMD.int32x4.and(SIMD.int32x4.fromFloat32x4Bits(xmm3), SIMD.int32x4.fromFloat32x4Bits(y2)));
     //printFloat32x4 ("Probe 10", y2);
-    y    = SIMD.int32x4.bitsToFloat32x4(SIMD.int32x4.and(SIMD.int32x4.not(SIMD.float32x4.bitsToInt32x4(xmm3)), SIMD.float32x4.bitsToInt32x4(y)));
+    y    = SIMD.float32x4.fromInt32x4Bits(SIMD.int32x4.and(SIMD.int32x4.not(SIMD.int32x4.fromFloat32x4Bits(xmm3)), SIMD.int32x4.fromFloat32x4Bits(y)));
     y    = SIMD.float32x4.add(y, y2);
 
     //printFloat32x4 ("Probe 9", y);
-    y    = SIMD.int32x4.bitsToFloat32x4(SIMD.int32x4.xor(SIMD.float32x4.bitsToInt32x4(y), SIMD.float32x4.bitsToInt32x4(sign_bit)));
+    y    = SIMD.float32x4.fromInt32x4Bits(SIMD.int32x4.xor(SIMD.int32x4.fromFloat32x4Bits(y), SIMD.int32x4.fromFloat32x4Bits(sign_bit)));
     return y;
   }
 
