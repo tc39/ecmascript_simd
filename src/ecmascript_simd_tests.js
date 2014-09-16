@@ -1272,3 +1272,366 @@ test('View on Float32x4Array', function() {
   equal(a.getAt(3).z, 15);
   equal(a.getAt(3).w, 16);
 });
+
+test('DataView.getFloat32x4', function() {
+  var a = new Float32Array(8);
+  var v = new DataView(a.buffer);
+  for (var i = 0; i < a.length; i++) {
+    v.setFloat32(i * 4, i);
+  }
+  for (var i = 0; i < a.length - 4; i++) {
+    var f32x4 = v.getFloat32x4(i * 4);
+    equal(f32x4.x, v.getFloat32(i * 4));
+    equal(f32x4.y, v.getFloat32((i + 1) * 4));
+    equal(f32x4.z, v.getFloat32((i + 2) * 4));
+    equal(f32x4.w, v.getFloat32((i + 3) * 4));
+  }
+});
+
+test('DataView.getFloat32x4 with littleEndian as false', function() {
+  var a = new Float32Array(8);
+  var v = new DataView(a.buffer);
+  for (var i = 0; i < a.length; i++) {
+    v.setFloat32(i * 4, i, false);
+  }
+  for (var i = 0; i < a.length - 4; i++) {
+    var f32x4 = v.getFloat32x4(i * 4, false);
+    equal(f32x4.x, v.getFloat32(i * 4, false));
+    equal(f32x4.y, v.getFloat32((i + 1) * 4, false));
+    equal(f32x4.z, v.getFloat32((i + 2) * 4, false));
+    equal(f32x4.w, v.getFloat32((i + 3) * 4, false));
+  }
+});
+
+
+test('DataView.getFloat32x4 with littleEndian as true', function() {
+  var a = new Float32Array(8);
+  var v = new DataView(a.buffer);
+  for (var i = 0; i < a.length; i++) {
+    v.setFloat32(i * 4, i, true);
+  }
+  for (var i = 0; i < a.length - 4; i++) {
+    var f32x4 = v.getFloat32x4(i * 4, true);
+    equal(f32x4.x, v.getFloat32(i * 4, true));
+    equal(f32x4.y, v.getFloat32((i + 1) * 4, true));
+    equal(f32x4.z, v.getFloat32((i + 2) * 4, true));
+    equal(f32x4.w, v.getFloat32((i + 3) * 4, true));
+  }
+});
+
+test('DataView.getFloat32x4 exceptions', function() {
+  var a = new Float32Array(8);
+  var v = new DataView(a.buffer);
+  throws(function () {
+    v.getFloat32x4(-1);
+  });
+  throws(function () {
+    v.getFloat32x4(28);
+  });
+});
+
+test('DataView.getFloat64x2', function() {
+  var a = new Float64Array(8);
+  var v = new DataView(a.buffer);
+  for (var i = 0; i < a.length; i++) {
+    v.setFloat64(i * 8, i);
+  }
+  for (var i = 0; i < a.length - 2; i++) {
+    var f32x4 = v.getFloat64x2(i * 8);
+    equal(f32x4.x, v.getFloat64(i * 8));
+    equal(f32x4.y, v.getFloat64((i + 1) * 8));
+  }
+});
+
+test('DataView.getFloat64x2 with littleEndian as false', function() {
+  var a = new Float64Array(8);
+  var v = new DataView(a.buffer);
+  for (var i = 0; i < a.length; i++) {
+    v.setFloat64(i * 8, i, false);
+  }
+  for (var i = 0; i < a.length - 2; i++) {
+    var f32x4 = v.getFloat64x2(i * 8, false);
+    equal(f32x4.x, v.getFloat64(i * 8, false));
+    equal(f32x4.y, v.getFloat64((i + 1) * 8, false));
+  }
+});
+
+
+test('DataView.getFloat64x2 with littleEndian as true', function() {
+  var a = new Float64Array(8);
+  var v = new DataView(a.buffer);
+  for (var i = 0; i < a.length; i++) {
+    v.setFloat64(i * 8, i, true);
+  }
+  for (var i = 0; i < a.length - 2; i++) {
+    var f32x4 = v.getFloat64x2(i * 8, true);
+    equal(f32x4.x, v.getFloat64(i * 8, true));
+    equal(f32x4.y, v.getFloat64((i + 1) * 8, true));
+  }
+});
+
+test('DataView.getFloat64x2 exceptions', function() {
+  var a = new Float64Array(8);
+  var v = new DataView(a.buffer);
+  throws(function () {
+    v.getFloat64x2(-1);
+  });
+  throws(function () {
+    v.getFloat64x2(60);
+  });
+});
+
+test('DataView.getInt32x4', function() {
+  var a = new Int32Array(8);
+  var v = new DataView(a.buffer);
+  for (var i = 0; i < a.length; i++) {
+    v.setInt32(i * 4, i);
+  }
+  for (var i = 0; i < a.length - 4; i++) {
+    var f32x4 = v.getInt32x4(i * 4);
+    equal(f32x4.x, v.getInt32(i * 4));
+    equal(f32x4.y, v.getInt32((i + 1) * 4));
+    equal(f32x4.z, v.getInt32((i + 2) * 4));
+    equal(f32x4.w, v.getInt32((i + 3) * 4));
+  }
+});
+
+test('DataView.getInt32x4 with littleEndian as false', function() {
+  var a = new Int32Array(8);
+  var v = new DataView(a.buffer);
+  for (var i = 0; i < a.length; i++) {
+    v.setInt32(i * 4, i, false);
+  }
+  for (var i = 0; i < a.length - 4; i++) {
+    var f32x4 = v.getInt32x4(i * 4, false);
+    equal(f32x4.x, v.getInt32(i * 4, false));
+    equal(f32x4.y, v.getInt32((i + 1) * 4, false));
+    equal(f32x4.z, v.getInt32((i + 2) * 4, false));
+    equal(f32x4.w, v.getInt32((i + 3) * 4, false));
+  }
+});
+
+
+test('DataView.getInt32x4 with littleEndian as true', function() {
+  var a = new Int32Array(8);
+  var v = new DataView(a.buffer);
+  for (var i = 0; i < a.length; i++) {
+    v.setInt32(i * 4, i, true);
+  }
+  for (var i = 0; i < a.length - 4; i++) {
+    var f32x4 = v.getInt32x4(i * 4, true);
+    equal(f32x4.x, v.getInt32(i * 4, true));
+    equal(f32x4.y, v.getInt32((i + 1) * 4, true));
+    equal(f32x4.z, v.getInt32((i + 2) * 4, true));
+    equal(f32x4.w, v.getInt32((i + 3) * 4, true));
+  }
+});
+
+test('DataView.getInt32x4 exceptions', function() {
+  var a = new Int32Array(8);
+  var v = new DataView(a.buffer);
+  throws(function () {
+    v.getInt32x4(-1);
+  });
+  throws(function () {
+    v.getInt32x4(28);
+  });
+});
+
+test('DataView.setFloat32x4', function() {
+  var a = new Float32Array(8);
+  var b = new Float32Array(8);
+  var u = new DataView(a.buffer);
+  var v = new DataView(b.buffer);
+  for (var i = 0; i < a.length; i++) {
+    u.setFloat32(i * 4, i);
+  }
+  for (var i = 0; i < b.length; i+=4) {
+    v.setFloat32x4(i * 4, SIMD.float32x4(i, i+1, i+2, i+3));
+  }
+  for (var i = 0; i < a.length; i++) {
+    equal(u.getFloat32(i*4), v.getFloat32(i*4));
+
+  }
+});
+
+test('DataView.setFloat32x4 with littleEndian as false', function() {
+  var a = new Float32Array(8);
+  var b = new Float32Array(8);
+  var u = new DataView(a.buffer);
+  var v = new DataView(b.buffer);
+  for (var i = 0; i < a.length; i++) {
+    u.setFloat32(i * 4, i, false);
+  }
+  for (var i = 0; i < b.length; i+=4) {
+    v.setFloat32x4(i * 4, SIMD.float32x4(i, i+1, i+2, i+3), false);
+  }
+  for (var i = 0; i < a.length; i++) {
+    equal(u.getFloat32(i*4, false), v.getFloat32(i*4, false));
+  }
+});
+
+
+test('DataView.setFloat32x4 with littleEndian as true', function() {
+  var a = new Float32Array(8);
+  var b = new Float32Array(8);
+  var u = new DataView(a.buffer);
+  var v = new DataView(b.buffer);
+  for (var i = 0; i < a.length; i++) {
+    u.setFloat32(i * 4, i, true);
+  }
+  for (var i = 0; i < b.length; i+=4) {
+    v.setFloat32x4(i * 4, SIMD.float32x4(i, i+1, i+2, i+3), true);
+  }
+  for (var i = 0; i < a.length; i++) {
+    equal(u.getFloat32(i*4, true), v.getFloat32(i*4, true));
+  }
+});
+
+test('DataView.setFloat32x4 exceptions', function() {
+  var a = new Float32Array(8);
+  var v = new DataView(a.buffer);
+  var f4 = SIMD.float32x4(0, 1, 2, 3);
+  var i4 = SIMD.int32x4(0, 1, 2, 3);
+  throws(function () {
+    v.setFloat32x4(-1, f4);
+  });
+  throws(function () {
+    v.setFloat32x4(28, f4);
+  });
+  throws(function () {
+    v.setFloat32x4(1, i4);
+  });
+});
+
+test('DataView.setFloat64x2', function() {
+  var a = new Float64Array(8);
+  var b = new Float64Array(8);
+  var u = new DataView(a.buffer);
+  var v = new DataView(b.buffer);
+  for (var i = 0; i < a.length; i++) {
+    u.setFloat64(i * 8, i);
+  }
+  for (var i = 0; i < b.length; i+=2) {
+    v.setFloat64x2(i * 8, SIMD.float64x2(i, i+1));
+  }
+  for (var i = 0; i < a.length; i++) {
+    equal(u.getFloat64(i*8), v.getFloat64(i*8));
+
+  }
+});
+
+test('DataView.setFloat64x2 with littleEndian as false', function() {
+  var a = new Float64Array(8);
+  var b = new Float64Array(8);
+  var u = new DataView(a.buffer);
+  var v = new DataView(b.buffer);
+  for (var i = 0; i < a.length; i++) {
+    u.setFloat64(i * 8, i, false);
+  }
+  for (var i = 0; i < b.length; i+=2) {
+    v.setFloat64x2(i * 8, SIMD.float64x2(i, i+1), false);
+  }
+  for (var i = 0; i < a.length; i++) {
+    equal(u.getFloat64(i*8, false), v.getFloat64(i*8, false));
+  }
+});
+
+
+test('DataView.setFloat64x2 with littleEndian as true', function() {
+  var a = new Float64Array(8);
+  var b = new Float64Array(8);
+  var u = new DataView(a.buffer);
+  var v = new DataView(b.buffer);
+  for (var i = 0; i < a.length; i++) {
+    u.setFloat64(i * 8, i, true);
+  }
+  for (var i = 0; i < b.length; i+=2) {
+    v.setFloat64x2(i * 8, SIMD.float64x2(i, i+1), true);
+  }
+  for (var i = 0; i < a.length; i++) {
+    equal(u.getFloat64(i*8, true), v.getFloat64(i*8, true));
+  }
+});
+
+test('DataView.setFloat64x2 exceptions', function() {
+  var a = new Float64Array(8);
+  var v = new DataView(a.buffer);
+  var f2 = SIMD.float64x2(0, 1);
+  var i4 = SIMD.int32x4(0, 1, 2, 3);
+  throws(function () {
+    v.setFloat64x2(-1, f2);
+  });
+  throws(function () {
+    v.setFloat64x2(60, f2);
+  });
+  throws(function () {
+    v.setFloat64x2(1, i4);
+  });
+});
+
+test('DataView.setInt32x4', function() {
+  var a = new Int32Array(8);
+  var b = new Int32Array(8);
+  var u = new DataView(a.buffer);
+  var v = new DataView(b.buffer);
+  for (var i = 0; i < a.length; i++) {
+    u.setInt32(i * 4, i);
+  }
+  for (var i = 0; i < b.length; i+=4) {
+    v.setInt32x4(i * 4, SIMD.int32x4(i, i+1, i+2, i+3));
+  }
+  for (var i = 0; i < a.length; i++) {
+    equal(u.getInt32(i*4), v.getInt32(i*4));
+
+  }
+});
+
+test('DataView.setInt32x4 with littleEndian as false', function() {
+  var a = new Int32Array(8);
+  var b = new Int32Array(8);
+  var u = new DataView(a.buffer);
+  var v = new DataView(b.buffer);
+  for (var i = 0; i < a.length; i++) {
+    u.setInt32(i * 4, i, false);
+  }
+  for (var i = 0; i < b.length; i+=4) {
+    v.setInt32x4(i * 4, SIMD.int32x4(i, i+1, i+2, i+3), false);
+  }
+  for (var i = 0; i < a.length; i++) {
+    equal(u.getInt32(i*4, false), v.getInt32(i*4, false));
+  }
+});
+
+
+test('DataView.setInt32x4 with littleEndian as true', function() {
+  var a = new Int32Array(8);
+  var b = new Int32Array(8);
+  var u = new DataView(a.buffer);
+  var v = new DataView(b.buffer);
+  for (var i = 0; i < a.length; i++) {
+    u.setInt32(i * 4, i, true);
+  }
+  for (var i = 0; i < b.length; i+=4) {
+    v.setInt32x4(i * 4, SIMD.int32x4(i, i+1, i+2, i+3), true);
+  }
+  for (var i = 0; i < a.length; i++) {
+    equal(u.getInt32(i*4, true), v.getInt32(i*4, true));
+  }
+});
+
+test('DataView.setInt32x4 exceptions', function() {
+  var a = new Int32Array(8);
+  var v = new DataView(a.buffer);
+  var f4 = SIMD.float32x4(0, 1, 2, 3);
+  var i4 = SIMD.int32x4(0, 1, 2, 3);
+  throws(function () {
+    v.setInt32x4(-1, i4);
+  });
+  throws(function () {
+    v.setInt32x4(28, i4);
+  });
+  throws(function () {
+    v.setInt32x4(1, f4);
+  });
+});
