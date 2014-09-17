@@ -82,6 +82,10 @@ test('float32x4 signMask getter', function() {
   equal(0x0, b.signMask);
   var c = SIMD.float32x4(1.0, -2.0, -3.0, 4.0);
   equal(0x6, c.signMask);
+  var d = SIMD.float32x4(-0.0, 0.0, 0.0, -0.0);
+  equal(0x9, d.signMask);
+  var e = SIMD.float32x4(0.0, -0.0, -0.0, 0.0);
+  equal(0x6, e.signMask);
 });
 
 test('float32x4 vector getters', function() {
@@ -467,6 +471,10 @@ test('float64x2 signMask getter', function() {
   equal(0x2, c.signMask);
   var d = SIMD.float64x2(-1.0, -2.0);
   equal(0x3, d.signMask);
+  var e = SIMD.float64x2(0.0, -0.0);
+  equal(0x2, e.signMask);
+  var f = SIMD.float64x2(-0.0, 0.0);
+  equal(0x1, f.signMask);
 });
 
 test('float64x2 abs', function() {
