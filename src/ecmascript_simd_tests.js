@@ -407,67 +407,6 @@ test('float32x4 float64x2 conversion', function() {
   equal(2.0, n.y);
 });
 
-test('float32x4 load', function() {
-  var a = new Float32Array(8);
-  for (var i = 0; i < a.length; i++) {
-    a[i] = i;
-  }
-  for (var i = 0; i < a.length - 4; i++) {
-    var v = SIMD.float32x4.load(a.buffer, i * 4);
-    equal(i, v.x);
-    equal(i+1, v.y);
-    equal(i+2, v.z);
-    equal(i+3, v.w);
-  }
-});
-
-test('float32x4 store', function() {
-  var a = new Float32Array(10);
-  SIMD.float32x4.store(a.buffer, 0, SIMD.float32x4(0, 1, 2, -1));
-  SIMD.float32x4.store(a.buffer, 12, SIMD.float32x4(3, 4, 5, -1));
-  SIMD.float32x4.store(a.buffer, 24, SIMD.float32x4(6, 7, 8, 9));
-  for (var i = 0; i < a.length; i++) {
-    equal(i, a[i]);
-  }
-});
-
-test('float32x4 load exceptions', function () {
-  var a = new Float32Array(8);
-  throws(function () {
-    var f = SIMD.float32x4.load(a.buffer, -1);
-  });
-  throws(function () {
-    var f = SIMD.float32x4.load(a.buffer, 28);
-  });
-  throws(function () {
-    var f = SIMD.float32x4.load(a, 1);
-  });
-  throws(function () {
-    var f = SIMD.float32x4.load(a.buffer, "a");
-  });
-});
-
-test('float32x4 store exceptions', function () {
-  var a = new Float32Array(8);
-  var f = SIMD.float32x4(1, 2, 3, 4);
-  var i = SIMD.int32x4(1, 2, 3, 4);
-  throws(function () {
-    SIMD.float32x4.store(a.buffer, -1, f);
-  });
-  throws(function () {
-    SIMD.float32x4.store(a.buffer, 28, f);
-  });
-  throws(function () {
-    SIMD.float32x4.store(a, 1, f);
-  });
-  throws(function () {
-    SIMD.float32x4.store(a.buffer, "a", f);
-  });
-  throws(function () {
-    SIMD.float32x4.store(a.buffer, 1, i);
-  });
-});
-
 test('float64x2 constructor', function() {
   equal('function', typeof SIMD.float64x2);
   var m = SIMD.float64x2(1.0, 2.0);
@@ -787,65 +726,6 @@ test('float64x2 select', function() {
   equal(4.0, s.y);
 });
 
-test('float64x2 load', function() {
-  var a = new Float64Array(8);
-  for (var i = 0; i < a.length; i++) {
-    a[i] = i;
-  }
-  for (var i = 0; i < a.length - 2; i++) {
-    var v = SIMD.float64x2.load(a.buffer, i * 8);
-    equal(i, v.x);
-    equal(i+1, v.y);
-  }
-});
-
-test('float64x2 store', function() {
-  var a = new Float64Array(6);
-  SIMD.float64x2.store(a.buffer, 0, SIMD.float64x2(0, 1));
-  SIMD.float64x2.store(a.buffer, 16, SIMD.float64x2(2, 3));
-  SIMD.float64x2.store(a.buffer, 32, SIMD.float64x2(4, 5));
-  for (var i = 0; i < a.length; i++) {
-    equal(i, a[i]);
-  }
-});
-
-test('float64x2 load exceptions', function () {
-  var a = new Float64Array(8);
-  throws(function () {
-    var f = SIMD.float64x2.load(a.buffer, -1);
-  });
-  throws(function () {
-    var f = SIMD.float64x2.load(a.buffer, 112);
-  });
-  throws(function () {
-    var f = SIMD.float64x2.load(a, 1);
-  });
-  throws(function () {
-    var f = SIMD.float64x2.load(a.buffer, "a");
-  });
-});
-
-test('float64x2 store exceptions', function () {
-  var a = new Float64Array(8);
-  var f = SIMD.float64x2(1, 2);
-  var i = SIMD.int32x4(1, 2, 3, 4);
-  throws(function () {
-    SIMD.float64x2.store(a.buffer, -1, f);
-  });
-  throws(function () {
-    SIMD.float64x2.store(a.buffer, 112, f);
-  });
-  throws(function () {
-    SIMD.float64x2.store(a, 1, f);
-  });
-  throws(function () {
-    SIMD.float64x2.store(a.buffer, "a", f);
-  });
-  throws(function () {
-    SIMD.float64x2.store(a.buffer, 1, i);
-  });
-});
-
 test('int32x4 fromFloat32x4 constructor', function() {
   var m = SIMD.float32x4(1.0, 2.2, 3.6, 4.8);
   var n = SIMD.int32x4.fromFloat32x4(m);
@@ -1117,67 +997,6 @@ test('int32x4 select', function() {
   equal(2, s.y);
   equal(7, s.z);
   equal(8, s.w);
-});
-
-test('int32x4 load', function() {
-  var a = new Int32Array(8);
-  for (var i = 0; i < a.length; i++) {
-    a[i] = i;
-  }
-  for (var i = 0; i < a.length - 4; i++) {
-    var v = SIMD.int32x4.load(a.buffer, i * 4);
-    equal(i, v.x);
-    equal(i+1, v.y);
-    equal(i+2, v.z);
-    equal(i+3, v.w);
-  }
-});
-
-test('int32x4 store', function() {
-  var a = new Int32Array(10);
-  SIMD.int32x4.store(a.buffer, 0, SIMD.int32x4(0, 1, 2, -1));
-  SIMD.int32x4.store(a.buffer, 12, SIMD.int32x4(3, 4, 5, -1));
-  SIMD.int32x4.store(a.buffer, 24, SIMD.int32x4(6, 7, 8, 9));
-  for (var i = 0; i < a.length; i++) {
-    equal(i, a[i]);
-  }
-});
-
-test('int32x4 load exceptions', function () {
-  var a = new Int32Array(8);
-  throws(function () {
-    var f = SIMD.int32x4.load(a.buffer, -1);
-  });
-  throws(function () {
-    var f = SIMD.int32x4.load(a.buffer, 28);
-  });
-  throws(function () {
-    var f = SIMD.int32x4.load(a, 1);
-  });
-  throws(function () {
-    var f = SIMD.int32x4.load(a.buffer, "a");
-  });
-});
-
-test('int32x4 store exceptions', function () {
-  var a = new Int32Array(8);
-  var f = SIMD.float32x4(1, 2, 3, 4);
-  var i = SIMD.int32x4(1, 2, 3, 4);
-  throws(function () {
-    SIMD.int32x4.store(a.buffer, -1, i);
-  });
-  throws(function () {
-    SIMD.int32x4.store(a.buffer, 28, i);
-  });
-  throws(function () {
-    SIMD.int32x4.store(a, 1, i);
-  });
-  throws(function () {
-    SIMD.int32x4.store(a.buffer, "a", i);
-  });
-  throws(function () {
-    SIMD.int32x4.store(a.buffer, 1, f);
-  });
 });
 
 test('Float32x4Array simple', function() {
