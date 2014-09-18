@@ -54,15 +54,15 @@
     T2[10] = 2.0;
     T2[15] = 2.0;
 
-    T1x4.setAt(0, float32x4(1.0, 0.0, 0.0, 0.0));
-    T1x4.setAt(1, float32x4(0.0, 1.0, 0.0, 0.0));
-    T1x4.setAt(2, float32x4(0.0, 0.0, 1.0, 0.0));
-    T1x4.setAt(3, float32x4(0.0, 0.0, 0.0, 1.0));
+    T1x4.setAt(0, SIMD.float32x4(1.0, 0.0, 0.0, 0.0));
+    T1x4.setAt(1, SIMD.float32x4(0.0, 1.0, 0.0, 0.0));
+    T1x4.setAt(2, SIMD.float32x4(0.0, 0.0, 1.0, 0.0));
+    T1x4.setAt(3, SIMD.float32x4(0.0, 0.0, 0.0, 1.0));
 
-    T2x4.setAt(0, float32x4(2.0, 0.0, 0.0, 0.0));
-    T2x4.setAt(1, float32x4(0.0, 2.0, 0.0, 0.0));
-    T2x4.setAt(2, float32x4(0.0, 0.0, 2.0, 0.0));
-    T2x4.setAt(3, float32x4(0.0, 0.0, 0.0, 2.0));
+    T2x4.setAt(0, SIMD.float32x4(2.0, 0.0, 0.0, 0.0));
+    T2x4.setAt(1, SIMD.float32x4(0.0, 2.0, 0.0, 0.0));
+    T2x4.setAt(2, SIMD.float32x4(0.0, 0.0, 2.0, 0.0));
+    T2x4.setAt(3, SIMD.float32x4(0.0, 0.0, 0.0, 2.0));
 
     multiply(1);
     simdMultiply(1);

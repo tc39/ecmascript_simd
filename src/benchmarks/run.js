@@ -12,7 +12,8 @@ load ('base.js');
 
 // load individual benchmarks
 load ('kernel-template.js');
-load ('average.js');
+load ('averageFloat32x4.js');
+load ('averageFloat64x2.js');
 load ('mandelbrot.js');
 load ('matrix-multiplication.js');
 load ('transform.js');
@@ -20,6 +21,7 @@ load ('shiftrows.js');
 load ('aobench.js');
 load ('transpose4x4.js');
 load ('inverse4x4.js');
+load ('sinx4.js');
 
 function printResult (str) {
   print (str);

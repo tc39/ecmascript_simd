@@ -21,11 +21,6 @@
 "use strict";
 
 function Float32x4Array(a, b, c) {
-
-  float32x4.splat = function(s) {
-    return float32x4(s, s, s, s);
-  }
-
   function isNumber(o) {
       return typeof o == "number" || (typeof o == "object" && o.constructor === Number);
   }
@@ -118,7 +113,7 @@ Float32x4Array.prototype.getAt = function(i) {
   var y = this.storage_[i*4+1];
   var z = this.storage_[i*4+2];
   var w = this.storage_[i*4+3];
-  return float32x4(x, y, z, w);
+  return SIMD.float32x4(x, y, z, w);
 }
 
 Float32x4Array.prototype.setAt = function(i, v) {
@@ -128,7 +123,7 @@ Float32x4Array.prototype.setAt = function(i, v) {
   if (i >= this.length) {
     throw "Index out of bounds.";
   }
-  if (!(v instanceof float32x4)) {
+  if (!(v instanceof SIMD.float32x4)) {
     throw "Value is not a float32x4.";
   }
   this.storage_[i*4+0] = v.x;

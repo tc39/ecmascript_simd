@@ -24,7 +24,7 @@
   var tsrc   = new Float32Array(16);
   var tsrcx4 = new Float32x4Array(tsrc.buffer);
 
-  var sel_ttff = int32x4.bool(true, true, false, false);
+  var sel_ttff = SIMD.int32x4.bool(true, true, false, false);
 
   function initMatrix(matrix, matrixTransposed) {
     for (var r = 0; r < 4; ++r) {
@@ -121,15 +121,15 @@
     var tmp01;
     var tmp23;
 
-    tmp01 = SIMD.int32x4.select(sel_ttff, src0, SIMD.float32x4.shuffle(src1, SIMD.XXXY));
-    tmp23 = SIMD.int32x4.select(sel_ttff, src2, SIMD.float32x4.shuffle(src3, SIMD.XXXY));
-    dst0  = SIMD.int32x4.select(sel_ttff, SIMD.float32x4.shuffle(tmp01, SIMD.XZXX), SIMD.float32x4.shuffle(tmp23, SIMD.XXXZ));
-    dst1  = SIMD.int32x4.select(sel_ttff, SIMD.float32x4.shuffle(tmp01, SIMD.YWXX), SIMD.float32x4.shuffle(tmp23, SIMD.XXYW));
+    tmp01 = SIMD.float32x4.select(sel_ttff, src0, SIMD.float32x4.shuffle(src1, SIMD.XXXY));
+    tmp23 = SIMD.float32x4.select(sel_ttff, src2, SIMD.float32x4.shuffle(src3, SIMD.XXXY));
+    dst0  = SIMD.float32x4.select(sel_ttff, SIMD.float32x4.shuffle(tmp01, SIMD.XZXX), SIMD.float32x4.shuffle(tmp23, SIMD.XXXZ));
+    dst1  = SIMD.float32x4.select(sel_ttff, SIMD.float32x4.shuffle(tmp01, SIMD.YWXX), SIMD.float32x4.shuffle(tmp23, SIMD.XXYW));
 
-    tmp01 = SIMD.int32x4.select(sel_ttff, SIMD.float32x4.shuffle(src0, SIMD.ZWXX), src1);
-    tmp23 = SIMD.int32x4.select(sel_ttff, SIMD.float32x4.shuffle(src2, SIMD.ZWXX), src3);
-    dst2  = SIMD.int32x4.select(sel_ttff, SIMD.float32x4.shuffle(tmp01, SIMD.XZXX), SIMD.float32x4.shuffle(tmp23, SIMD.XXXZ));
-    dst3  = SIMD.int32x4.select(sel_ttff, SIMD.float32x4.shuffle(tmp01, SIMD.YWXX), SIMD.float32x4.shuffle(tmp23, SIMD.XXYW));
+    tmp01 = SIMD.float32x4.select(sel_ttff, SIMD.float32x4.shuffle(src0, SIMD.ZWXX), src1);
+    tmp23 = SIMD.float32x4.select(sel_ttff, SIMD.float32x4.shuffle(src2, SIMD.ZWXX), src3);
+    dst2  = SIMD.float32x4.select(sel_ttff, SIMD.float32x4.shuffle(tmp01, SIMD.XZXX), SIMD.float32x4.shuffle(tmp23, SIMD.XXXZ));
+    dst3  = SIMD.float32x4.select(sel_ttff, SIMD.float32x4.shuffle(tmp01, SIMD.YWXX), SIMD.float32x4.shuffle(tmp23, SIMD.XXYW));
 
     dstx4.setAt(0, dst0);
     dstx4.setAt(1, dst1);
