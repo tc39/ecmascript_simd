@@ -401,6 +401,8 @@ SIMD.float32x4.div = function(a, b) {
   */
 SIMD.float32x4.clamp = function(t, lowerLimit, upperLimit) {
   checkFloat32x4(t);
+  checkFloat32x4(lowerLimit);
+  checkFloat32x4(upperLimit);
   var cx = t.x < lowerLimit.x ? lowerLimit.x : t.x;
   var cy = t.y < lowerLimit.y ? lowerLimit.y : t.y;
   var cz = t.z < lowerLimit.z ? lowerLimit.z : t.z;
@@ -946,6 +948,8 @@ SIMD.float64x2.div = function(a, b) {
   */
 SIMD.float64x2.clamp = function(t, lowerLimit, upperLimit) {
   checkFloat64x2(t);
+  checkFloat64x2(lowerLimit);
+  checkFloat64x2(upperLimit);
   var cx = t.x < lowerLimit.x ? lowerLimit.x : t.x;
   var cy = t.y < lowerLimit.y ? lowerLimit.y : t.y;
   cx = cx > upperLimit.x ? upperLimit.x : cx;
