@@ -18,9 +18,6 @@
   3. This notice may not be removed or altered from any source distribution.
 */
 
-"use strict";
-
-
 function Int32x4Array(a, b, c) {
 
   function isNumber(o) {
