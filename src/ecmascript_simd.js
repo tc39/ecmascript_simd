@@ -759,11 +759,8 @@ SIMD.float32x4.load = function(buffer, byteOffset) {
     throw new TypeError("The 2nd argument must be a Number.");
   if (byteOffset < 0 || (byteOffset + 16) > buffer.byteLength)
     throw new RangeError("The value of byteOffset is invalid.");
-  var i8a = new Int8Array(buffer, byteOffset, 16);
-  for (var i = 0; i < 16; i++)
-    _PRIVATE._i8x16[i] = i8a[i];
-  return SIMD.float32x4(_PRIVATE._f32x4[0], _PRIVATE._f32x4[1],
-                        _PRIVATE._f32x4[2], _PRIVATE._f32x4[3]);
+  var f32a = new Float32Array(buffer, byteOffset, 4);
+  return SIMD.float32x4(f32a[0], f32a[1], f32a[2], f32a[3]);
 }
 
 /**
@@ -778,10 +775,8 @@ SIMD.float32x4.loadX = function(buffer, byteOffset) {
     throw new TypeError("The 2nd argument must be a Number.");
   if (byteOffset < 0 || (byteOffset + 4) > buffer.byteLength)
     throw new RangeError("The value of byteOffset is invalid.");
-  var i8a = new Int8Array(buffer, byteOffset, 4);
-  for (var i = 0; i < 4; i++)
-    _PRIVATE._i8x16[i] = i8a[i];
-  return SIMD.float32x4(_PRIVATE._f32x4[0], 0.0, 0.0, 0.0);
+  var f32a = new Float32Array(buffer, byteOffset, 1);
+  return SIMD.float32x4(f32a[0], 0.0, 0.0, 0.0);
 }
 
 /**
@@ -796,10 +791,8 @@ SIMD.float32x4.loadXY = function(buffer, byteOffset) {
     throw new TypeError("The 2nd argument must be a Number.");
   if (byteOffset < 0 || (byteOffset + 8) > buffer.byteLength)
     throw new RangeError("The value of byteOffset is invalid.");
-  var i8a = new Int8Array(buffer, byteOffset, 8);
-  for (var i = 0; i < 8; i++)
-    _PRIVATE._i8x16[i] = i8a[i];
-  return SIMD.float32x4(_PRIVATE._f32x4[0], _PRIVATE._f32x4[1], 0.0, 0.0);
+  var f32a = new Float32Array(buffer, byteOffset, 2);
+  return SIMD.float32x4(f32a[0], f32a[1], 0.0, 0.0);
 }
 
 /**
@@ -814,11 +807,8 @@ SIMD.float32x4.loadXYZ = function(buffer, byteOffset) {
     throw new TypeError("The 2nd argument must be a Number.");
   if (byteOffset < 0 || (byteOffset + 12) > buffer.byteLength)
     throw new RangeError("The value of byteOffset is invalid.");
-  var i8a = new Int8Array(buffer, byteOffset, 12);
-  for (var i = 0; i < 12; i++)
-    _PRIVATE._i8x16[i] = i8a[i];
-  return SIMD.float32x4(_PRIVATE._f32x4[0], _PRIVATE._f32x4[1],
-                        _PRIVATE._f32x4[2], 0.0);
+  var f32a = new Float32Array(buffer, byteOffset, 3);
+  return SIMD.float32x4(f32a[0], f32a[1], f32a[2], 0.0);
 }
 
 /**
@@ -835,13 +825,11 @@ SIMD.float32x4.store = function(buffer, byteOffset, value) {
   if (byteOffset < 0 || (byteOffset + 16) > buffer.byteLength)
     throw new RangeError("The value of byteOffset is invalid.");
   checkFloat32x4(value);
-  _PRIVATE._f32x4[0] = value.x;
-  _PRIVATE._f32x4[1] = value.y;
-  _PRIVATE._f32x4[2] = value.z;
-  _PRIVATE._f32x4[3] = value.w;
-  var i8a = new Int8Array(buffer, byteOffset, 16);
-  for (var i = 0; i < 16; i++)
-    i8a[i] = _PRIVATE._i8x16[i];
+  var f32a = new Float32Array(buffer, byteOffset, 4);
+  f32a[0] = value.x;
+  f32a[1] = value.y;
+  f32a[2] = value.z;
+  f32a[3] = value.w;
 }
 
 /**
@@ -858,10 +846,8 @@ SIMD.float32x4.storeX = function(buffer, byteOffset, value) {
   if (byteOffset < 0 || (byteOffset + 4) > buffer.byteLength)
     throw new RangeError("The value of byteOffset is invalid.");
   checkFloat32x4(value);
-  _PRIVATE._f32x4[0] = value.x;
-  var i8a = new Int8Array(buffer, byteOffset, 4);
-  for (var i = 0; i < 4; i++)
-    i8a[i] = _PRIVATE._i8x16[i];
+  var f32a = new Float32Array(buffer, byteOffset, 1);
+  f32a[0] = value.x;
 }
 
 /**
@@ -878,11 +864,9 @@ SIMD.float32x4.storeXY = function(buffer, byteOffset, value) {
   if (byteOffset < 0 || (byteOffset + 8) > buffer.byteLength)
     throw new RangeError("The value of byteOffset is invalid.");
   checkFloat32x4(value);
-  _PRIVATE._f32x4[0] = value.x;
-  _PRIVATE._f32x4[1] = value.y;
-  var i8a = new Int8Array(buffer, byteOffset, 8);
-  for (var i = 0; i < 8; i++)
-    i8a[i] = _PRIVATE._i8x16[i];
+  var f32a = new Float32Array(buffer, byteOffset, 2);
+  f32a[0] = value.x;
+  f32a[1] = value.y;
 }
 
 /**
@@ -899,12 +883,10 @@ SIMD.float32x4.storeXYZ = function(buffer, byteOffset, value) {
   if (byteOffset < 0 || (byteOffset + 12) > buffer.byteLength)
     throw new RangeError("The value of byteOffset is invalid.");
   checkFloat32x4(value);
-  _PRIVATE._f32x4[0] = value.x;
-  _PRIVATE._f32x4[1] = value.y;
-  _PRIVATE._f32x4[2] = value.z;
-  var i8a = new Int8Array(buffer, byteOffset, 12);
-  for (var i = 0; i < 12; i++)
-    i8a[i] = _PRIVATE._i8x16[i];
+  var f32a = new Float32Array(buffer, byteOffset, 3);
+  f32a[0] = value.x;
+  f32a[1] = value.y;
+  f32a[2] = value.z;
 }
 
 /**
@@ -1206,10 +1188,8 @@ SIMD.float64x2.load = function(buffer, byteOffset) {
     throw new TypeError("The 2nd argument must be a Number.");
   if (byteOffset < 0 || (byteOffset + 16) > buffer.byteLength)
     throw new RangeError("The value of byteOffset is invalid.");
-  var i8a = new Int8Array(buffer, byteOffset, 16);
-  for (var i = 0; i < 16; i++)
-    _PRIVATE._i8x16[i] = i8a[i];
-  return SIMD.float64x2(_PRIVATE._f64x2[0], _PRIVATE._f64x2[1]);
+  var f64a = new Float64Array(buffer, byteOffset, 2);
+  return SIMD.float64x2(f64a[0], f64a[1]);
 }
 
 /**
@@ -1224,10 +1204,8 @@ SIMD.float64x2.loadX = function(buffer, byteOffset) {
     throw new TypeError("The 2nd argument must be a Number.");
   if (byteOffset < 0 || (byteOffset + 8) > buffer.byteLength)
     throw new RangeError("The value of byteOffset is invalid.");
-  var i8a = new Int8Array(buffer, byteOffset, 8);
-  for (var i = 0; i < 8; i++)
-    _PRIVATE._i8x16[i] = i8a[i];
-  return SIMD.float64x2(_PRIVATE._f64x2[0], 0.0);
+  var f64a = new Float64Array(buffer, byteOffset, 1);
+  return SIMD.float64x2(f64a[0], 0.0);
 }
 
 /**
@@ -1244,11 +1222,9 @@ SIMD.float64x2.store = function(buffer, byteOffset, value) {
   if (byteOffset < 0 || (byteOffset + 16) > buffer.byteLength)
     throw new RangeError("The value of byteOffset is invalid.");
   checkFloat64x2(value);
-  _PRIVATE._f64x2[0] = value.x;
-  _PRIVATE._f64x2[1] = value.y;
-  var i8a = new Int8Array(buffer, byteOffset, 16);
-  for (var i = 0; i < 16; i++)
-    i8a[i] = _PRIVATE._i8x16[i];
+  var f64a = new Float64Array(buffer, byteOffset, 2);
+  f64a[0] = value.x;
+  f64a[1] = value.y;
 }
 
 /**
@@ -1265,10 +1241,8 @@ SIMD.float64x2.storeX = function(buffer, byteOffset, value) {
   if (byteOffset < 0 || (byteOffset + 8) > buffer.byteLength)
     throw new RangeError("The value of byteOffset is invalid.");
   checkFloat64x2(value);
-  _PRIVATE._f64x2[0] = value.x;
-  var i8a = new Int8Array(buffer, byteOffset, 8);
-  for (var i = 0; i < 8; i++)
-    i8a[i] = _PRIVATE._i8x16[i];
+  var f64a = new Float64Array(buffer, byteOffset, 1);
+  f64a[0] = value.x;
 }
 
 /**
@@ -1612,11 +1586,8 @@ SIMD.int32x4.load = function(buffer, byteOffset) {
     throw new TypeError("The 2nd argument must be a Number.");
   if (byteOffset < 0 || (byteOffset + 16) > buffer.byteLength)
     throw new RangeError("The value of byteOffset is invalid.");
-  var i8a = new Int8Array(buffer, byteOffset, 16);
-  for (var i = 0; i < 16; i++)
-    _PRIVATE._i8x16[i] = i8a[i];
-  return SIMD.int32x4(_PRIVATE._i32x4[0], _PRIVATE._i32x4[1],
-                      _PRIVATE._i32x4[2], _PRIVATE._i32x4[3]);
+  var i32a = new Int32Array(buffer, byteOffset, 4);
+  return SIMD.int32x4(i32a[0], i32a[1], i32a[2], i32a[3]);
 }
 
 /**
@@ -1631,10 +1602,8 @@ SIMD.int32x4.loadX = function(buffer, byteOffset) {
     throw new TypeError("The 2nd argument must be a Number.");
   if (byteOffset < 0 || (byteOffset + 4) > buffer.byteLength)
     throw new RangeError("The value of byteOffset is invalid.");
-  var i8a = new Int8Array(buffer, byteOffset, 4);
-  for (var i = 0; i < 4; i++)
-    _PRIVATE._i8x16[i] = i8a[i];
-  return SIMD.int32x4(_PRIVATE._i32x4[0], 0, 0, 0);
+  var i32a = new Int32Array(buffer, byteOffset, 1);
+  return SIMD.int32x4(i32a[0], 0, 0, 0);
 }
 
 /**
@@ -1649,10 +1618,8 @@ SIMD.int32x4.loadXY = function(buffer, byteOffset) {
     throw new TypeError("The 2nd argument must be a Number.");
   if (byteOffset < 0 || (byteOffset + 8) > buffer.byteLength)
     throw new RangeError("The value of byteOffset is invalid.");
-  var i8a = new Int8Array(buffer, byteOffset, 8);
-  for (var i = 0; i < 8; i++)
-    _PRIVATE._i8x16[i] = i8a[i];
-  return SIMD.int32x4(_PRIVATE._i32x4[0], _PRIVATE._i32x4[1], 0, 0);
+  var i32a = new Int32Array(buffer, byteOffset, 2);
+  return SIMD.int32x4(i32a[0], i32a[1], 0, 0);
 }
 
 /**
@@ -1667,11 +1634,8 @@ SIMD.int32x4.loadXYZ = function(buffer, byteOffset) {
     throw new TypeError("The 2nd argument must be a Number.");
   if (byteOffset < 0 || (byteOffset + 12) > buffer.byteLength)
     throw new RangeError("The value of byteOffset is invalid.");
-  var i8a = new Int8Array(buffer, byteOffset, 12);
-  for (var i = 0; i < 12; i++)
-    _PRIVATE._i8x16[i] = i8a[i];
-  return SIMD.int32x4(_PRIVATE._i32x4[0], _PRIVATE._i32x4[1],
-                      _PRIVATE._i32x4[2], 0);
+  var i32a = new Int32Array(buffer, byteOffset, 3);
+  return SIMD.int32x4(i32a[0], i32a[1], i32a[2], 0);
 }
 
 /**
@@ -1688,13 +1652,11 @@ SIMD.int32x4.store = function(buffer, byteOffset, value) {
   if (byteOffset < 0 || (byteOffset + 16) > buffer.byteLength)
     throw new RangeError("The value of byteOffset is invalid.");
   checkInt32x4(value);
-  _PRIVATE._i32x4[0] = value.x;
-  _PRIVATE._i32x4[1] = value.y;
-  _PRIVATE._i32x4[2] = value.z;
-  _PRIVATE._i32x4[3] = value.w;
-  var i8a = new Int8Array(buffer, byteOffset, 16);
-  for (var i = 0; i < 16; i++)
-    i8a[i] = _PRIVATE._i8x16[i];
+  var i32a = new Int32Array(buffer, byteOffset, 4);
+  i32a[0] = value.x;
+  i32a[1] = value.y;
+  i32a[2] = value.z;
+  i32a[3] = value.w;
 }
 
 /**
@@ -1711,10 +1673,8 @@ SIMD.int32x4.storeX = function(buffer, byteOffset, value) {
   if (byteOffset < 0 || (byteOffset + 4) > buffer.byteLength)
     throw new RangeError("The value of byteOffset is invalid.");
   checkInt32x4(value);
-  _PRIVATE._i32x4[0] = value.x;
-  var i8a = new Int8Array(buffer, byteOffset, 4);
-  for (var i = 0; i < 4; i++)
-    i8a[i] = _PRIVATE._i8x16[i];
+  var i32a = new Int32Array(buffer, byteOffset, 1);
+  i32a[0] = value.x;
 }
 
 /**
@@ -1731,11 +1691,9 @@ SIMD.int32x4.storeXY = function(buffer, byteOffset, value) {
   if (byteOffset < 0 || (byteOffset + 8) > buffer.byteLength)
     throw new RangeError("The value of byteOffset is invalid.");
   checkInt32x4(value);
-  _PRIVATE._i32x4[0] = value.x;
-  _PRIVATE._i32x4[1] = value.y;
-  var i8a = new Int8Array(buffer, byteOffset, 8);
-  for (var i = 0; i < 8; i++)
-    i8a[i] = _PRIVATE._i8x16[i];
+  var i32a = new Int32Array(buffer, byteOffset, 2);
+  i32a[0] = value.x;
+  i32a[1] = value.y;
 }
 
 /**
@@ -1752,12 +1710,10 @@ SIMD.int32x4.storeXYZ = function(buffer, byteOffset, value) {
   if (byteOffset < 0 || (byteOffset + 12) > buffer.byteLength)
     throw new RangeError("The value of byteOffset is invalid.");
   checkInt32x4(value);
-  _PRIVATE._i32x4[0] = value.x;
-  _PRIVATE._i32x4[1] = value.y;
-  _PRIVATE._i32x4[2] = value.z;
-  var i8a = new Int8Array(buffer, byteOffset, 12);
-  for (var i = 0; i < 12; i++)
-    i8a[i] = _PRIVATE._i8x16[i];
+  var i32a = new Int32Array(buffer, byteOffset, 3);
+  i32a[0] = value.x;
+  i32a[1] = value.y;
+  i32a[2] = value.z;
 }
 
 Object.defineProperty(SIMD, 'XXXX', { get: function() { return 0x0; } });
