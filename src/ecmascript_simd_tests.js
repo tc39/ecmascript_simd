@@ -813,7 +813,7 @@ test('float64x2 div', function() {
   equal(2.0, c.x);
   equal(3.0, c.y);
 });
-  
+
 test('float64x2 clamp', function() {
   var a = SIMD.float64x2(-20.0, 10.0);
   var b = SIMD.float64x2(2.125, 3.0);

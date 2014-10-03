@@ -77,28 +77,28 @@ function Int32x4Array(a, b, c) {
   }
 }
 
-Object.defineProperty(Int32x4Array.prototype, 'length',
-  { get: function() { return this.length_; }
+Object.defineProperty(Int32x4Array.prototype, 'length', {
+  get: function() { return this.length_; }
 });
 
-Object.defineProperty(Int32x4Array.prototype, 'byteLength',
-  { get: function() { return this.length_ * Int32x4Array.BYTES_PER_ELEMENT; }
+Object.defineProperty(Int32x4Array.prototype, 'byteLength', {
+  get: function() { return this.length_ * Int32x4Array.BYTES_PER_ELEMENT; }
 });
 
-Object.defineProperty(Int32x4Array, 'BYTES_PER_ELEMENT',
-  { get: function() { return 16; }
+Object.defineProperty(Int32x4Array, 'BYTES_PER_ELEMENT', {
+  get: function() { return 16; }
 });
 
-Object.defineProperty(Int32x4Array.prototype, 'BYTES_PER_ELEMENT',
-  { get: function() { return 16; }
+Object.defineProperty(Int32x4Array.prototype, 'BYTES_PER_ELEMENT', {
+  get: function() { return 16; }
 });
 
-Object.defineProperty(Int32x4Array.prototype, 'byteOffset',
-  { get: function() { return this.byteOffset_; }
+Object.defineProperty(Int32x4Array.prototype, 'byteOffset', {
+  get: function() { return this.byteOffset_; }
 });
 
-Object.defineProperty(Int32x4Array.prototype, 'buffer',
-  { get: function() { return this.storage_.buffer; }
+Object.defineProperty(Int32x4Array.prototype, 'buffer', {
+  get: function() { return this.storage_.buffer; }
 });
 
 Int32x4Array.prototype.getAt = function(i) {
