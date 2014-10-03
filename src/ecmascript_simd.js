@@ -420,6 +420,7 @@ SIMD.float32x4.clamp = function(t, lowerLimit, upperLimit) {
   */
 SIMD.float32x4.min = function(t, other) {
   checkFloat32x4(t);
+  checkFloat32x4(other);
   var cx = t.x > other.x ? other.x : t.x;
   var cy = t.y > other.y ? other.y : t.y;
   var cz = t.z > other.z ? other.z : t.z;
@@ -433,6 +434,7 @@ SIMD.float32x4.min = function(t, other) {
   */
 SIMD.float32x4.max = function(t, other) {
   checkFloat32x4(t);
+  checkFloat32x4(other);
   var cx = t.x < other.x ? other.x : t.x;
   var cy = t.y < other.y ? other.y : t.y;
   var cz = t.z < other.z ? other.z : t.z;
