@@ -2129,6 +2129,7 @@ function isTypedArray(o) {
          (o instanceof Uint32Array) ||
          (o instanceof Float32Array) ||
          (o instanceof Float64Array) ||
+         (o instanceof Int32x4Array) ||
          (o instanceof Float32x4Array);
 }
 
