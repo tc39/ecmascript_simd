@@ -465,7 +465,8 @@ SIMD.float32x4.reciprocalSqrt = function(t) {
   */
 SIMD.float32x4.scale = function(t, s) {
   checkFloat32x4(t);
-  return SIMD.float32x4(s * t.x, s * t.y, s * t.z, s * t.w);
+  var s4 = SIMD.float32x4.splat(s);
+  return SIMD.float32x4.mul(t,s4);
 }
 
 /**
