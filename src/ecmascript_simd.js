@@ -199,7 +199,7 @@ SIMD.float64x2.zero = function() {
   * @constructor
   */
 SIMD.float64x2.splat = function(s) {
-  return SIMD.float32x4(s, s);
+  return SIMD.float64x2(s, s);
 }
 
 /**
