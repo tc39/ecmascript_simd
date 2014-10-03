@@ -250,10 +250,10 @@ SIMD.float64x2.fromInt32x4Bits = function(t) {
 
 /**
   * Construct a new instance of int32x4 number.
-  * @param {integer} 32-bit unsigned value used for x lane.
-  * @param {integer} 32-bit unsigned value used for y lane.
-  * @param {integer} 32-bit unsigned value used for z lane.
-  * @param {integer} 32-bit unsigned value used for w lane.
+  * @param {integer} 32-bit value used for x lane.
+  * @param {integer} 32-bit value used for y lane.
+  * @param {integer} 32-bit value used for z lane.
+  * @param {integer} 32-bit value used for w lane.
   * @constructor
   */
 SIMD.int32x4 = function(x, y, z, w) {
