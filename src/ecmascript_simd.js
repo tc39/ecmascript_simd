@@ -2119,7 +2119,7 @@ function Float32x4Array(a, b, c) {
       this.storage_ = new Float32Array(a, b, c);
     }
     else {
-      // Note = new Float32Array(a, b) is NOT equivalent to new Float32Array(a, b, undefined)
+      // Note: new Float32Array(a, b) is NOT equivalent to new Float32Array(a, b, undefined)
       this.storage_ = new Float32Array(a, b);
     }
     this.length_ = this.storage_.length / 4;
@@ -2233,7 +2233,7 @@ function Int32x4Array(a, b, c) {
       this.storage_ = new Int32Array(a, b, c);
     }
     else {
-      // Note = new Int32Array(a, b) is NOT equivalent to new Float32Array(a, b, undefined)
+      // Note: new Int32Array(a, b) is NOT equivalent to new Int32Array(a, b, undefined)
       this.storage_ = new Int32Array(a, b);
     }
     this.length_ = this.storage_.length / 4;
