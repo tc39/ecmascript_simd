@@ -121,7 +121,7 @@
     emm0     = SIMD.int32x4.shiftLeft(emm0, 29);
 
     emm2     = SIMD.int32x4.and(emm2, _pi32_2);
-    emm2     = SIMD.int32x4.equal(emm2, SIMD.int32x4.zero());
+    emm2     = SIMD.int32x4.equal(emm2, SIMD.int32x4.splat(0));
 
     swap_sign_bit = SIMD.float32x4.fromInt32x4Bits(emm0);
     poly_mask     = SIMD.float32x4.fromInt32x4Bits(emm2);

@@ -80,7 +80,7 @@
   function simdVertexTransform(n) {
     for (var i = 0; i < n; i++) {
       var xxxx = SIMD.float32x4.shuffle(Vx4.getAt(0), SIMD.XXXX);
-      var z = SIMD.float32x4.zero();
+      var z = SIMD.float32x4.splat(0.0);
       z = SIMD.float32x4.add(z, SIMD.float32x4.mul(xxxx, Tx4.getAt(0)));
       var yyyy = SIMD.float32x4.shuffle(Vx4.getAt(0), SIMD.YYYY);
       z = SIMD.float32x4.add(z, SIMD.float32x4.mul(yyyy, Tx4.getAt(1)));
