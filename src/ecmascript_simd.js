@@ -475,16 +475,6 @@ SIMD.float32x4.reciprocalSqrt = function(t) {
 }
 
 /**
-  * @return {float32x4} New instance of float32x4 with values of t
-  * scaled by s.
-  */
-SIMD.float32x4.scale = function(t, s) {
-  checkFloat32x4(t);
-  var s4 = SIMD.float32x4.splat(s);
-  return SIMD.float32x4.mul(t,s4);
-}
-
-/**
   * @return {float32x4} New instance of float32x4 with square root of
   * values of t.
   */
@@ -1019,15 +1009,6 @@ SIMD.float64x2.reciprocal = function(t) {
 SIMD.float64x2.reciprocalSqrt = function(t) {
   checkFloat64x2(t);
   return SIMD.float64x2(Math.sqrt(1.0 / t.x), Math.sqrt(1.0 / t.y));
-}
-
-/**
-  * @return {float64x2} New instance of float32x4 with values of t
-  * scaled by s.
-  */
-SIMD.float64x2.scale = function(t, s) {
-  checkFloat64x2(t);
-  return SIMD.float64x2(s * t.x, s * t.y);
 }
 
 /**

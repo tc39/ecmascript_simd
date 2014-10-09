@@ -390,15 +390,6 @@ test('float32x4 reciprocal sqrt', function() {
   almostEqual(4.0, c.w);
 });
 
-test('float32x4 scale', function() {
-  var a = SIMD.float32x4(8.0, 4.0, 2.0, -2.0);
-  var c = SIMD.float32x4.scale(a, 0.5);
-  equal(4.0, c.x);
-  equal(2.0, c.y);
-  equal(1.0, c.z);
-  equal(-1.0, c.w);
-});
-
 test('float32x4 sqrt', function() {
   var a = SIMD.float32x4(16.0, 9.0, 4.0, 1.0);
   var c = SIMD.float32x4.sqrt(a);
@@ -1161,13 +1152,6 @@ test('float64x2 reciprocal sqrt', function() {
   var c = SIMD.float64x2.reciprocalSqrt(a);
   almostEqual(1.0, c.x);
   almostEqual(2.0, c.y);
-});
-
-test('float64x2 scale', function() {
-  var a = SIMD.float64x2(8.0, -2.0);
-  var c = SIMD.float64x2.scale(a, 0.5);
-  equal(4.0, c.x);
-  equal(-1.0, c.y);
 });
 
 test('float64x2 sqrt', function() {
