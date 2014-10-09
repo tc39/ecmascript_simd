@@ -1440,54 +1440,6 @@ SIMD.int32x4.withW = function(t, w) {
 
 /**
   * @param {int32x4} t An instance of int32x4.
-  * @param {boolean} x flag used for x lane.
-  * @return {int32x4} New instance of int32x4 with the values in t and
-  * x lane replaced with {x}.
-  */
-SIMD.int32x4.withFlagX = function(t, flagX) {
-  checkInt32x4(t);
-  var x = flagX ? 0xFFFFFFFF : 0x0;
-  return SIMD.int32x4(x, t.y, t.z, t.w);
-}
-
-/**
-  * @param {int32x4} t An instance of int32x4.
-  * @param {boolean} y flag used for y lane.
-  * @return {int32x4} New instance of int32x4 with the values in t and
-  * y lane replaced with {y}.
-  */
-SIMD.int32x4.withFlagY = function(t, flagY) {
-  checkInt32x4(t);
-  var y = flagY ? 0xFFFFFFFF : 0x0;
-  return SIMD.int32x4(t.x, y, t.z, t.w);
-}
-
-/**
-  * @param {int32x4} t An instance of int32x4.
-  * @param {boolean} z flag used for z lane.
-  * @return {int32x4} New instance of int32x4 with the values in t and
-  * z lane replaced with {z}.
-  */
-SIMD.int32x4.withFlagZ = function(t, flagZ) {
-  checkInt32x4(t);
-  var z = flagZ ? 0xFFFFFFFF : 0x0;
-  return SIMD.int32x4(t.x, t.y, z, t.w);
-}
-
-/**
-  * @param {int32x4} t An instance of int32x4.
-  * @param {boolean} w flag used for w lane.
-  * @return {int32x4} New instance of int32x4 with the values in t and
-  * w lane replaced with {w}.
-  */
-SIMD.int32x4.withFlagW = function(t, flagW) {
-  checkInt32x4(t);
-  var w = flagW ? 0xFFFFFFFF : 0x0;
-  return SIMD.int32x4(t.x, t.y, t.z, w);
-}
-
-/**
-  * @param {int32x4} t An instance of int32x4.
   * @param {int32x4} other An instance of int32x4.
   * @return {int32x4} 0xFFFFFFFF or 0x0 in each lane depending on
   * the result of t == other.
