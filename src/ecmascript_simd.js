@@ -99,14 +99,6 @@ SIMD.float32x4 = function(x, y, z, w) {
 }
 
 /**
-  * Construct a new instance of float32x4 number with 0.0 in all lanes.
-  * @constructor
-  */
-SIMD.float32x4.zero = function() {
-  return SIMD.float32x4(0.0, 0.0, 0.0, 0.0);
-}
-
-/**
   * Construct a new instance of float32x4 number with the same value
   * in all lanes.
   * @param {double} value used for all lanes.
@@ -186,14 +178,6 @@ SIMD.float64x2 = function(x, y) {
 }
 
 /**
-  * Construct a new instance of float64x2 number with 0.0 in all lanes.
-  * @constructor
-  */
-SIMD.float64x2.zero = function() {
-  return SIMD.float64x2(0.0, 0.0);
-}
-
-/**
   * Construct a new instance of float64x2 number with the same value
   * in all lanes.
   * @param {double} value used for all lanes.
@@ -269,14 +253,6 @@ SIMD.int32x4 = function(x, y, z, w) {
   this.y_ = y|0;
   this.z_ = z|0;
   this.w_ = w|0;
-}
-
-/**
-  * Construct a new instance of int32x4 number with 0 in all lanes.
-  * @constructor
-  */
-SIMD.int32x4.zero = function() {
-  return SIMD.int32x4(0, 0, 0, 0);
 }
 
 /**

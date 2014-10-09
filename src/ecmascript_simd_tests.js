@@ -864,13 +864,6 @@ test('float64x2 splat constructor', function() {
   equal(m.x, m.y);
 });
 
-test('float64x2 zero constructor', function() {
-  equal('function', typeof SIMD.float64x2.zero);
-  var m = SIMD.float64x2.zero();
-  equal(0.0, m.x);
-  equal(0.0, m.y);
-});
-
 test('float64x2 fromFloat32x4 constructor', function() {
   var m = SIMD.float32x4(1.0, 2.0, 3.0, 4.0);
   var n = SIMD.float64x2.fromFloat32x4(m);
