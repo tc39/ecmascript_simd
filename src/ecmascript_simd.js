@@ -18,8 +18,6 @@
   3. This notice may not be removed or altered from any source distribution.
 */
 
-"use strict";
-
 // SIMD module.
 var SIMD = {};
 
@@ -199,7 +197,7 @@ SIMD.float64x2.zero = function() {
   * @constructor
   */
 SIMD.float64x2.splat = function(s) {
-  return SIMD.float32x4(s, s);
+  return SIMD.float64x2(s, s);
 }
 
 /**
@@ -252,16 +250,16 @@ SIMD.float64x2.fromInt32x4Bits = function(t) {
 
 /**
   * Construct a new instance of int32x4 number.
-  * @param {integer} 32-bit unsigned value used for x lane.
-  * @param {integer} 32-bit unsigned value used for y lane.
-  * @param {integer} 32-bit unsigned value used for z lane.
-  * @param {integer} 32-bit unsigned value used for w lane.
+  * @param {integer} 32-bit value used for x lane.
+  * @param {integer} 32-bit value used for y lane.
+  * @param {integer} 32-bit value used for z lane.
+  * @param {integer} 32-bit value used for w lane.
   * @constructor
   */
 SIMD.int32x4 = function(x, y, z, w) {
   if (arguments.length == 1) {
-      checkInt32x4(x);
-      return x;
+    checkInt32x4(x);
+    return x;
   }
 
   if (!(this instanceof SIMD.int32x4)) {
@@ -761,11 +759,8 @@ SIMD.float32x4.load = function(buffer, byteOffset) {
     throw new TypeError("The 2nd argument must be a Number.");
   if (byteOffset < 0 || (byteOffset + 16) > buffer.byteLength)
     throw new RangeError("The value of byteOffset is invalid.");
-  var i8a = new Int8Array(buffer, byteOffset, 16);
-  for (var i = 0; i < 16; i++)
-    _PRIVATE._i8x16[i] = i8a[i];
-  return SIMD.float32x4(_PRIVATE._f32x4[0], _PRIVATE._f32x4[1],
-                        _PRIVATE._f32x4[2], _PRIVATE._f32x4[3]);
+  var f32a = new Float32Array(buffer, byteOffset, 4);
+  return SIMD.float32x4(f32a[0], f32a[1], f32a[2], f32a[3]);
 }
 
 /**
@@ -780,10 +775,8 @@ SIMD.float32x4.loadX = function(buffer, byteOffset) {
     throw new TypeError("The 2nd argument must be a Number.");
   if (byteOffset < 0 || (byteOffset + 4) > buffer.byteLength)
     throw new RangeError("The value of byteOffset is invalid.");
-  var i8a = new Int8Array(buffer, byteOffset, 4);
-  for (var i = 0; i < 4; i++)
-    _PRIVATE._i8x16[i] = i8a[i];
-  return SIMD.float32x4(_PRIVATE._f32x4[0], 0.0, 0.0, 0.0);
+  var f32a = new Float32Array(buffer, byteOffset, 1);
+  return SIMD.float32x4(f32a[0], 0.0, 0.0, 0.0);
 }
 
 /**
@@ -798,10 +791,8 @@ SIMD.float32x4.loadXY = function(buffer, byteOffset) {
     throw new TypeError("The 2nd argument must be a Number.");
   if (byteOffset < 0 || (byteOffset + 8) > buffer.byteLength)
     throw new RangeError("The value of byteOffset is invalid.");
-  var i8a = new Int8Array(buffer, byteOffset, 8);
-  for (var i = 0; i < 8; i++)
-    _PRIVATE._i8x16[i] = i8a[i];
-  return SIMD.float32x4(_PRIVATE._f32x4[0], _PRIVATE._f32x4[1], 0.0, 0.0);
+  var f32a = new Float32Array(buffer, byteOffset, 2);
+  return SIMD.float32x4(f32a[0], f32a[1], 0.0, 0.0);
 }
 
 /**
@@ -816,11 +807,8 @@ SIMD.float32x4.loadXYZ = function(buffer, byteOffset) {
     throw new TypeError("The 2nd argument must be a Number.");
   if (byteOffset < 0 || (byteOffset + 12) > buffer.byteLength)
     throw new RangeError("The value of byteOffset is invalid.");
-  var i8a = new Int8Array(buffer, byteOffset, 12);
-  for (var i = 0; i < 12; i++)
-    _PRIVATE._i8x16[i] = i8a[i];
-  return SIMD.float32x4(_PRIVATE._f32x4[0], _PRIVATE._f32x4[1],
-                        _PRIVATE._f32x4[2], 0.0);
+  var f32a = new Float32Array(buffer, byteOffset, 3);
+  return SIMD.float32x4(f32a[0], f32a[1], f32a[2], 0.0);
 }
 
 /**
@@ -837,13 +825,11 @@ SIMD.float32x4.store = function(buffer, byteOffset, value) {
   if (byteOffset < 0 || (byteOffset + 16) > buffer.byteLength)
     throw new RangeError("The value of byteOffset is invalid.");
   checkFloat32x4(value);
-  _PRIVATE._f32x4[0] = value.x;
-  _PRIVATE._f32x4[1] = value.y;
-  _PRIVATE._f32x4[2] = value.z;
-  _PRIVATE._f32x4[3] = value.w;
-  var i8a = new Int8Array(buffer, byteOffset, 16);
-  for (var i = 0; i < 16; i++)
-    i8a[i] = _PRIVATE._i8x16[i];
+  var f32a = new Float32Array(buffer, byteOffset, 4);
+  f32a[0] = value.x;
+  f32a[1] = value.y;
+  f32a[2] = value.z;
+  f32a[3] = value.w;
 }
 
 /**
@@ -860,10 +846,8 @@ SIMD.float32x4.storeX = function(buffer, byteOffset, value) {
   if (byteOffset < 0 || (byteOffset + 4) > buffer.byteLength)
     throw new RangeError("The value of byteOffset is invalid.");
   checkFloat32x4(value);
-  _PRIVATE._f32x4[0] = value.x;
-  var i8a = new Int8Array(buffer, byteOffset, 4);
-  for (var i = 0; i < 4; i++)
-    i8a[i] = _PRIVATE._i8x16[i];
+  var f32a = new Float32Array(buffer, byteOffset, 1);
+  f32a[0] = value.x;
 }
 
 /**
@@ -880,11 +864,9 @@ SIMD.float32x4.storeXY = function(buffer, byteOffset, value) {
   if (byteOffset < 0 || (byteOffset + 8) > buffer.byteLength)
     throw new RangeError("The value of byteOffset is invalid.");
   checkFloat32x4(value);
-  _PRIVATE._f32x4[0] = value.x;
-  _PRIVATE._f32x4[1] = value.y;
-  var i8a = new Int8Array(buffer, byteOffset, 8);
-  for (var i = 0; i < 8; i++)
-    i8a[i] = _PRIVATE._i8x16[i];
+  var f32a = new Float32Array(buffer, byteOffset, 2);
+  f32a[0] = value.x;
+  f32a[1] = value.y;
 }
 
 /**
@@ -901,12 +883,10 @@ SIMD.float32x4.storeXYZ = function(buffer, byteOffset, value) {
   if (byteOffset < 0 || (byteOffset + 12) > buffer.byteLength)
     throw new RangeError("The value of byteOffset is invalid.");
   checkFloat32x4(value);
-  _PRIVATE._f32x4[0] = value.x;
-  _PRIVATE._f32x4[1] = value.y;
-  _PRIVATE._f32x4[2] = value.z;
-  var i8a = new Int8Array(buffer, byteOffset, 12);
-  for (var i = 0; i < 12; i++)
-    i8a[i] = _PRIVATE._i8x16[i];
+  var f32a = new Float32Array(buffer, byteOffset, 3);
+  f32a[0] = value.x;
+  f32a[1] = value.y;
+  f32a[2] = value.z;
 }
 
 /**
@@ -1208,10 +1188,8 @@ SIMD.float64x2.load = function(buffer, byteOffset) {
     throw new TypeError("The 2nd argument must be a Number.");
   if (byteOffset < 0 || (byteOffset + 16) > buffer.byteLength)
     throw new RangeError("The value of byteOffset is invalid.");
-  var i8a = new Int8Array(buffer, byteOffset, 16);
-  for (var i = 0; i < 16; i++)
-    _PRIVATE._i8x16[i] = i8a[i];
-  return SIMD.float64x2(_PRIVATE._f64x2[0], _PRIVATE._f64x2[1]);
+  var f64a = new Float64Array(buffer, byteOffset, 2);
+  return SIMD.float64x2(f64a[0], f64a[1]);
 }
 
 /**
@@ -1226,10 +1204,8 @@ SIMD.float64x2.loadX = function(buffer, byteOffset) {
     throw new TypeError("The 2nd argument must be a Number.");
   if (byteOffset < 0 || (byteOffset + 8) > buffer.byteLength)
     throw new RangeError("The value of byteOffset is invalid.");
-  var i8a = new Int8Array(buffer, byteOffset, 8);
-  for (var i = 0; i < 8; i++)
-    _PRIVATE._i8x16[i] = i8a[i];
-  return SIMD.float64x2(_PRIVATE._f64x2[0], 0.0);
+  var f64a = new Float64Array(buffer, byteOffset, 1);
+  return SIMD.float64x2(f64a[0], 0.0);
 }
 
 /**
@@ -1246,11 +1222,9 @@ SIMD.float64x2.store = function(buffer, byteOffset, value) {
   if (byteOffset < 0 || (byteOffset + 16) > buffer.byteLength)
     throw new RangeError("The value of byteOffset is invalid.");
   checkFloat64x2(value);
-  _PRIVATE._f64x2[0] = value.x;
-  _PRIVATE._f64x2[1] = value.y;
-  var i8a = new Int8Array(buffer, byteOffset, 16);
-  for (var i = 0; i < 16; i++)
-    i8a[i] = _PRIVATE._i8x16[i];
+  var f64a = new Float64Array(buffer, byteOffset, 2);
+  f64a[0] = value.x;
+  f64a[1] = value.y;
 }
 
 /**
@@ -1267,10 +1241,8 @@ SIMD.float64x2.storeX = function(buffer, byteOffset, value) {
   if (byteOffset < 0 || (byteOffset + 8) > buffer.byteLength)
     throw new RangeError("The value of byteOffset is invalid.");
   checkFloat64x2(value);
-  _PRIVATE._f64x2[0] = value.x;
-  var i8a = new Int8Array(buffer, byteOffset, 8);
-  for (var i = 0; i < 8; i++)
-    i8a[i] = _PRIVATE._i8x16[i];
+  var f64a = new Float64Array(buffer, byteOffset, 1);
+  f64a[0] = value.x;
 }
 
 /**
@@ -1614,11 +1586,8 @@ SIMD.int32x4.load = function(buffer, byteOffset) {
     throw new TypeError("The 2nd argument must be a Number.");
   if (byteOffset < 0 || (byteOffset + 16) > buffer.byteLength)
     throw new RangeError("The value of byteOffset is invalid.");
-  var i8a = new Int8Array(buffer, byteOffset, 16);
-  for (var i = 0; i < 16; i++)
-    _PRIVATE._i8x16[i] = i8a[i];
-  return SIMD.int32x4(_PRIVATE._i32x4[0], _PRIVATE._i32x4[1],
-                      _PRIVATE._i32x4[2], _PRIVATE._i32x4[3]);
+  var i32a = new Int32Array(buffer, byteOffset, 4);
+  return SIMD.int32x4(i32a[0], i32a[1], i32a[2], i32a[3]);
 }
 
 /**
@@ -1633,10 +1602,8 @@ SIMD.int32x4.loadX = function(buffer, byteOffset) {
     throw new TypeError("The 2nd argument must be a Number.");
   if (byteOffset < 0 || (byteOffset + 4) > buffer.byteLength)
     throw new RangeError("The value of byteOffset is invalid.");
-  var i8a = new Int8Array(buffer, byteOffset, 4);
-  for (var i = 0; i < 4; i++)
-    _PRIVATE._i8x16[i] = i8a[i];
-  return SIMD.int32x4(_PRIVATE._i32x4[0], 0, 0, 0);
+  var i32a = new Int32Array(buffer, byteOffset, 1);
+  return SIMD.int32x4(i32a[0], 0, 0, 0);
 }
 
 /**
@@ -1651,10 +1618,8 @@ SIMD.int32x4.loadXY = function(buffer, byteOffset) {
     throw new TypeError("The 2nd argument must be a Number.");
   if (byteOffset < 0 || (byteOffset + 8) > buffer.byteLength)
     throw new RangeError("The value of byteOffset is invalid.");
-  var i8a = new Int8Array(buffer, byteOffset, 8);
-  for (var i = 0; i < 8; i++)
-    _PRIVATE._i8x16[i] = i8a[i];
-  return SIMD.int32x4(_PRIVATE._i32x4[0], _PRIVATE._i32x4[1], 0, 0);
+  var i32a = new Int32Array(buffer, byteOffset, 2);
+  return SIMD.int32x4(i32a[0], i32a[1], 0, 0);
 }
 
 /**
@@ -1669,11 +1634,8 @@ SIMD.int32x4.loadXYZ = function(buffer, byteOffset) {
     throw new TypeError("The 2nd argument must be a Number.");
   if (byteOffset < 0 || (byteOffset + 12) > buffer.byteLength)
     throw new RangeError("The value of byteOffset is invalid.");
-  var i8a = new Int8Array(buffer, byteOffset, 12);
-  for (var i = 0; i < 12; i++)
-    _PRIVATE._i8x16[i] = i8a[i];
-  return SIMD.int32x4(_PRIVATE._i32x4[0], _PRIVATE._i32x4[1],
-                      _PRIVATE._i32x4[2], 0);
+  var i32a = new Int32Array(buffer, byteOffset, 3);
+  return SIMD.int32x4(i32a[0], i32a[1], i32a[2], 0);
 }
 
 /**
@@ -1690,13 +1652,11 @@ SIMD.int32x4.store = function(buffer, byteOffset, value) {
   if (byteOffset < 0 || (byteOffset + 16) > buffer.byteLength)
     throw new RangeError("The value of byteOffset is invalid.");
   checkInt32x4(value);
-  _PRIVATE._i32x4[0] = value.x;
-  _PRIVATE._i32x4[1] = value.y;
-  _PRIVATE._i32x4[2] = value.z;
-  _PRIVATE._i32x4[3] = value.w;
-  var i8a = new Int8Array(buffer, byteOffset, 16);
-  for (var i = 0; i < 16; i++)
-    i8a[i] = _PRIVATE._i8x16[i];
+  var i32a = new Int32Array(buffer, byteOffset, 4);
+  i32a[0] = value.x;
+  i32a[1] = value.y;
+  i32a[2] = value.z;
+  i32a[3] = value.w;
 }
 
 /**
@@ -1713,10 +1673,8 @@ SIMD.int32x4.storeX = function(buffer, byteOffset, value) {
   if (byteOffset < 0 || (byteOffset + 4) > buffer.byteLength)
     throw new RangeError("The value of byteOffset is invalid.");
   checkInt32x4(value);
-  _PRIVATE._i32x4[0] = value.x;
-  var i8a = new Int8Array(buffer, byteOffset, 4);
-  for (var i = 0; i < 4; i++)
-    i8a[i] = _PRIVATE._i8x16[i];
+  var i32a = new Int32Array(buffer, byteOffset, 1);
+  i32a[0] = value.x;
 }
 
 /**
@@ -1733,11 +1691,9 @@ SIMD.int32x4.storeXY = function(buffer, byteOffset, value) {
   if (byteOffset < 0 || (byteOffset + 8) > buffer.byteLength)
     throw new RangeError("The value of byteOffset is invalid.");
   checkInt32x4(value);
-  _PRIVATE._i32x4[0] = value.x;
-  _PRIVATE._i32x4[1] = value.y;
-  var i8a = new Int8Array(buffer, byteOffset, 8);
-  for (var i = 0; i < 8; i++)
-    i8a[i] = _PRIVATE._i8x16[i];
+  var i32a = new Int32Array(buffer, byteOffset, 2);
+  i32a[0] = value.x;
+  i32a[1] = value.y;
 }
 
 /**
@@ -1754,15 +1710,13 @@ SIMD.int32x4.storeXYZ = function(buffer, byteOffset, value) {
   if (byteOffset < 0 || (byteOffset + 12) > buffer.byteLength)
     throw new RangeError("The value of byteOffset is invalid.");
   checkInt32x4(value);
-  _PRIVATE._i32x4[0] = value.x;
-  _PRIVATE._i32x4[1] = value.y;
-  _PRIVATE._i32x4[2] = value.z;
-  var i8a = new Int8Array(buffer, byteOffset, 12);
-  for (var i = 0; i < 12; i++)
-    i8a[i] = _PRIVATE._i8x16[i];
+  var i32a = new Int32Array(buffer, byteOffset, 3);
+  i32a[0] = value.x;
+  i32a[1] = value.y;
+  i32a[2] = value.z;
 }
 
-Object.defineProperty(SIMD, 'XXXX', { get: function() { return 0x0; } });
+Object.defineProperty(SIMD, 'XXXX', { get: function() { return 0x00; } });
 Object.defineProperty(SIMD, 'XXXY', { get: function() { return 0x40; } });
 Object.defineProperty(SIMD, 'XXXZ', { get: function() { return 0x80; } });
 Object.defineProperty(SIMD, 'XXXW', { get: function() { return 0xC0; } });
@@ -1778,7 +1732,7 @@ Object.defineProperty(SIMD, 'XXWX', { get: function() { return 0x30; } });
 Object.defineProperty(SIMD, 'XXWY', { get: function() { return 0x70; } });
 Object.defineProperty(SIMD, 'XXWZ', { get: function() { return 0xB0; } });
 Object.defineProperty(SIMD, 'XXWW', { get: function() { return 0xF0; } });
-Object.defineProperty(SIMD, 'XYXX', { get: function() { return 0x4; } });
+Object.defineProperty(SIMD, 'XYXX', { get: function() { return 0x04; } });
 Object.defineProperty(SIMD, 'XYXY', { get: function() { return 0x44; } });
 Object.defineProperty(SIMD, 'XYXZ', { get: function() { return 0x84; } });
 Object.defineProperty(SIMD, 'XYXW', { get: function() { return 0xC4; } });
@@ -1794,7 +1748,7 @@ Object.defineProperty(SIMD, 'XYWX', { get: function() { return 0x34; } });
 Object.defineProperty(SIMD, 'XYWY', { get: function() { return 0x74; } });
 Object.defineProperty(SIMD, 'XYWZ', { get: function() { return 0xB4; } });
 Object.defineProperty(SIMD, 'XYWW', { get: function() { return 0xF4; } });
-Object.defineProperty(SIMD, 'XZXX', { get: function() { return 0x8; } });
+Object.defineProperty(SIMD, 'XZXX', { get: function() { return 0x08; } });
 Object.defineProperty(SIMD, 'XZXY', { get: function() { return 0x48; } });
 Object.defineProperty(SIMD, 'XZXZ', { get: function() { return 0x88; } });
 Object.defineProperty(SIMD, 'XZXW', { get: function() { return 0xC8; } });
@@ -1810,7 +1764,7 @@ Object.defineProperty(SIMD, 'XZWX', { get: function() { return 0x38; } });
 Object.defineProperty(SIMD, 'XZWY', { get: function() { return 0x78; } });
 Object.defineProperty(SIMD, 'XZWZ', { get: function() { return 0xB8; } });
 Object.defineProperty(SIMD, 'XZWW', { get: function() { return 0xF8; } });
-Object.defineProperty(SIMD, 'XWXX', { get: function() { return 0xC; } });
+Object.defineProperty(SIMD, 'XWXX', { get: function() { return 0x0C; } });
 Object.defineProperty(SIMD, 'XWXY', { get: function() { return 0x4C; } });
 Object.defineProperty(SIMD, 'XWXZ', { get: function() { return 0x8C; } });
 Object.defineProperty(SIMD, 'XWXW', { get: function() { return 0xCC; } });
@@ -1826,7 +1780,7 @@ Object.defineProperty(SIMD, 'XWWX', { get: function() { return 0x3C; } });
 Object.defineProperty(SIMD, 'XWWY', { get: function() { return 0x7C; } });
 Object.defineProperty(SIMD, 'XWWZ', { get: function() { return 0xBC; } });
 Object.defineProperty(SIMD, 'XWWW', { get: function() { return 0xFC; } });
-Object.defineProperty(SIMD, 'YXXX', { get: function() { return 0x1; } });
+Object.defineProperty(SIMD, 'YXXX', { get: function() { return 0x01; } });
 Object.defineProperty(SIMD, 'YXXY', { get: function() { return 0x41; } });
 Object.defineProperty(SIMD, 'YXXZ', { get: function() { return 0x81; } });
 Object.defineProperty(SIMD, 'YXXW', { get: function() { return 0xC1; } });
@@ -1842,7 +1796,7 @@ Object.defineProperty(SIMD, 'YXWX', { get: function() { return 0x31; } });
 Object.defineProperty(SIMD, 'YXWY', { get: function() { return 0x71; } });
 Object.defineProperty(SIMD, 'YXWZ', { get: function() { return 0xB1; } });
 Object.defineProperty(SIMD, 'YXWW', { get: function() { return 0xF1; } });
-Object.defineProperty(SIMD, 'YYXX', { get: function() { return 0x5; } });
+Object.defineProperty(SIMD, 'YYXX', { get: function() { return 0x05; } });
 Object.defineProperty(SIMD, 'YYXY', { get: function() { return 0x45; } });
 Object.defineProperty(SIMD, 'YYXZ', { get: function() { return 0x85; } });
 Object.defineProperty(SIMD, 'YYXW', { get: function() { return 0xC5; } });
@@ -1858,7 +1812,7 @@ Object.defineProperty(SIMD, 'YYWX', { get: function() { return 0x35; } });
 Object.defineProperty(SIMD, 'YYWY', { get: function() { return 0x75; } });
 Object.defineProperty(SIMD, 'YYWZ', { get: function() { return 0xB5; } });
 Object.defineProperty(SIMD, 'YYWW', { get: function() { return 0xF5; } });
-Object.defineProperty(SIMD, 'YZXX', { get: function() { return 0x9; } });
+Object.defineProperty(SIMD, 'YZXX', { get: function() { return 0x09; } });
 Object.defineProperty(SIMD, 'YZXY', { get: function() { return 0x49; } });
 Object.defineProperty(SIMD, 'YZXZ', { get: function() { return 0x89; } });
 Object.defineProperty(SIMD, 'YZXW', { get: function() { return 0xC9; } });
@@ -1874,7 +1828,7 @@ Object.defineProperty(SIMD, 'YZWX', { get: function() { return 0x39; } });
 Object.defineProperty(SIMD, 'YZWY', { get: function() { return 0x79; } });
 Object.defineProperty(SIMD, 'YZWZ', { get: function() { return 0xB9; } });
 Object.defineProperty(SIMD, 'YZWW', { get: function() { return 0xF9; } });
-Object.defineProperty(SIMD, 'YWXX', { get: function() { return 0xD; } });
+Object.defineProperty(SIMD, 'YWXX', { get: function() { return 0x0D; } });
 Object.defineProperty(SIMD, 'YWXY', { get: function() { return 0x4D; } });
 Object.defineProperty(SIMD, 'YWXZ', { get: function() { return 0x8D; } });
 Object.defineProperty(SIMD, 'YWXW', { get: function() { return 0xCD; } });
@@ -1890,7 +1844,7 @@ Object.defineProperty(SIMD, 'YWWX', { get: function() { return 0x3D; } });
 Object.defineProperty(SIMD, 'YWWY', { get: function() { return 0x7D; } });
 Object.defineProperty(SIMD, 'YWWZ', { get: function() { return 0xBD; } });
 Object.defineProperty(SIMD, 'YWWW', { get: function() { return 0xFD; } });
-Object.defineProperty(SIMD, 'ZXXX', { get: function() { return 0x2; } });
+Object.defineProperty(SIMD, 'ZXXX', { get: function() { return 0x02; } });
 Object.defineProperty(SIMD, 'ZXXY', { get: function() { return 0x42; } });
 Object.defineProperty(SIMD, 'ZXXZ', { get: function() { return 0x82; } });
 Object.defineProperty(SIMD, 'ZXXW', { get: function() { return 0xC2; } });
@@ -1906,7 +1860,7 @@ Object.defineProperty(SIMD, 'ZXWX', { get: function() { return 0x32; } });
 Object.defineProperty(SIMD, 'ZXWY', { get: function() { return 0x72; } });
 Object.defineProperty(SIMD, 'ZXWZ', { get: function() { return 0xB2; } });
 Object.defineProperty(SIMD, 'ZXWW', { get: function() { return 0xF2; } });
-Object.defineProperty(SIMD, 'ZYXX', { get: function() { return 0x6; } });
+Object.defineProperty(SIMD, 'ZYXX', { get: function() { return 0x06; } });
 Object.defineProperty(SIMD, 'ZYXY', { get: function() { return 0x46; } });
 Object.defineProperty(SIMD, 'ZYXZ', { get: function() { return 0x86; } });
 Object.defineProperty(SIMD, 'ZYXW', { get: function() { return 0xC6; } });
@@ -1922,7 +1876,7 @@ Object.defineProperty(SIMD, 'ZYWX', { get: function() { return 0x36; } });
 Object.defineProperty(SIMD, 'ZYWY', { get: function() { return 0x76; } });
 Object.defineProperty(SIMD, 'ZYWZ', { get: function() { return 0xB6; } });
 Object.defineProperty(SIMD, 'ZYWW', { get: function() { return 0xF6; } });
-Object.defineProperty(SIMD, 'ZZXX', { get: function() { return 0xA; } });
+Object.defineProperty(SIMD, 'ZZXX', { get: function() { return 0x0A; } });
 Object.defineProperty(SIMD, 'ZZXY', { get: function() { return 0x4A; } });
 Object.defineProperty(SIMD, 'ZZXZ', { get: function() { return 0x8A; } });
 Object.defineProperty(SIMD, 'ZZXW', { get: function() { return 0xCA; } });
@@ -1938,7 +1892,7 @@ Object.defineProperty(SIMD, 'ZZWX', { get: function() { return 0x3A; } });
 Object.defineProperty(SIMD, 'ZZWY', { get: function() { return 0x7A; } });
 Object.defineProperty(SIMD, 'ZZWZ', { get: function() { return 0xBA; } });
 Object.defineProperty(SIMD, 'ZZWW', { get: function() { return 0xFA; } });
-Object.defineProperty(SIMD, 'ZWXX', { get: function() { return 0xE; } });
+Object.defineProperty(SIMD, 'ZWXX', { get: function() { return 0x0E; } });
 Object.defineProperty(SIMD, 'ZWXY', { get: function() { return 0x4E; } });
 Object.defineProperty(SIMD, 'ZWXZ', { get: function() { return 0x8E; } });
 Object.defineProperty(SIMD, 'ZWXW', { get: function() { return 0xCE; } });
@@ -1954,7 +1908,7 @@ Object.defineProperty(SIMD, 'ZWWX', { get: function() { return 0x3E; } });
 Object.defineProperty(SIMD, 'ZWWY', { get: function() { return 0x7E; } });
 Object.defineProperty(SIMD, 'ZWWZ', { get: function() { return 0xBE; } });
 Object.defineProperty(SIMD, 'ZWWW', { get: function() { return 0xFE; } });
-Object.defineProperty(SIMD, 'WXXX', { get: function() { return 0x3; } });
+Object.defineProperty(SIMD, 'WXXX', { get: function() { return 0x03; } });
 Object.defineProperty(SIMD, 'WXXY', { get: function() { return 0x43; } });
 Object.defineProperty(SIMD, 'WXXZ', { get: function() { return 0x83; } });
 Object.defineProperty(SIMD, 'WXXW', { get: function() { return 0xC3; } });
@@ -1970,7 +1924,7 @@ Object.defineProperty(SIMD, 'WXWX', { get: function() { return 0x33; } });
 Object.defineProperty(SIMD, 'WXWY', { get: function() { return 0x73; } });
 Object.defineProperty(SIMD, 'WXWZ', { get: function() { return 0xB3; } });
 Object.defineProperty(SIMD, 'WXWW', { get: function() { return 0xF3; } });
-Object.defineProperty(SIMD, 'WYXX', { get: function() { return 0x7; } });
+Object.defineProperty(SIMD, 'WYXX', { get: function() { return 0x07; } });
 Object.defineProperty(SIMD, 'WYXY', { get: function() { return 0x47; } });
 Object.defineProperty(SIMD, 'WYXZ', { get: function() { return 0x87; } });
 Object.defineProperty(SIMD, 'WYXW', { get: function() { return 0xC7; } });
@@ -1986,7 +1940,7 @@ Object.defineProperty(SIMD, 'WYWX', { get: function() { return 0x37; } });
 Object.defineProperty(SIMD, 'WYWY', { get: function() { return 0x77; } });
 Object.defineProperty(SIMD, 'WYWZ', { get: function() { return 0xB7; } });
 Object.defineProperty(SIMD, 'WYWW', { get: function() { return 0xF7; } });
-Object.defineProperty(SIMD, 'WZXX', { get: function() { return 0xB; } });
+Object.defineProperty(SIMD, 'WZXX', { get: function() { return 0x0B; } });
 Object.defineProperty(SIMD, 'WZXY', { get: function() { return 0x4B; } });
 Object.defineProperty(SIMD, 'WZXZ', { get: function() { return 0x8B; } });
 Object.defineProperty(SIMD, 'WZXW', { get: function() { return 0xCB; } });
@@ -2002,7 +1956,7 @@ Object.defineProperty(SIMD, 'WZWX', { get: function() { return 0x3B; } });
 Object.defineProperty(SIMD, 'WZWY', { get: function() { return 0x7B; } });
 Object.defineProperty(SIMD, 'WZWZ', { get: function() { return 0xBB; } });
 Object.defineProperty(SIMD, 'WZWW', { get: function() { return 0xFB; } });
-Object.defineProperty(SIMD, 'WWXX', { get: function() { return 0xF; } });
+Object.defineProperty(SIMD, 'WWXX', { get: function() { return 0x0F; } });
 Object.defineProperty(SIMD, 'WWXY', { get: function() { return 0x4F; } });
 Object.defineProperty(SIMD, 'WWXZ', { get: function() { return 0x8F; } });
 Object.defineProperty(SIMD, 'WWXW', { get: function() { return 0xCF; } });
@@ -2036,8 +1990,8 @@ Object.defineProperty(SIMD.float32x4.prototype, 'z', {
   get: function() { return this.z_; }
 });
 
-Object.defineProperty(SIMD.float32x4.prototype, 'w',
-  { get: function() { return this.w_; }
+Object.defineProperty(SIMD.float32x4.prototype, 'w', {
+  get: function() { return this.w_; }
 });
 
 /**
@@ -2084,8 +2038,8 @@ Object.defineProperty(SIMD.int32x4.prototype, 'z', {
   get: function() { return this.z_; }
 });
 
-Object.defineProperty(SIMD.int32x4.prototype, 'w',
-  { get: function() { return this.w_; }
+Object.defineProperty(SIMD.int32x4.prototype, 'w', {
+  get: function() { return this.w_; }
 });
 
 Object.defineProperty(SIMD.int32x4.prototype, 'flagX', {
@@ -2100,8 +2054,8 @@ Object.defineProperty(SIMD.int32x4.prototype, 'flagZ', {
   get: function() { return this.z_ != 0x0; }
 });
 
-Object.defineProperty(SIMD.int32x4.prototype, 'flagW',
-  { get: function() { return this.w_ != 0x0; }
+Object.defineProperty(SIMD.int32x4.prototype, 'flagW', {
+  get: function() { return this.w_ != 0x0; }
 });
 
 /**
@@ -2131,6 +2085,7 @@ function isTypedArray(o) {
          (o instanceof Uint32Array) ||
          (o instanceof Float32Array) ||
          (o instanceof Float64Array) ||
+         (o instanceof Int32x4Array) ||
          (o instanceof Float32x4Array);
 }
 
@@ -2164,7 +2119,7 @@ function Float32x4Array(a, b, c) {
       this.storage_ = new Float32Array(a, b, c);
     }
     else {
-      // Note = new Float32Array(a, b) is NOT equivalent to new Float32Array(a, b, undefined)
+      // Note: new Float32Array(a, b) is NOT equivalent to new Float32Array(a, b, undefined)
       this.storage_ = new Float32Array(a, b);
     }
     this.length_ = this.storage_.length / 4;
@@ -2174,28 +2129,28 @@ function Float32x4Array(a, b, c) {
   }
 }
 
-Object.defineProperty(Float32x4Array.prototype, 'length',
-  { get: function() { return this.length_; }
+Object.defineProperty(Float32x4Array.prototype, 'length', {
+  get: function() { return this.length_; }
 });
 
-Object.defineProperty(Float32x4Array.prototype, 'byteLength',
-  { get: function() { return this.length_ * Float32x4Array.BYTES_PER_ELEMENT; }
+Object.defineProperty(Float32x4Array.prototype, 'byteLength', {
+  get: function() { return this.length_ * Float32x4Array.BYTES_PER_ELEMENT; }
 });
 
-Object.defineProperty(Float32x4Array, 'BYTES_PER_ELEMENT',
-  { get: function() { return 16; }
+Object.defineProperty(Float32x4Array, 'BYTES_PER_ELEMENT', {
+  get: function() { return 16; }
 });
 
-Object.defineProperty(Float32x4Array.prototype, 'BYTES_PER_ELEMENT',
-  { get: function() { return 16; }
+Object.defineProperty(Float32x4Array.prototype, 'BYTES_PER_ELEMENT', {
+  get: function() { return 16; }
 });
 
-Object.defineProperty(Float32x4Array.prototype, 'byteOffset',
-  { get: function() { return this.byteOffset_; }
+Object.defineProperty(Float32x4Array.prototype, 'byteOffset', {
+  get: function() { return this.byteOffset_; }
 });
 
-Object.defineProperty(Float32x4Array.prototype, 'buffer',
-  { get: function() { return this.storage_.buffer; }
+Object.defineProperty(Float32x4Array.prototype, 'buffer', {
+  get: function() { return this.storage_.buffer; }
 });
 
 Float32x4Array.prototype.getAt = function(i) {
@@ -2278,7 +2233,7 @@ function Int32x4Array(a, b, c) {
       this.storage_ = new Int32Array(a, b, c);
     }
     else {
-      // Note = new Int32Array(a, b) is NOT equivalent to new Float32Array(a, b, undefined)
+      // Note: new Int32Array(a, b) is NOT equivalent to new Int32Array(a, b, undefined)
       this.storage_ = new Int32Array(a, b);
     }
     this.length_ = this.storage_.length / 4;
@@ -2288,28 +2243,28 @@ function Int32x4Array(a, b, c) {
   }
 }
 
-Object.defineProperty(Int32x4Array.prototype, 'length',
-  { get: function() { return this.length_; }
+Object.defineProperty(Int32x4Array.prototype, 'length', {
+  get: function() { return this.length_; }
 });
 
-Object.defineProperty(Int32x4Array.prototype, 'byteLength',
-  { get: function() { return this.length_ * Int32x4Array.BYTES_PER_ELEMENT; }
+Object.defineProperty(Int32x4Array.prototype, 'byteLength', {
+  get: function() { return this.length_ * Int32x4Array.BYTES_PER_ELEMENT; }
 });
 
-Object.defineProperty(Int32x4Array, 'BYTES_PER_ELEMENT',
-  { get: function() { return 16; }
+Object.defineProperty(Int32x4Array, 'BYTES_PER_ELEMENT', {
+  get: function() { return 16; }
 });
 
-Object.defineProperty(Int32x4Array.prototype, 'BYTES_PER_ELEMENT',
-  { get: function() { return 16; }
+Object.defineProperty(Int32x4Array.prototype, 'BYTES_PER_ELEMENT', {
+  get: function() { return 16; }
 });
 
-Object.defineProperty(Int32x4Array.prototype, 'byteOffset',
-  { get: function() { return this.byteOffset_; }
+Object.defineProperty(Int32x4Array.prototype, 'byteOffset', {
+  get: function() { return this.byteOffset_; }
 });
 
-Object.defineProperty(Int32x4Array.prototype, 'buffer',
-  { get: function() { return this.storage_.buffer; }
+Object.defineProperty(Int32x4Array.prototype, 'buffer', {
+  get: function() { return this.storage_.buffer; }
 });
 
 Int32x4Array.prototype.getAt = function(i) {

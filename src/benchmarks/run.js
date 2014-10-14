@@ -1,3 +1,5 @@
+"use strict"
+
 if (typeof SIMD === "undefined") {
   load ('../ecmascript_simd.js');
 }
