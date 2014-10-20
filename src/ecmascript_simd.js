@@ -46,6 +46,18 @@ _PRIVATE.truncatei32 = function(x) {
   return _PRIVATE._i32[0];
 }
 
+_PRIVATE.minNum = function(x, y) {
+    return x != x ? y :
+           y != y ? x :
+           Math.min(x, y);
+}
+
+_PRIVATE.maxNum = function(x, y) {
+    return x != x ? y :
+           y != y ? x :
+           Math.max(x, y);
+}
+
 function checkFloat32x4(t) {
   if (!(t instanceof SIMD.float32x4)) {
     throw new TypeError("argument is not a float32x4.");
@@ -437,10 +449,10 @@ SIMD.float32x4.clamp = function(t, lowerLimit, upperLimit) {
 SIMD.float32x4.min = function(t, other) {
   checkFloat32x4(t);
   checkFloat32x4(other);
-  var cx = t.x > other.x ? other.x : t.x;
-  var cy = t.y > other.y ? other.y : t.y;
-  var cz = t.z > other.z ? other.z : t.z;
-  var cw = t.w > other.w ? other.w : t.w;
+  var cx = Math.min(t.x, other.x);
+  var cy = Math.min(t.y, other.y);
+  var cz = Math.min(t.z, other.z);
+  var cw = Math.min(t.w, other.w);
   return SIMD.float32x4(cx, cy, cz, cw);
 }
 
@@ -451,10 +463,38 @@ SIMD.float32x4.min = function(t, other) {
 SIMD.float32x4.max = function(t, other) {
   checkFloat32x4(t);
   checkFloat32x4(other);
-  var cx = t.x < other.x ? other.x : t.x;
-  var cy = t.y < other.y ? other.y : t.y;
-  var cz = t.z < other.z ? other.z : t.z;
-  var cw = t.w < other.w ? other.w : t.w;
+  var cx = Math.max(t.x, other.x);
+  var cy = Math.max(t.y, other.y);
+  var cz = Math.max(t.z, other.z);
+  var cw = Math.max(t.w, other.w);
+  return SIMD.float32x4(cx, cy, cz, cw);
+}
+
+/**
+  * @return {float32x4} New instance of float32x4 with the minimum value of
+  * t and other, preferring numbers over NaNs.
+  */
+SIMD.float32x4.minNum = function(t, other) {
+  checkFloat32x4(t);
+  checkFloat32x4(other);
+  var cx = _PRIVATE.minNum(t.x, other.x);
+  var cy = _PRIVATE.minNum(t.y, other.y);
+  var cz = _PRIVATE.minNum(t.z, other.z);
+  var cw = _PRIVATE.minNum(t.w, other.w);
+  return SIMD.float32x4(cx, cy, cz, cw);
+}
+
+/**
+  * @return {float32x4} New instance of float32x4 with the maximum value of
+  * t and other, preferring numbers over NaNs.
+  */
+SIMD.float32x4.maxNum = function(t, other) {
+  checkFloat32x4(t);
+  checkFloat32x4(other);
+  var cx = _PRIVATE.maxNum(t.x, other.x);
+  var cy = _PRIVATE.maxNum(t.y, other.y);
+  var cz = _PRIVATE.maxNum(t.z, other.z);
+  var cw = _PRIVATE.maxNum(t.w, other.w);
   return SIMD.float32x4(cx, cy, cz, cw);
 }
 
@@ -965,8 +1005,8 @@ SIMD.float64x2.clamp = function(t, lowerLimit, upperLimit) {
 SIMD.float64x2.min = function(t, other) {
   checkFloat64x2(t);
   checkFloat64x2(other);
-  var cx = t.x > other.x ? other.x : t.x;
-  var cy = t.y > other.y ? other.y : t.y;
+  var cx = Math.min(t.x, other.x);
+  var cy = Math.min(t.y, other.y);
   return SIMD.float64x2(cx, cy);
 }
 
@@ -977,8 +1017,32 @@ SIMD.float64x2.min = function(t, other) {
 SIMD.float64x2.max = function(t, other) {
   checkFloat64x2(t);
   checkFloat64x2(other);
-  var cx = t.x < other.x ? other.x : t.x;
-  var cy = t.y < other.y ? other.y : t.y;
+  var cx = Math.max(t.x, other.x);
+  var cy = Math.max(t.y, other.y);
+  return SIMD.float64x2(cx, cy);
+}
+
+/**
+  * @return {float64x2} New instance of float64x2 with the minimum value of
+  * t and other, preferring numbers over NaNs.
+  */
+SIMD.float64x2.minNum = function(t, other) {
+  checkFloat64x2(t);
+  checkFloat64x2(other);
+  var cx = _PRIVATE.minNum(t.x > other.x);
+  var cy = _PRIVATE.minNum(t.y > other.y);
+  return SIMD.float64x2(cx, cy);
+}
+
+/**
+  * @return {float64x2} New instance of float64x2 with the maximum value of
+  * t and other, preferring numbers over NaNs.
+  */
+SIMD.float64x2.maxNum = function(t, other) {
+  checkFloat64x2(t);
+  checkFloat64x2(other);
+  var cx = _PRIVATE.maxNum(t.x, other.x);
+  var cy = _PRIVATE.maxNum(t.y, other.y);
   return SIMD.float64x2(cx, cy);
 }
 
