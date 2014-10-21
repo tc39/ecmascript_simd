@@ -886,14 +886,19 @@ SIMD.float32x4.storeX = function(tarray, index, value) {
   if (index < 0 || (index * bpe + 4) > tarray.byteLength)
     throw new RangeError("The value of index is invalid.");
   checkFloat32x4(value);
-  _PRIVATE._f32x4[0] = value.x;
-  var array = bpe == 1 ? _PRIVATE._i8x16 :
-              bpe == 2 ? _PRIVATE._i16x8 :
-              bpe == 4 ? (tarray.toString() === "[object Float32Array]" ? _PRIVATE._f32x4 : _PRIVATE._i32x4) :
-              _PRIVATE._f64x2;
-  var n = 4 / bpe;
-  for (var i = 0; i < n; ++i)
-    tarray[index + i] = array[i];
+  if (bpe == 8) {
+    // tarray's elements are too wide. Just create a new view; this is rare.
+    var view = new Float32Array(tarray.buffer, index * 8, 1);
+    view[0] = value.x;
+  } else {
+    _PRIVATE._f32x4[0] = value.x;
+    var array = bpe == 1 ? _PRIVATE._i8x16 :
+                bpe == 2 ? _PRIVATE._i16x8 :
+                (tarray.toString() === "[object Float32Array]" ? _PRIVATE._f32x4 : _PRIVATE._i32x4);
+    var n = 4 / bpe;
+    for (var i = 0; i < n; ++i)
+      tarray[index + i] = array[i];
+  }
 }
 
 /**
@@ -937,16 +942,23 @@ SIMD.float32x4.storeXYZ = function(tarray, index, value) {
   if (index < 0 || (index * bpe + 12) > tarray.byteLength)
     throw new RangeError("The value of index is invalid.");
   checkFloat32x4(value);
-  _PRIVATE._f32x4[0] = value.x;
-  _PRIVATE._f32x4[1] = value.y;
-  _PRIVATE._f32x4[2] = value.z;
-  var array = bpe == 1 ? _PRIVATE._i8x16 :
-              bpe == 2 ? _PRIVATE._i16x8 :
-              bpe == 4 ? (tarray.toString() === "[object Float32Array]" ? _PRIVATE._f32x4 : _PRIVATE._i32x4) :
-              _PRIVATE._f64x2;
-  var n = 12 / bpe;
-  for (var i = 0; i < n; ++i)
-    tarray[index + i] = array[i];
+  if (bpe == 8) {
+    // tarray's elements are too wide. Just create a new view; this is rare.
+    var view = new Float32Array(tarray.buffer, index * 8, 3);
+    view[0] = value.x;
+    view[1] = value.y;
+    view[2] = value.z;
+  } else {
+    _PRIVATE._f32x4[0] = value.x;
+    _PRIVATE._f32x4[1] = value.y;
+    _PRIVATE._f32x4[2] = value.z;
+    var array = bpe == 1 ? _PRIVATE._i8x16 :
+                bpe == 2 ? _PRIVATE._i16x8 :
+                (tarray.toString() === "[object Float32Array]" ? _PRIVATE._f32x4 : _PRIVATE._i32x4);
+    var n = 12 / bpe;
+    for (var i = 0; i < n; ++i)
+      tarray[index + i] = array[i];
+  }
 }
 
 /**
@@ -1803,14 +1815,19 @@ SIMD.int32x4.storeX = function(tarray, index, value) {
   if (index < 0 || (index * bpe + 4) > tarray.byteLength)
     throw new RangeError("The value of index is invalid.");
   checkInt32x4(value);
-  _PRIVATE._i32x4[0] = value.x;
-  var array = bpe == 1 ? _PRIVATE._i8x16 :
-              bpe == 2 ? _PRIVATE._i16x8 :
-              bpe == 4 ? (tarray.toString() === "[object Float32Array]" ? _PRIVATE._f32x4 : _PRIVATE._i32x4) :
-              _PRIVATE._f64x2;
-  var n = 4 / bpe;
-  for (var i = 0; i < n; ++i)
-    tarray[index + i] = array[i];
+  if (bpe == 8) {
+    // tarray's elements are too wide. Just create a new view; this is rare.
+    var view = new Int32Array(tarray.buffer, index * 8, 1);
+    view[0] = value.x;
+  } else {
+    _PRIVATE._i32x4[0] = value.x;
+    var array = bpe == 1 ? _PRIVATE._i8x16 :
+                bpe == 2 ? _PRIVATE._i16x8 :
+                (tarray.toString() === "[object Float32Array]" ? _PRIVATE._f32x4 : _PRIVATE._i32x4);
+    var n = 4 / bpe;
+    for (var i = 0; i < n; ++i)
+      tarray[index + i] = array[i];
+  }
 }
 
 /**
@@ -1854,16 +1871,23 @@ SIMD.int32x4.storeXYZ = function(tarray, index, value) {
   if (index < 0 || (index * bpe + 12) > tarray.byteLength)
     throw new RangeError("The value of index is invalid.");
   checkInt32x4(value);
-  _PRIVATE._i32x4[0] = value.x;
-  _PRIVATE._i32x4[1] = value.y;
-  _PRIVATE._i32x4[2] = value.z;
-  var array = bpe == 1 ? _PRIVATE._i8x16 :
-              bpe == 2 ? _PRIVATE._i16x8 :
-              bpe == 4 ? (tarray.toString() === "[object Float32Array]" ? _PRIVATE._f32x4 : _PRIVATE._i32x4) :
-              _PRIVATE._f64x2;
-  var n = 12 / bpe;
-  for (var i = 0; i < n; ++i)
-    tarray[index + i] = array[i];
+  if (bpe == 8) {
+    // tarray's elements are too wide. Just create a new view; this is rare.
+    var view = new Int32Array(tarray.buffer, index * 8, 3);
+    view[0] = value.x;
+    view[1] = value.y;
+    view[2] = value.z;
+  } else {
+    _PRIVATE._i32x4[0] = value.x;
+    _PRIVATE._i32x4[1] = value.y;
+    _PRIVATE._i32x4[2] = value.z;
+    var array = bpe == 1 ? _PRIVATE._i8x16 :
+                bpe == 2 ? _PRIVATE._i16x8 :
+                (tarray.toString() === "[object Float32Array]" ? _PRIVATE._f32x4 : _PRIVATE._i32x4);
+    var n = 12 / bpe;
+    for (var i = 0; i < n; ++i)
+      tarray[index + i] = array[i];
+  }
 }
 
 Object.defineProperty(SIMD, 'XXXX', { get: function() { return 0x00; } });
