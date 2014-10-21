@@ -234,6 +234,26 @@ test('float32x4 min', function() {
   notEqual(z.w, z.w);
 });
 
+test('float32x4 minNum', function() {
+  var a = SIMD.float32x4(-20.0, 10.0, 30.0, 0.5);
+  var lower = SIMD.float32x4(2.0, 1.0, 50.0, 0.0);
+  var c = SIMD.float32x4.minNum(a, lower);
+  equal(-20.0, c.x);
+  equal(1.0, c.y);
+  equal(30.0, c.z);
+  equal(0.0, c.w);
+
+  var x = SIMD.float32x4(-0, 0, NaN, 0);
+  var y = SIMD.float32x4(0, -0, 0, NaN);
+  var z = SIMD.float32x4.minNum(x, y);
+  equal(0, z.x);
+  equal(1 / z.x, -Infinity);
+  equal(0, z.y);
+  equal(1 / z.y, -Infinity);
+  equal(0, z.z);
+  equal(0, z.w);
+});
+
 test('float32x4 min exceptions', function() {
   var ok    = SIMD.float32x4(1.0, 2.0, 3.0, 4.0);
   var notOk = 1;
@@ -263,6 +283,26 @@ test('float32x4 max', function() {
   equal(1 / z.y, Infinity);
   notEqual(z.z, z.z);
   notEqual(z.w, z.w);
+});
+
+test('float32x4 maxNum', function() {
+  var a = SIMD.float32x4(-20.0, 10.0, 30.0, 0.5);
+  var upper = SIMD.float32x4(2.5, 5.0, 55.0, 1.0);
+  var c = SIMD.float32x4.maxNum(a, upper);
+  equal(2.5, c.x);
+  equal(10.0, c.y);
+  equal(55.0, c.z);
+  equal(1.0, c.w);
+
+  var x = SIMD.float32x4(-0, 0, NaN, 0);
+  var y = SIMD.float32x4(0, -0, 0, NaN);
+  var z = SIMD.float32x4.maxNum(x, y);
+  equal(0, z.x);
+  equal(1 / z.x, Infinity);
+  equal(0, z.y);
+  equal(1 / z.y, Infinity);
+  equal(0, z.z);
+  equal(0, z.w);
 });
 
 test('float32x4 max exceptions', function() {
@@ -878,6 +918,27 @@ test('float64x2 min', function() {
   notEqual(z.y, z.y);
 });
 
+test('float64x2 minNum', function() {
+  var a = SIMD.float64x2(-20.0, 10.0);
+  var lower = SIMD.float64x2(2.0, 1.0);
+  var c = SIMD.float64x2.minNum(a, lower);
+  equal(-20.0, c.x);
+  equal(1.0, c.y);
+
+  var x = SIMD.float64x2(-0, 0);
+  var y = SIMD.float64x2(0, -0);
+  var z = SIMD.float64x2.minNum(x, y);
+  equal(0, z.x);
+  equal(1 / z.x, -Infinity);
+  equal(0, z.y);
+  equal(1 / z.y, -Infinity);
+  x = SIMD.float64x2(NaN, 0);
+  y = SIMD.float64x2(0, NaN);
+  z = SIMD.float64x2.minNum(x, y);
+  equal(0, z.x);
+  equal(0, z.y);
+});
+
 test('float64x2 min exceptions', function() {
   var ok    = SIMD.float64x2(1.0, 2.0);
   var notOk = 1;
@@ -908,6 +969,27 @@ test('float64x2 max', function() {
   z = SIMD.float64x2.max(x, y);
   notEqual(z.x, z.x);
   notEqual(z.y, z.y);
+});
+
+test('float64x2 maxNum', function() {
+  var a = SIMD.float64x2(-20.0, 10.0);
+  var upper = SIMD.float64x2(2.5, 5.0);
+  var c = SIMD.float64x2.maxNum(a, upper);
+  equal(2.5, c.x);
+  equal(10.0, c.y);
+
+  var x = SIMD.float64x2(-0, 0);
+  var y = SIMD.float64x2(0, -0);
+  var z = SIMD.float64x2.maxNum(x, y);
+  equal(0, z.x);
+  equal(1 / z.x, Infinity);
+  equal(0, z.y);
+  equal(1 / z.y, Infinity);
+  x = SIMD.float64x2(NaN, 0);
+  y = SIMD.float64x2(0, NaN);
+  z = SIMD.float64x2.maxNum(x, y);
+  equal(0, z.x);
+  equal(0, z.y);
 });
 
 test('float64x2 max exceptions', function() {

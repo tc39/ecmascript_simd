@@ -1029,8 +1029,8 @@ SIMD.float64x2.max = function(t, other) {
 SIMD.float64x2.minNum = function(t, other) {
   checkFloat64x2(t);
   checkFloat64x2(other);
-  var cx = _PRIVATE.minNum(t.x > other.x);
-  var cy = _PRIVATE.minNum(t.y > other.y);
+  var cx = _PRIVATE.minNum(t.x, other.x);
+  var cy = _PRIVATE.minNum(t.y, other.y);
   return SIMD.float64x2(cx, cy);
 }
 
