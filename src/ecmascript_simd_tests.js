@@ -1159,6 +1159,13 @@ test('int32x4 fromFloat32x4 constructor', function() {
   equal(2, n.y);
   equal(3, n.z);
   equal(4, n.w);
+
+  m = SIMD.float32x4(0.0, -0.0, -1.2, -3.8);
+  n = SIMD.int32x4.fromFloat32x4(m);
+  equal(0, n.x);
+  equal(0, n.y);
+  equal(-1, n.z);
+  equal(-3, n.w);
 });
 
 test('int32x4 fromFloat64x2 constructor', function() {
@@ -1166,6 +1173,27 @@ test('int32x4 fromFloat64x2 constructor', function() {
   var n = SIMD.int32x4.fromFloat64x2(m);
   equal(1, n.x);
   equal(2, n.y);
+  equal(0, n.z);
+  equal(0, n.w);
+
+  m = SIMD.float64x2(3.6, 4.8);
+  n = SIMD.int32x4.fromFloat64x2(m);
+  equal(3, n.x);
+  equal(4, n.y);
+  equal(0, n.z);
+  equal(0, n.w);
+
+  m = SIMD.float64x2(0.0, -0.0);
+  n = SIMD.int32x4.fromFloat64x2(m);
+  equal(0, n.x);
+  equal(0, n.y);
+  equal(0, n.z);
+  equal(0, n.w);
+
+  m = SIMD.float64x2(-1.2, -3.8);
+  n = SIMD.int32x4.fromFloat64x2(m);
+  equal(-1, n.x);
+  equal(-3, n.y);
   equal(0, n.z);
   equal(0, n.w);
 });

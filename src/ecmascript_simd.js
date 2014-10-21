@@ -312,8 +312,7 @@ SIMD.int32x4.splat = function(s) {
   */
 SIMD.int32x4.fromFloat32x4 = function(t) {
   checkFloat32x4(t);
-  var a = SIMD.int32x4(Math.floor(t.x_), Math.floor(t.y_),
-                       Math.floor(t.z_), Math.floor(t.w_));
+  var a = SIMD.int32x4(t.x_, t.y_, t.z_, t.w_);
   return a;
 }
 
@@ -323,9 +322,7 @@ SIMD.int32x4.fromFloat32x4 = function(t) {
   */
 SIMD.int32x4.fromFloat64x2 = function(t) {
   checkFloat64x2(t);
-  var a = SIMD.int32x4.zero();
-  a.x_ = Math.floor(t.x_);
-  a.y_ = Math.floor(t.y_);
+  var a = SIMD.int32x4(t.x_, t.y_, 0, 0);
   return a;
 }
 
