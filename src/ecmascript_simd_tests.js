@@ -399,12 +399,12 @@ test('float32x4 sqrt', function() {
   equal(1.0, c.w);
 });
 
-test('float32x4 shuffleMix', function() {
+test('float32x4 shuffle', function() {
   var a    = SIMD.float32x4(1.0, 2.0, 3.0, 4.0);
   var b    = SIMD.float32x4(5.0, 6.0, 7.0, 8.0);
-  var xyxy = SIMD.float32x4.shuffleMix(a, b, SIMD.XYXY);
-  var zwzw = SIMD.float32x4.shuffleMix(a, b, SIMD.ZWZW);
-  var xxxx = SIMD.float32x4.shuffleMix(a, b, SIMD.XXXX);
+  var xyxy = SIMD.float32x4.shuffle(a, b, 0, 1, 4, 5);
+  var zwzw = SIMD.float32x4.shuffle(a, b, 2, 3, 6, 7);
+  var xxxx = SIMD.float32x4.shuffle(a, b, 0, 0, 4, 4);
   equal(1.0, xyxy.x);
   equal(2.0, xyxy.y);
   equal(5.0, xyxy.z);
@@ -417,6 +417,22 @@ test('float32x4 shuffleMix', function() {
   equal(1.0, xxxx.y);
   equal(5.0, xxxx.z);
   equal(5.0, xxxx.w);
+
+  var c = SIMD.float32x4.shuffle(a, b, 0, 4, 5, 1);
+  var d = SIMD.float32x4.shuffle(a, b, 2, 6, 3, 7);
+  var e = SIMD.float32x4.shuffle(a, b, 0, 4, 0, 4);
+  equal(1.0, c.x);
+  equal(5.0, c.y);
+  equal(6.0, c.z);
+  equal(2.0, c.w);
+  equal(3.0, d.x);
+  equal(7.0, d.y);
+  equal(4.0, d.z);
+  equal(8.0, d.w);
+  equal(1.0, e.x);
+  equal(5.0, e.y);
+  equal(1.0, e.z);
+  equal(5.0, e.w);
 });
 
 test('float32x4 withX', function() {
@@ -1468,21 +1484,34 @@ test('float64x2 swizzle', function() {
   equal(2.0, yy.y);
 });
 
-test('float64x2 shuffleMix', function() {
+test('float64x2 shuffle', function() {
   var a  = SIMD.float64x2(1.0, 2.0);
   var b  = SIMD.float64x2(3.0, 4.0);
-  var xx = SIMD.float64x2.shuffleMix(a, b, SIMD.XX);
-  var xy = SIMD.float64x2.shuffleMix(a, b, SIMD.XY);
-  var yx = SIMD.float64x2.shuffleMix(a, b, SIMD.YX);
-  var yy = SIMD.float64x2.shuffleMix(a, b, SIMD.YY);
+  var xx = SIMD.float64x2.shuffle(a, b, 0, 2);
+  var xy = SIMD.float64x2.shuffle(a, b, 0, 3);
+  var yx = SIMD.float64x2.shuffle(a, b, 1, 0);
+  var yy = SIMD.float64x2.shuffle(a, b, 1, 3);
   equal(1.0, xx.x);
   equal(3.0, xx.y);
   equal(1.0, xy.x);
   equal(4.0, xy.y);
   equal(2.0, yx.x);
-  equal(3.0, yx.y);
+  equal(1.0, yx.y);
   equal(2.0, yy.x);
   equal(4.0, yy.y);
+
+  var c = SIMD.float64x2.shuffle(a, b, 1, 0);
+  var d = SIMD.float64x2.shuffle(a, b, 3, 2);
+  var e = SIMD.float64x2.shuffle(a, b, 0, 1);
+  var f = SIMD.float64x2.shuffle(a, b, 0, 2);
+  equal(2.0, c.x);
+  equal(1.0, c.y);
+  equal(4.0, d.x);
+  equal(3.0, d.y);
+  equal(1.0, e.x);
+  equal(2.0, e.y);
+  equal(1.0, f.x);
+  equal(3.0, f.y);
 });
 
 test('float64x2 withX', function() {

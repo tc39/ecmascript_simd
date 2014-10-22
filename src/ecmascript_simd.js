@@ -504,18 +504,17 @@ SIMD.float32x4.swizzle = function(t, mask) {
 }
 
 /**
-  * @param {float32x4} t1 An instance of float32x4 to be shuffled. XY lanes in result
-  * @param {float32x4} t2 An instance of float32x4 to be shuffled. ZW lanes in result
-  * @param {integer} mask One of the 256 shuffle masks, for example, SIMD.XXXX.
+  * @param {float32x4} t1 An instance of float32x4 to be shuffled.
+  * @param {float32x4} t2 An instance of float32x4 to be shuffled.
+  * @param {integer} x - Index in concatenation of t1 and t2 for lane x
+  * @param {integer} y - Index in concatenation of t1 and t2 for lane y
+  * @param {integer} z - Index in concatenation of t1 and t2 for lane z
+  * @param {integer} w - Index in concatenation of t1 and t2 for lane w
   * @return {float32x4} New instance of float32x4 with lanes shuffled.
   */
-SIMD.float32x4.shuffleMix = function(t1, t2, mask) {
+SIMD.float32x4.shuffle = function(t1, t2, x, y, z, w) {
   checkFloat32x4(t1);
   checkFloat32x4(t2);
-  var _x = (mask) & 0x3;
-  var _y = (mask >> 2) & 0x3;
-  var _z = (mask >> 4) & 0x3;
-  var _w = (mask >> 6) & 0x3;
   var storage = _PRIVATE._f32x8;
   storage[0] = t1.x_;
   storage[1] = t1.y_;
@@ -525,8 +524,7 @@ SIMD.float32x4.shuffleMix = function(t1, t2, mask) {
   storage[5] = t2.y_;
   storage[6] = t2.z_;
   storage[7] = t2.w_;
-  return SIMD.float32x4(storage[0 + _x], storage[0 + _y],
-                        storage[4 + _z], storage[4 + _w]);
+  return SIMD.float32x4(storage[x], storage[y], storage[z], storage[w]);
 }
 
 /**
@@ -1108,22 +1106,21 @@ SIMD.float64x2.swizzle = function(t, mask) {
 }
 
 /**
-  * @param {float64x2} t1 An instance of float64x2 to be shuffled. X lane in result
-  * @param {float64x2} t2 An instance of float64x2 to be shuffled. Y lane in result
-  * @param {integer} mask One of the 4 shuffle masks, for example, SIMD.XY.
+  * @param {float64x2} t1 An instance of float64x2 to be shuffled.
+  * @param {float64x2} t2 An instance of float64x2 to be shuffled.
+  * @param {integer} x - Index in concatenation of t1 and t2 for lane x
+  * @param {integer} y - Index in concatenation of t1 and t2 for lane y
   * @return {float64x2} New instance of float64x2 with lanes shuffled.
   */
-SIMD.float64x2.shuffleMix = function(t1, t2, mask) {
+SIMD.float64x2.shuffle = function(t1, t2, x, y) {
   checkFloat64x2(t1);
   checkFloat64x2(t2);
-  var _x = (mask) & 0x1;
-  var _y = (mask >> 1) & 0x1;
   var storage = _PRIVATE._f64x4;
   storage[0] = t1.x_;
   storage[1] = t1.y_;
   storage[2] = t2.x_;
   storage[3] = t2.y_;
-  return SIMD.float64x2(storage[0 + _x], storage[2 + _y]);
+  return SIMD.float64x2(storage[x], storage[y]);
 }
 
 /**
@@ -1454,18 +1451,17 @@ SIMD.int32x4.swizzle = function(t, mask) {
 }
 
 /**
-  * @param {int32x4} t1 An instance of float32x4 to be shuffled. XY lanes in result
-  * @param {int32x4} t2 An instance of float32x4 to be shuffled. ZW lanes in result
-  * @param {integer} mask One of the 256 shuffle masks, for example, SIMD.XXXX.
+  * @param {int32x4} t1 An instance of float32x4 to be shuffled.
+  * @param {int32x4} t2 An instance of float32x4 to be shuffled.
+  * @param {integer} x - Index in concatenation of t1 and t2 for lane x
+  * @param {integer} y - Index in concatenation of t1 and t2 for lane y
+  * @param {integer} z - Index in concatenation of t1 and t2 for lane z
+  * @param {integer} w - Index in concatenation of t1 and t2 for lane w
   * @return {int32x4} New instance of float32x4 with lanes shuffled.
   */
-SIMD.int32x4.shuffleMix = function(t1, t2, mask) {
+SIMD.int32x4.shuffle = function(t1, t2, x, y, z, w) {
   checkInt32x4(t1);
   checkInt32x4(t2);
-  var _x = (mask) & 0x3;
-  var _y = (mask >> 2) & 0x3;
-  var _z = (mask >> 4) & 0x3;
-  var _w = (mask >> 6) & 0x3;
   var storage = _PRIVATE._i32x8;
   storage[0] = t1.x_;
   storage[1] = t1.y_;
@@ -1475,8 +1471,7 @@ SIMD.int32x4.shuffleMix = function(t1, t2, mask) {
   storage[5] = t2.y_;
   storage[6] = t2.z_;
   storage[7] = t2.w_;
-  return SIMD.float32x4(storage[0 + _x], storage[0 + _y],
-                        storage[4 + _z], storage[4 + _w]);
+  return SIMD.float32x4(storage[x], storage[y], storage[z], storage[w]);
 }
 
 /**

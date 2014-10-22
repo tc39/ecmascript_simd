@@ -111,27 +111,27 @@
 
     // Transpose the source matrix.  Sort of.  Not a true transpose operation
 
-    tmp1 = SIMD.float32x4.shuffleMix(src0, src1, SIMD.XYXY);
-    row1 = SIMD.float32x4.shuffleMix(src2, src3, SIMD.XYXY);
-    row0 = SIMD.float32x4.shuffleMix(tmp1, row1, SIMD.XZXZ);
-    row1 = SIMD.float32x4.shuffleMix(row1, tmp1, SIMD.YWYW);
+    tmp1 = SIMD.float32x4.shuffle(src0, src1, 0, 1, 4, 5);
+    row1 = SIMD.float32x4.shuffle(src2, src3, 0, 1, 4, 5);
+    row0 = SIMD.float32x4.shuffle(tmp1, row1, 0, 2, 4, 6);
+    row1 = SIMD.float32x4.shuffle(row1, tmp1, 1, 3, 5, 7);
 
-    tmp1 = SIMD.float32x4.shuffleMix(src0, src1, SIMD.ZWZW);
-    row3 = SIMD.float32x4.shuffleMix(src2, src3, SIMD.ZWZW);
-    row2 = SIMD.float32x4.shuffleMix(tmp1, row3, SIMD.XZXZ);
-    row3 = SIMD.float32x4.shuffleMix(row3, tmp1, SIMD.YWYW);
+    tmp1 = SIMD.float32x4.shuffle(src0, src1, 2, 3, 6, 7);
+    row3 = SIMD.float32x4.shuffle(src2, src3, 2, 3, 6, 7);
+    row2 = SIMD.float32x4.shuffle(tmp1, row3, 0, 2, 4, 6);
+    row3 = SIMD.float32x4.shuffle(row3, tmp1, 1, 3, 5, 7);
 
     // This is a true transposition, but it will lead to an incorrect result
 
-    //tmp1 = SIMD.float32x4.shuffleMix(src0, src1, SIMD.XYXY);
-    //tmp2 = SIMD.float32x4.shuffleMix(src2, src3, SIMD.XYXY);
-    //row0  = SIMD.float32x4.shuffleMix(tmp1, tmp2, SIMD.XZXZ);
-    //row1  = SIMD.float32x4.shuffleMix(tmp1, tmp2, SIMD.YWYW);
+    //tmp1 = SIMD.float32x4.shuffle(src0, src1, 0, 1, 4, 5);
+    //tmp2 = SIMD.float32x4.shuffle(src2, src3, 0, 1, 4, 5);
+    //row0  = SIMD.float32x4.shuffle(tmp1, tmp2, 0, 2, 4, 6);
+    //row1  = SIMD.float32x4.shuffle(tmp1, tmp2, 1, 3, 5, 7);
 
-    //tmp1 = SIMD.float32x4.shuffleMix(src0, src1, SIMD.ZWZW);
-    //tmp2 = SIMD.float32x4.shuffleMix(src2, src3, SIMD.ZWZW);
-    //row2  = SIMD.float32x4.shuffleMix(tmp1, tmp2, SIMD.XZXZ);
-    //row3  = SIMD.float32x4.shuffleMix(tmp1, tmp2, SIMD.YWYW);
+    //tmp1 = SIMD.float32x4.shuffle(src0, src1, 2, 3, 6, 7);
+    //tmp2 = SIMD.float32x4.shuffle(src2, src3, 2, 3, 6, 7);
+    //row2  = SIMD.float32x4.shuffle(tmp1, tmp2, 0, 2, 4, 6);
+    //row3  = SIMD.float32x4.shuffle(tmp1, tmp2, 1, 3, 5, 7);
 
     // ----
     tmp1   = SIMD.float32x4.mul(row2, row3);
@@ -320,27 +320,27 @@
 
       // Transpose the source matrix.  Sort of.  Not a true transpose operation
 
-      tmp1 = SIMD.float32x4.shuffleMix(src0, src1, SIMD.XYXY);
-      row1 = SIMD.float32x4.shuffleMix(src2, src3, SIMD.XYXY);
-      row0 = SIMD.float32x4.shuffleMix(tmp1, row1, SIMD.XZXZ);
-      row1 = SIMD.float32x4.shuffleMix(row1, tmp1, SIMD.YWYW);
+      tmp1 = SIMD.float32x4.shuffle(src0, src1, 0, 1, 4, 5);
+      row1 = SIMD.float32x4.shuffle(src2, src3, 0, 1, 4, 5);
+      row0 = SIMD.float32x4.shuffle(tmp1, row1, 0, 2, 4, 6);
+      row1 = SIMD.float32x4.shuffle(row1, tmp1, 1, 3, 5, 7);
 
-      tmp1 = SIMD.float32x4.shuffleMix(src0, src1, SIMD.ZWZW);
-      row3 = SIMD.float32x4.shuffleMix(src2, src3, SIMD.ZWZW);
-      row2 = SIMD.float32x4.shuffleMix(tmp1, row3, SIMD.XZXZ);
-      row3 = SIMD.float32x4.shuffleMix(row3, tmp1, SIMD.YWYW);
+      tmp1 = SIMD.float32x4.shuffle(src0, src1, 2, 3, 6, 7);
+      row3 = SIMD.float32x4.shuffle(src2, src3, 2, 3, 6, 7);
+      row2 = SIMD.float32x4.shuffle(tmp1, row3, 0, 2, 4, 6);
+      row3 = SIMD.float32x4.shuffle(row3, tmp1, 1, 3, 5, 7);
 
       // This is a true transposition, but it will lead to an incorrect result
 
-      //tmp1 = SIMD.float32x4.shuffleMix(src0, src1, SIMD.XYXY);
-      //tmp2 = SIMD.float32x4.shuffleMix(src2, src3, SIMD.XYXY);
-      //row0  = SIMD.float32x4.shuffleMix(tmp1, tmp2, SIMD.XZXZ);
-      //row1  = SIMD.float32x4.shuffleMix(tmp1, tmp2, SIMD.YWYW);
+      //tmp1 = SIMD.float32x4.shuffle(src0, src1, 0, 1, 4, 5);
+      //tmp2 = SIMD.float32x4.shuffle(src2, src3, 0, 1, 4, 5);
+      //row0  = SIMD.float32x4.shuffle(tmp1, tmp2, 0, 2, 4, 6);
+      //row1  = SIMD.float32x4.shuffle(tmp1, tmp2, 1, 3, 5, 7);
 
-      //tmp1 = SIMD.float32x4.shuffleMix(src0, src1, SIMD.ZWZW);
-      //tmp2 = SIMD.float32x4.shuffleMix(src2, src3, SIMD.ZWZW);
-      //row2  = SIMD.float32x4.shuffleMix(tmp1, tmp2, SIMD.XZXZ);
-      //row3  = SIMD.float32x4.shuffleMix(tmp1, tmp2, SIMD.YWYW);
+      //tmp1 = SIMD.float32x4.shuffle(src0, src1, 2, 3, 6, 7);
+      //tmp2 = SIMD.float32x4.shuffle(src2, src3, 2, 3, 6, 7);
+      //row2  = SIMD.float32x4.shuffle(tmp1, tmp2, 0, 2, 4, 6);
+      //row3  = SIMD.float32x4.shuffle(tmp1, tmp2, 1, 3, 5, 7);
 
       // ----
       tmp1 = SIMD.float32x4.mul(row2, row3);
