@@ -121,11 +121,11 @@ test('float32x4 signMask getter', function() {
 
 test('float32x4 vector getters', function() {
   var a = SIMD.float32x4(4.0, 3.0, 2.0, 1.0);
-  var xxxx = SIMD.float32x4.shuffle(a, SIMD.XXXX);
-  var yyyy = SIMD.float32x4.shuffle(a, SIMD.YYYY);
-  var zzzz = SIMD.float32x4.shuffle(a, SIMD.ZZZZ);
-  var wwww = SIMD.float32x4.shuffle(a, SIMD.WWWW);
-  var wzyx = SIMD.float32x4.shuffle(a, SIMD.WZYX);
+  var xxxx = SIMD.float32x4.swizzle(a, SIMD.XXXX);
+  var yyyy = SIMD.float32x4.swizzle(a, SIMD.YYYY);
+  var zzzz = SIMD.float32x4.swizzle(a, SIMD.ZZZZ);
+  var wwww = SIMD.float32x4.swizzle(a, SIMD.WWWW);
+  var wzyx = SIMD.float32x4.swizzle(a, SIMD.WZYX);
   equal(4.0, xxxx.x);
   equal(4.0, xxxx.y);
   equal(4.0, xxxx.z);
@@ -1452,12 +1452,12 @@ test('float64x2 sqrt', function() {
   equal(3.0, c.y);
 });
 
-test('float64x2 shuffle', function() {
+test('float64x2 swizzle', function() {
   var a  = SIMD.float64x2(1.0, 2.0);
-  var xx = SIMD.float64x2.shuffle(a, SIMD.XX);
-  var xy = SIMD.float64x2.shuffle(a, SIMD.XY);
-  var yx = SIMD.float64x2.shuffle(a, SIMD.YX);
-  var yy = SIMD.float64x2.shuffle(a, SIMD.YY);
+  var xx = SIMD.float64x2.swizzle(a, SIMD.XX);
+  var xy = SIMD.float64x2.swizzle(a, SIMD.XY);
+  var yx = SIMD.float64x2.swizzle(a, SIMD.YX);
+  var yy = SIMD.float64x2.swizzle(a, SIMD.YY);
   equal(1.0, xx.x);
   equal(1.0, xx.y);
   equal(1.0, xy.x);

@@ -485,11 +485,11 @@ SIMD.float32x4.sqrt = function(t) {
 }
 
 /**
-  * @param {float32x4} t An instance of float32x4 to be shuffled.
-  * @param {integer} mask One of the 256 shuffle masks, for example, SIMD.XXXX.
-  * @return {float32x4} New instance of float32x4 with lanes shuffled.
+  * @param {float32x4} t An instance of float32x4 to be swizzled.
+  * @param {integer} mask One of the 256 swizzle masks, for example, SIMD.XXXX.
+  * @return {float32x4} New instance of float32x4 with lanes swizzled.
   */
-SIMD.float32x4.shuffle = function(t, mask) {
+SIMD.float32x4.swizzle = function(t, mask) {
   checkFloat32x4(t);
   var _x = (mask) & 0x3;
   var _y = (mask >> 2) & 0x3;
@@ -1093,11 +1093,11 @@ SIMD.float64x2.sqrt = function(t) {
 }
 
 /**
-  * @param {float64x2} t An instance of float64x2 to be shuffled.
-  * @param {integer} mask One of the 4 shuffle masks, for example, SIMD.XY.
-  * @return {float64x2} New instance of float64x2 with lanes shuffled.
+  * @param {float64x2} t An instance of float64x2 to be swizzled.
+  * @param {integer} mask One of the 4 swizzle masks, for example, SIMD.XY.
+  * @return {float64x2} New instance of float64x2 with lanes swizzled.
   */
-SIMD.float64x2.shuffle = function(t, mask) {
+SIMD.float64x2.swizzle = function(t, mask) {
   checkFloat64x2(t);
   var _x = (mask) & 0x1;
   var _y = (mask >> 1) & 0x1;
@@ -1435,11 +1435,11 @@ SIMD.int32x4.mul = function(a, b) {
 }
 
 /**
-  * @param {int32x4} t An instance of float32x4 to be shuffled.
-  * @param {integer} mask One of the 256 shuffle masks, for example, SIMD.XXXX.
-  * @return {int32x4} New instance of float32x4 with lanes shuffled.
+  * @param {int32x4} t An instance of float32x4 to be swizzled.
+  * @param {integer} mask One of the 256 swizzle masks, for example, SIMD.XXXX.
+  * @return {int32x4} New instance of float32x4 with lanes swizzled.
   */
-SIMD.int32x4.shuffle = function(t, mask) {
+SIMD.int32x4.swizzle = function(t, mask) {
   checkInt32x4(t);
   var _x = (mask) & 0x3;
   var _y = (mask >> 2) & 0x3;
@@ -1843,6 +1843,8 @@ SIMD.int32x4.storeXYZ = function(tarray, index, value) {
       tarray[index + i] = array[i];
   }
 }
+
+// Swizzle Masks.
 
 Object.defineProperty(SIMD, 'XXXX', { get: function() { return 0x00; } });
 Object.defineProperty(SIMD, 'XXXY', { get: function() { return 0x40; } });
