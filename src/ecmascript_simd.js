@@ -112,10 +112,7 @@ SIMD.float32x4.splat = function(s) {
   */
 SIMD.float32x4.fromFloat64x2 = function(t) {
   checkFloat64x2(t);
-  var a = SIMD.float32x4.zero();
-  a.x_ = t.x_;
-  a.y_ = t.y_;
-  return a;
+  return SIMD.float32x4(t.x_, t.y_, 0, 0);
 }
 
 /**
@@ -124,12 +121,7 @@ SIMD.float32x4.fromFloat64x2 = function(t) {
   */
 SIMD.float32x4.fromInt32x4 = function(t) {
   checkInt32x4(t);
-  var a = SIMD.float32x4.zero();
-  a.x_ = t.x_;
-  a.y_ = t.y_;
-  a.z_ = t.z_;
-  a.w_ = t.w_;
-  return a;
+  return SIMD.float32x4(t.x_, t.y_, t.z_, t.w_);
 }
 
 /**
@@ -178,8 +170,9 @@ SIMD.float64x2 = function(x, y) {
     return new SIMD.float64x2(x, y);
   }
 
-  this.x_ = x;
-  this.y_ = y;
+  // Use unary + to force coersion to Number.
+  this.x_ = +x;
+  this.y_ = +y;
 }
 
 /**
@@ -206,8 +199,7 @@ SIMD.float64x2.splat = function(s) {
   */
 SIMD.float64x2.fromFloat32x4 = function(t) {
   checkFloat32x4(t);
-  var a = SIMD.float64x2(t.x_, t.y_);
-  return a;
+  return SIMD.float64x2(t.x_, t.y_);
 }
 
 /**
@@ -216,10 +208,7 @@ SIMD.float64x2.fromFloat32x4 = function(t) {
   */
 SIMD.float64x2.fromInt32x4 = function(t) {
   checkInt32x4(t);
-  var a = SIMD.float64x2.zero();
-  a.x_ = t.x_;
-  a.y_ = t.y_;
-  return a;
+  return SIMD.float64x2(t.x_, t.y_);
 }
 
 /**
@@ -312,8 +301,7 @@ SIMD.int32x4.splat = function(s) {
   */
 SIMD.int32x4.fromFloat32x4 = function(t) {
   checkFloat32x4(t);
-  var a = SIMD.int32x4(t.x_, t.y_, t.z_, t.w_);
-  return a;
+  return SIMD.int32x4(t.x_, t.y_, t.z_, t.w_);
 }
 
 /**
@@ -322,8 +310,7 @@ SIMD.int32x4.fromFloat32x4 = function(t) {
   */
 SIMD.int32x4.fromFloat64x2 = function(t) {
   checkFloat64x2(t);
-  var a = SIMD.int32x4(t.x_, t.y_, 0, 0);
-  return a;
+  return SIMD.int32x4(t.x_, t.y_, 0, 0);
 }
 
 /**
@@ -349,8 +336,7 @@ SIMD.int32x4.fromFloat64x2Bits = function(t) {
   _PRIVATE._f64x2[0] = t.x_;
   _PRIVATE._f64x2[1] = t.y_;
   var alias = _PRIVATE._i32x4;
-  var ix4 = SIMD.int32x4(alias[0], alias[1], alias[2], alias[3]);
-  return ix4;
+  return SIMD.int32x4(alias[0], alias[1], alias[2], alias[3]);
 }
 
 /**
