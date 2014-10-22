@@ -1919,6 +1919,42 @@ test('int32x4 fromFloat64x2Bits constructor', function() {
   equal(0x40000000, n.w);
 });
 
+test('int32x4 shuffle', function() {
+  var a    = SIMD.int32x4(1, 2, 3, 4);
+  var b    = SIMD.int32x4(5, 6, 7, 8);
+  var xyxy = SIMD.int32x4.shuffle(a, b, 0, 1, 4, 5);
+  var zwzw = SIMD.int32x4.shuffle(a, b, 2, 3, 6, 7);
+  var xxxx = SIMD.int32x4.shuffle(a, b, 0, 0, 4, 4);
+  equal(1, xyxy.x);
+  equal(2, xyxy.y);
+  equal(5, xyxy.z);
+  equal(6, xyxy.w);
+  equal(3, zwzw.x);
+  equal(4, zwzw.y);
+  equal(7, zwzw.z);
+  equal(8, zwzw.w);
+  equal(1, xxxx.x);
+  equal(1, xxxx.y);
+  equal(5, xxxx.z);
+  equal(5, xxxx.w);
+
+  var c = SIMD.int32x4.shuffle(a, b, 0, 4, 5, 1);
+  var d = SIMD.int32x4.shuffle(a, b, 2, 6, 3, 7);
+  var e = SIMD.int32x4.shuffle(a, b, 0, 4, 0, 4);
+  equal(1, c.x);
+  equal(5, c.y);
+  equal(6, c.z);
+  equal(2, c.w);
+  equal(3, d.x);
+  equal(7, d.y);
+  equal(4, d.z);
+  equal(8, d.w);
+  equal(1, e.x);
+  equal(5, e.y);
+  equal(1, e.z);
+  equal(5, e.w);
+});
+
 test('int32x4 withX', function() {
     var a = SIMD.int32x4(1, 2, 3, 4);
     var c = SIMD.int32x4.withX(a, 20);
@@ -2042,6 +2078,34 @@ test('int32x4 signMask getter', function() {
   equal(0xf, c.signMask);
 });
 
+test('int32x4 vector getters', function() {
+  var a = SIMD.int32x4(4, 3, 2, 1);
+  var xxxx = SIMD.int32x4.swizzle(a, SIMD.XXXX);
+  var yyyy = SIMD.int32x4.swizzle(a, SIMD.YYYY);
+  var zzzz = SIMD.int32x4.swizzle(a, SIMD.ZZZZ);
+  var wwww = SIMD.int32x4.swizzle(a, SIMD.WWWW);
+  var wzyx = SIMD.int32x4.swizzle(a, SIMD.WZYX);
+  equal(4, xxxx.x);
+  equal(4, xxxx.y);
+  equal(4, xxxx.z);
+  equal(4, xxxx.w);
+  equal(3, yyyy.x);
+  equal(3, yyyy.y);
+  equal(3, yyyy.z);
+  equal(3, yyyy.w);
+  equal(2, zzzz.x);
+  equal(2, zzzz.y);
+  equal(2, zzzz.z);
+  equal(2, zzzz.w);
+  equal(1, wwww.x);
+  equal(1, wwww.y);
+  equal(1, wwww.z);
+  equal(1, wwww.w);
+  equal(1, wzyx.x);
+  equal(2, wzyx.y);
+  equal(3, wzyx.z);
+  equal(4, wzyx.w);
+});
 
 test('int32x4 add', function() {
   var a = SIMD.int32x4(0xFFFFFFFF, 0xFFFFFFFF, 0x7fffffff, 0x0);
