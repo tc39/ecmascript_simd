@@ -24,9 +24,6 @@ var SIMD = {};
 // private stuff.
 var _PRIVATE = {}
 
-_PRIVATE._f32 = new Float32Array(1);
-_PRIVATE._i32 = new Int32Array(1);
-
 _PRIVATE._f32x4 = new Float32Array(4);
 _PRIVATE._f64x2 = new Float64Array(_PRIVATE._f32x4.buffer);
 _PRIVATE._i32x4 = new Int32Array(_PRIVATE._f32x4.buffer);
@@ -36,14 +33,15 @@ _PRIVATE._f32x8 = new Float32Array(8);
 _PRIVATE._f64x4 = new Float64Array(4);
 _PRIVATE._i32x8 = new Int32Array(8);
 
-_PRIVATE.truncatef32 = function(x) {
-  _PRIVATE._f32[0] = x;
-  return _PRIVATE._f32[0];
-}
+if (typeof Math.fround != 'undefined') {
+  _PRIVATE.truncatef32 = Math.fround;
+} else {
+  _PRIVATE._f32 = new Float32Array(1);
 
-_PRIVATE.truncatei32 = function(x) {
-  _PRIVATE._i32[0] = x;
-  return _PRIVATE._i32[0];
+  _PRIVATE.truncatef32 = function(x) {
+    _PRIVATE._f32[0] = x;
+    return _PRIVATE._f32[0];
+  }
 }
 
 function checkFloat32x4(t) {
@@ -255,10 +253,10 @@ SIMD.int32x4 = function(x, y, z, w) {
     return new SIMD.int32x4(x, y, z, w);
   }
 
-  this.x_ = _PRIVATE.truncatei32(x);
-  this.y_ = _PRIVATE.truncatei32(y);
-  this.z_ = _PRIVATE.truncatei32(z);
-  this.w_ = _PRIVATE.truncatei32(w);
+  this.x_ = x|0;
+  this.y_ = y|0;
+  this.z_ = z|0;
+  this.w_ = w|0;
 }
 
 /**
