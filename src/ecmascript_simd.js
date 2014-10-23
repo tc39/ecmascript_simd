@@ -675,13 +675,32 @@ SIMD.float32x4.greaterThan = function(t, other) {
 /**
   * @param {int32x4} t Selector mask. An instance of int32x4
   * @param {float32x4} trueValue Pick lane from here if corresponding
-  * selector lane is 0xFFFFFFFF
+  * selector lane is true
   * @param {float32x4} falseValue Pick lane from here if corresponding
-  * selector lane is 0x0
+  * selector lane is false
   * @return {float32x4} Mix of lanes from trueValue or falseValue as
   * indicated
   */
 SIMD.float32x4.select = function(t, trueValue, falseValue) {
+  checkInt32x4(t);
+  checkFloat32x4(trueValue);
+  checkFloat32x4(falseValue);
+  return SIMD.float32x4(_PRIVATE.tobool(t.x) ? trueValue.x : falseValue.x,
+                        _PRIVATE.tobool(t.y) ? trueValue.y : falseValue.y,
+                        _PRIVATE.tobool(t.z) ? trueValue.z : falseValue.z,
+                        _PRIVATE.tobool(t.w) ? trueValue.w : falseValue.w);
+}
+
+/**
+  * @param {int32x4} t Selector mask. An instance of int32x4
+  * @param {float32x4} trueValue Pick bit from here if corresponding
+  * selector bit is 1
+  * @param {float32x4} falseValue Pick bit from here if corresponding
+  * selector bit is 0
+  * @return {float32x4} Mix of bits from trueValue or falseValue as
+  * indicated
+  */
+SIMD.float32x4.bitselect = function(t, trueValue, falseValue) {
   checkInt32x4(t);
   checkFloat32x4(trueValue);
   checkFloat32x4(falseValue);
@@ -1240,13 +1259,30 @@ SIMD.float64x2.greaterThan = function(t, other) {
 /**
   * @param {int32x4} t Selector mask. An instance of int32x4
   * @param {float64x2} trueValue Pick lane from here if corresponding
-  * selector lanes are 0xFFFFFFFF
+  * selector lane is true
   * @param {float64x2} falseValue Pick lane from here if corresponding
-  * selector lanes are 0x0
+  * selector lane is false
   * @return {float64x2} Mix of lanes from trueValue or falseValue as
   * indicated
   */
 SIMD.float64x2.select = function(t, trueValue, falseValue) {
+  checkInt32x4(t);
+  checkFloat64x2(trueValue);
+  checkFloat64x2(falseValue);
+  return SIMD.float32x4(_PRIVATE.tobool(t.x) ? trueValue.x : falseValue.x,
+                        _PRIVATE.tobool(t.y) ? trueValue.y : falseValue.y);
+}
+
+/**
+  * @param {int32x4} t Selector mask. An instance of int32x4
+  * @param {float64x2} trueValue Pick bit from here if corresponding
+  * selector bit is 1
+  * @param {float64x2} falseValue Pick bit from here if corresponding
+  * selector bit is 0
+  * @return {float64x2} Mix of bits from trueValue or falseValue as
+  * indicated
+  */
+SIMD.float64x2.bitselect = function(t, trueValue, falseValue) {
   checkInt32x4(t);
   checkFloat64x2(trueValue);
   checkFloat64x2(falseValue);
@@ -1489,13 +1525,32 @@ SIMD.int32x4.shuffleMix = function(t1, t2, mask) {
 /**
   * @param {int32x4} t Selector mask. An instance of int32x4
   * @param {int32x4} trueValue Pick lane from here if corresponding
-  * selector lane is 0xFFFFFFFF
+  * selector lane is true
   * @param {int32x4} falseValue Pick lane from here if corresponding
-  * selector lane is 0x0
+  * selector lane is false
   * @return {int32x4} Mix of lanes from trueValue or falseValue as
   * indicated
   */
 SIMD.int32x4.select = function(t, trueValue, falseValue) {
+  checkInt32x4(t);
+  checkInt32x4(trueValue);
+  checkInt32x4(falseValue);
+  return SIMD.int32x4(_PRIVATE.tobool(t.x) ? trueValue.x : falseValue.x,
+                      _PRIVATE.tobool(t.y) ? trueValue.y : falseValue.y,
+                      _PRIVATE.tobool(t.z) ? trueValue.z : falseValue.z,
+                      _PRIVATE.tobool(t.w) ? trueValue.w : falseValue.w);
+}
+
+/**
+  * @param {int32x4} t Selector mask. An instance of int32x4
+  * @param {int32x4} trueValue Pick bit from here if corresponding
+  * selector bit is 1
+  * @param {int32x4} falseValue Pick bit from here if corresponding
+  * selector bit is 0
+  * @return {int32x4} Mix of bits from trueValue or falseValue as
+  * indicated
+  */
+SIMD.int32x4.bitselect = function(t, trueValue, falseValue) {
   checkInt32x4(t);
   checkInt32x4(trueValue);
   checkInt32x4(falseValue);
