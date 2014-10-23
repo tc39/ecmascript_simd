@@ -54,6 +54,13 @@ _PRIVATE.maxNum = function(x, y) {
     return x != x ? y :
            y != y ? x :
            Math.max(x, y);
+
+_PRIVATE.tobool = function(x) {
+  return x < 0;
+}
+
+_PRIVATE.frombool = function(x) {
+  return !x - 1;
 }
 
 function checkFloat32x4(t) {
@@ -2171,19 +2178,19 @@ Object.defineProperty(SIMD.int32x4.prototype, 'w', {
 });
 
 Object.defineProperty(SIMD.int32x4.prototype, 'flagX', {
-  get: function() { return this.x_ != 0x0; }
+  get: function() { return _PRIVATE.tobool(this.x_); }
 });
 
 Object.defineProperty(SIMD.int32x4.prototype, 'flagY', {
-  get: function() { return this.y_ != 0x0; }
+  get: function() { return _PRIVATE.tobool(this.y_); }
 });
 
 Object.defineProperty(SIMD.int32x4.prototype, 'flagZ', {
-  get: function() { return this.z_ != 0x0; }
+  get: function() { return _PRIVATE.tobool(this.z_); }
 });
 
 Object.defineProperty(SIMD.int32x4.prototype, 'flagW', {
-  get: function() { return this.w_ != 0x0; }
+  get: function() { return _PRIVATE.tobool(this.w_); }
 });
 
 /**

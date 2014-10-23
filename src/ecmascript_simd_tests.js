@@ -1937,10 +1937,14 @@ test('int32x4 and', function() {
   equal(0x55555555, n.y);
   equal(0x55555555, n.z);
   equal(0x55555555, n.w);
-  equal(true, n.flagX);
-  equal(true, n.flagY);
-  equal(true, n.flagZ);
-  equal(true, n.flagW);
+  equal(true, m.flagX);
+  equal(true, m.flagY);
+  equal(true, m.flagZ);
+  equal(true, m.flagW);
+  equal(false, n.flagX);
+  equal(false, n.flagY);
+  equal(false, n.flagZ);
+  equal(false, n.flagW);
   var o = SIMD.int32x4.and(m,n);  // and
   equal(0x0, o.x);
   equal(0x0, o.y);
