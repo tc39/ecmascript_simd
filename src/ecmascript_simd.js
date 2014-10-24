@@ -263,8 +263,8 @@ SIMD.int32x4 = function(x, y, z, w) {
 }
 
 /**
-  * Construct a new instance of int32x4 number with 0xFFFFFFFF or 0x0 in each
-  * lane, depending on the truth value in x, y, z, and w.
+  * Construct a new instance of int32x4 number with either true or false in each
+  * lane, depending on the truth values in x, y, z, and w.
   * @param {boolean} flag used for x lane.
   * @param {boolean} flag used for y lane.
   * @param {boolean} flag used for z lane.
@@ -272,10 +272,10 @@ SIMD.int32x4 = function(x, y, z, w) {
   * @constructor
   */
 SIMD.int32x4.bool = function(x, y, z, w) {
-  return SIMD.int32x4(x ? -1 : 0x0,
-                      y ? -1 : 0x0,
-                      z ? -1 : 0x0,
-                      w ? -1 : 0x0);
+  return SIMD.int32x4(_PRIVATE.frombool(x),
+                      _PRIVATE.frombool(y),
+                      _PRIVATE.frombool(z),
+                      _PRIVATE.frombool(w));
 }
 
 /**
@@ -579,7 +579,7 @@ SIMD.float32x4.withW = function(t, w) {
 /**
   * @param {float32x4} t An instance of float32x4.
   * @param {float32x4} other An instance of float32x4.
-  * @return {int32x4} 0xFFFFFFFF or 0x0 in each lane depending on
+  * @return {int32x4} true or false in each lane depending on
   * the result of t < other.
   */
 SIMD.float32x4.lessThan = function(t, other) {
@@ -595,7 +595,7 @@ SIMD.float32x4.lessThan = function(t, other) {
 /**
   * @param {float32x4} t An instance of float32x4.
   * @param {float32x4} other An instance of float32x4.
-  * @return {int32x4} 0xFFFFFFFF or 0x0 in each lane depending on
+  * @return {int32x4} true or false in each lane depending on
   * the result of t <= other.
   */
 SIMD.float32x4.lessThanOrEqual = function(t, other) {
@@ -611,7 +611,7 @@ SIMD.float32x4.lessThanOrEqual = function(t, other) {
 /**
   * @param {float32x4} t An instance of float32x4.
   * @param {float32x4} other An instance of float32x4.
-  * @return {int32x4} 0xFFFFFFFF or 0x0 in each lane depending on
+  * @return {int32x4} true or false in each lane depending on
   * the result of t == other.
   */
 SIMD.float32x4.equal = function(t, other) {
@@ -627,7 +627,7 @@ SIMD.float32x4.equal = function(t, other) {
 /**
   * @param {float32x4} t An instance of float32x4.
   * @param {float32x4} other An instance of float32x4.
-  * @return {int32x4} 0xFFFFFFFF or 0x0 in each lane depending on
+  * @return {int32x4} true or false in each lane depending on
   * the result of t != other.
   */
 SIMD.float32x4.notEqual = function(t, other) {
@@ -643,7 +643,7 @@ SIMD.float32x4.notEqual = function(t, other) {
 /**
   * @param {float32x4} t An instance of float32x4.
   * @param {float32x4} other An instance of float32x4.
-  * @return {int32x4} 0xFFFFFFFF or 0x0 in each lane depending on
+  * @return {int32x4} true or false in each lane depending on
   * the result of t >= other.
   */
 SIMD.float32x4.greaterThanOrEqual = function(t, other) {
@@ -659,7 +659,7 @@ SIMD.float32x4.greaterThanOrEqual = function(t, other) {
 /**
   * @param {float32x4} t An instance of float32x4.
   * @param {float32x4} other An instance of float32x4.
-  * @return {int32x4} 0xFFFFFFFF or 0x0 in each lane depending on
+  * @return {int32x4} true or false in each lane depending on
   * the result of t > other.
   */
 SIMD.float32x4.greaterThan = function(t, other) {
@@ -1156,7 +1156,7 @@ SIMD.float64x2.withY = function(t, y) {
 /**
   * @param {float64x2} t An instance of float64x2.
   * @param {float64x2} other An instance of float64x2.
-  * @return {int32x4} 0xFFFFFFFF or 0x0 in each lane depending on
+  * @return {int32x4} true or false in each lane depending on
   * the result of t < other.
   */
 SIMD.float64x2.lessThan = function(t, other) {
@@ -1170,7 +1170,7 @@ SIMD.float64x2.lessThan = function(t, other) {
 /**
   * @param {float64x2} t An instance of float64x2.
   * @param {float64x2} other An instance of float64x2.
-  * @return {int32x4} 0xFFFFFFFF or 0x0 in each lane depending on
+  * @return {int32x4} true or false in each lane depending on
   * the result of t <= other.
   */
 SIMD.float64x2.lessThanOrEqual = function(t, other) {
@@ -1184,7 +1184,7 @@ SIMD.float64x2.lessThanOrEqual = function(t, other) {
 /**
   * @param {float64x2} t An instance of float64x2.
   * @param {float64x2} other An instance of float64x2.
-  * @return {int32x4} 0xFFFFFFFF or 0x0 in each lane depending on
+  * @return {int32x4} true or false in each lane depending on
   * the result of t == other.
   */
 SIMD.float64x2.equal = function(t, other) {
@@ -1198,7 +1198,7 @@ SIMD.float64x2.equal = function(t, other) {
 /**
   * @param {float64x2} t An instance of float64x2.
   * @param {float64x2} other An instance of float64x2.
-  * @return {int32x4} 0xFFFFFFFF or 0x0 in each lane depending on
+  * @return {int32x4} true or false in each lane depending on
   * the result of t != other.
   */
 SIMD.float64x2.notEqual = function(t, other) {
@@ -1212,7 +1212,7 @@ SIMD.float64x2.notEqual = function(t, other) {
 /**
   * @param {float64x2} t An instance of float64x2.
   * @param {float64x2} other An instance of float64x2.
-  * @return {int32x4} 0xFFFFFFFF or 0x0 in each lane depending on
+  * @return {int32x4} true or false in each lane depending on
   * the result of t >= other.
   */
 SIMD.float64x2.greaterThanOrEqual = function(t, other) {
@@ -1226,7 +1226,7 @@ SIMD.float64x2.greaterThanOrEqual = function(t, other) {
 /**
   * @param {float64x2} t An instance of float64x2.
   * @param {float64x2} other An instance of float64x2.
-  * @return {int32x4} 0xFFFFFFFF or 0x0 in each lane depending on
+  * @return {int32x4} true or false in each lane depending on
   * the result of t > other.
   */
 SIMD.float64x2.greaterThan = function(t, other) {
@@ -1550,7 +1550,7 @@ SIMD.int32x4.withW = function(t, w) {
 /**
   * @param {int32x4} t An instance of int32x4.
   * @param {int32x4} other An instance of int32x4.
-  * @return {int32x4} 0xFFFFFFFF or 0x0 in each lane depending on
+  * @return {int32x4} true or false in each lane depending on
   * the result of t == other.
   */
 SIMD.int32x4.equal = function(t, other) {
@@ -1566,7 +1566,7 @@ SIMD.int32x4.equal = function(t, other) {
 /**
   * @param {int32x4} t An instance of int32x4.
   * @param {int32x4} other An instance of int32x4.
-  * @return {int32x4} 0xFFFFFFFF or 0x0 in each lane depending on
+  * @return {int32x4} true or false in each lane depending on
   * the result of t > other.
   */
 SIMD.int32x4.greaterThan = function(t, other) {
@@ -1582,7 +1582,7 @@ SIMD.int32x4.greaterThan = function(t, other) {
 /**
   * @param {int32x4} t An instance of int32x4.
   * @param {int32x4} other An instance of int32x4.
-  * @return {int32x4} 0xFFFFFFFF or 0x0 in each lane depending on
+  * @return {int32x4} true or false in each lane depending on
   * the result of t < other.
   */
 SIMD.int32x4.lessThan = function(t, other) {
