@@ -387,6 +387,44 @@ test('float32x4 comparisons', function() {
   equal(0x0, cmp.y);
   equal(-1, cmp.z);
   equal(0x0, cmp.w);
+
+  var o = SIMD.float32x4(0.0, -0.0, 0.0, NaN);
+  var p = SIMD.float32x4(-0.0, 0.0, NaN, 0.0);
+  cmp = SIMD.float32x4.lessThan(o, p);
+  equal(0x0, cmp.x);
+  equal(0x0, cmp.y);
+  equal(0x0, cmp.z);
+  equal(0x0, cmp.w);
+
+  cmp = SIMD.float32x4.lessThanOrEqual(o, p);
+  equal(-1, cmp.x);
+  equal(-1, cmp.y);
+  equal(0x0, cmp.z);
+  equal(0x0, cmp.w);
+
+  cmp = SIMD.float32x4.equal(o, p);
+  equal(-1, cmp.x);
+  equal(-1, cmp.y);
+  equal(0x0, cmp.z);
+  equal(0x0, cmp.w);
+
+  cmp = SIMD.float32x4.notEqual(o, p);
+  equal(0x0, cmp.x);
+  equal(0x0, cmp.y);
+  equal(-1, cmp.z);
+  equal(-1, cmp.w);
+
+  cmp = SIMD.float32x4.greaterThanOrEqual(o, p);
+  equal(-1, cmp.x);
+  equal(-1, cmp.y);
+  equal(0x0, cmp.z);
+  equal(0x0, cmp.w);
+
+  cmp = SIMD.float32x4.greaterThan(o, p);
+  equal(0x0, cmp.x);
+  equal(0x0, cmp.y);
+  equal(0x0, cmp.z);
+  equal(0x0, cmp.w);
 });
 
 test('float32x4 select', function() {
@@ -1022,6 +1060,52 @@ test('float64x2 comparisons', function() {
   equal(-1, cmp.y);
   equal(0x0, cmp.z);
   equal(0x0, cmp.w);
+
+  var o = SIMD.float64x2(0.0, -0.0);
+  var p = SIMD.float64x2(-0.0, 0.0);
+  var q = SIMD.float64x2(0.0, NaN);
+  var r = SIMD.float64x2(NaN, 0.0);
+  cmp = SIMD.float64x2.lessThan(o, p);
+  equal(0x0, cmp.x);
+  equal(0x0, cmp.y);
+  cmp = SIMD.float64x2.lessThan(q, r);
+  equal(0x0, cmp.x);
+  equal(0x0, cmp.y);
+
+  cmp = SIMD.float64x2.lessThanOrEqual(o, p);
+  equal(-1, cmp.x);
+  equal(-1, cmp.y);
+  cmp = SIMD.float64x2.lessThanOrEqual(q, r);
+  equal(0x0, cmp.x);
+  equal(0x0, cmp.y);
+
+  cmp = SIMD.float64x2.equal(o, p);
+  equal(-1, cmp.x);
+  equal(-1, cmp.y);
+  cmp = SIMD.float64x2.equal(q, r);
+  equal(0x0, cmp.x);
+  equal(0x0, cmp.y);
+
+  cmp = SIMD.float64x2.notEqual(o, p);
+  equal(0x0, cmp.x);
+  equal(0x0, cmp.y);
+  cmp = SIMD.float64x2.notEqual(q, r);
+  equal(-1, cmp.x);
+  equal(-1, cmp.y);
+
+  cmp = SIMD.float64x2.greaterThanOrEqual(o, p);
+  equal(-1, cmp.x);
+  equal(-1, cmp.y);
+  cmp = SIMD.float64x2.greaterThanOrEqual(q, r);
+  equal(0x0, cmp.x);
+  equal(0x0, cmp.y);
+
+  cmp = SIMD.float64x2.greaterThan(o, p);
+  equal(0x0, cmp.x);
+  equal(0x0, cmp.y);
+  cmp = SIMD.float64x2.greaterThan(q, r);
+  equal(0x0, cmp.x);
+  equal(0x0, cmp.y);
 });
 
 test('float64x2 select', function() {
