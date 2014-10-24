@@ -1582,7 +1582,7 @@ SIMD.int32x4.lessThan = function(t, other) {
   * @param {int} bits Bit count to shift by.
   * @return {int32x4} lanes in a shifted by bits.
   */
-SIMD.int32x4.shiftLeft = function(a, bits) {
+SIMD.int32x4.shiftLeftByScalar = function(a, bits) {
   checkInt32x4(a);
   var x = a.x << bits;
   var y = a.y << bits;
@@ -1596,7 +1596,7 @@ SIMD.int32x4.shiftLeft = function(a, bits) {
   * @param {int} bits Bit count to shift by.
   * @return {int32x4} lanes in a shifted by bits.
   */
-SIMD.int32x4.shiftRightLogical = function(a, bits) {
+SIMD.int32x4.shiftRightLogicalByScalar = function(a, bits) {
   checkInt32x4(a);
   var x = a.x >>> bits;
   var y = a.y >>> bits;
@@ -1610,7 +1610,7 @@ SIMD.int32x4.shiftRightLogical = function(a, bits) {
   * @param {int} bits Bit count to shift by.
   * @return {int32x4} lanes in a shifted by bits.
   */
-SIMD.int32x4.shiftRightArithmetic = function(a, bits) {
+SIMD.int32x4.shiftRightArithmeticByScalar = function(a, bits) {
   checkInt32x4(a);
   var x = a.x >> bits;
   var y = a.y >> bits;
