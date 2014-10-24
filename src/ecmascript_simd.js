@@ -2189,10 +2189,10 @@ Object.defineProperty(SIMD.float32x4.prototype, 'w', {
   */
 Object.defineProperty(SIMD.float32x4.prototype, 'signMask', {
   get: function() {
-    var mx = (this.x < 0.0 || 1/this.x === -Infinity) ? 1 : 0;
-    var my = (this.y < 0.0 || 1/this.y === -Infinity) ? 1 : 0;
-    var mz = (this.z < 0.0 || 1/this.z === -Infinity) ? 1 : 0;
-    var mw = (this.w < 0.0 || 1/this.w === -Infinity) ? 1 : 0;
+    var mx = (this.x < 0.0 || 1/this.x === -Infinity);
+    var my = (this.y < 0.0 || 1/this.y === -Infinity);
+    var mz = (this.z < 0.0 || 1/this.z === -Infinity);
+    var mw = (this.w < 0.0 || 1/this.w === -Infinity);
     return mx | my << 1 | mz << 2 | mw << 3;
   }
 });
@@ -2210,8 +2210,8 @@ Object.defineProperty(SIMD.float64x2.prototype, 'y', {
   */
 Object.defineProperty(SIMD.float64x2.prototype, 'signMask', {
   get: function() {
-    var mx = (this.x < 0.0 || 1/this.x === -Infinity) ? 1 : 0;
-    var my = (this.y < 0.0 || 1/this.y === -Infinity) ? 1 : 0;
+    var mx = (this.x < 0.0 || 1/this.x === -Infinity);
+    var my = (this.y < 0.0 || 1/this.y === -Infinity);
     return mx | my << 1;
   }
 });
@@ -2253,10 +2253,10 @@ Object.defineProperty(SIMD.int32x4.prototype, 'flagW', {
   */
 Object.defineProperty(SIMD.int32x4.prototype, 'signMask', {
   get: function() {
-    var mx = (this.x_ & 0x80000000) >>> 31;
-    var my = (this.y_ & 0x80000000) >>> 31;
-    var mz = (this.z_ & 0x80000000) >>> 31;
-    var mw = (this.w_ & 0x80000000) >>> 31;
+    var mx = _PRIVATE.tobool(this.x_);
+    var my = _PRIVATE.tobool(this.y_);
+    var mz = _PRIVATE.tobool(this.z_);
+    var mw = _PRIVATE.tobool(this.w_);
     return mx | my << 1 | mz << 2 | mw << 3;
   }
 });
