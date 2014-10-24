@@ -1498,6 +1498,29 @@ test('int32x4 mul', function() {
   equal(0x0, c.w);
 });
 
+test('int32x4 comparisons', function() {
+  var m = SIMD.int32x4(1000, 2000, 100, 1);
+  var n = SIMD.int32x4(-2000, 2000, 1, 100);
+  var cmp;
+  cmp = SIMD.int32x4.lessThan(m, n);
+  equal(0x0, cmp.x);
+  equal(0x0, cmp.y);
+  equal(0x0, cmp.z);
+  equal(-1, cmp.w);
+
+  cmp = SIMD.int32x4.equal(m, n);
+  equal(0x0, cmp.x);
+  equal(-1, cmp.y);
+  equal(0x0, cmp.z);
+  equal(0x0, cmp.w);
+
+  cmp = SIMD.int32x4.greaterThan(m, n);
+  equal(-1, cmp.x);
+  equal(0x0, cmp.y);
+  equal(-1, cmp.z);
+  equal(0x0, cmp.w);
+});
+
 test('int32x4 select', function() {
   var m = SIMD.int32x4.bool(true, true, false, false);
   var t = SIMD.int32x4(1, 2, 3, 4);
