@@ -1793,6 +1793,84 @@ test('int32x4 comparisons', function() {
   equal(0x0, cmp.w);
 });
 
+test('int32x4 shiftLeftByScalar', function() {
+  var a = SIMD.int32x4(0xffffffff, 0x7fffffff, 0x1, 0x0);
+  var b;
+
+  b = SIMD.int32x4.shiftLeftByScalar(a, 1);
+  equal(b.x, 0xfffffffe|0);
+  equal(b.y, 0xfffffffe|0);
+  equal(b.z, 0x00000002);
+  equal(b.w, 0x00000000);
+  b = SIMD.int32x4.shiftLeftByScalar(a, 2);
+  equal(b.x, 0xfffffffc|0);
+  equal(b.y, 0xfffffffc|0);
+  equal(b.z, 0x00000004);
+  equal(b.w, 0x00000000);
+  b = SIMD.int32x4.shiftLeftByScalar(a, 30);
+  equal(b.x, 0xc0000000|0);
+  equal(b.y, 0xc0000000|0);
+  equal(b.z, 0x40000000);
+  equal(b.w, 0x00000000);
+  b = SIMD.int32x4.shiftLeftByScalar(a, 31);
+  equal(b.x, 0x80000000|0);
+  equal(b.y, 0x80000000|0);
+  equal(b.z, 0x80000000|0);
+  equal(b.w, 0x0);
+});
+
+test('int32x4 shiftRightArithmeticByScalar', function() {
+  var a = SIMD.int32x4(0xffffffff, 0x7fffffff, 0x1, 0x0);
+  var b;
+
+  b = SIMD.int32x4.shiftRightArithmeticByScalar(a, 1);
+  equal(b.x, 0xffffffff|0);
+  equal(b.y, 0x3fffffff);
+  equal(b.z, 0x00000000);
+  equal(b.w, 0x00000000);
+  b = SIMD.int32x4.shiftRightArithmeticByScalar(a, 2);
+  equal(b.x, 0xffffffff|0);
+  equal(b.y, 0x1fffffff);
+  equal(b.z, 0x00000000);
+  equal(b.w, 0x00000000);
+  b = SIMD.int32x4.shiftRightArithmeticByScalar(a, 30);
+  equal(b.x, 0xffffffff|0);
+  equal(b.y, 0x00000001);
+  equal(b.z, 0x00000000);
+  equal(b.w, 0x00000000);
+  b = SIMD.int32x4.shiftRightArithmeticByScalar(a, 31);
+  equal(b.x, 0xffffffff|0);
+  equal(b.y, 0x00000000);
+  equal(b.z, 0x00000000);
+  equal(b.w, 0x00000000);
+});
+
+test('int32x4 shiftRightLogicalByScalar', function() {
+  var a = SIMD.int32x4(0xffffffff, 0x7fffffff, 0x1, 0x0);
+  var b;
+
+  b = SIMD.int32x4.shiftRightLogicalByScalar(a, 1);
+  equal(b.x, 0x7fffffff);
+  equal(b.y, 0x3fffffff);
+  equal(b.z, 0x00000000);
+  equal(b.w, 0x00000000);
+  b = SIMD.int32x4.shiftRightLogicalByScalar(a, 2);
+  equal(b.x, 0x3fffffff);
+  equal(b.y, 0x1fffffff);
+  equal(b.z, 0x00000000);
+  equal(b.w, 0x00000000);
+  b = SIMD.int32x4.shiftRightLogicalByScalar(a, 30);
+  equal(b.x, 0x00000003);
+  equal(b.y, 0x00000001);
+  equal(b.z, 0x00000000);
+  equal(b.w, 0x00000000);
+  b = SIMD.int32x4.shiftRightLogicalByScalar(a, 31);
+  equal(b.x, 0x00000001);
+  equal(b.y, 0x00000000);
+  equal(b.z, 0x00000000);
+  equal(b.w, 0x00000000);
+});
+
 test('int32x4 select', function() {
   var m = SIMD.int32x4.bool(true, true, false, false);
   var t = SIMD.int32x4(1, 2, 3, 4);
