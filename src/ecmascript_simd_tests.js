@@ -461,8 +461,9 @@ test('float32x4 load', function() {
 });
 
 test('float32x4 overaligned load', function() {
-  var a = new Float32Array(8);
-  var af = new Float64Array(a.buffer);
+  var b = new ArrayBuffer(40);
+  var a = new Float32Array(b, 8);
+  var af = new Float64Array(b, 8);
   for (var i = 0; i < a.length; i++) {
     a[i] = i;
   }
@@ -513,8 +514,9 @@ test('float32x4 loadX', function() {
 });
 
 test('float32x4 overaligned loadX', function() {
-  var a = new Float32Array(8);
-  var af = new Float64Array(a.buffer);
+  var b = new ArrayBuffer(40);
+  var a = new Float32Array(b, 8);
+  var af = new Float64Array(b, 8);
   for (var i = 0; i < a.length; i++) {
     a[i] = i;
   }
@@ -565,8 +567,9 @@ test('float32x4 loadXY', function() {
 });
 
 test('float32x4 overaligned loadXY', function() {
-  var a = new Float32Array(8);
-  var af = new Float64Array(a.buffer);
+  var b = new ArrayBuffer(40);
+  var a = new Float32Array(b, 8);
+  var af = new Float64Array(b, 8);
   for (var i = 0; i < a.length; i++) {
     a[i] = i;
   }
@@ -617,8 +620,9 @@ test('float32x4 loadXYZ', function() {
 });
 
 test('float32x4 overaligned loadXYZ', function() {
-  var a = new Float32Array(10);
-  var af = new Float64Array(a.buffer);
+  var b = new ArrayBuffer(48);
+  var a = new Float32Array(b, 8);
+  var af = new Float64Array(b, 8);
   for (var i = 0; i < a.length; i++) {
     a[i] = i;
   }
@@ -665,8 +669,9 @@ test('float32x4 store', function() {
 });
 
 test('float32x4 overaligned store', function() {
-  var a = new Float32Array(12);
-  var af = new Float64Array(a.buffer);
+  var b = new ArrayBuffer(56);
+  var a = new Float32Array(b, 8);
+  var af = new Float64Array(b, 8);
   SIMD.float32x4.store(af, 0, SIMD.float32x4(0, 1, 2, 3));
   SIMD.float32x4.store(af, 2, SIMD.float32x4(4, 5, 6, 7));
   SIMD.float32x4.store(af, 4, SIMD.float32x4(8, 9, 10, 11));
@@ -705,8 +710,9 @@ test('float32x4 storeX', function() {
 });
 
 test('float32x4 overaligned storeX', function() {
-  var a = new Float32Array(4);
-  var af = new Float64Array(a.buffer);
+  var b = new ArrayBuffer(24);
+  var a = new Float32Array(b, 8);
+  var af = new Float64Array(b, 8);
   a[1] = -2;
   a[3] = -2;
   SIMD.float32x4.storeX(af, 0, SIMD.float32x4(0, -1, -1, -1));
@@ -751,8 +757,9 @@ test('float32x4 storeXY', function() {
 });
 
 test('float32x4 overaligned storeXY', function() {
-  var a = new Float32Array(8);
-  var af = new Float64Array(a.buffer);
+  var b = new ArrayBuffer(40);
+  var a = new Float32Array(b, 8);
+  var af = new Float64Array(b, 8);
   SIMD.float32x4.storeXY(af, 0, SIMD.float32x4(0, 1, -1, -1));
   SIMD.float32x4.storeXY(af, 1, SIMD.float32x4(2, 3, -1, -1));
   SIMD.float32x4.storeXY(af, 2, SIMD.float32x4(4, 5, -1, -1));
@@ -792,8 +799,9 @@ test('float32x4 storeXYZ', function() {
 });
 
 test('float32x4 overaligned storeXYZ', function() {
-  var a = new Float32Array(12);
-  var af = new Float64Array(a.buffer);
+  var b = new ArrayBuffer(56);
+  var a = new Float32Array(b, 8);
+  var af = new Float64Array(b, 8);
   a[3] = -2;
   a[7] = -2;
   a[11] = -2;
@@ -1802,8 +1810,9 @@ test('int32x4 load', function() {
 });
 
 test('int32x4 overaligned load', function() {
-  var a = new Int32Array(8);
-  var af = new Float64Array(a.buffer);
+  var b = new ArrayBuffer(40);
+  var a = new Int32Array(b, 8);
+  var af = new Float64Array(b, 8);
   for (var i = 0; i < a.length; i++) {
     a[i] = i;
   }
@@ -1854,12 +1863,13 @@ test('int32x4 loadX', function() {
 });
 
 test('int32x4 overaligned loadX', function() {
-  var a = new Int32Array(8);
-  var af = new Int32Array(a.buffer);
+  var b = new ArrayBuffer(40);
+  var a = new Int32Array(b, 8);
+  var af = new Int32Array(b, 8);
   for (var i = 0; i < a.length; i++) {
     a[i] = i;
   }
-  for (var i = 0; i < a.length ; i++) {
+  for (var i = 0; i < a.length; i++) {
     var v = SIMD.int32x4.loadX(af, i);
     equal(i, v.x);
     equal(0, v.y);
@@ -1906,8 +1916,9 @@ test('int32x4 loadXY', function() {
 });
 
 test('int32x4 overaligned loadXY', function() {
-  var a = new Int32Array(8);
-  var af = new Float64Array(a.buffer);
+  var b = new ArrayBuffer(40);
+  var a = new Int32Array(b, 8);
+  var af = new Float64Array(b, 8);
   for (var i = 0; i < a.length; i++) {
     a[i] = i;
   }
@@ -1958,8 +1969,9 @@ test('int32x4 loadXYZ', function() {
 });
 
 test('int32x4 overaligned loadXYZ', function() {
-  var a = new Int32Array(10);
-  var af = new Float64Array(a.buffer);
+  var b = new ArrayBuffer(48);
+  var a = new Int32Array(b, 8);
+  var af = new Float64Array(b, 8);
   for (var i = 0; i < a.length; i++) {
     a[i] = i;
   }
@@ -2006,8 +2018,9 @@ test('int32x4 store', function() {
 });
 
 test('int32x4 overaligned store', function() {
-  var a = new Int32Array(12);
-  var af = new Float64Array(a.buffer);
+  var b = new ArrayBuffer(56);
+  var a = new Int32Array(b, 8);
+  var af = new Float64Array(b, 8);
   SIMD.int32x4.store(af, 0, SIMD.int32x4(0, 1, 2, 3));
   SIMD.int32x4.store(af, 2, SIMD.int32x4(4, 5, 6, 7));
   SIMD.int32x4.store(af, 4, SIMD.int32x4(8, 9, 10, 11));
@@ -2046,8 +2059,9 @@ test('int32x4 storeX', function() {
 });
 
 test('int32x4 overaligned storeX', function() {
-  var a = new Int32Array(4);
-  var af = new Float64Array(a.buffer);
+  var b = new ArrayBuffer(24);
+  var a = new Int32Array(b, 8);
+  var af = new Float64Array(b, 8);
   a[1] = -2;
   a[3] = -2;
   SIMD.int32x4.storeX(af, 0, SIMD.int32x4(0, -1, -1, -1));
@@ -2133,8 +2147,9 @@ test('int32x4 storeXYZ', function() {
 });
 
 test('int32x4 overaligned storeXYZ', function() {
-  var a = new Int32Array(12);
-  var af = new Float64Array(a.buffer);
+  var b = new ArrayBuffer(56);
+  var a = new Int32Array(b, 8);
+  var af = new Float64Array(b, 8);
   a[3] = -2;
   a[7] = -2;
   a[11] = -2;

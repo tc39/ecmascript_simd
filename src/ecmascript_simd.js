@@ -888,7 +888,7 @@ SIMD.float32x4.storeX = function(tarray, index, value) {
   checkFloat32x4(value);
   if (bpe == 8) {
     // tarray's elements are too wide. Just create a new view; this is rare.
-    var view = new Float32Array(tarray.buffer, index * 8, 1);
+    var view = new Float32Array(tarray.buffer, tarray.byteOffset + index * 8, 1);
     view[0] = value.x;
   } else {
     _PRIVATE._f32x4[0] = value.x;
@@ -944,7 +944,7 @@ SIMD.float32x4.storeXYZ = function(tarray, index, value) {
   checkFloat32x4(value);
   if (bpe == 8) {
     // tarray's elements are too wide. Just create a new view; this is rare.
-    var view = new Float32Array(tarray.buffer, index * 8, 3);
+    var view = new Float32Array(tarray.buffer, tarray.byteOffset + index * 8, 3);
     view[0] = value.x;
     view[1] = value.y;
     view[2] = value.z;
@@ -1817,7 +1817,7 @@ SIMD.int32x4.storeX = function(tarray, index, value) {
   checkInt32x4(value);
   if (bpe == 8) {
     // tarray's elements are too wide. Just create a new view; this is rare.
-    var view = new Int32Array(tarray.buffer, index * 8, 1);
+    var view = new Int32Array(tarray.buffer, tarray.byteOffset + index * 8, 1);
     view[0] = value.x;
   } else {
     _PRIVATE._i32x4[0] = value.x;
@@ -1873,7 +1873,7 @@ SIMD.int32x4.storeXYZ = function(tarray, index, value) {
   checkInt32x4(value);
   if (bpe == 8) {
     // tarray's elements are too wide. Just create a new view; this is rare.
-    var view = new Int32Array(tarray.buffer, index * 8, 3);
+    var view = new Int32Array(tarray.buffer, tarray.byteOffset + index * 8, 3);
     view[0] = value.x;
     view[1] = value.y;
     view[2] = value.z;
