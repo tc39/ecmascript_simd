@@ -762,7 +762,7 @@ SIMD.float32x4.load = function(tarray, index) {
     throw new RangeError("The value of index is invalid.");
   var array = bpe == 1 ? _PRIVATE._i8x16 :
               bpe == 2 ? _PRIVATE._i16x8 :
-              bpe == 4 ? (tarray.toString() === "[object Float32Array]" ? _PRIVATE._f32x4 : _PRIVATE._i32x4) :
+              bpe == 4 ? (tarray instanceof Float32Array ? _PRIVATE._f32x4 : _PRIVATE._i32x4) :
               _PRIVATE._f64x2;
   var n = 16 / bpe;
   for (var i = 0; i < n; ++i)
@@ -786,7 +786,7 @@ SIMD.float32x4.loadX = function(tarray, index) {
     throw new RangeError("The value of index is invalid.");
   var array = bpe == 1 ? _PRIVATE._i8x16 :
               bpe == 2 ? _PRIVATE._i16x8 :
-              bpe == 4 ? (tarray.toString() === "[object Float32Array]" ? _PRIVATE._f32x4 : _PRIVATE._i32x4) :
+              bpe == 4 ? (tarray instanceof Float32Array ? _PRIVATE._f32x4 : _PRIVATE._i32x4) :
               _PRIVATE._f64x2;
   var n = 4 / bpe;
   for (var i = 0; i < n; ++i)
@@ -810,7 +810,7 @@ SIMD.float32x4.loadXY = function(tarray, index) {
     throw new RangeError("The value of index is invalid.");
   var array = bpe == 1 ? _PRIVATE._i8x16 :
               bpe == 2 ? _PRIVATE._i16x8 :
-              bpe == 4 ? (tarray.toString() === "[object Float32Array]" ? _PRIVATE._f32x4 : _PRIVATE._i32x4) :
+              bpe == 4 ? (tarray instanceof Float32Array ? _PRIVATE._f32x4 : _PRIVATE._i32x4) :
               _PRIVATE._f64x2;
   var n = 8 / bpe;
   for (var i = 0; i < n; ++i)
@@ -834,7 +834,7 @@ SIMD.float32x4.loadXYZ = function(tarray, index) {
     throw new RangeError("The value of index is invalid.");
   var array = bpe == 1 ? _PRIVATE._i8x16 :
               bpe == 2 ? _PRIVATE._i16x8 :
-              bpe == 4 ? (tarray.toString() === "[object Float32Array]" ? _PRIVATE._f32x4 : _PRIVATE._i32x4) :
+              bpe == 4 ? (tarray instanceof Float32Array ? _PRIVATE._f32x4 : _PRIVATE._i32x4) :
               _PRIVATE._f64x2;
   var n = 12 / bpe;
   for (var i = 0; i < n; ++i)
@@ -864,7 +864,7 @@ SIMD.float32x4.store = function(tarray, index, value) {
   _PRIVATE._f32x4[3] = value.w;
   var array = bpe == 1 ? _PRIVATE._i8x16 :
               bpe == 2 ? _PRIVATE._i16x8 :
-              bpe == 4 ? (tarray.toString() === "[object Float32Array]" ? _PRIVATE._f32x4 : _PRIVATE._i32x4) :
+              bpe == 4 ? (tarray instanceof Float32Array ? _PRIVATE._f32x4 : _PRIVATE._i32x4) :
               _PRIVATE._f64x2;
   var n = 16 / bpe;
   for (var i = 0; i < n; ++i)
@@ -894,7 +894,7 @@ SIMD.float32x4.storeX = function(tarray, index, value) {
     _PRIVATE._f32x4[0] = value.x;
     var array = bpe == 1 ? _PRIVATE._i8x16 :
                 bpe == 2 ? _PRIVATE._i16x8 :
-                (tarray.toString() === "[object Float32Array]" ? _PRIVATE._f32x4 : _PRIVATE._i32x4);
+                (tarray instanceof Float32Array ? _PRIVATE._f32x4 : _PRIVATE._i32x4);
     var n = 4 / bpe;
     for (var i = 0; i < n; ++i)
       tarray[index + i] = array[i];
@@ -920,7 +920,7 @@ SIMD.float32x4.storeXY = function(tarray, index, value) {
   _PRIVATE._f32x4[1] = value.y;
   var array = bpe == 1 ? _PRIVATE._i8x16 :
               bpe == 2 ? _PRIVATE._i16x8 :
-              bpe == 4 ? (tarray.toString() === "[object Float32Array]" ? _PRIVATE._f32x4 : _PRIVATE._i32x4) :
+              bpe == 4 ? (tarray instanceof Float32Array ? _PRIVATE._f32x4 : _PRIVATE._i32x4) :
               _PRIVATE._f64x2;
   var n = 8 / bpe;
   for (var i = 0; i < n; ++i)
@@ -954,7 +954,7 @@ SIMD.float32x4.storeXYZ = function(tarray, index, value) {
     _PRIVATE._f32x4[2] = value.z;
     var array = bpe == 1 ? _PRIVATE._i8x16 :
                 bpe == 2 ? _PRIVATE._i16x8 :
-                (tarray.toString() === "[object Float32Array]" ? _PRIVATE._f32x4 : _PRIVATE._i32x4);
+                (tarray instanceof Float32Array ? _PRIVATE._f32x4 : _PRIVATE._i32x4);
     var n = 12 / bpe;
     for (var i = 0; i < n; ++i)
       tarray[index + i] = array[i];
@@ -1264,7 +1264,7 @@ SIMD.float64x2.load = function(tarray, index) {
   var f64temp = _PRIVATE._f64x2;
   var array = bpe == 1 ? _PRIVATE._i8x16 :
               bpe == 2 ? _PRIVATE._i16x8 :
-              bpe == 4 ? (tarray.toString() === "[object Float32Array]" ? _PRIVATE._f32x4 : _PRIVATE._i32x4) :
+              bpe == 4 ? (tarray instanceof Float32Array ? _PRIVATE._f32x4 : _PRIVATE._i32x4) :
               f64temp;
   var n = 16 / bpe;
   for (var i = 0; i < n; ++i)
@@ -1288,7 +1288,7 @@ SIMD.float64x2.loadX = function(tarray, index) {
   var f64temp = _PRIVATE._f64x2;
   var array = bpe == 1 ? _PRIVATE._i8x16 :
               bpe == 2 ? _PRIVATE._i16x8 :
-              bpe == 4 ? (tarray.toString() === "[object Float32Array]" ? _PRIVATE._f32x4 : _PRIVATE._i32x4) :
+              bpe == 4 ? (tarray instanceof Float32Array ? _PRIVATE._f32x4 : _PRIVATE._i32x4) :
               f64temp;
   var n = 8 / bpe;
   for (var i = 0; i < n; ++i)
@@ -1315,7 +1315,7 @@ SIMD.float64x2.store = function(tarray, index, value) {
   _PRIVATE._f64x2[1] = value.y;
   var array = bpe == 1 ? _PRIVATE._i8x16 :
               bpe == 2 ? _PRIVATE._i16x8 :
-              bpe == 4 ? (tarray.toString() === "[object Float32Array]" ? _PRIVATE._f32x4 : _PRIVATE._i32x4) :
+              bpe == 4 ? (tarray instanceof Float32Array ? _PRIVATE._f32x4 : _PRIVATE._i32x4) :
               _PRIVATE._f64x2;
   var n = 16 / bpe;
   for (var i = 0; i < n; ++i)
@@ -1340,7 +1340,7 @@ SIMD.float64x2.storeX = function(tarray, index, value) {
   _PRIVATE._f64x2[0] = value.x;
   var array = bpe == 1 ? _PRIVATE._i8x16 :
               bpe == 2 ? _PRIVATE._i16x8 :
-              bpe == 4 ? (tarray.toString() === "[object Float32Array]" ? _PRIVATE._f32x4 : _PRIVATE._i32x4) :
+              bpe == 4 ? (tarray instanceof Float32Array ? _PRIVATE._f32x4 : _PRIVATE._i32x4) :
               _PRIVATE._f64x2;
   var n = 8 / bpe;
   for (var i = 0; i < n; ++i)
@@ -1691,7 +1691,7 @@ SIMD.int32x4.load = function(tarray, index) {
     throw new RangeError("The value of index is invalid.");
   var array = bpe == 1 ? _PRIVATE._i8x16 :
               bpe == 2 ? _PRIVATE._i16x8 :
-              bpe == 4 ? (tarray.toString() === "[object Float32Array]" ? _PRIVATE._f32x4 : _PRIVATE._i32x4) :
+              bpe == 4 ? (tarray instanceof Float32Array ? _PRIVATE._f32x4 : _PRIVATE._i32x4) :
               _PRIVATE._f64x2;
   var n = 16 / bpe;
   for (var i = 0; i < n; ++i)
@@ -1715,7 +1715,7 @@ SIMD.int32x4.loadX = function(tarray, index) {
     throw new RangeError("The value of index is invalid.");
   var array = bpe == 1 ? _PRIVATE._i8x16 :
               bpe == 2 ? _PRIVATE._i16x8 :
-              bpe == 4 ? (tarray.toString() === "[object Float32Array]" ? _PRIVATE._f32x4 : _PRIVATE._i32x4) :
+              bpe == 4 ? (tarray instanceof Float32Array ? _PRIVATE._f32x4 : _PRIVATE._i32x4) :
               _PRIVATE._f64x2;
   var n = 4 / bpe;
   for (var i = 0; i < n; ++i)
@@ -1739,7 +1739,7 @@ SIMD.int32x4.loadXY = function(tarray, index) {
     throw new RangeError("The value of index is invalid.");
   var array = bpe == 1 ? _PRIVATE._i8x16 :
               bpe == 2 ? _PRIVATE._i16x8 :
-              bpe == 4 ? (tarray.toString() === "[object Float32Array]" ? _PRIVATE._f32x4 : _PRIVATE._i32x4) :
+              bpe == 4 ? (tarray instanceof Float32Array ? _PRIVATE._f32x4 : _PRIVATE._i32x4) :
               _PRIVATE._f64x2;
   var n = 8 / bpe;
   for (var i = 0; i < n; ++i)
@@ -1763,7 +1763,7 @@ SIMD.int32x4.loadXYZ = function(tarray, index) {
     throw new RangeError("The value of index is invalid.");
   var array = bpe == 1 ? _PRIVATE._i8x16 :
               bpe == 2 ? _PRIVATE._i16x8 :
-              bpe == 4 ? (tarray.toString() === "[object Float32Array]" ? _PRIVATE._f32x4 : _PRIVATE._i32x4) :
+              bpe == 4 ? (tarray instanceof Float32Array ? _PRIVATE._f32x4 : _PRIVATE._i32x4) :
               _PRIVATE._f64x2;
   var n = 12 / bpe;
   for (var i = 0; i < n; ++i)
@@ -1793,7 +1793,7 @@ SIMD.int32x4.store = function(tarray, index, value) {
   _PRIVATE._i32x4[3] = value.w;
   var array = bpe == 1 ? _PRIVATE._i8x16 :
               bpe == 2 ? _PRIVATE._i16x8 :
-              bpe == 4 ? (tarray.toString() === "[object Float32Array]" ? _PRIVATE._f32x4 : _PRIVATE._i32x4) :
+              bpe == 4 ? (tarray instanceof Float32Array ? _PRIVATE._f32x4 : _PRIVATE._i32x4) :
               _PRIVATE._f64x2;
   var n = 16 / bpe;
   for (var i = 0; i < n; ++i)
@@ -1823,7 +1823,7 @@ SIMD.int32x4.storeX = function(tarray, index, value) {
     _PRIVATE._i32x4[0] = value.x;
     var array = bpe == 1 ? _PRIVATE._i8x16 :
                 bpe == 2 ? _PRIVATE._i16x8 :
-                (tarray.toString() === "[object Float32Array]" ? _PRIVATE._f32x4 : _PRIVATE._i32x4);
+                (tarray instanceof Float32Array ? _PRIVATE._f32x4 : _PRIVATE._i32x4);
     var n = 4 / bpe;
     for (var i = 0; i < n; ++i)
       tarray[index + i] = array[i];
@@ -1849,7 +1849,7 @@ SIMD.int32x4.storeXY = function(tarray, index, value) {
   _PRIVATE._i32x4[1] = value.y;
   var array = bpe == 1 ? _PRIVATE._i8x16 :
               bpe == 2 ? _PRIVATE._i16x8 :
-              bpe == 4 ? (tarray.toString() === "[object Float32Array]" ? _PRIVATE._f32x4 : _PRIVATE._i32x4) :
+              bpe == 4 ? (tarray instanceof Float32Array ? _PRIVATE._f32x4 : _PRIVATE._i32x4) :
               _PRIVATE._f64x2;
   var n = 8 / bpe;
   for (var i = 0; i < n; ++i)
@@ -1883,7 +1883,7 @@ SIMD.int32x4.storeXYZ = function(tarray, index, value) {
     _PRIVATE._i32x4[2] = value.z;
     var array = bpe == 1 ? _PRIVATE._i8x16 :
                 bpe == 2 ? _PRIVATE._i16x8 :
-                (tarray.toString() === "[object Float32Array]" ? _PRIVATE._f32x4 : _PRIVATE._i32x4);
+                (tarray instanceof Float32Array ? _PRIVATE._f32x4 : _PRIVATE._i32x4);
     var n = 12 / bpe;
     for (var i = 0; i < n; ++i)
       tarray[index + i] = array[i];
