@@ -1853,7 +1853,7 @@ test('int32x4 loadX', function() {
   }
 });
 
-test('int32x4 overalignde loadX', function() {
+test('int32x4 overaligned loadX', function() {
   var a = new Int32Array(8);
   var af = new Int32Array(a.buffer);
   for (var i = 0; i < a.length; i++) {
