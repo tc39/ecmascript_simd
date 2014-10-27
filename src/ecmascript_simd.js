@@ -24,9 +24,6 @@ var SIMD = {};
 // private stuff.
 var _PRIVATE = {}
 
-_PRIVATE._f32 = new Float32Array(1);
-_PRIVATE._i32 = new Int32Array(1);
-
 _PRIVATE._f32x4 = new Float32Array(4);
 _PRIVATE._f64x2 = new Float64Array(_PRIVATE._f32x4.buffer);
 _PRIVATE._i32x4 = new Int32Array(_PRIVATE._f32x4.buffer);
@@ -36,14 +33,15 @@ _PRIVATE._f32x8 = new Float32Array(8);
 _PRIVATE._f64x4 = new Float64Array(4);
 _PRIVATE._i32x8 = new Int32Array(8);
 
-_PRIVATE.truncatef32 = function(x) {
-  _PRIVATE._f32[0] = x;
-  return _PRIVATE._f32[0];
-}
+if (typeof Math.fround != 'undefined') {
+  _PRIVATE.truncatef32 = Math.fround;
+} else {
+  _PRIVATE._f32 = new Float32Array(1);
 
-_PRIVATE.truncatei32 = function(x) {
-  _PRIVATE._i32[0] = x;
-  return _PRIVATE._i32[0];
+  _PRIVATE.truncatef32 = function(x) {
+    _PRIVATE._f32[0] = x;
+    return _PRIVATE._f32[0];
+  }
 }
 
 _PRIVATE.minNum = function(x, y) {
@@ -124,10 +122,7 @@ SIMD.float32x4.splat = function(s) {
   */
 SIMD.float32x4.fromFloat64x2 = function(t) {
   checkFloat64x2(t);
-  var a = SIMD.float32x4.zero();
-  a.x_ = t.x_;
-  a.y_ = t.y_;
-  return a;
+  return SIMD.float32x4(t.x_, t.y_, 0, 0);
 }
 
 /**
@@ -136,12 +131,7 @@ SIMD.float32x4.fromFloat64x2 = function(t) {
   */
 SIMD.float32x4.fromInt32x4 = function(t) {
   checkInt32x4(t);
-  var a = SIMD.float32x4.zero();
-  a.x_ = t.x_;
-  a.y_ = t.y_;
-  a.z_ = t.z_;
-  a.w_ = t.w_;
-  return a;
+  return SIMD.float32x4(t.x_, t.y_, t.z_, t.w_);
 }
 
 /**
@@ -190,8 +180,9 @@ SIMD.float64x2 = function(x, y) {
     return new SIMD.float64x2(x, y);
   }
 
-  this.x_ = x;
-  this.y_ = y;
+  // Use unary + to force coersion to Number.
+  this.x_ = +x;
+  this.y_ = +y;
 }
 
 /**
@@ -218,8 +209,7 @@ SIMD.float64x2.splat = function(s) {
   */
 SIMD.float64x2.fromFloat32x4 = function(t) {
   checkFloat32x4(t);
-  var a = SIMD.float64x2(t.x_, t.y_);
-  return a;
+  return SIMD.float64x2(t.x_, t.y_);
 }
 
 /**
@@ -228,10 +218,7 @@ SIMD.float64x2.fromFloat32x4 = function(t) {
   */
 SIMD.float64x2.fromInt32x4 = function(t) {
   checkInt32x4(t);
-  var a = SIMD.float64x2.zero();
-  a.x_ = t.x_;
-  a.y_ = t.y_;
-  return a;
+  return SIMD.float64x2(t.x_, t.y_);
 }
 
 /**
@@ -278,10 +265,10 @@ SIMD.int32x4 = function(x, y, z, w) {
     return new SIMD.int32x4(x, y, z, w);
   }
 
-  this.x_ = _PRIVATE.truncatei32(x);
-  this.y_ = _PRIVATE.truncatei32(y);
-  this.z_ = _PRIVATE.truncatei32(z);
-  this.w_ = _PRIVATE.truncatei32(w);
+  this.x_ = x|0;
+  this.y_ = y|0;
+  this.z_ = z|0;
+  this.w_ = w|0;
 }
 
 /**
@@ -324,9 +311,7 @@ SIMD.int32x4.splat = function(s) {
   */
 SIMD.int32x4.fromFloat32x4 = function(t) {
   checkFloat32x4(t);
-  var a = SIMD.int32x4(Math.floor(t.x_), Math.floor(t.y_),
-                       Math.floor(t.z_), Math.floor(t.w_));
-  return a;
+  return SIMD.int32x4(t.x_, t.y_, t.z_, t.w_);
 }
 
 /**
@@ -335,10 +320,7 @@ SIMD.int32x4.fromFloat32x4 = function(t) {
   */
 SIMD.int32x4.fromFloat64x2 = function(t) {
   checkFloat64x2(t);
-  var a = SIMD.int32x4.zero();
-  a.x_ = Math.floor(t.x_);
-  a.y_ = Math.floor(t.y_);
-  return a;
+  return SIMD.int32x4(t.x_, t.y_, 0, 0);
 }
 
 /**
@@ -364,8 +346,7 @@ SIMD.int32x4.fromFloat64x2Bits = function(t) {
   _PRIVATE._f64x2[0] = t.x_;
   _PRIVATE._f64x2[1] = t.y_;
   var alias = _PRIVATE._i32x4;
-  var ix4 = SIMD.int32x4(alias[0], alias[1], alias[2], alias[3]);
-  return ix4;
+  return SIMD.int32x4(alias[0], alias[1], alias[2], alias[3]);
 }
 
 /**
