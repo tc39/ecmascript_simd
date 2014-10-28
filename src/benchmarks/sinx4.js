@@ -118,7 +118,7 @@
     y        = SIMD.float32x4.fromInt32x4(emm2);
     //printFloat32x4 ("Probe 7", y);
     emm0     = SIMD.int32x4.and(emm2, _pi32_4);
-    emm0     = SIMD.int32x4.shiftLeft(emm0, 29);
+    emm0     = SIMD.int32x4.shiftLeftByScalar(emm0, 29);
 
     emm2     = SIMD.int32x4.and(emm2, _pi32_2);
     emm2     = SIMD.int32x4.equal(emm2, SIMD.int32x4.zero());
