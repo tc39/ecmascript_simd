@@ -99,14 +99,6 @@ SIMD.float32x4 = function(x, y, z, w) {
 }
 
 /**
-  * Construct a new instance of float32x4 number with 0.0 in all lanes.
-  * @constructor
-  */
-SIMD.float32x4.zero = function() {
-  return SIMD.float32x4(0.0, 0.0, 0.0, 0.0);
-}
-
-/**
   * Construct a new instance of float32x4 number with the same value
   * in all lanes.
   * @param {double} value used for all lanes.
@@ -186,14 +178,6 @@ SIMD.float64x2 = function(x, y) {
 }
 
 /**
-  * Construct a new instance of float64x2 number with 0.0 in all lanes.
-  * @constructor
-  */
-SIMD.float64x2.zero = function() {
-  return SIMD.float64x2(0.0, 0.0);
-}
-
-/**
   * Construct a new instance of float64x2 number with the same value
   * in all lanes.
   * @param {double} value used for all lanes.
@@ -269,14 +253,6 @@ SIMD.int32x4 = function(x, y, z, w) {
   this.y_ = y|0;
   this.z_ = z|0;
   this.w_ = w|0;
-}
-
-/**
-  * Construct a new instance of int32x4 number with 0 in all lanes.
-  * @constructor
-  */
-SIMD.int32x4.zero = function() {
-  return SIMD.int32x4(0, 0, 0, 0);
 }
 
 /**
@@ -496,16 +472,6 @@ SIMD.float32x4.reciprocalSqrt = function(t) {
   checkFloat32x4(t);
   return SIMD.float32x4(Math.sqrt(1.0 / t.x), Math.sqrt(1.0 / t.y),
                         Math.sqrt(1.0 / t.z), Math.sqrt(1.0 / t.w));
-}
-
-/**
-  * @return {float32x4} New instance of float32x4 with values of t
-  * scaled by s.
-  */
-SIMD.float32x4.scale = function(t, s) {
-  checkFloat32x4(t);
-  var s4 = SIMD.float32x4.splat(s);
-  return SIMD.float32x4.mul(t,s4);
 }
 
 /**
@@ -1118,15 +1084,6 @@ SIMD.float64x2.reciprocalSqrt = function(t) {
 }
 
 /**
-  * @return {float64x2} New instance of float32x4 with values of t
-  * scaled by s.
-  */
-SIMD.float64x2.scale = function(t, s) {
-  checkFloat64x2(t);
-  return SIMD.float64x2(s * t.x, s * t.y);
-}
-
-/**
   * @return {float64x2} New instance of float32x4 with square root of
   * values of t.
   */
@@ -1580,54 +1537,6 @@ SIMD.int32x4.withZ = function(t, z) {
   */
 SIMD.int32x4.withW = function(t, w) {
   checkInt32x4(t);
-  return SIMD.int32x4(t.x, t.y, t.z, w);
-}
-
-/**
-  * @param {int32x4} t An instance of int32x4.
-  * @param {boolean} x flag used for x lane.
-  * @return {int32x4} New instance of int32x4 with the values in t and
-  * x lane replaced with {x}.
-  */
-SIMD.int32x4.withFlagX = function(t, flagX) {
-  checkInt32x4(t);
-  var x = flagX ? 0xFFFFFFFF : 0x0;
-  return SIMD.int32x4(x, t.y, t.z, t.w);
-}
-
-/**
-  * @param {int32x4} t An instance of int32x4.
-  * @param {boolean} y flag used for y lane.
-  * @return {int32x4} New instance of int32x4 with the values in t and
-  * y lane replaced with {y}.
-  */
-SIMD.int32x4.withFlagY = function(t, flagY) {
-  checkInt32x4(t);
-  var y = flagY ? 0xFFFFFFFF : 0x0;
-  return SIMD.int32x4(t.x, y, t.z, t.w);
-}
-
-/**
-  * @param {int32x4} t An instance of int32x4.
-  * @param {boolean} z flag used for z lane.
-  * @return {int32x4} New instance of int32x4 with the values in t and
-  * z lane replaced with {z}.
-  */
-SIMD.int32x4.withFlagZ = function(t, flagZ) {
-  checkInt32x4(t);
-  var z = flagZ ? 0xFFFFFFFF : 0x0;
-  return SIMD.int32x4(t.x, t.y, z, t.w);
-}
-
-/**
-  * @param {int32x4} t An instance of int32x4.
-  * @param {boolean} w flag used for w lane.
-  * @return {int32x4} New instance of int32x4 with the values in t and
-  * w lane replaced with {w}.
-  */
-SIMD.int32x4.withFlagW = function(t, flagW) {
-  checkInt32x4(t);
-  var w = flagW ? 0xFFFFFFFF : 0x0;
   return SIMD.int32x4(t.x, t.y, t.z, w);
 }
 

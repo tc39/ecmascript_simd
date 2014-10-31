@@ -278,7 +278,7 @@
     orthoBasis(basis, isect.n);
 
     var occlusion = 0;
-    var occlusionx4 = SIMD.float32x4.zero();
+    var occlusionx4 = SIMD.float32x4.splat(0.0);
 
     for (j = 0; j < ntheta; j++) {
       for (i = 0; i < nphi; i += 4) {
@@ -314,14 +314,14 @@
         };
         var occIsectB = {
           p: {
-            x: SIMD.float32x4.zero(),
-            y: SIMD.float32x4.zero(),
-            z: SIMD.float32x4.zero()
+            x: SIMD.float32x4.splat(0.0),
+            y: SIMD.float32x4.splat(0.0),
+            z: SIMD.float32x4.splat(0.0)
           },
           n: {
-            x: SIMD.float32x4.zero(),
-            y: SIMD.float32x4.zero(),
-            z: SIMD.float32x4.zero()
+            x: SIMD.float32x4.splat(0.0),
+            y: SIMD.float32x4.splat(0.0),
+            z: SIMD.float32x4.splat(0.0)
           }
         };
 
@@ -363,10 +363,10 @@
                      SIMD.float32x4.splat(sphere.radius * sphere.radius));
     var D = SIMD.float32x4.sub(SIMD.float32x4.mul(B, B), C);
 
-    var cond1 = SIMD.float32x4.greaterThan(D, SIMD.float32x4.zero());
+    var cond1 = SIMD.float32x4.greaterThan(D, SIMD.float32x4.splat(0.0));
     if (cond1.signMask) {
       var t2 = SIMD.float32x4.fromInt32x4Bits(SIMD.int32x4.and(cond1, SIMD.int32x4.fromFloat32x4Bits(SIMD.float32x4.sub(SIMD.float32x4.neg(B), SIMD.float32x4.sqrt(D)))));
-      var cond2 = SIMD.int32x4.and(SIMD.float32x4.greaterThan(t2, SIMD.float32x4.zero()),
+      var cond2 = SIMD.int32x4.and(SIMD.float32x4.greaterThan(t2, SIMD.float32x4.splat(0.0)),
                                    SIMD.float32x4.lessThan(t2, isectA.t));
       if (cond2.signMask) {
         isectA.t = SIMD.float32x4.fromInt32x4Bits(
@@ -428,7 +428,7 @@
                       SIMD.float32x4.add(SIMD.float32x4.mul(orgy, SIMD.float32x4.splat(plane.n.y)),
                                SIMD.float32x4.mul(orgz, SIMD.float32x4.splat(plane.n.z))));
     var t2 = SIMD.float32x4.fromInt32x4Bits(SIMD.int32x4.and(cond1, SIMD.int32x4.fromFloat32x4Bits(SIMD.float32x4.div(SIMD.float32x4.neg(SIMD.float32x4.add(dp, d)), v))));
-    var cond2 = SIMD.int32x4.and(SIMD.float32x4.greaterThan(t2, SIMD.float32x4.zero()), SIMD.float32x4.lessThan(t2, isectA.t));
+    var cond2 = SIMD.int32x4.and(SIMD.float32x4.greaterThan(t2, SIMD.float32x4.splat(0.0)), SIMD.float32x4.lessThan(t2, isectA.t));
     if (cond2.signMask) {
       isectA.t = SIMD.float32x4.fromInt32x4Bits(SIMD.int32x4.or(SIMD.int32x4.and(cond2, SIMD.int32x4.fromFloat32x4Bits(t2)),
                                              SIMD.int32x4.and(SIMD.int32x4.not(cond2), SIMD.int32x4.fromFloat32x4Bits(isectA.t))));

@@ -54,7 +54,7 @@
   function simdAverage(n) {
     var ax2_length = ax2.length;
     for (var i = 0; i < n; ++i) {
-      var sum2 = SIMD.float64x2.zero();
+      var sum2 = SIMD.float64x2.splat(0.0);
       for (var j = 0; j < ax2_length; ++j) {
         sum2 = SIMD.float64x2.add(sum2, ax2.getAt(j));
       }

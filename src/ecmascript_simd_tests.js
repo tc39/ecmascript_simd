@@ -390,15 +390,6 @@ test('float32x4 reciprocal sqrt', function() {
   almostEqual(4.0, c.w);
 });
 
-test('float32x4 scale', function() {
-  var a = SIMD.float32x4(8.0, 4.0, 2.0, -2.0);
-  var c = SIMD.float32x4.scale(a, 0.5);
-  equal(4.0, c.x);
-  equal(2.0, c.y);
-  equal(1.0, c.z);
-  equal(-1.0, c.w);
-});
-
 test('float32x4 sqrt', function() {
   var a = SIMD.float32x4(16.0, 9.0, 4.0, 1.0);
   var c = SIMD.float32x4.sqrt(a);
@@ -1155,13 +1146,6 @@ test('float64x2 splat constructor', function() {
   equal(m.x, m.y);
 });
 
-test('float64x2 zero constructor', function() {
-  equal('function', typeof SIMD.float64x2.zero);
-  var m = SIMD.float64x2.zero();
-  equal(0.0, m.x);
-  equal(0.0, m.y);
-});
-
 test('float64x2 fromFloat32x4 constructor', function() {
   var m = SIMD.float32x4(1.0, 2.0, 3.0, 4.0);
   var n = SIMD.float64x2.fromFloat32x4(m);
@@ -1459,13 +1443,6 @@ test('float64x2 reciprocal sqrt', function() {
   var c = SIMD.float64x2.reciprocalSqrt(a);
   almostEqual(1.0, c.x);
   almostEqual(2.0, c.y);
-});
-
-test('float64x2 scale', function() {
-  var a = SIMD.float64x2(8.0, -2.0);
-  var c = SIMD.float64x2.scale(a, 0.5);
-  equal(4.0, c.x);
-  equal(-1.0, c.y);
 });
 
 test('float64x2 sqrt', function() {
@@ -1947,79 +1924,6 @@ test('int32x4 withW', function() {
     equal(2, c.y);
     equal(3, c.z);
     equal(20, c.w);
-});
-
-test('int32x4 withFlagX', function() {
-    var a = SIMD.int32x4.bool(true, false, true, false);
-    var c = SIMD.int32x4.withFlagX(a, true);
-    equal(true, c.flagX);
-    equal(false, c.flagY);
-    equal(true, c.flagZ);
-    equal(false, c.flagW);
-    c = SIMD.int32x4.withFlagX(a, false);
-    equal(false, c.flagX);
-    equal(false, c.flagY);
-    equal(true, c.flagZ);
-    equal(false, c.flagW);
-    equal(0x0, c.x);
-    equal(0x0, c.y);
-    equal(-1, c.z);
-    equal(0x0, c.w);
-});
-
-test('int32x4 withFlagY', function() {
-    var a = SIMD.int32x4.bool(true, false, true, false);
-    var c = SIMD.int32x4.withFlagY(a, true);
-    equal(true, c.flagX);
-    equal(true, c.flagY);
-    equal(true, c.flagZ);
-    equal(false, c.flagW);
-    c = SIMD.int32x4.withFlagY(a, false);
-    equal(true, c.flagX);
-    equal(false, c.flagY);
-    equal(true, c.flagZ);
-    equal(false, c.flagW);
-    equal(-1, c.x);
-    equal(0x0, c.y);
-    equal(-1, c.z);
-    equal(0x0, c.w);
-});
-
-test('int32x4 withFlagZ', function() {
-    var a = SIMD.int32x4.bool(true, false, true, false);
-    var c = SIMD.int32x4.withFlagZ(a, true);
-    equal(-1, c.x);
-    equal(true, c.flagX);
-    equal(false, c.flagY);
-    equal(true, c.flagZ);
-    equal(false, c.flagW);
-    c = SIMD.int32x4.withFlagZ(a, false);
-    equal(true, c.flagX);
-    equal(false, c.flagY);
-    equal(false, c.flagZ);
-    equal(false, c.flagW);
-    equal(-1, c.x);
-    equal(0x0, c.y);
-    equal(0x0, c.z);
-    equal(0x0, c.w);
-});
-
-test('int32x4 withFlagW', function() {
-    var a = SIMD.int32x4.bool(true, false, true, false);
-    var c = SIMD.int32x4.withFlagW(a, true);
-    equal(true, c.flagX);
-    equal(false, c.flagY);
-    equal(true, c.flagZ);
-    equal(true, c.flagW);
-    c = SIMD.int32x4.withFlagW(a, false);
-    equal(true, c.flagX);
-    equal(false, c.flagY);
-    equal(true, c.flagZ);
-    equal(false, c.flagW);
-    equal(-1, c.x);
-    equal(0x0, c.y);
-    equal(-1, c.z);
-    equal(0x0, c.w);
 });
 
 test('int32x4 and', function() {
