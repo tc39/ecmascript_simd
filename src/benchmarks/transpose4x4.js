@@ -121,15 +121,15 @@
     var tmp01;
     var tmp23;
 
-    tmp01 = SIMD.float32x4.select(sel_ttff, src0, SIMD.float32x4.swizzle(src1, SIMD.XXXY));
-    tmp23 = SIMD.float32x4.select(sel_ttff, src2, SIMD.float32x4.swizzle(src3, SIMD.XXXY));
-    dst0  = SIMD.float32x4.select(sel_ttff, SIMD.float32x4.swizzle(tmp01, SIMD.XZXX), SIMD.float32x4.swizzle(tmp23, SIMD.XXXZ));
-    dst1  = SIMD.float32x4.select(sel_ttff, SIMD.float32x4.swizzle(tmp01, SIMD.YWXX), SIMD.float32x4.swizzle(tmp23, SIMD.XXYW));
+    tmp01 = SIMD.float32x4.select(sel_ttff, src0, SIMD.float32x4.swizzle(src1, 0, 0, 0, 1));
+    tmp23 = SIMD.float32x4.select(sel_ttff, src2, SIMD.float32x4.swizzle(src3, 0, 0, 0, 1));
+    dst0  = SIMD.float32x4.select(sel_ttff, SIMD.float32x4.swizzle(tmp01, 0, 2, 0, 0), SIMD.float32x4.swizzle(tmp23, 0, 0, 0, 2));
+    dst1  = SIMD.float32x4.select(sel_ttff, SIMD.float32x4.swizzle(tmp01, 1, 3, 0, 0), SIMD.float32x4.swizzle(tmp23, 0, 0, 1, 3));
 
-    tmp01 = SIMD.float32x4.select(sel_ttff, SIMD.float32x4.swizzle(src0, SIMD.ZWXX), src1);
-    tmp23 = SIMD.float32x4.select(sel_ttff, SIMD.float32x4.swizzle(src2, SIMD.ZWXX), src3);
-    dst2  = SIMD.float32x4.select(sel_ttff, SIMD.float32x4.swizzle(tmp01, SIMD.XZXX), SIMD.float32x4.swizzle(tmp23, SIMD.XXXZ));
-    dst3  = SIMD.float32x4.select(sel_ttff, SIMD.float32x4.swizzle(tmp01, SIMD.YWXX), SIMD.float32x4.swizzle(tmp23, SIMD.XXYW));
+    tmp01 = SIMD.float32x4.select(sel_ttff, SIMD.float32x4.swizzle(src0, 2, 3, 0, 0), src1);
+    tmp23 = SIMD.float32x4.select(sel_ttff, SIMD.float32x4.swizzle(src2, 2, 3, 0, 0), src3);
+    dst2  = SIMD.float32x4.select(sel_ttff, SIMD.float32x4.swizzle(tmp01, 0, 2, 0, 0), SIMD.float32x4.swizzle(tmp23, 0, 0, 0, 2));
+    dst3  = SIMD.float32x4.select(sel_ttff, SIMD.float32x4.swizzle(tmp01, 1, 3, 0, 0), SIMD.float32x4.swizzle(tmp23, 0, 0, 1, 3));
 
     dstx4.setAt(0, dst0);
     dstx4.setAt(1, dst1);

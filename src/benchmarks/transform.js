@@ -79,14 +79,14 @@
 
   function simdVertexTransform(n) {
     for (var i = 0; i < n; i++) {
-      var xxxx = SIMD.float32x4.swizzle(Vx4.getAt(0), SIMD.XXXX);
+      var xxxx = SIMD.float32x4.swizzle(Vx4.getAt(0), 0, 0, 0, 0);
       var z = SIMD.float32x4.splat(0.0);
       z = SIMD.float32x4.add(z, SIMD.float32x4.mul(xxxx, Tx4.getAt(0)));
-      var yyyy = SIMD.float32x4.swizzle(Vx4.getAt(0), SIMD.YYYY);
+      var yyyy = SIMD.float32x4.swizzle(Vx4.getAt(0), 1, 1, 1, 1);
       z = SIMD.float32x4.add(z, SIMD.float32x4.mul(yyyy, Tx4.getAt(1)));
-      var zzzz = SIMD.float32x4.swizzle(Vx4.getAt(0), SIMD.ZZZZ);
+      var zzzz = SIMD.float32x4.swizzle(Vx4.getAt(0), 2, 2, 2, 2);
       z = SIMD.float32x4.add(z, SIMD.float32x4.mul(zzzz, Tx4.getAt(2)));
-      var wwww = SIMD.float32x4.swizzle(Vx4.getAt(0), SIMD.WWWW);
+      var wwww = SIMD.float32x4.swizzle(Vx4.getAt(0), 3, 3, 3, 3);
       z = SIMD.float32x4.add(z, SIMD.float32x4.mul(wwww, Tx4.getAt(3)));
       Outx4.setAt(0, z);
     }

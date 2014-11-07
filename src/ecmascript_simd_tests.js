@@ -121,11 +121,11 @@ test('float32x4 signMask getter', function() {
 
 test('float32x4 vector getters', function() {
   var a = SIMD.float32x4(4.0, 3.0, 2.0, 1.0);
-  var xxxx = SIMD.float32x4.swizzle(a, SIMD.XXXX);
-  var yyyy = SIMD.float32x4.swizzle(a, SIMD.YYYY);
-  var zzzz = SIMD.float32x4.swizzle(a, SIMD.ZZZZ);
-  var wwww = SIMD.float32x4.swizzle(a, SIMD.WWWW);
-  var wzyx = SIMD.float32x4.swizzle(a, SIMD.WZYX);
+  var xxxx = SIMD.float32x4.swizzle(a, 0, 0, 0, 0);
+  var yyyy = SIMD.float32x4.swizzle(a, 1, 1, 1, 1);
+  var zzzz = SIMD.float32x4.swizzle(a, 2, 2, 2, 2);
+  var wwww = SIMD.float32x4.swizzle(a, 3, 3, 3, 3);
+  var wzyx = SIMD.float32x4.swizzle(a, 3, 2, 1, 0);
   equal(4.0, xxxx.x);
   equal(4.0, xxxx.y);
   equal(4.0, xxxx.z);
@@ -1470,10 +1470,10 @@ test('float64x2 sqrt', function() {
 
 test('float64x2 swizzle', function() {
   var a  = SIMD.float64x2(1.0, 2.0);
-  var xx = SIMD.float64x2.swizzle(a, SIMD.XX);
-  var xy = SIMD.float64x2.swizzle(a, SIMD.XY);
-  var yx = SIMD.float64x2.swizzle(a, SIMD.YX);
-  var yy = SIMD.float64x2.swizzle(a, SIMD.YY);
+  var xx = SIMD.float64x2.swizzle(a, 0, 0);
+  var xy = SIMD.float64x2.swizzle(a, 0, 1);
+  var yx = SIMD.float64x2.swizzle(a, 1, 0);
+  var yy = SIMD.float64x2.swizzle(a, 1, 1);
   equal(1.0, xx.x);
   equal(1.0, xx.y);
   equal(1.0, xy.x);
@@ -2080,11 +2080,11 @@ test('int32x4 signMask getter', function() {
 
 test('int32x4 vector getters', function() {
   var a = SIMD.int32x4(4, 3, 2, 1);
-  var xxxx = SIMD.int32x4.swizzle(a, SIMD.XXXX);
-  var yyyy = SIMD.int32x4.swizzle(a, SIMD.YYYY);
-  var zzzz = SIMD.int32x4.swizzle(a, SIMD.ZZZZ);
-  var wwww = SIMD.int32x4.swizzle(a, SIMD.WWWW);
-  var wzyx = SIMD.int32x4.swizzle(a, SIMD.WZYX);
+  var xxxx = SIMD.int32x4.swizzle(a, 0, 0, 0, 0);
+  var yyyy = SIMD.int32x4.swizzle(a, 1, 1, 1, 1);
+  var zzzz = SIMD.int32x4.swizzle(a, 2, 2, 2, 2);
+  var wwww = SIMD.int32x4.swizzle(a, 3, 3, 3, 3);
+  var wzyx = SIMD.int32x4.swizzle(a, 3, 2, 1, 0);
   equal(4, xxxx.x);
   equal(4, xxxx.y);
   equal(4, xxxx.z);
