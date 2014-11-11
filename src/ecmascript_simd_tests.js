@@ -46,6 +46,16 @@ test('coercive constructors', function() {
   equal(SIMD.float64x2(z), z);
   throws(function() {SIMD.float64x2(1)});
   throws(function() {SIMD.float64x2('hi')});
+
+  var u = SIMD.int16x8(1, 2, 3, 4, 5, 6, 7, 8);
+  equal(SIMD.int16x8(u), u);
+  throws(function() {SIMD.int16x8(1)});
+  throws(function() {SIMD.int16x8('hi')});
+
+  var v = SIMD.int8x16(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16);
+  equal(SIMD.int8x16(v), v);
+  throws(function() {SIMD.int8x16(1)});
+  throws(function() {SIMD.int8x16('hi')});
 });
 
 test('float32x4 fromFloat64x2 constructor', function() {
@@ -92,6 +102,24 @@ test('float32x4 fromFloat64x2Bits constructor', function() {
 test('float32x4 fromInt32x4Bits constructor', function() {
   var m = SIMD.int32x4(0x3F800000, 0x40000000, 0x40400000, 0x40800000);
   var n = SIMD.float32x4.fromInt32x4Bits(m);
+  equal(1.0, n.x);
+  equal(2.0, n.y);
+  equal(3.0, n.z);
+  equal(4.0, n.w);
+});
+
+test('float32x4 fromInt16x8Bits constructor', function() {
+  var m = SIMD.int16x8(0x0000, 0x3F80, 0x0000, 0x4000, 0x0000, 0x4040, 0x0000, 0x4080);
+  var n = SIMD.float32x4.fromInt16x8Bits(m);
+  equal(1.0, n.x);
+  equal(2.0, n.y);
+  equal(3.0, n.z);
+  equal(4.0, n.w);
+});
+
+test('float32x4 fromInt8x16Bits constructor', function() {
+  var m = SIMD.int8x16(0x0, 0x0, 0x80, 0x3F, 0x0, 0x0, 0x00, 0x40, 0x00, 0x00, 0x40, 0x40, 0x00, 0x00, 0x80, 0x40);
+  var n = SIMD.float32x4.fromInt8x16Bits(m);
   equal(1.0, n.x);
   equal(2.0, n.y);
   equal(3.0, n.z);
@@ -1195,8 +1223,22 @@ test('float64x2 fromFloat32x4Bits constructor', function() {
 });
 
 test('float64x2 fromInt32x4Bits constructor', function() {
-  var m = SIMD.int32x4(0x00000000, 0x3ff00000, 0x0000000, 0x40000000);
+  var m = SIMD.int32x4(0x00000000, 0x3ff00000, 0x00000000, 0x40000000);
   var n = SIMD.float64x2.fromInt32x4Bits(m);
+  equal(1.0, n.x);
+  equal(2.0, n.y);
+});
+
+test('float64x2 fromInt16x8Bits constructor', function() {
+  var m = SIMD.int16x8(0x0000, 0x0000, 0x0000, 0x3ff0, 0x0000, 0x0000, 0x0000, 0x4000);
+  var n = SIMD.float64x2.fromInt16x8Bits(m);
+  equal(1.0, n.x);
+  equal(2.0, n.y);
+});
+
+test('float64x2 fromInt8x16Bits constructor', function() {
+  var m = SIMD.int8x16(0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xf0, 0x3f, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x40);
+  var n = SIMD.float64x2.fromInt8x16Bits(m);
   equal(1.0, n.x);
   equal(2.0, n.y);
 });
@@ -2820,6 +2862,894 @@ test('int32x4 storeXYZ exceptions', function () {
   });
 });
 
+test('int16x8 fromFloat32x4Bits constructor', function() {
+  var m = SIMD.float32x4(1.0, 2.0, 3.0, 4.0);
+  var n = SIMD.int16x8.fromFloat32x4Bits(m);
+  equal(0x0000, n.s0);
+  equal(0x3F80, n.s1);
+  equal(0x0000, n.s2);
+  equal(0x4000, n.s3);
+  equal(0x0000, n.s4);
+  equal(0x4040, n.s5);
+  equal(0x0000, n.s6);
+  equal(0x4080, n.s7);
+});
+
+test('int16x8 and', function() {
+  var m = SIMD.int16x8(0xAAAA, 0xAAAA, 0xAAAA, 0xAAAA, 43690, 43690, 0xAAAA, 0xAAAA);
+  var n = SIMD.int16x8(0x5555, 0x5555, 0x5555, 0x5555, 0x5555, 0x5555, 0x5555, 0x5555);
+  equal(-21846, m.s0);
+  equal(-21846, m.s1);
+  equal(-21846, m.s2);
+  equal(-21846, m.s3);
+  equal(-21846, m.s4);
+  equal(-21846, m.s5);
+  equal(-21846, m.s6);
+  equal(-21846, m.s7);
+  equal(0x5555, n.s0);
+  equal(0x5555, n.s1);
+  equal(0x5555, n.s2);
+  equal(0x5555, n.s3);
+  equal(0x5555, n.s4);
+  equal(0x5555, n.s5);
+  equal(0x5555, n.s6);
+  equal(0x5555, n.s7);
+  var o = SIMD.int16x8.and(m,n);  // and
+  equal(0x0, o.s0);
+  equal(0x0, o.s1);
+  equal(0x0, o.s2);
+  equal(0x0, o.s3);
+  equal(0x0, o.s4);
+  equal(0x0, o.s5);
+  equal(0x0, o.s6);
+  equal(0x0, o.s7);
+});
+
+test('int16x8 or', function() {
+  var m = SIMD.int16x8(0xAAAA, 0xAAAA, 0xAAAA, 0xAAAA, 0xAAAA, 0xAAAA, 0xAAAA, 0xAAAA);
+  var n = SIMD.int16x8(0x5555, 0x5555, 0x5555, 0x5555, 0x5555, 0x5555, 0x5555, 0x5555);
+  var o = SIMD.int16x8.or(m,n);  // or
+  equal(-1, o.s0);
+  equal(-1, o.s1);
+  equal(-1, o.s2);
+  equal(-1, o.s3);
+  equal(-1, o.s4);
+  equal(-1, o.s5);
+  equal(-1, o.s6);
+  equal(-1, o.s7);
+});
+
+test('int16x8 xor', function() {
+  var m = SIMD.int16x8(0xAAAA, 0xAAAA, 0xAAAA, 0xAAAA, 0xAAAA, 0xAAAA, 0xAAAA, 0xAAAA);
+  var n = SIMD.int16x8(0x5555, 0x5555, 0x5555, 0x5555, 0x5555, 0x5555, 0x5555, 0x5555);
+  var o = SIMD.int16x8.xor(m,n);  // xor
+  equal(-1, o.s0);
+  equal(-1, o.s1);
+  equal(-1, o.s2);
+  equal(-1, o.s3);
+  equal(-1, o.s4);
+  equal(-1, o.s5);
+  equal(-1, o.s6);
+  equal(-1, o.s7);
+  o = SIMD.int16x8.xor(m,m);  // xor
+  equal(0x0, o.s0);
+  equal(0x0, o.s1);
+  equal(0x0, o.s2);
+  equal(0x0, o.s3);
+  equal(0x0, o.s4);
+  equal(0x0, o.s5);
+  equal(0x0, o.s6);
+  equal(0x0, o.s7);
+});
+
+test('int16x8 neg', function() {
+  var m = SIMD.int16x8(16, -32, 64, -128, 256, -512, 1024, -2048);
+  m = SIMD.int16x8.neg(m);
+  equal(-16, m.s0);
+  equal(32, m.s1);
+  equal(-64, m.s2);
+  equal(128, m.s3);
+  equal(-256, m.s4);
+  equal(512, m.s5);
+  equal(-1024, m.s6);
+  equal(2048, m.s7);
+
+  var n = SIMD.int16x8(0, 0, 0x7fff, 0xffff, -1, -1, 0x8000, 0x0000);
+  n = SIMD.int16x8.neg(n);
+  equal(0, n.s0);
+  equal(0, n.s1);
+  equal(-32767, n.s2);
+  equal(1, n.s3);
+  equal(1, n.s4);
+  equal(1, n.s5);
+  equal(-32768, n.s6);
+  equal(0, n.s7);
+});
+
+test('int16x8 signMask getter', function() {
+  var a = SIMD.int16x8(0x8000, 0x0000, 0x700, 0x0000, 0xFFFF, 0xFFFF, 0x0, 0x0);
+  equal(0x31, a.signMask);
+  var b = SIMD.int16x8(0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0);
+  equal(0x0, b.signMask);
+  var c = SIMD.int16x8(0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF);
+  equal(0xff, c.signMask);
+});
+
+
+test('int16x8 add', function() {
+  var a = SIMD.int16x8(0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0x7fff, 0xffff, 0x0, 0x0);
+  var b = SIMD.int16x8(0x0, 0x1, 0xFFFF, 0xFFFF, 0x0, 0x1, 0xFFFF, 0xFFFF);
+  var c = SIMD.int16x8.add(a, b);
+  equal(-1, c.s0);
+  equal(0, c.s1);
+  equal(-2, c.s2);
+  equal(-2, c.s3);
+  equal(0x7fff, c.s4);
+  equal(0, c.s5);
+  equal(-1, c.s6);
+  equal(-1, c.s7);
+});
+
+test('int16x8 sub', function() {
+  var a = SIMD.int16x8(0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0x8000, 0x0000, 0x0, 0x0);
+  var b = SIMD.int16x8(0x0, 0x1, 0xFFFF, 0x0FFFF, 0x0, 0x1, 0xFFFF, 0xFFFF);
+  var c = SIMD.int16x8.sub(a, b);
+  equal(-1, c.s0);
+  equal(-2, c.s1);
+  equal(0, c.s2);
+  equal(0, c.s3);
+  equal(-32768, c.s4);
+  equal(-1, c.s5);
+  equal(1, c.s6);
+  equal(1, c.s7);
+});
+
+test('int16x8 mul', function() {
+  var a = SIMD.int16x8(0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0x8000, 0x0000, 0x0, 0x0);
+  var b = SIMD.int16x8(0x0, 0x1, 0xFFFF, 0xFFFF, 0x8000, 0x0000, 0xFFFF, 0xFFFF);
+  var c = SIMD.int16x8.mul(a, b);
+  equal(0, c.s0);
+  equal(-1, c.s1);
+  equal(1, c.s2);
+  equal(1, c.s3);
+  equal(0, c.s4);
+  equal(0, c.s5);
+  equal(0, c.s6);
+  equal(0, c.s7);
+});
+
+test('int16x8 comparisons', function() {
+  var m = SIMD.int16x8(1000, 2000, 100, 1, -1000, -2000, -100, 1);
+  var n = SIMD.int16x8(-2000, 2000, 1, 100, 2000, -2000, -1, -100);
+  var cmp;
+  cmp = SIMD.int16x8.lessThan(m, n);
+  equal(0x0, cmp.s0);
+  equal(0x0, cmp.s1);
+  equal(0x0, cmp.s2);
+  equal(-1, cmp.s3);
+  equal(-1, cmp.s4);
+  equal(0x0, cmp.s5);
+  equal(-1, cmp.s6);
+  equal(0x0, cmp.s7);
+
+  cmp = SIMD.int16x8.equal(m, n);
+  equal(0x0, cmp.s0);
+  equal(-1, cmp.s1);
+  equal(0x0, cmp.s2);
+  equal(0x0, cmp.s3);
+  equal(0x0, cmp.s4);
+  equal(-1, cmp.s5);
+  equal(0x0, cmp.s6);
+  equal(0x0, cmp.s7);
+
+  cmp = SIMD.int16x8.greaterThan(m, n);
+  equal(-1, cmp.s0);
+  equal(0, cmp.s1);
+  equal(-1, cmp.s2);
+  equal(0, cmp.s3);
+  equal(0, cmp.s4);
+  equal(0, cmp.s5);
+  equal(0, cmp.s6);
+  equal(-1, cmp.s7);
+});
+
+test('int16x8 shiftLeftByScalar', function() {
+  var a = SIMD.int16x8(0xffff, 0xffff, 0x7fff, 0xffff, 0x0, 0x1, 0x0, 0x0);
+  var b;
+
+  b = SIMD.int16x8.shiftLeftByScalar(a, 1);
+  equal(b.s0, -2);
+  equal(b.s1, -2);
+  equal(b.s2, -2);
+  equal(b.s3, -2);
+  equal(b.s4, 0x0000);
+  equal(b.s5, 0x0002);
+  equal(b.s6, 0x0000);
+  equal(b.s7, 0x0000);
+  b = SIMD.int16x8.shiftLeftByScalar(a, 2);
+  equal(b.s0, -4);
+  equal(b.s1, -4);
+  equal(b.s2, -4);
+  equal(b.s3, -4);
+  equal(b.s4, 0x0000);
+  equal(b.s5, 0x0004);
+  equal(b.s6, 0x0000);
+  equal(b.s7, 0x0000);
+  b = SIMD.int16x8.shiftLeftByScalar(a, 14);
+  equal(b.s0, -16384);
+  equal(b.s1, -16384);
+  equal(b.s2, -16384);
+  equal(b.s3, -16384);
+  equal(b.s4, 0x0000);
+  equal(b.s5, 0x4000);
+  equal(b.s6, 0x0000);
+  equal(b.s7, 0x0000);
+  b = SIMD.int16x8.shiftLeftByScalar(a, 15);
+  equal(b.s0, -32768);
+  equal(b.s1, -32768);
+  equal(b.s2, -32768);
+  equal(b.s3, -32768);
+  equal(b.s4, 0x0000);
+  equal(b.s5, -32768);
+  equal(b.s6, 0x0000);
+  equal(b.s7, 0x0000);
+});
+
+test('int16x8 shiftRightArithmeticByScalar', function() {
+  var a = SIMD.int16x8(0xffff, 0xffff, 0x7fff, 0xffff, 0x0, 0x1, 0x0, 0x0);
+  var b;
+
+  b = SIMD.int16x8.shiftRightArithmeticByScalar(a, 1);
+  equal(b.s0, -1);
+  equal(b.s1, -1);
+  equal(b.s2, 0x3fff);
+  equal(b.s3, -1);
+  equal(b.s4, 0x0000);
+  equal(b.s5, 0x0000);
+  equal(b.s6, 0x0000);
+  equal(b.s7, 0x0000);
+  b = SIMD.int16x8.shiftRightArithmeticByScalar(a, 2);
+  equal(b.s0, -1);
+  equal(b.s1, -1);
+  equal(b.s2, 0x1fff);
+  equal(b.s3, -1);
+  equal(b.s4, 0x0000);
+  equal(b.s5, 0x0000);
+  equal(b.s6, 0x0000);
+  equal(b.s7, 0x0000);
+  b = SIMD.int16x8.shiftRightArithmeticByScalar(a, 14);
+  equal(b.s0, -1);
+  equal(b.s1, -1);
+  equal(b.s2, 0x0001);
+  equal(b.s3, -1);
+  equal(b.s4, 0x0000);
+  equal(b.s5, 0x0000);
+  equal(b.s6, 0x0000);
+  equal(b.s7, 0x0000);
+  b = SIMD.int16x8.shiftRightArithmeticByScalar(a, 15);
+  equal(b.s0, -1);
+  equal(b.s1, -1);
+  equal(b.s2, 0x0000);
+  equal(b.s3, -1);
+  equal(b.s4, 0x0000);
+  equal(b.s5, 0x0000);
+  equal(b.s6, 0x0000);
+  equal(b.s7, 0x0000);
+});
+
+test('int16x8 shiftRightLogicalByScalar', function() {
+  var a = SIMD.int16x8(0xffff, 0xffff, 0x7fff, 0xffff, 0x0, 0x1, 0x0, 0x0);
+  var b;
+
+  b = SIMD.int16x8.shiftRightLogicalByScalar(a, 1);
+  equal(b.s0, 0x7fff);
+  equal(b.s1, 0x7fff);
+  equal(b.s2, 0x3fff);
+  equal(b.s3, 0x7fff);
+  equal(b.s4, 0x0000);
+  equal(b.s5, 0x0000);
+  equal(b.s6, 0x0000);
+  equal(b.s7, 0x0000);
+  b = SIMD.int16x8.shiftRightLogicalByScalar(a, 2);
+  equal(b.s0, 0x3fff);
+  equal(b.s1, 0x3fff);
+  equal(b.s2, 0x1fff);
+  equal(b.s3, 0x3fff);
+  equal(b.s4, 0x0000);
+  equal(b.s5, 0x0000);
+  equal(b.s6, 0x0000);
+  equal(b.s7, 0x0000);
+  b = SIMD.int16x8.shiftRightLogicalByScalar(a, 14);
+  equal(b.s0, 0x0003);
+  equal(b.s1, 0x0003);
+  equal(b.s2, 0x0001);
+  equal(b.s3, 0x0003);
+  equal(b.s4, 0x0000);
+  equal(b.s5, 0x0000);
+  equal(b.s6, 0x0000);
+  equal(b.s7, 0x0000);
+  b = SIMD.int16x8.shiftRightLogicalByScalar(a, 15);
+  equal(b.s0, 0x0001);
+  equal(b.s1, 0x0001);
+  equal(b.s2, 0x0000);
+  equal(b.s3, 0x0001);
+  equal(b.s4, 0x0000);
+  equal(b.s5, 0x0000);
+  equal(b.s6, 0x0000);
+  equal(b.s7, 0x0000);
+});
+
+test('int16x8 select', function() {
+  var m = SIMD.int16x8.bool(true, true, true, true, false, false, false, false);
+  var t = SIMD.int16x8(1, 2, 3, 4, 5, 6, 7, 8);
+  var f = SIMD.int16x8(9, 10, 11, 12, 13, 14, 15, 16);
+  var s = SIMD.int16x8.select(m, t, f);
+  equal(1, s.s0);
+  equal(2, s.s1);
+  equal(3, s.s2);
+  equal(4, s.s3);
+  equal(13, s.s4);
+  equal(14, s.s5);
+  equal(15, s.s6);
+  equal(16, s.s7);
+});
+
+test('int8x16 and', function() {
+  var m = SIMD.int8x16(0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 170, 170, 170, 170, 0xAA, 0xAA, 0xAA, 0xAA);
+  var n = SIMD.int8x16(0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55);
+  equal(-86, m.s0);
+  equal(-86, m.s1);
+  equal(-86, m.s2);
+  equal(-86, m.s3);
+  equal(-86, m.s4);
+  equal(-86, m.s5);
+  equal(-86, m.s6);
+  equal(-86, m.s7);
+  equal(-86, m.s8);
+  equal(-86, m.s9);
+  equal(-86, m.s10);
+  equal(-86, m.s11);
+  equal(-86, m.s12);
+  equal(-86, m.s13);
+  equal(-86, m.s14);
+  equal(-86, m.s15);
+  equal(85, n.s0);
+  equal(85, n.s1);
+  equal(85, n.s2);
+  equal(85, n.s3);
+  equal(85, n.s4);
+  equal(85, n.s5);
+  equal(85, n.s6);
+  equal(85, n.s7);
+  equal(85, n.s8);
+  equal(85, n.s9);
+  equal(85, n.s10);
+  equal(85, n.s11);
+  equal(85, n.s12);
+  equal(85, n.s13);
+  equal(85, n.s14);
+  equal(85, n.s15);
+  var o = SIMD.int8x16.and(m,n);  // and
+  equal(0x0, o.s0);
+  equal(0x0, o.s1);
+  equal(0x0, o.s2);
+  equal(0x0, o.s3);
+  equal(0x0, o.s4);
+  equal(0x0, o.s5);
+  equal(0x0, o.s6);
+  equal(0x0, o.s7);
+  equal(0x0, o.s8);
+  equal(0x0, o.s9);
+  equal(0x0, o.s10);
+  equal(0x0, o.s11);
+  equal(0x0, o.s12);
+  equal(0x0, o.s13);
+  equal(0x0, o.s14);
+  equal(0x0, o.s15);
+});
+
+test('int8x16 or', function() {
+  var m = SIMD.int8x16(0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA);
+  var n = SIMD.int8x16(0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55);
+  var o = SIMD.int8x16.or(m,n);  // or
+  equal(-1, o.s0);
+  equal(-1, o.s1);
+  equal(-1, o.s2);
+  equal(-1, o.s3);
+  equal(-1, o.s4);
+  equal(-1, o.s5);
+  equal(-1, o.s6);
+  equal(-1, o.s7);
+  equal(-1, o.s8);
+  equal(-1, o.s9);
+  equal(-1, o.s10);
+  equal(-1, o.s11);
+  equal(-1, o.s12);
+  equal(-1, o.s13);
+  equal(-1, o.s14);
+  equal(-1, o.s15);
+});
+
+test('int8x16 xor', function() {
+  var m = SIMD.int8x16(0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA);
+  var n = SIMD.int8x16(0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55);
+  var o = SIMD.int8x16.xor(m,n);  // xor
+  equal(-1, o.s0);
+  equal(-1, o.s1);
+  equal(-1, o.s2);
+  equal(-1, o.s3);
+  equal(-1, o.s4);
+  equal(-1, o.s5);
+  equal(-1, o.s6);
+  equal(-1, o.s7);
+  equal(-1, o.s8);
+  equal(-1, o.s9);
+  equal(-1, o.s10);
+  equal(-1, o.s11);
+  equal(-1, o.s12);
+  equal(-1, o.s13);
+  equal(-1, o.s14);
+  equal(-1, o.s15);
+  o = SIMD.int8x16.xor(m,m);  // xor
+  equal(0x0, o.s0);
+  equal(0x0, o.s1);
+  equal(0x0, o.s2);
+  equal(0x0, o.s3);
+  equal(0x0, o.s4);
+  equal(0x0, o.s5);
+  equal(0x0, o.s6);
+  equal(0x0, o.s7);
+  equal(0x0, o.s8);
+  equal(0x0, o.s9);
+  equal(0x0, o.s10);
+  equal(0x0, o.s11);
+  equal(0x0, o.s12);
+  equal(0x0, o.s13);
+  equal(0x0, o.s14);
+  equal(0x0, o.s15);
+});
+
+test('int8x16 neg', function() {
+  var m = SIMD.int8x16(16, -32, 64, -128, 256, -512, 1024, -2048, 4096, -8192, 16384, -32768, 65536, -131072, 262144, -524288);
+  m = SIMD.int8x16.neg(m);
+  equal(-16, m.s0);
+  equal(32, m.s1);
+  equal(-64, m.s2);
+  equal(-128, m.s3);
+  equal(0, m.s4);
+  equal(0, m.s5);
+  equal(0, m.s6);
+  equal(0, m.s7);
+  equal(0, m.s8);
+  equal(0, m.s9);
+  equal(0, m.s10);
+  equal(0, m.s11);
+  equal(0, m.s12);
+  equal(0, m.s13);
+  equal(0, m.s14);
+  equal(0, m.s15);
+
+  var n = SIMD.int8x16(0, 0, 0, 0, 0x7f, 0xff, 0xff, 0xff, -1, -1, -1, -1, 0x80, 0x00, 0x00, 0x00);
+  n = SIMD.int8x16.neg(n);
+  equal(0, n.s0);
+  equal(0, n.s1);
+  equal(0, n.s2);
+  equal(0, n.s3);
+  equal(-127, n.s4);
+  equal(1, n.s5);
+  equal(1, n.s6);
+  equal(1, n.s7);
+  equal(1, n.s8);
+  equal(1, n.s9);
+  equal(1, n.s10);
+  equal(1, n.s11);
+  equal(-128, n.s12);
+  equal(0, n.s13);
+  equal(0, n.s14);
+  equal(0, n.s15);
+});
+
+test('int8x16 signMask getter', function() {
+  var a = SIMD.int8x16(0x80, 0x00, 0x00, 0x00, 0x7, 0x02, 0x01, 0x00, 0xFF, 0xF0, 0xF2, 0xFc, 0x0, 0x0, 0x0, 0x0);
+  equal(0xf01, a.signMask);
+  var b = SIMD.int8x16(0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0);
+  equal(0x0, b.signMask);
+  var c = SIMD.int8x16(0xFF, 0xFE, 0xF0, 0xF1, 0xF2, 0xF3, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xF1, 0xF0, 0xFE);
+  equal(0xffff, c.signMask);
+});
+
+
+test('int8x16 add', function() {
+  var a = SIMD.int8x16(0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x7f, 0xff, 0xff, 0xff, 0x0, 0x0, 0x0, 0x0);
+  var b = SIMD.int8x16(0x0, 0x0, 0x0, 0x1, 0xFF, 0xFF, 0xFF, 0xFF, 0x0, 0x0, 0x0, 0x1, 0xFF, 0xFF, 0xFF, 0xFF);
+  var c = SIMD.int8x16.add(a, b);
+  equal(-1, c.s0);
+  equal(-1, c.s1);
+  equal(-1, c.s2);
+  equal(0x0, c.s3);
+  equal(-2, c.s4);
+  equal(-2, c.s5);
+  equal(-2, c.s6);
+  equal(-2, c.s7);
+  equal(0x7f, c.s8);
+  equal(-1, c.s9);
+  equal(-1, c.s10);
+  equal(0x0, c.s11);
+  equal(-1, c.s12);
+  equal(-1, c.s13);
+  equal(-1, c.s14);
+  equal(-1, c.s15);
+});
+
+test('int8x16 sub', function() {
+  var a = SIMD.int8x16(0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x7f, 0xff, 0xff, 0xff, 0x0, 0x0, 0x0, 0x0);
+  var b = SIMD.int8x16(0x0, 0x0, 0x0, 0x1, 0xFF, 0xFF, 0xFF, 0xFF, 0x0, 0x0, 0x0, 0x1, 0xFF, 0xFF, 0xFF, 0xFF);
+  var c = SIMD.int8x16.sub(a, b);
+  equal(-1, c.s0);
+  equal(-1, c.s1);
+  equal(-1, c.s2);
+  equal(-2, c.s3);
+  equal(0, c.s4);
+  equal(0, c.s5);
+  equal(0, c.s6);
+  equal(0, c.s7);
+  equal(0x7f, c.s8);
+  equal(-1, c.s9);
+  equal(-1, c.s10);
+  equal(-2, c.s11);
+  equal(1, c.s12);
+  equal(1, c.s13);
+  equal(1, c.s14);
+  equal(1, c.s15);
+});
+
+test('int8x16 mul', function() {
+  var a = SIMD.int8x16(0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x7f, 0xff, 0xff, 0xff, 0x0, 0x0, 0x0, 0x0);
+  var b = SIMD.int8x16(0x0, 0x0, 0x0, 0x1, 0xFF, 0xFF, 0xFF, 0xFF, 0x0, 0x0, 0x0, 0x1, 0xFF, 0xFF, 0xFF, 0xFF);
+  var c = SIMD.int8x16.mul(a, b);
+  equal(0x0, c.s0);
+  equal(0x0, c.s1);
+  equal(0x0, c.s2);
+  equal(-1, c.s3);
+  equal(1, c.s4);
+  equal(1, c.s5);
+  equal(1, c.s6);
+  equal(1, c.s7);
+  equal(0, c.s8);
+  equal(0, c.s9);
+  equal(0, c.s10);
+  equal(-1, c.s11);
+  equal(0, c.s12);
+  equal(0, c.s13);
+  equal(0, c.s14);
+  equal(0, c.s15);
+});
+
+test('int8x16 comparisons', function() {
+  var m = SIMD.int8x16(1000, 2000, 100, 1, -1000, -2000, -100, 1, 0, 0, 0, 0, -1, 1, -2, 2);
+  var n = SIMD.int8x16(-2000, 2000, 1, 100, 2000, -2000, -1, -100, -1, 1, -2, 2, 0, 0, 0, 0);
+  var cmp;
+  cmp = SIMD.int8x16.lessThan(m, n);
+  equal(-1, cmp.s0);
+  equal(0x0, cmp.s1);
+  equal(0x0, cmp.s2);
+  equal(-1, cmp.s3);
+  equal(0x0, cmp.s4);
+  equal(0x0, cmp.s5);
+  equal(-1, cmp.s6);
+  equal(0x0, cmp.s7);
+  equal(0x0, cmp.s8);
+  equal(-1, cmp.s9);
+  equal(0x0, cmp.s10);
+  equal(-1, cmp.s11);
+  equal(-1, cmp.s12);
+  equal(0x0, cmp.s13);
+  equal(-1, cmp.s14);
+  equal(0x0, cmp.s15);
+
+  cmp = SIMD.int8x16.equal(m, n);
+  equal(0x0, cmp.s0);
+  equal(-1, cmp.s1);
+  equal(0x0, cmp.s2);
+  equal(0x0, cmp.s3);
+  equal(0x0, cmp.s4);
+  equal(-1, cmp.s5);
+  equal(0x0, cmp.s6);
+  equal(0x0, cmp.s7);
+  equal(0x0, cmp.s8);
+  equal(0x0, cmp.s9);
+  equal(0x0, cmp.s10);
+  equal(0x0, cmp.s11);
+  equal(0x0, cmp.s12);
+  equal(0x0, cmp.s13);
+  equal(0x0, cmp.s14);
+  equal(0x0, cmp.s15);
+
+  cmp = SIMD.int8x16.greaterThan(m, n);
+  equal(0x0, cmp.s0);
+  equal(0x0, cmp.s1);
+  equal(-1, cmp.s2);
+  equal(0x0, cmp.s3);
+  equal(-1, cmp.s4);
+  equal(0x0, cmp.s5);
+  equal(0x0, cmp.s6);
+  equal(-1, cmp.s7);
+  equal(-1, cmp.s8);
+  equal(0x0, cmp.s9);
+  equal(-1, cmp.s10);
+  equal(0x0, cmp.s11);
+  equal(0x0, cmp.s12);
+  equal(-1, cmp.s13);
+  equal(0x0, cmp.s14);
+  equal(-1, cmp.s15);
+});
+
+test('int8x16 shiftLeftByScalar', function() {
+  var a = SIMD.int8x16(0xff, 0xff, 0xff, 0xff, 0x7f, 0xff, 0xff, 0xff, 0x0, 0x0, 0x0, 0x1, 0x0, 0x0, 0x0, 0x0);
+  var b;
+
+  b = SIMD.int8x16.shiftLeftByScalar(a, 1);
+  equal(b.s0, -2);
+  equal(b.s1, -2);
+  equal(b.s2, -2);
+  equal(b.s3, -2);
+  equal(b.s4, -2);
+  equal(b.s5, -2);
+  equal(b.s6, -2);
+  equal(b.s7, -2);
+  equal(b.s8, 0x00);
+  equal(b.s9, 0x00);
+  equal(b.s10, 0x00);
+  equal(b.s11, 0x02);
+  equal(b.s12, 0x00);
+  equal(b.s13, 0x00);
+  equal(b.s14, 0x00);
+  equal(b.s15, 0x00);
+  b = SIMD.int8x16.shiftLeftByScalar(a, 2);
+  equal(b.s0, -4);
+  equal(b.s1, -4);
+  equal(b.s2, -4);
+  equal(b.s3, -4);
+  equal(b.s4, -4);
+  equal(b.s5, -4);
+  equal(b.s6, -4);
+  equal(b.s7, -4);
+  equal(b.s8, 0x00);
+  equal(b.s9, 0x00);
+  equal(b.s10, 0x00);
+  equal(b.s11, 0x04);
+  equal(b.s12, 0x00);
+  equal(b.s13, 0x00);
+  equal(b.s14, 0x00);
+  equal(b.s15, 0x00);
+  b = SIMD.int8x16.shiftLeftByScalar(a, 6);
+  equal(b.s0, -64);
+  equal(b.s1, -64);
+  equal(b.s2, -64);
+  equal(b.s3, -64);
+  equal(b.s4, -64);
+  equal(b.s5, -64);
+  equal(b.s6, -64);
+  equal(b.s7, -64);
+  equal(b.s8, 0x00);
+  equal(b.s9, 0x00);
+  equal(b.s10, 0x00);
+  equal(b.s11, 0x40);
+  equal(b.s12, 0x00);
+  equal(b.s13, 0x00);
+  equal(b.s14, 0x00);
+  equal(b.s15, 0x00);
+  b = SIMD.int8x16.shiftLeftByScalar(a, 7);
+  equal(b.s0, -128);
+  equal(b.s1, -128);
+  equal(b.s2, -128);
+  equal(b.s3, -128);
+  equal(b.s4, -128);
+  equal(b.s5, -128);
+  equal(b.s6, -128);
+  equal(b.s7, -128);
+  equal(b.s8, 0x00);
+  equal(b.s9, 0x00);
+  equal(b.s10, 0x00);
+  equal(b.s11, -128);
+  equal(b.s12, 0x00);
+  equal(b.s13, 0x00);
+  equal(b.s14, 0x00);
+  equal(b.s15, 0x00);
+});
+
+test('int8x16 shiftRightArithmeticByScalar', function() {
+  var a = SIMD.int8x16(0xff, 0xff, 0xff, 0xff, 0x7f, 0xff, 0xff, 0xff, 0x0, 0x0, 0x0, 0x1, 0x0, 0x0, 0x0, 0x0);
+  var b;
+
+  b = SIMD.int8x16.shiftRightArithmeticByScalar(a, 1);
+  equal(b.s0, -1);
+  equal(b.s1, -1);
+  equal(b.s2, -1);
+  equal(b.s3, -1);
+  equal(b.s4, 0x3f);
+  equal(b.s5, -1);
+  equal(b.s6, -1);
+  equal(b.s7, -1);
+  equal(b.s8, 0x00);
+  equal(b.s9, 0x00);
+  equal(b.s10, 0x00);
+  equal(b.s11, 0x00);
+  equal(b.s12, 0x00);
+  equal(b.s13, 0x00);
+  equal(b.s14, 0x00);
+  equal(b.s15, 0x00);
+  b = SIMD.int8x16.shiftRightArithmeticByScalar(a, 2);
+  equal(b.s0, -1);
+  equal(b.s1, -1);
+  equal(b.s2, -1);
+  equal(b.s3, -1);
+  equal(b.s4, 0x1f);
+  equal(b.s5, -1);
+  equal(b.s6, -1);
+  equal(b.s7, -1);
+  equal(b.s8, 0x00);
+  equal(b.s9, 0x00);
+  equal(b.s10, 0x00);
+  equal(b.s11, 0x00);
+  equal(b.s12, 0x00);
+  equal(b.s13, 0x00);
+  equal(b.s14, 0x00);
+  equal(b.s15, 0x00);
+  b = SIMD.int8x16.shiftRightArithmeticByScalar(a, 6);
+  equal(b.s0, -1);
+  equal(b.s1, -1);
+  equal(b.s2, -1);
+  equal(b.s3, -1);
+  equal(b.s4, 0x01);
+  equal(b.s5, -1);
+  equal(b.s6, -1);
+  equal(b.s7, -1);
+  equal(b.s8, 0x00);
+  equal(b.s9, 0x00);
+  equal(b.s10, 0x00);
+  equal(b.s11, 0x00);
+  equal(b.s12, 0x00);
+  equal(b.s13, 0x00);
+  equal(b.s14, 0x00);
+  equal(b.s15, 0x00);
+  b = SIMD.int8x16.shiftRightArithmeticByScalar(a, 7);
+  equal(b.s0, -1);
+  equal(b.s1, -1);
+  equal(b.s2, -1);
+  equal(b.s3, -1);
+  equal(b.s4, 0x0);
+  equal(b.s5, -1);
+  equal(b.s6, -1);
+  equal(b.s7, -1);
+  equal(b.s8, 0x00);
+  equal(b.s9, 0x00);
+  equal(b.s10, 0x00);
+  equal(b.s11, 0x00);
+  equal(b.s12, 0x00);
+  equal(b.s13, 0x00);
+  equal(b.s14, 0x00);
+  equal(b.s15, 0x00);
+});
+
+test('int8x16 shiftRightLogicalByScalar', function() {
+  var a = SIMD.int8x16(0xff, 0xff, 0xff, 0xff, 0x7f, 0xff, 0xff, 0xff, 0x0, 0x0, 0x0, 0x1, 0x0, 0x0, 0x0, 0x0);
+  var b;
+
+  b = SIMD.int8x16.shiftRightLogicalByScalar(a, 1);
+  equal(b.s0, 0x7f);
+  equal(b.s1, 0x7f);
+  equal(b.s2, 0x7f);
+  equal(b.s3, 0x7f);
+  equal(b.s4, 0x3f);
+  equal(b.s5, 0x7f);
+  equal(b.s6, 0x7f);
+  equal(b.s7, 0x7f);
+  equal(b.s8, 0x00);
+  equal(b.s9, 0x00);
+  equal(b.s10, 0x00);
+  equal(b.s11, 0x00);
+  equal(b.s12, 0x00);
+  equal(b.s13, 0x00);
+  equal(b.s14, 0x00);
+  equal(b.s15, 0x00);
+  b = SIMD.int8x16.shiftRightLogicalByScalar(a, 2);
+  equal(b.s0, 0x3f);
+  equal(b.s1, 0x3f);
+  equal(b.s2, 0x3f);
+  equal(b.s3, 0x3f);
+  equal(b.s4, 0x1f);
+  equal(b.s5, 0x3f);
+  equal(b.s6, 0x3f);
+  equal(b.s7, 0x3f);
+  equal(b.s8, 0x00);
+  equal(b.s9, 0x00);
+  equal(b.s10, 0x00);
+  equal(b.s11, 0x00);
+  equal(b.s12, 0x00);
+  equal(b.s13, 0x00);
+  equal(b.s14, 0x00);
+  equal(b.s15, 0x00);
+  b = SIMD.int8x16.shiftRightLogicalByScalar(a, 6);
+  equal(b.s0, 0x03);
+  equal(b.s1, 0x03);
+  equal(b.s2, 0x03);
+  equal(b.s3, 0x03);
+  equal(b.s4, 0x01);
+  equal(b.s5, 0x03);
+  equal(b.s6, 0x03);
+  equal(b.s7, 0x03);
+  equal(b.s8, 0x00);
+  equal(b.s9, 0x00);
+  equal(b.s10, 0x00);
+  equal(b.s11, 0x00);
+  equal(b.s12, 0x00);
+  equal(b.s13, 0x00);
+  equal(b.s14, 0x00);
+  equal(b.s15, 0x00);
+  b = SIMD.int8x16.shiftRightLogicalByScalar(a, 7);
+  equal(b.s0, 0x01);
+  equal(b.s1, 0x01);
+  equal(b.s2, 0x01);
+  equal(b.s3, 0x01);
+  equal(b.s4, 0x00);
+  equal(b.s5, 0x01);
+  equal(b.s6, 0x01);
+  equal(b.s7, 0x01);
+  equal(b.s8, 0x00);
+  equal(b.s9, 0x00);
+  equal(b.s10, 0x00);
+  equal(b.s11, 0x00);
+  equal(b.s12, 0x00);
+  equal(b.s13, 0x00);
+  equal(b.s14, 0x00);
+  equal(b.s15, 0x00);
+});
+
+test('int8x16 select', function() {
+  var m = SIMD.int8x16.bool(true, true, true, true, true, true, true, true, false, false, false, false, false, false, false, false);
+  var t = SIMD.int8x16(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16);
+  var f = SIMD.int8x16(17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32);
+  var s = SIMD.int8x16.select(m, t, f);
+  equal(1, s.s0);
+  equal(2, s.s1);
+  equal(3, s.s2);
+  equal(4, s.s3);
+  equal(5, s.s4);
+  equal(6, s.s5);
+  equal(7, s.s6);
+  equal(8, s.s7);
+  equal(25, s.s8);
+  equal(26, s.s9);
+  equal(27, s.s10);
+  equal(28, s.s11);
+  equal(29, s.s12);
+  equal(30, s.s13);
+  equal(31, s.s14);
+  equal(32, s.s15);
+});
+
+test('int8x16 fromFloat32x4Bits constructor', function() {
+  var m = SIMD.float32x4(1.0, 2.0, 3.0, 4.0);
+  var n = SIMD.int8x16.fromFloat32x4Bits(m);
+  equal(0x00, n.s0);
+  equal(0x00, n.s1);
+  equal(-128, n.s2);
+  equal(0x3f, n.s3);
+  equal(0x00, n.s4);
+  equal(0x00, n.s5);
+  equal(0x00, n.s6);
+  equal(0x40, n.s7);
+  equal(0x00, n.s8);
+  equal(0x00, n.s9);
+  equal(0x40, n.s10);
+  equal(0x40, n.s11);
+  equal(0x00, n.s12);
+  equal(0x00, n.s13);
+  equal(-128, n.s14);
+  equal(0x40, n.s15);
+});
+
 test('Float32x4Array simple', function() {
   var a = new Float32x4Array(1);
   equal(1, a.length);
@@ -3462,5 +4392,135 @@ test('DataView.setInt32x4 exceptions', function() {
   });
   throws(function () {
     v.setInt32x4(1, f4);
+  });
+});
+
+test('DataView.setInt16x8', function() {
+  var a = new Int16Array(16);
+  var b = new Int16Array(16);
+  var u = new DataView(a.buffer);
+  var v = new DataView(b.buffer);
+  for (var i = 0; i < a.length; i++) {
+    u.setInt16(i * 2, i);
+  }
+  for (var i = 0; i < b.length; i+=8) {
+    v.setInt16x8(i * 2, SIMD.int16x8(i, i+1, i+2, i+3, i+4, i+5, i+6, i+7));
+  }
+  for (var i = 0; i < a.length; i++) {
+    equal(u.getInt16(i*2), v.getInt16(i*2));
+  }
+});
+
+test('DataView.setInt16x8 with littleEndian as false', function() {
+  var a = new Int16Array(16);
+  var b = new Int16Array(16);
+  var u = new DataView(a.buffer);
+  var v = new DataView(b.buffer);
+  for (var i = 0; i < a.length; i++) {
+    u.setInt16(i * 2, i, false);
+  }
+  for (var i = 0; i < b.length; i+=8) {
+    v.setInt16x8(i * 2, SIMD.int16x8(i, i+1, i+2, i+3, i+4, i+5, i+6, i+7), false);
+  }
+  for (var i = 0; i < a.length; i++) {
+    equal(u.getInt16(i*2, false), v.getInt16(i*2, false));
+  }
+});
+
+
+test('DataView.setInt16x8 with littleEndian as true', function() {
+  var a = new Int16Array(16);
+  var b = new Int16Array(16);
+  var u = new DataView(a.buffer);
+  var v = new DataView(b.buffer);
+  for (var i = 0; i < a.length; i++) {
+    u.setInt16(i * 2, i, true);
+  }
+  for (var i = 0; i < b.length; i+=8) {
+    v.setInt16x8(i * 2, SIMD.int16x8(i, i+1, i+2, i+3, i+4, i+5, i+6, i+7), true);
+  }
+  for (var i = 0; i < a.length; i++) {
+    equal(u.getInt16(i*2, true), v.getInt16(i*2, true));
+  }
+});
+
+test('DataView.setInt16x8 exceptions', function() {
+  var a = new Int16Array(16);
+  var v = new DataView(a.buffer);
+  var f4 = SIMD.float32x4(0, 1, 2, 3);
+  var i2 = SIMD.int16x8(0, 1, 2, 3, 4, 5, 6, 7);
+  throws(function () {
+    v.setInt16x8(-1, i2);
+  });
+  throws(function () {
+    v.setInt16x8(28, i2);
+  });
+  throws(function () {
+    v.setInt16x8(1, f4);
+  });
+});
+
+test('DataView.setInt8x16', function() {
+  var a = new Int8Array(32);
+  var b = new Int8Array(32);
+  var u = new DataView(a.buffer);
+  var v = new DataView(b.buffer);
+  for (var i = 0; i < a.length; i++) {
+    u.setInt8(i, i);
+  }
+  for (var i = 0; i < b.length; i+=16) {
+    v.setInt8x16(i, SIMD.int8x16(i, i+1, i+2, i+3, i+4, i+5, i+6, i+7, i+8, i+9, i+10, i+11, i+12, i+13, i+14, i+15));
+  }
+  for (var i = 0; i < a.length; i++) {
+    equal(u.getInt8(i), v.getInt8(i));
+  }
+});
+
+test('DataView.setInt8x16 with littleEndian as false', function() {
+  var a = new Int8Array(32);
+  var b = new Int8Array(32);
+  var u = new DataView(a.buffer);
+  var v = new DataView(b.buffer);
+  for (var i = 0; i < a.length; i++) {
+    u.setInt8(i, i, false);
+  }
+  for (var i = 0; i < b.length; i+=16) {
+    v.setInt8x16(i, SIMD.int8x16(i, i+1, i+2, i+3, i+4, i+5, i+6, i+7, i+8, i+9, i+10, i+11, i+12, i+13, i+14, i+15), false);
+  }
+  for (var i = 0; i < a.length; i++) {
+    equal(u.getInt8(i, false), v.getInt8(i, false));
+  }
+});
+
+
+test('DataView.setInt8x16 with littleEndian as true', function() {
+  var a = new Int8Array(32);
+  var b = new Int8Array(32);
+  var u = new DataView(a.buffer);
+  var v = new DataView(b.buffer);
+  for (var i = 0; i < a.length; i++) {
+    u.setInt8(i, i, true);
+  }
+  for (var i = 0; i < b.length; i+=16) {
+    v.setInt8x16(i, SIMD.int8x16(i, i+1, i+2, i+3, i+4, i+5, i+6, i+7, i+8, i+9, i+10, i+11, i+12, i+13, i+14, i+15), true);
+  }
+  for (var i = 0; i < a.length; i++) {
+    equal(u.getInt8(i, true), v.getInt8(i, true));
+  }
+});
+
+test('DataView.setInt8x16 exceptions', function() {
+  var a = new Int8Array(32);
+  var v = new DataView(a.buffer);
+  var f4 = SIMD.float32x4(0, 1, 2, 3);
+  var i2 = SIMD.int8x16(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15);
+  throws(function () {
+    v.setInt8x16(-1, i2);
+  });
+  throws(function () {
+    v.setInt8x16(28, i2);
+  });
+  throws(function () {
+    v.setInt8x16(1, f4);
   });
 });
