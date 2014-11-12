@@ -551,7 +551,7 @@ test('float32x4 comparisons', function() {
 });
 
 test('float32x4 select', function() {
-  var m = SIMD.int32x4.bool(true, true, false, false);
+  var m = SIMD.int32x4(0xaaaaaaaa, 0xaaaaaaaa, 0x55555555, 0x55555555);
   var t = SIMD.float32x4(1.0, 2.0, 3.0, 4.0);
   var f = SIMD.float32x4(5.0, 6.0, 7.0, 8.0);
   var s = SIMD.float32x4.select(m, t, f);
@@ -559,6 +559,17 @@ test('float32x4 select', function() {
   equal(2.0, s.y);
   equal(7.0, s.z);
   equal(8.0, s.w);
+});
+
+test('float32x4 bitselect', function() {
+  var m = SIMD.int32x4(0xaaaaaaaa, 0xaaaaaaaa, 0x55555555, 0x55555555);
+  var t = SIMD.float32x4(1.0, 2.0, 3.0, 4.0);
+  var f = SIMD.float32x4(5.0, 6.0, 7.0, 8.0);
+  var s = SIMD.float32x4.bitselect(m, t, f);
+  equal(7.737125245533627e+25, s.x);
+  equal(3.0, s.y);
+  equal(7.0, s.z);
+  equal(2.0, s.w);
 });
 
 test('float32x4 int32x4 bit conversion', function() {
@@ -1649,11 +1660,20 @@ test('float64x2 comparisons', function() {
 });
 
 test('float64x2 select', function() {
-  var m = SIMD.int32x4.bool(true, true, false, false);
+  var m = SIMD.int32x4(0xaaaaaaaa, 0x55555555);
   var t = SIMD.float64x2(1.0, 2.0);
   var f = SIMD.float64x2(3.0, 4.0);
   var s = SIMD.float64x2.select(m, t, f);
   equal(1.0, s.x);
+  equal(4.0, s.y);
+});
+
+test('float64x2 bitselect', function() {
+  var m = SIMD.int32x4(0xaaaaaaaa, 0x55555555);
+  var t = SIMD.float64x2(1.0, 2.0);
+  var f = SIMD.float64x2(3.0, 4.0);
+  var s = SIMD.float64x2.bitselect(m, t, f);
+  equal(7.475396213323176e-206, s.x);
   equal(4.0, s.y);
 });
 
@@ -2002,10 +2022,14 @@ test('int32x4 and', function() {
   equal(0x55555555, n.y);
   equal(0x55555555, n.z);
   equal(0x55555555, n.w);
-  equal(true, n.flagX);
-  equal(true, n.flagY);
-  equal(true, n.flagZ);
-  equal(true, n.flagW);
+  equal(true, m.flagX);
+  equal(true, m.flagY);
+  equal(true, m.flagZ);
+  equal(true, m.flagW);
+  equal(false, n.flagX);
+  equal(false, n.flagY);
+  equal(false, n.flagZ);
+  equal(false, n.flagW);
   var o = SIMD.int32x4.and(m,n);  // and
   equal(0x0, o.x);
   equal(0x0, o.y);
@@ -2239,7 +2263,7 @@ test('int32x4 shiftRightLogicalByScalar', function() {
 });
 
 test('int32x4 select', function() {
-  var m = SIMD.int32x4.bool(true, true, false, false);
+  var m = SIMD.int32x4(0xaaaaaaaa, 0xaaaaaaaa, 0x55555555, 0x55555555);
   var t = SIMD.int32x4(1, 2, 3, 4);
   var f = SIMD.int32x4(5, 6, 7, 8);
   var s = SIMD.int32x4.select(m, t, f);
@@ -2247,6 +2271,17 @@ test('int32x4 select', function() {
   equal(2, s.y);
   equal(7, s.z);
   equal(8, s.w);
+});
+
+test('int32x4 bitselect', function() {
+  var m = SIMD.int32x4(0xaaaaaaaa, 0xaaaaaaaa, 0x55555555, 0x55555555);
+  var t = SIMD.int32x4(1, 2, 3, 4);
+  var f = SIMD.int32x4(5, 6, 7, 8);
+  var s = SIMD.int32x4.bitselect(m, t, f);
+  equal(5, s.x);
+  equal(6, s.y);
+  equal(3, s.z);
+  equal(12, s.w);
 });
 
 test('int32x4 load', function() {
