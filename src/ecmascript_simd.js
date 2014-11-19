@@ -54,6 +54,7 @@ _PRIVATE.maxNum = function(x, y) {
     return x != x ? y :
            y != y ? x :
            Math.max(x, y);
+}
 
 _PRIVATE.tobool = function(x) {
   return x < 0;
