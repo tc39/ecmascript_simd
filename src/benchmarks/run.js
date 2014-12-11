@@ -11,7 +11,6 @@ if (typeof Int32x4Array === "undefined") {
 load ('base.js');
 
 // load individual benchmarks
-/*
 load ('kernel-template.js');
 load ('average.js');
 load ('mandelbrot.js');
@@ -21,7 +20,6 @@ load ('shiftrows.js');
 load ('aobench.js');
 load ('transpose4x4.js');
 load ('inverse4x4.js');
-*/
 load ('memset.js');
 
 function printResult (str) {
