@@ -106,7 +106,7 @@
 
 
       while ((ptr|0) < (stop16|0)) {
-        HEAP32x4.setAt(((ptr)>>4), value16);
+        SIMD.int32x4.store(HEAP8, ((ptr)>>0), value16);
         ptr = (ptr+16)|0;
       }
 
