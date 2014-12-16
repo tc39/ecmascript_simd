@@ -48,15 +48,15 @@ if (typeof Math.fround !== 'undefined') {
 }
 
 _PRIVATE.minNum = function(x, y) {
-    return x != x ? y :
-           y != y ? x :
-           Math.min(x, y);
+  return x != x ? y :
+         y != y ? x :
+         Math.min(x, y);
 }
 
 _PRIVATE.maxNum = function(x, y) {
-    return x != x ? y :
-           y != y ? x :
-           Math.max(x, y);
+  return x != x ? y :
+         y != y ? x :
+         Math.max(x, y);
 }
 
 _PRIVATE.tobool = function(x) {
@@ -3253,7 +3253,7 @@ Object.defineProperty(SIMD.int8x16.prototype, 'signMask', {
 });
 
 function isNumber(o) {
-    return typeof o === "number" || (typeof o === "object" && o.constructor === Number);
+  return typeof o === "number" || (typeof o === "object" && o.constructor === Number);
 }
 
 function isTypedArray(o) {
