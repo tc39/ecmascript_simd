@@ -22,7 +22,7 @@
 var SIMD = {};
 
 // private stuff.
-var _SIMD_PRIVATE = {}
+var _SIMD_PRIVATE = {};
 
 _SIMD_PRIVATE._f32x4 = new Float32Array(4);
 _SIMD_PRIVATE._f64x2 = new Float64Array(_SIMD_PRIVATE._f32x4.buffer);
