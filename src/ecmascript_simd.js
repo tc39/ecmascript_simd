@@ -47,6 +47,28 @@ if (typeof Math.fround !== 'undefined') {
   }
 }
 
+_SIMD_PRIVATE.isNumber = function(o) {
+  return typeof o === "number" || (typeof o === "object" && o.constructor === Number);
+}
+
+_SIMD_PRIVATE.isTypedArray = function(o) {
+  return (o instanceof Int8Array) ||
+         (o instanceof Uint8Array) ||
+         (o instanceof Uint8ClampedArray) ||
+         (o instanceof Int16Array) ||
+         (o instanceof Uint16Array) ||
+         (o instanceof Int32Array) ||
+         (o instanceof Uint32Array) ||
+         (o instanceof Float32Array) ||
+         (o instanceof Float64Array) ||
+         (o instanceof Int32x4Array) ||
+         (o instanceof Float32x4Array);
+}
+
+_SIMD_PRIVATE.isArrayBuffer = function(o) {
+  return (o instanceof ArrayBuffer);
+}
+
 _SIMD_PRIVATE.minNum = function(x, y) {
   return x != x ? y :
          y != y ? x :
@@ -1159,9 +1181,9 @@ SIMD.float32x4.not = function(a) {
   * @return {float32x4} New instance of float32x4.
   */
 SIMD.float32x4.load = function(tarray, index) {
-  if (!isTypedArray(tarray))
+  if (!_SIMD_PRIVATE.isTypedArray(tarray))
     throw new TypeError("The 1st argument must be a typed array.");
-  if (!isNumber(index))
+  if (!_SIMD_PRIVATE.isNumber(index))
     throw new TypeError("The 2nd argument must be a Number.");
   var bpe = tarray.BYTES_PER_ELEMENT;
   if (index < 0 || (index * bpe + 16) > tarray.byteLength)
@@ -1183,9 +1205,9 @@ SIMD.float32x4.load = function(tarray, index) {
   * @return {float32x4} New instance of float32x4.
   */
 SIMD.float32x4.loadX = function(tarray, index) {
-  if (!isTypedArray(tarray))
+  if (!_SIMD_PRIVATE.isTypedArray(tarray))
     throw new TypeError("The 1st argument must be a typed array.");
-  if (!isNumber(index))
+  if (!_SIMD_PRIVATE.isNumber(index))
     throw new TypeError("The 2nd argument must be a Number.");
   var bpe = tarray.BYTES_PER_ELEMENT;
   if (index < 0 || (index * bpe + 4) > tarray.byteLength)
@@ -1207,9 +1229,9 @@ SIMD.float32x4.loadX = function(tarray, index) {
   * @return {float32x4} New instance of float32x4.
   */
 SIMD.float32x4.loadXY = function(tarray, index) {
-  if (!isTypedArray(tarray))
+  if (!_SIMD_PRIVATE.isTypedArray(tarray))
     throw new TypeError("The 1st argument must be a typed array.");
-  if (!isNumber(index))
+  if (!_SIMD_PRIVATE.isNumber(index))
     throw new TypeError("The 2nd argument must be a Number.");
   var bpe = tarray.BYTES_PER_ELEMENT;
   if (index < 0 || (index * bpe + 8) > tarray.byteLength)
@@ -1231,9 +1253,9 @@ SIMD.float32x4.loadXY = function(tarray, index) {
   * @return {float32x4} New instance of float32x4.
   */
 SIMD.float32x4.loadXYZ = function(tarray, index) {
-  if (!isTypedArray(tarray))
+  if (!_SIMD_PRIVATE.isTypedArray(tarray))
     throw new TypeError("The 1st argument must be a typed array.");
-  if (!isNumber(index))
+  if (!_SIMD_PRIVATE.isNumber(index))
     throw new TypeError("The 2nd argument must be a Number.");
   var bpe = tarray.BYTES_PER_ELEMENT;
   if (index < 0 || (index * bpe + 12) > tarray.byteLength)
@@ -1256,9 +1278,9 @@ SIMD.float32x4.loadXYZ = function(tarray, index) {
   * @return {void}
   */
 SIMD.float32x4.store = function(tarray, index, value) {
-  if (!isTypedArray(tarray))
+  if (!_SIMD_PRIVATE.isTypedArray(tarray))
     throw new TypeError("The 1st argument must be a typed array.");
-  if (!isNumber(index))
+  if (!_SIMD_PRIVATE.isNumber(index))
     throw new TypeError("The 2nd argument must be a Number.");
   var bpe = tarray.BYTES_PER_ELEMENT;
   if (index < 0 || (index * bpe + 16) > tarray.byteLength)
@@ -1284,9 +1306,9 @@ SIMD.float32x4.store = function(tarray, index, value) {
   * @return {void}
   */
 SIMD.float32x4.storeX = function(tarray, index, value) {
-  if (!isTypedArray(tarray))
+  if (!_SIMD_PRIVATE.isTypedArray(tarray))
     throw new TypeError("The 1st argument must be a typed array.");
-  if (!isNumber(index))
+  if (!_SIMD_PRIVATE.isNumber(index))
     throw new TypeError("The 2nd argument must be a Number.");
   var bpe = tarray.BYTES_PER_ELEMENT;
   if (index < 0 || (index * bpe + 4) > tarray.byteLength)
@@ -1314,9 +1336,9 @@ SIMD.float32x4.storeX = function(tarray, index, value) {
   * @return {void}
   */
 SIMD.float32x4.storeXY = function(tarray, index, value) {
-  if (!isTypedArray(tarray))
+  if (!_SIMD_PRIVATE.isTypedArray(tarray))
     throw new TypeError("The 1st argument must be a typed array.");
-  if (!isNumber(index))
+  if (!_SIMD_PRIVATE.isNumber(index))
     throw new TypeError("The 2nd argument must be a Number.");
   var bpe = tarray.BYTES_PER_ELEMENT;
   if (index < 0 || (index * bpe + 8) > tarray.byteLength)
@@ -1340,9 +1362,9 @@ SIMD.float32x4.storeXY = function(tarray, index, value) {
   * @return {void}
   */
 SIMD.float32x4.storeXYZ = function(tarray, index, value) {
-  if (!isTypedArray(tarray))
+  if (!_SIMD_PRIVATE.isTypedArray(tarray))
     throw new TypeError("The 1st argument must be a typed array.");
-  if (!isNumber(index))
+  if (!_SIMD_PRIVATE.isNumber(index))
     throw new TypeError("The 2nd argument must be a Number.");
   var bpe = tarray.BYTES_PER_ELEMENT;
   if (index < 0 || (index * bpe + 12) > tarray.byteLength)
@@ -1716,9 +1738,9 @@ SIMD.float64x2.bitselect = function(t, trueValue, falseValue) {
   * @return {float64x2} New instance of float64x2.
   */
 SIMD.float64x2.load = function(tarray, index) {
-  if (!isTypedArray(tarray))
+  if (!_SIMD_PRIVATE.isTypedArray(tarray))
     throw new TypeError("The 1st argument must be a typed array.");
-  if (!isNumber(index))
+  if (!_SIMD_PRIVATE.isNumber(index))
     throw new TypeError("The 2nd argument must be a Number.");
   var bpe = tarray.BYTES_PER_ELEMENT;
   if (index < 0 || (index * bpe + 16) > tarray.byteLength)
@@ -1740,9 +1762,9 @@ SIMD.float64x2.load = function(tarray, index) {
   * @return {float64x2} New instance of float64x2.
   */
 SIMD.float64x2.loadX = function(tarray, index) {
-  if (!isTypedArray(tarray))
+  if (!_SIMD_PRIVATE.isTypedArray(tarray))
     throw new TypeError("The 1st argument must be a typed array.");
-  if (!isNumber(index))
+  if (!_SIMD_PRIVATE.isNumber(index))
     throw new TypeError("The 2nd argument must be a Number.");
   var bpe = tarray.BYTES_PER_ELEMENT;
   if (index < 0 || (index * bpe + 8) > tarray.byteLength)
@@ -1765,9 +1787,9 @@ SIMD.float64x2.loadX = function(tarray, index) {
   * @return {void}
   */
 SIMD.float64x2.store = function(tarray, index, value) {
-  if (!isTypedArray(tarray))
+  if (!_SIMD_PRIVATE.isTypedArray(tarray))
     throw new TypeError("The 1st argument must be a typed array.");
-  if (!isNumber(index))
+  if (!_SIMD_PRIVATE.isNumber(index))
     throw new TypeError("The 2nd argument must be a Number.");
   var bpe = tarray.BYTES_PER_ELEMENT;
   if (index < 0 || (index * bpe + 16) > tarray.byteLength)
@@ -1791,9 +1813,9 @@ SIMD.float64x2.store = function(tarray, index, value) {
   * @return {void}
   */
 SIMD.float64x2.storeX = function(tarray, index, value) {
-  if (!isTypedArray(tarray))
+  if (!_SIMD_PRIVATE.isTypedArray(tarray))
     throw new TypeError("The 1st argument must be a typed array.");
-  if (!isNumber(index))
+  if (!_SIMD_PRIVATE.isNumber(index))
     throw new TypeError("The 2nd argument must be a Number.");
   var bpe = tarray.BYTES_PER_ELEMENT;
   if (index < 0 || (index * bpe + 8) > tarray.byteLength)
@@ -2161,9 +2183,9 @@ SIMD.int32x4.shiftRightArithmeticByScalar = function(a, bits) {
   * @return {int32x4} New instance of int32x4.
   */
 SIMD.int32x4.load = function(tarray, index) {
-  if (!isTypedArray(tarray))
+  if (!_SIMD_PRIVATE.isTypedArray(tarray))
     throw new TypeError("The 1st argument must be a typed array.");
-  if (!isNumber(index))
+  if (!_SIMD_PRIVATE.isNumber(index))
     throw new TypeError("The 2nd argument must be a Number.");
   var bpe = tarray.BYTES_PER_ELEMENT;
   if (index < 0 || (index * bpe + 16) > tarray.byteLength)
@@ -2185,9 +2207,9 @@ SIMD.int32x4.load = function(tarray, index) {
   * @return {int32x4} New instance of int32x4.
   */
 SIMD.int32x4.loadX = function(tarray, index) {
-  if (!isTypedArray(tarray))
+  if (!_SIMD_PRIVATE.isTypedArray(tarray))
     throw new TypeError("The 1st argument must be a typed array.");
-  if (!isNumber(index))
+  if (!_SIMD_PRIVATE.isNumber(index))
     throw new TypeError("The 2nd argument must be a Number.");
   var bpe = tarray.BYTES_PER_ELEMENT;
   if (index < 0 || (index * bpe + 4) > tarray.byteLength)
@@ -2209,9 +2231,9 @@ SIMD.int32x4.loadX = function(tarray, index) {
   * @return {int32x4} New instance of int32x4.
   */
 SIMD.int32x4.loadXY = function(tarray, index) {
-  if (!isTypedArray(tarray))
+  if (!_SIMD_PRIVATE.isTypedArray(tarray))
     throw new TypeError("The 1st argument must be a typed array.");
-  if (!isNumber(index))
+  if (!_SIMD_PRIVATE.isNumber(index))
     throw new TypeError("The 2nd argument must be a Number.");
   var bpe = tarray.BYTES_PER_ELEMENT;
   if (index < 0 || (index * bpe + 8) > tarray.byteLength)
@@ -2233,9 +2255,9 @@ SIMD.int32x4.loadXY = function(tarray, index) {
   * @return {int32x4} New instance of int32x4.
   */
 SIMD.int32x4.loadXYZ = function(tarray, index) {
-  if (!isTypedArray(tarray))
+  if (!_SIMD_PRIVATE.isTypedArray(tarray))
     throw new TypeError("The 1st argument must be a typed array.");
-  if (!isNumber(index))
+  if (!_SIMD_PRIVATE.isNumber(index))
     throw new TypeError("The 2nd argument must be a Number.");
   var bpe = tarray.BYTES_PER_ELEMENT;
   if (index < 0 || (index * bpe + 12) > tarray.byteLength)
@@ -2258,9 +2280,9 @@ SIMD.int32x4.loadXYZ = function(tarray, index) {
   * @return {void}
   */
 SIMD.int32x4.store = function(tarray, index, value) {
-  if (!isTypedArray(tarray))
+  if (!_SIMD_PRIVATE.isTypedArray(tarray))
     throw new TypeError("The 1st argument must be a typed array.");
-  if (!isNumber(index))
+  if (!_SIMD_PRIVATE.isNumber(index))
     throw new TypeError("The 2nd argument must be a Number.");
   var bpe = tarray.BYTES_PER_ELEMENT;
   if (index < 0 || (index * bpe + 16) > tarray.byteLength)
@@ -2286,9 +2308,9 @@ SIMD.int32x4.store = function(tarray, index, value) {
   * @return {void}
   */
 SIMD.int32x4.storeX = function(tarray, index, value) {
-  if (!isTypedArray(tarray))
+  if (!_SIMD_PRIVATE.isTypedArray(tarray))
     throw new TypeError("The 1st argument must be a typed array.");
-  if (!isNumber(index))
+  if (!_SIMD_PRIVATE.isNumber(index))
     throw new TypeError("The 2nd argument must be a Number.");
   var bpe = tarray.BYTES_PER_ELEMENT;
   if (index < 0 || (index * bpe + 4) > tarray.byteLength)
@@ -2316,9 +2338,9 @@ SIMD.int32x4.storeX = function(tarray, index, value) {
   * @return {void}
   */
 SIMD.int32x4.storeXY = function(tarray, index, value) {
-  if (!isTypedArray(tarray))
+  if (!_SIMD_PRIVATE.isTypedArray(tarray))
     throw new TypeError("The 1st argument must be a typed array.");
-  if (!isNumber(index))
+  if (!_SIMD_PRIVATE.isNumber(index))
     throw new TypeError("The 2nd argument must be a Number.");
   var bpe = tarray.BYTES_PER_ELEMENT;
   if (index < 0 || (index * bpe + 8) > tarray.byteLength)
@@ -2342,9 +2364,9 @@ SIMD.int32x4.storeXY = function(tarray, index, value) {
   * @return {void}
   */
 SIMD.int32x4.storeXYZ = function(tarray, index, value) {
-  if (!isTypedArray(tarray))
+  if (!_SIMD_PRIVATE.isTypedArray(tarray))
     throw new TypeError("The 1st argument must be a typed array.");
-  if (!isNumber(index))
+  if (!_SIMD_PRIVATE.isNumber(index))
     throw new TypeError("The 2nd argument must be a Number.");
   var bpe = tarray.BYTES_PER_ELEMENT;
   if (index < 0 || (index * bpe + 12) > tarray.byteLength)
@@ -2601,7 +2623,7 @@ SIMD.int16x8.shiftRightArithmeticByScalar = function(a, bits) {
   * @return {int16x8} New instance of int16x8.
   */
 SIMD.int16x8.load = function(tarray, index) {
-  if (!isTypedArray(tarray))
+  if (!_SIMD_PRIVATE.isTypedArray(tarray))
     throw new TypeError("The 1st argument must be a typed array.");
   if (!_SIMD_PRIVATE.isNumber(index))
     throw new TypeError("The 2nd argument must be a Number.");
@@ -2627,9 +2649,9 @@ SIMD.int16x8.load = function(tarray, index) {
   * @return {void}
   */
 SIMD.int16x8.store = function(tarray, index, value) {
-  if (!isTypedArray(tarray))
+  if (!_SIMD_PRIVATE.isTypedArray(tarray))
     throw new TypeError("The 1st argument must be a typed array.");
-  if (!isNumber(index))
+  if (!_SIMD_PRIVATE.isNumber(index))
     throw new TypeError("The 2nd argument must be a Number.");
   var bpe = tarray.BYTES_PER_ELEMENT;
   if (index < 0 || (index * bpe + 16) > tarray.byteLength)
@@ -2956,7 +2978,7 @@ SIMD.int8x16.shiftRightArithmeticByScalar = function(a, bits) {
   * @return {int8x16} New instance of int8x16.
   */
 SIMD.int8x16.load = function(tarray, index) {
-  if (!isTypedArray(tarray))
+  if (!_SIMD_PRIVATE.isTypedArray(tarray))
     throw new TypeError("The 1st argument must be a typed array.");
   if (!_SIMD_PRIVATE.isNumber(index))
     throw new TypeError("The 2nd argument must be a Number.");
@@ -2984,9 +3006,9 @@ SIMD.int8x16.load = function(tarray, index) {
   * @return {void}
   */
 SIMD.int8x16.store = function(tarray, index, value) {
-  if (!isTypedArray(tarray))
+  if (!_SIMD_PRIVATE.isTypedArray(tarray))
     throw new TypeError("The 1st argument must be a typed array.");
-  if (!isNumber(index))
+  if (!_SIMD_PRIVATE.isNumber(index))
     throw new TypeError("The 2nd argument must be a Number.");
   var bpe = tarray.BYTES_PER_ELEMENT;
   if (index < 0 || (index * bpe + 16) > tarray.byteLength)
@@ -3252,35 +3274,13 @@ Object.defineProperty(SIMD.int8x16.prototype, 'signMask', {
   }
 });
 
-function isNumber(o) {
-  return typeof o === "number" || (typeof o === "object" && o.constructor === Number);
-}
-
-function isTypedArray(o) {
-  return (o instanceof Int8Array) ||
-         (o instanceof Uint8Array) ||
-         (o instanceof Uint8ClampedArray) ||
-         (o instanceof Int16Array) ||
-         (o instanceof Uint16Array) ||
-         (o instanceof Int32Array) ||
-         (o instanceof Uint32Array) ||
-         (o instanceof Float32Array) ||
-         (o instanceof Float64Array) ||
-         (o instanceof Int32x4Array) ||
-         (o instanceof Float32x4Array);
-}
-
-function isArrayBuffer(o) {
-  return (o instanceof ArrayBuffer);
-}
-
 function Float32x4Array(a, b, c) {
-  if (isNumber(a)) {
+  if (_SIMD_PRIVATE.isNumber(a)) {
     this.storage_ = new Float32Array(a*4);
     this.length_ = a;
     this.byteOffset_ = 0;
     return;
-  } else if (isTypedArray(a)) {
+  } else if (_SIMD_PRIVATE.isTypedArray(a)) {
     if (!(a instanceof Float32x4Array)) {
       throw "Copying typed array of non-Float32x4Array is unimplemented.";
     }
@@ -3291,7 +3291,7 @@ function Float32x4Array(a, b, c) {
     for (var i = 0; i < a.length*4; i++) {
       this.storage_[i] = a.storage_[i];
     }
-  } else if (isArrayBuffer(a)) {
+  } else if (_SIMD_PRIVATE.isArrayBuffer(a)) {
     if ((b != undefined) && (b % Float32x4Array.BYTES_PER_ELEMENT) != 0) {
       throw "byteOffset must be a multiple of 16.";
     }
@@ -3367,34 +3367,12 @@ Float32x4Array.prototype.setAt = function(i, v) {
 
 function Int32x4Array(a, b, c) {
 
-  function isNumber(o) {
-      return typeof o === "number" || (typeof o === "object" && o.constructor === Number);
-  }
-
-  function isTypedArray(o) {
-    return (o instanceof Int8Array) ||
-           (o instanceof Uint8Array) ||
-           (o instanceof Uint8ClampedArray) ||
-           (o instanceof Int16Array) ||
-           (o instanceof Uint16Array) ||
-           (o instanceof Int32Array) ||
-           (o instanceof Uint32Array) ||
-           (o instanceof Float32Array) ||
-           (o instanceof Float64Array) ||
-           (o instanceof Int32x4Array) ||
-           (o instanceof Float32x4Array);
-  }
-
-  function isArrayBuffer(o) {
-    return (o instanceof ArrayBuffer);
-  }
-
-  if (isNumber(a)) {
+  if (_SIMD_PRIVATE.isNumber(a)) {
     this.storage_ = new Int32Array(a*4);
     this.length_ = a;
     this.byteOffset_ = 0;
     return;
-  } else if (isTypedArray(a)) {
+  } else if (_SIMD_PRIVATE.isTypedArray(a)) {
     if (!(a instanceof Int32x4Array)) {
       throw "Copying typed array of non-Int32x4Array is unimplemented.";
     }
@@ -3405,7 +3383,7 @@ function Int32x4Array(a, b, c) {
     for (var i = 0; i < a.length*4; i++) {
       this.storage_[i] = a.storage_[i];
     }
-  } else if (isArrayBuffer(a)) {
+  } else if (_SIMD_PRIVATE.isArrayBuffer(a)) {
     if ((b != undefined) && (b % Int32x4Array.BYTES_PER_ELEMENT) != 0) {
       throw "byteOffset must be a multiple of 16.";
     }
@@ -3483,7 +3461,7 @@ function isDataView(v) {
 }
 
 DataView.prototype.getFloat32x4 = function(byteOffset, littleEndian) {
-  if (!isDataView(this))
+  if (!_SIMD_PRIVATE.isDataView(this))
     throw new TypeError("This is not a DataView.");
   if (byteOffset < 0 || (byteOffset + 16) > this.buffer.byteLength)
     throw new RangeError("The value of byteOffset is invalid.");
@@ -3496,7 +3474,7 @@ DataView.prototype.getFloat32x4 = function(byteOffset, littleEndian) {
 }
 
 DataView.prototype.getFloat64x2 = function(byteOffset, littleEndian) {
-  if (!isDataView(this))
+  if (!_SIMD_PRIVATE.isDataView(this))
     throw new TypeError("This is not a DataView.");
   if (byteOffset < 0 || (byteOffset + 16) > this.buffer.byteLength)
     throw new RangeError("The value of byteOffset is invalid.");
@@ -3507,7 +3485,7 @@ DataView.prototype.getFloat64x2 = function(byteOffset, littleEndian) {
 }
 
 DataView.prototype.getInt32x4 = function(byteOffset, littleEndian) {
-  if (!isDataView(this))
+  if (!_SIMD_PRIVATE.isDataView(this))
     throw new TypeError("This is not a DataView.");
   if (byteOffset < 0 || (byteOffset + 16) > this.buffer.byteLength)
     throw new RangeError("The value of byteOffset is invalid.");
@@ -3520,7 +3498,7 @@ DataView.prototype.getInt32x4 = function(byteOffset, littleEndian) {
 }
 
 DataView.prototype.getInt16x8 = function(byteOffset, littleEndian) {
-  if (!isDataView(this))
+  if (!_SIMD_PRIVATE.isDataView(this))
     throw new TypeError("This is not a DataView.");
   if (byteOffset < 0 || (byteOffset + 16) > this.buffer.byteLength)
     throw new RangeError("The value of byteOffset is invalid.");
@@ -3537,7 +3515,7 @@ DataView.prototype.getInt16x8 = function(byteOffset, littleEndian) {
 }
 
 DataView.prototype.getInt8x16 = function(byteOffset, littleEndian) {
-  if (!isDataView(this))
+  if (!_SIMD_PRIVATE.isDataView(this))
     throw new TypeError("This is not a DataView.");
   if (byteOffset < 0 || (byteOffset + 16) > this.buffer.byteLength)
     throw new RangeError("The value of byteOffset is invalid.");
@@ -3562,7 +3540,7 @@ DataView.prototype.getInt8x16 = function(byteOffset, littleEndian) {
 }
 
 DataView.prototype.setFloat32x4 = function(byteOffset, value, littleEndian) {
-  if (!isDataView(this))
+  if (!_SIMD_PRIVATE.isDataView(this))
     throw new TypeError("This is not a DataView.");
   if (byteOffset < 0 || (byteOffset + 16) > this.buffer.byteLength)
     throw new RangeError("The value of byteOffset is invalid.");
@@ -3576,7 +3554,7 @@ DataView.prototype.setFloat32x4 = function(byteOffset, value, littleEndian) {
 }
 
 DataView.prototype.setFloat64x2 = function(byteOffset, value, littleEndian) {
-  if (!isDataView(this))
+  if (!_SIMD_PRIVATE.isDataView(this))
     throw new TypeError("This is not a DataView.");
   if (byteOffset < 0 || (byteOffset + 16) > this.buffer.byteLength)
     throw new RangeError("The value of byteOffset is invalid.");
@@ -3588,7 +3566,7 @@ DataView.prototype.setFloat64x2 = function(byteOffset, value, littleEndian) {
 }
 
 DataView.prototype.setInt32x4 = function(byteOffset, value, littleEndian) {
-  if (!isDataView(this))
+  if (!_SIMD_PRIVATE.isDataView(this))
     throw new TypeError("This is not a DataView.");
   if (byteOffset < 0 || (byteOffset + 16) > this.buffer.byteLength)
     throw new RangeError("The value of byteOffset is invalid.");
@@ -3602,7 +3580,7 @@ DataView.prototype.setInt32x4 = function(byteOffset, value, littleEndian) {
 }
 
 DataView.prototype.setInt16x8 = function(byteOffset, value, littleEndian) {
-  if (!isDataView(this))
+  if (!_SIMD_PRIVATE.isDataView(this))
     throw new TypeError("This is not a DataView.");
   if (byteOffset < 0 || (byteOffset + 16) > this.buffer.byteLength)
     throw new RangeError("The value of byteOffset is invalid.");
@@ -3620,7 +3598,7 @@ DataView.prototype.setInt16x8 = function(byteOffset, value, littleEndian) {
 }
 
 DataView.prototype.setInt8x16 = function(byteOffset, value, littleEndian) {
-  if (!isDataView(this))
+  if (!_SIMD_PRIVATE.isDataView(this))
     throw new TypeError("This is not a DataView.");
   if (byteOffset < 0 || (byteOffset + 16) > this.buffer.byteLength)
     throw new RangeError("The value of byteOffset is invalid.");
