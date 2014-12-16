@@ -36,7 +36,7 @@ _PRIVATE._i32x8 = new Int32Array(8);
 _PRIVATE._i16x16 = new Int16Array(16);
 _PRIVATE._i8x32 = new Int8Array(32);
 
-if (typeof Math.fround != 'undefined') {
+if (typeof Math.fround !== 'undefined') {
   _PRIVATE.truncatef32 = Math.fround;
 } else {
   _PRIVATE._f32 = new Float32Array(1);
@@ -3253,7 +3253,7 @@ Object.defineProperty(SIMD.int8x16.prototype, 'signMask', {
 });
 
 function isNumber(o) {
-    return typeof o == "number" || (typeof o == "object" && o.constructor === Number);
+    return typeof o === "number" || (typeof o === "object" && o.constructor === Number);
 }
 
 function isTypedArray(o) {
@@ -3368,7 +3368,7 @@ Float32x4Array.prototype.setAt = function(i, v) {
 function Int32x4Array(a, b, c) {
 
   function isNumber(o) {
-      return typeof o == "number" || (typeof o == "object" && o.constructor === Number);
+      return typeof o === "number" || (typeof o === "object" && o.constructor === Number);
   }
 
   function isTypedArray(o) {
@@ -3487,7 +3487,7 @@ DataView.prototype.getFloat32x4 = function(byteOffset, littleEndian) {
     throw new TypeError("This is not a DataView.");
   if (byteOffset < 0 || (byteOffset + 16) > this.buffer.byteLength)
     throw new RangeError("The value of byteOffset is invalid.");
-  if (typeof littleEndian == 'undefined')
+  if (typeof littleEndian === 'undefined')
     littleEndian = false;
   return SIMD.float32x4(this.getFloat32(byteOffset, littleEndian),
                         this.getFloat32(byteOffset + 4, littleEndian),
@@ -3500,7 +3500,7 @@ DataView.prototype.getFloat64x2 = function(byteOffset, littleEndian) {
     throw new TypeError("This is not a DataView.");
   if (byteOffset < 0 || (byteOffset + 16) > this.buffer.byteLength)
     throw new RangeError("The value of byteOffset is invalid.");
-  if (typeof littleEndian == 'undefined')
+  if (typeof littleEndian === 'undefined')
     littleEndian = false;
   return SIMD.float64x2(this.getFloat64(byteOffset, littleEndian),
                         this.getFloat64(byteOffset + 8, littleEndian));
@@ -3511,7 +3511,7 @@ DataView.prototype.getInt32x4 = function(byteOffset, littleEndian) {
     throw new TypeError("This is not a DataView.");
   if (byteOffset < 0 || (byteOffset + 16) > this.buffer.byteLength)
     throw new RangeError("The value of byteOffset is invalid.");
-  if (typeof littleEndian == 'undefined')
+  if (typeof littleEndian === 'undefined')
     littleEndian = false;
   return SIMD.int32x4(this.getInt32(byteOffset, littleEndian),
                       this.getInt32(byteOffset + 4, littleEndian),
@@ -3524,7 +3524,7 @@ DataView.prototype.getInt16x8 = function(byteOffset, littleEndian) {
     throw new TypeError("This is not a DataView.");
   if (byteOffset < 0 || (byteOffset + 16) > this.buffer.byteLength)
     throw new RangeError("The value of byteOffset is invalid.");
-  if (typeof littleEndian == 'undefined')
+  if (typeof littleEndian === 'undefined')
     littleEndian = false;
   return SIMD.int16x8(this.getInt16(byteOffset, littleEndian),
                       this.getInt16(byteOffset + 2, littleEndian),
@@ -3541,7 +3541,7 @@ DataView.prototype.getInt8x16 = function(byteOffset, littleEndian) {
     throw new TypeError("This is not a DataView.");
   if (byteOffset < 0 || (byteOffset + 16) > this.buffer.byteLength)
     throw new RangeError("The value of byteOffset is invalid.");
-  if (typeof littleEndian == 'undefined')
+  if (typeof littleEndian === 'undefined')
     littleEndian = false;
   return SIMD.int8x16(this.getInt8(byteOffset, littleEndian),
                       this.getInt8(byteOffset + 1, littleEndian),
@@ -3567,7 +3567,7 @@ DataView.prototype.setFloat32x4 = function(byteOffset, value, littleEndian) {
   if (byteOffset < 0 || (byteOffset + 16) > this.buffer.byteLength)
     throw new RangeError("The value of byteOffset is invalid.");
   checkFloat32x4(value);
-  if (typeof littleEndian == 'undefined')
+  if (typeof littleEndian === 'undefined')
     littleEndian = false;
   this.setFloat32(byteOffset, value.x, littleEndian);
   this.setFloat32(byteOffset + 4, value.y, littleEndian);
@@ -3581,7 +3581,7 @@ DataView.prototype.setFloat64x2 = function(byteOffset, value, littleEndian) {
   if (byteOffset < 0 || (byteOffset + 16) > this.buffer.byteLength)
     throw new RangeError("The value of byteOffset is invalid.");
   checkFloat64x2(value);
-  if (typeof littleEndian == 'undefined')
+  if (typeof littleEndian === 'undefined')
     littleEndian = false;
   this.setFloat64(byteOffset, value.x, littleEndian);
   this.setFloat64(byteOffset + 8, value.y, littleEndian);
@@ -3593,7 +3593,7 @@ DataView.prototype.setInt32x4 = function(byteOffset, value, littleEndian) {
   if (byteOffset < 0 || (byteOffset + 16) > this.buffer.byteLength)
     throw new RangeError("The value of byteOffset is invalid.");
   checkInt32x4(value);
-  if (typeof littleEndian == 'undefined')
+  if (typeof littleEndian === 'undefined')
     littleEndian = false;
   this.setInt32(byteOffset, value.x, littleEndian);
   this.setInt32(byteOffset + 4, value.y, littleEndian);
@@ -3607,7 +3607,7 @@ DataView.prototype.setInt16x8 = function(byteOffset, value, littleEndian) {
   if (byteOffset < 0 || (byteOffset + 16) > this.buffer.byteLength)
     throw new RangeError("The value of byteOffset is invalid.");
   checkInt16x8(value);
-  if (typeof littleEndian == 'undefined')
+  if (typeof littleEndian === 'undefined')
     littleEndian = false;
   this.setInt16(byteOffset, value.s0, littleEndian);
   this.setInt16(byteOffset + 2, value.s1, littleEndian);
@@ -3625,7 +3625,7 @@ DataView.prototype.setInt8x16 = function(byteOffset, value, littleEndian) {
   if (byteOffset < 0 || (byteOffset + 16) > this.buffer.byteLength)
     throw new RangeError("The value of byteOffset is invalid.");
   checkInt8x16(value);
-  if (typeof littleEndian == 'undefined')
+  if (typeof littleEndian === 'undefined')
     littleEndian = false;
   this.setInt8(byteOffset, value.s0, littleEndian);
   this.setInt8(byteOffset + 1, value.s1, littleEndian);
