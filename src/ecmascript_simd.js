@@ -93,56 +93,56 @@ _SIMD_PRIVATE.frombool = function(x) {
 
 _SIMD_PRIVATE.saveFloat64x2 = function(x) {
   x = SIMD.float64x2(x);
-  _SIMD_PRIVATE._f64x2[0] = x.x_;
-  _SIMD_PRIVATE._f64x2[1] = x.y_;
+  _SIMD_PRIVATE._f64x2[0] = x.x;
+  _SIMD_PRIVATE._f64x2[1] = x.y;
 }
 
 _SIMD_PRIVATE.saveFloat32x4 = function(x) {
   x = SIMD.float32x4(x);
-  _SIMD_PRIVATE._f32x4[0] = x.x_;
-  _SIMD_PRIVATE._f32x4[1] = x.y_;
-  _SIMD_PRIVATE._f32x4[2] = x.z_;
-  _SIMD_PRIVATE._f32x4[3] = x.w_;
+  _SIMD_PRIVATE._f32x4[0] = x.x;
+  _SIMD_PRIVATE._f32x4[1] = x.y;
+  _SIMD_PRIVATE._f32x4[2] = x.z;
+  _SIMD_PRIVATE._f32x4[3] = x.w;
 }
 
 _SIMD_PRIVATE.saveInt32x4 = function(x) {
   x = SIMD.int32x4(x);
-  _SIMD_PRIVATE._i32x4[0] = x.x_;
-  _SIMD_PRIVATE._i32x4[1] = x.y_;
-  _SIMD_PRIVATE._i32x4[2] = x.z_;
-  _SIMD_PRIVATE._i32x4[3] = x.w_;
+  _SIMD_PRIVATE._i32x4[0] = x.x;
+  _SIMD_PRIVATE._i32x4[1] = x.y;
+  _SIMD_PRIVATE._i32x4[2] = x.z;
+  _SIMD_PRIVATE._i32x4[3] = x.w;
 }
 
 _SIMD_PRIVATE.saveInt16x8 = function(x) {
   x = SIMD.int16x8(x);
-  _SIMD_PRIVATE._i16x8[0] = x.s0_;
-  _SIMD_PRIVATE._i16x8[1] = x.s1_;
-  _SIMD_PRIVATE._i16x8[2] = x.s2_;
-  _SIMD_PRIVATE._i16x8[3] = x.s3_;
-  _SIMD_PRIVATE._i16x8[4] = x.s4_;
-  _SIMD_PRIVATE._i16x8[5] = x.s5_;
-  _SIMD_PRIVATE._i16x8[6] = x.s6_;
-  _SIMD_PRIVATE._i16x8[7] = x.s7_;
+  _SIMD_PRIVATE._i16x8[0] = x.s0;
+  _SIMD_PRIVATE._i16x8[1] = x.s1;
+  _SIMD_PRIVATE._i16x8[2] = x.s2;
+  _SIMD_PRIVATE._i16x8[3] = x.s3;
+  _SIMD_PRIVATE._i16x8[4] = x.s4;
+  _SIMD_PRIVATE._i16x8[5] = x.s5;
+  _SIMD_PRIVATE._i16x8[6] = x.s6;
+  _SIMD_PRIVATE._i16x8[7] = x.s7;
 }
 
 _SIMD_PRIVATE.saveInt8x16 = function(x) {
   x = SIMD.int8x16(x);
-  _SIMD_PRIVATE._i8x16[0] = x.s0_;
-  _SIMD_PRIVATE._i8x16[1] = x.s1_;
-  _SIMD_PRIVATE._i8x16[2] = x.s2_;
-  _SIMD_PRIVATE._i8x16[3] = x.s3_;
-  _SIMD_PRIVATE._i8x16[4] = x.s4_;
-  _SIMD_PRIVATE._i8x16[5] = x.s5_;
-  _SIMD_PRIVATE._i8x16[6] = x.s6_;
-  _SIMD_PRIVATE._i8x16[7] = x.s7_;
-  _SIMD_PRIVATE._i8x16[8] = x.s8_;
-  _SIMD_PRIVATE._i8x16[9] = x.s9_;
-  _SIMD_PRIVATE._i8x16[10] = x.s10_;
-  _SIMD_PRIVATE._i8x16[11] = x.s11_;
-  _SIMD_PRIVATE._i8x16[12] = x.s12_;
-  _SIMD_PRIVATE._i8x16[13] = x.s13_;
-  _SIMD_PRIVATE._i8x16[14] = x.s14_;
-  _SIMD_PRIVATE._i8x16[15] = x.s15_;
+  _SIMD_PRIVATE._i8x16[0] = x.s0;
+  _SIMD_PRIVATE._i8x16[1] = x.s1;
+  _SIMD_PRIVATE._i8x16[2] = x.s2;
+  _SIMD_PRIVATE._i8x16[3] = x.s3;
+  _SIMD_PRIVATE._i8x16[4] = x.s4;
+  _SIMD_PRIVATE._i8x16[5] = x.s5;
+  _SIMD_PRIVATE._i8x16[6] = x.s6;
+  _SIMD_PRIVATE._i8x16[7] = x.s7;
+  _SIMD_PRIVATE._i8x16[8] = x.s8;
+  _SIMD_PRIVATE._i8x16[9] = x.s9;
+  _SIMD_PRIVATE._i8x16[10] = x.s10;
+  _SIMD_PRIVATE._i8x16[11] = x.s11;
+  _SIMD_PRIVATE._i8x16[12] = x.s12;
+  _SIMD_PRIVATE._i8x16[13] = x.s13;
+  _SIMD_PRIVATE._i8x16[14] = x.s14;
+  _SIMD_PRIVATE._i8x16[15] = x.s15;
 }
 
 _SIMD_PRIVATE.restoreFloat64x2 = function() {
@@ -216,7 +216,7 @@ SIMD.float32x4.splat = function(s) {
   */
 SIMD.float32x4.fromFloat64x2 = function(t) {
   t = SIMD.float64x2(t);
-  return SIMD.float32x4(t.x_, t.y_, 0, 0);
+  return SIMD.float32x4(t.x, t.y, 0, 0);
 }
 
 /**
@@ -225,7 +225,7 @@ SIMD.float32x4.fromFloat64x2 = function(t) {
   */
 SIMD.float32x4.fromInt32x4 = function(t) {
   t = SIMD.int32x4(t);
-  return SIMD.float32x4(t.x_, t.y_, t.z_, t.w_);
+  return SIMD.float32x4(t.x, t.y, t.z, t.w);
 }
 
 /**
@@ -303,7 +303,7 @@ SIMD.float64x2.splat = function(s) {
   */
 SIMD.float64x2.fromFloat32x4 = function(t) {
   t = SIMD.float32x4(t);
-  return SIMD.float64x2(t.x_, t.y_);
+  return SIMD.float64x2(t.x, t.y);
 }
 
 /**
@@ -312,7 +312,7 @@ SIMD.float64x2.fromFloat32x4 = function(t) {
   */
 SIMD.float64x2.fromInt32x4 = function(t) {
   t = SIMD.int32x4(t);
-  return SIMD.float64x2(t.x_, t.y_);
+  return SIMD.float64x2(t.x, t.y);
 }
 
 /**
@@ -409,7 +409,7 @@ SIMD.int32x4.splat = function(s) {
   */
 SIMD.int32x4.fromFloat32x4 = function(t) {
   t = SIMD.float32x4(t);
-  return SIMD.int32x4(t.x_, t.y_, t.z_, t.w_);
+  return SIMD.int32x4(t.x, t.y, t.z, t.w);
 }
 
 /**
@@ -418,7 +418,7 @@ SIMD.int32x4.fromFloat32x4 = function(t) {
   */
 SIMD.int32x4.fromFloat64x2 = function(t) {
   t = SIMD.float64x2(t);
-  return SIMD.int32x4(t.x_, t.y_, 0, 0);
+  return SIMD.int32x4(t.x, t.y, 0, 0);
 }
 
 /**
@@ -895,10 +895,10 @@ SIMD.float32x4.sqrt = function(t) {
   */
 SIMD.float32x4.swizzle = function(t, x, y, z, w) {
   t = SIMD.float32x4(t);
-  _SIMD_PRIVATE._f32x4[0] = t.x_;
-  _SIMD_PRIVATE._f32x4[1] = t.y_;
-  _SIMD_PRIVATE._f32x4[2] = t.z_;
-  _SIMD_PRIVATE._f32x4[3] = t.w_;
+  _SIMD_PRIVATE._f32x4[0] = t.x;
+  _SIMD_PRIVATE._f32x4[1] = t.y;
+  _SIMD_PRIVATE._f32x4[2] = t.z;
+  _SIMD_PRIVATE._f32x4[3] = t.w;
   var storage = _SIMD_PRIVATE._f32x4;
   return SIMD.float32x4(storage[x], storage[y], storage[z], storage[w]);
 }
@@ -916,14 +916,14 @@ SIMD.float32x4.shuffle = function(t1, t2, x, y, z, w) {
   t1 = SIMD.float32x4(t1);
   t2 = SIMD.float32x4(t2);
   var storage = _SIMD_PRIVATE._f32x8;
-  storage[0] = t1.x_;
-  storage[1] = t1.y_;
-  storage[2] = t1.z_;
-  storage[3] = t1.w_;
-  storage[4] = t2.x_;
-  storage[5] = t2.y_;
-  storage[6] = t2.z_;
-  storage[7] = t2.w_;
+  storage[0] = t1.x;
+  storage[1] = t1.y;
+  storage[2] = t1.z;
+  storage[3] = t1.w;
+  storage[4] = t2.x;
+  storage[5] = t2.y;
+  storage[6] = t2.z;
+  storage[7] = t2.w;
   return SIMD.float32x4(storage[x], storage[y], storage[z], storage[w]);
 }
 
@@ -1546,8 +1546,8 @@ SIMD.float64x2.sqrt = function(t) {
 SIMD.float64x2.swizzle = function(t, x, y) {
   t = SIMD.float64x2(t);
   var storage = _SIMD_PRIVATE._f64x2;
-  storage[0] = t.x_;
-  storage[1] = t.y_;
+  storage[0] = t.x;
+  storage[1] = t.y;
   return SIMD.float64x2(storage[x], storage[y]);
 }
 
@@ -1562,10 +1562,10 @@ SIMD.float64x2.shuffle = function(t1, t2, x, y) {
   t1 = SIMD.float64x2(t1);
   t2 = SIMD.float64x2(t2);
   var storage = _SIMD_PRIVATE._f64x4;
-  storage[0] = t1.x_;
-  storage[1] = t1.y_;
-  storage[2] = t2.x_;
-  storage[3] = t2.y_;
+  storage[0] = t1.x;
+  storage[1] = t1.y;
+  storage[2] = t2.x;
+  storage[3] = t2.y;
   return SIMD.float64x2(storage[x], storage[y]);
 }
 
@@ -1907,10 +1907,10 @@ SIMD.int32x4.mul = function(a, b) {
 SIMD.int32x4.swizzle = function(t, x, y, z, w) {
   t = SIMD.int32x4(t);
   var storage = _SIMD_PRIVATE._i32x4;
-  storage[0] = t.x_;
-  storage[1] = t.y_;
-  storage[2] = t.z_;
-  storage[3] = t.w_;
+  storage[0] = t.x;
+  storage[1] = t.y;
+  storage[2] = t.z;
+  storage[3] = t.w;
   return SIMD.int32x4(storage[x], storage[y], storage[z], storage[w]);
 }
 
@@ -1927,14 +1927,14 @@ SIMD.int32x4.shuffle = function(t1, t2, x, y, z, w) {
   t1 = SIMD.int32x4(t1);
   t2 = SIMD.int32x4(t2);
   var storage = _SIMD_PRIVATE._i32x8;
-  storage[0] = t1.x_;
-  storage[1] = t1.y_;
-  storage[2] = t1.z_;
-  storage[3] = t1.w_;
-  storage[4] = t2.x_;
-  storage[5] = t2.y_;
-  storage[6] = t2.z_;
-  storage[7] = t2.w_;
+  storage[0] = t1.x;
+  storage[1] = t1.y;
+  storage[2] = t1.z;
+  storage[3] = t1.w;
+  storage[4] = t2.x;
+  storage[5] = t2.y;
+  storage[6] = t2.z;
+  storage[7] = t2.w;
   return SIMD.float32x4(storage[x], storage[y], storage[z], storage[w]);
 }
 
@@ -3084,19 +3084,19 @@ Object.defineProperty(SIMD.int32x4.prototype, 'w', {
 });
 
 Object.defineProperty(SIMD.int32x4.prototype, 'flagX', {
-  get: function() { return _SIMD_PRIVATE.tobool(this.x_); }
+  get: function() { return _SIMD_PRIVATE.tobool(this.x); }
 });
 
 Object.defineProperty(SIMD.int32x4.prototype, 'flagY', {
-  get: function() { return _SIMD_PRIVATE.tobool(this.y_); }
+  get: function() { return _SIMD_PRIVATE.tobool(this.y); }
 });
 
 Object.defineProperty(SIMD.int32x4.prototype, 'flagZ', {
-  get: function() { return _SIMD_PRIVATE.tobool(this.z_); }
+  get: function() { return _SIMD_PRIVATE.tobool(this.z); }
 });
 
 Object.defineProperty(SIMD.int32x4.prototype, 'flagW', {
-  get: function() { return _SIMD_PRIVATE.tobool(this.w_); }
+  get: function() { return _SIMD_PRIVATE.tobool(this.w); }
 });
 
 /**
@@ -3104,10 +3104,10 @@ Object.defineProperty(SIMD.int32x4.prototype, 'flagW', {
   */
 Object.defineProperty(SIMD.int32x4.prototype, 'signMask', {
   get: function() {
-    var mx = _SIMD_PRIVATE.tobool(this.x_);
-    var my = _SIMD_PRIVATE.tobool(this.y_);
-    var mz = _SIMD_PRIVATE.tobool(this.z_);
-    var mw = _SIMD_PRIVATE.tobool(this.w_);
+    var mx = _SIMD_PRIVATE.tobool(this.x);
+    var my = _SIMD_PRIVATE.tobool(this.y);
+    var mz = _SIMD_PRIVATE.tobool(this.z);
+    var mw = _SIMD_PRIVATE.tobool(this.w);
     return mx | my << 1 | mz << 2 | mw << 3;
   }
 });
@@ -3149,14 +3149,14 @@ Object.defineProperty(SIMD.int16x8.prototype, 's7', {
   */
 Object.defineProperty(SIMD.int16x8.prototype, 'signMask', {
   get: function() {
-    var ms0 = (this.s0_ & 0x8000) >>> 15;
-    var ms1 = (this.s1_ & 0x8000) >>> 15;
-    var ms2 = (this.s2_ & 0x8000) >>> 15;
-    var ms3 = (this.s3_ & 0x8000) >>> 15;
-    var ms4 = (this.s4_ & 0x8000) >>> 15;
-    var ms5 = (this.s5_ & 0x8000) >>> 15;
-    var ms6 = (this.s6_ & 0x8000) >>> 15;
-    var ms7 = (this.s7_ & 0x8000) >>> 15;
+    var ms0 = (this.s0 & 0x8000) >>> 15;
+    var ms1 = (this.s1 & 0x8000) >>> 15;
+    var ms2 = (this.s2 & 0x8000) >>> 15;
+    var ms3 = (this.s3 & 0x8000) >>> 15;
+    var ms4 = (this.s4 & 0x8000) >>> 15;
+    var ms5 = (this.s5 & 0x8000) >>> 15;
+    var ms6 = (this.s6 & 0x8000) >>> 15;
+    var ms7 = (this.s7 & 0x8000) >>> 15;
     return ms0 | ms1 << 1 | ms2 << 2 | ms3 << 3 |
            ms4 << 4 | ms5 << 5 | ms6 << 6 | ms7 << 7;
   }
@@ -3231,22 +3231,22 @@ Object.defineProperty(SIMD.int8x16.prototype, 's15', {
   */
 Object.defineProperty(SIMD.int8x16.prototype, 'signMask', {
   get: function() {
-    var ms0 = (this.s0_ & 0x80) >>> 7;
-    var ms1 = (this.s1_ & 0x80) >>> 7;
-    var ms2 = (this.s2_ & 0x80) >>> 7;
-    var ms3 = (this.s3_ & 0x80) >>> 7;
-    var ms4 = (this.s4_ & 0x80) >>> 7;
-    var ms5 = (this.s5_ & 0x80) >>> 7;
-    var ms6 = (this.s6_ & 0x80) >>> 7;
-    var ms7 = (this.s7_ & 0x80) >>> 7;
-    var ms8 = (this.s8_ & 0x80) >>> 7;
-    var ms9 = (this.s9_ & 0x80) >>> 7;
-    var ms10 = (this.s10_ & 0x80) >>> 7;
-    var ms11 = (this.s11_ & 0x80) >>> 7;
-    var ms12 = (this.s12_ & 0x80) >>> 7;
-    var ms13 = (this.s13_ & 0x80) >>> 7;
-    var ms14 = (this.s14_ & 0x80) >>> 7;
-    var ms15 = (this.s15_ & 0x80) >>> 7;
+    var ms0 = (this.s0 & 0x80) >>> 7;
+    var ms1 = (this.s1 & 0x80) >>> 7;
+    var ms2 = (this.s2 & 0x80) >>> 7;
+    var ms3 = (this.s3 & 0x80) >>> 7;
+    var ms4 = (this.s4 & 0x80) >>> 7;
+    var ms5 = (this.s5 & 0x80) >>> 7;
+    var ms6 = (this.s6 & 0x80) >>> 7;
+    var ms7 = (this.s7 & 0x80) >>> 7;
+    var ms8 = (this.s8 & 0x80) >>> 7;
+    var ms9 = (this.s9 & 0x80) >>> 7;
+    var ms10 = (this.s10 & 0x80) >>> 7;
+    var ms11 = (this.s11 & 0x80) >>> 7;
+    var ms12 = (this.s12 & 0x80) >>> 7;
+    var ms13 = (this.s13 & 0x80) >>> 7;
+    var ms14 = (this.s14 & 0x80) >>> 7;
+    var ms15 = (this.s15 & 0x80) >>> 7;
     return ms0 | ms1 << 1 | ms2 << 2 | ms3 << 3 |
            ms4 << 4 | ms5 << 5 | ms6 << 6 | ms7 << 7 |
            ms8 << 8 | ms9 << 9 | ms10 << 10 | ms11 << 11 |
