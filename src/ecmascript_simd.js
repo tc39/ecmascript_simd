@@ -227,7 +227,7 @@ SIMD.float32x4.fromFloat64x2 = function(t) {
 
 /**
   * @param {int32x4} t An instance of int32x4.
-  * @return {float32x4} A float to integer conversion copy of t.
+  * @return {float32x4} An integer to float conversion copy of t.
   */
 SIMD.float32x4.fromInt32x4 = function(t) {
   checkInt32x4(t);
@@ -1527,7 +1527,7 @@ SIMD.float64x2.reciprocalSqrt = function(t) {
 
 /**
   * @param {float64x2} t An instance of float64x2.
-  * @return {float64x2} New instance of float32x4 with square root of
+  * @return {float64x2} New instance of float64x2 with square root of
   * values of t.
   */
 SIMD.float64x2.sqrt = function(t) {
