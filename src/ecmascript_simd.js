@@ -1174,7 +1174,7 @@ SIMD.float32x4.load = function(tarray, index) {
   for (var i = 0; i < n; ++i)
     array[i] = tarray[index + i];
   var f32temp = _PRIVATE._f32x4;
-  return new SIMD.float32x4(f32temp[0], f32temp[1], f32temp[2], f32temp[3]);
+  return SIMD.float32x4(f32temp[0], f32temp[1], f32temp[2], f32temp[3]);
 }
 
 /**
@@ -1198,7 +1198,7 @@ SIMD.float32x4.loadX = function(tarray, index) {
   for (var i = 0; i < n; ++i)
     array[i] = tarray[index + i];
   var f32temp = _PRIVATE._f32x4;
-  return new SIMD.float32x4(f32temp[0], 0.0, 0.0, 0.0);
+  return SIMD.float32x4(f32temp[0], 0.0, 0.0, 0.0);
 }
 
 /**
@@ -1222,7 +1222,7 @@ SIMD.float32x4.loadXY = function(tarray, index) {
   for (var i = 0; i < n; ++i)
     array[i] = tarray[index + i];
   var f32temp = _PRIVATE._f32x4;
-  return new SIMD.float32x4(f32temp[0], f32temp[1], 0.0, 0.0);
+  return SIMD.float32x4(f32temp[0], f32temp[1], 0.0, 0.0);
 }
 
 /**
@@ -1246,7 +1246,7 @@ SIMD.float32x4.loadXYZ = function(tarray, index) {
   for (var i = 0; i < n; ++i)
     array[i] = tarray[index + i];
   var f32temp = _PRIVATE._f32x4;
-  return new SIMD.float32x4(f32temp[0], f32temp[1], f32temp[2], 0.0);
+  return SIMD.float32x4(f32temp[0], f32temp[1], f32temp[2], 0.0);
 }
 
 /**
@@ -1731,7 +1731,7 @@ SIMD.float64x2.load = function(tarray, index) {
   var n = 16 / bpe;
   for (var i = 0; i < n; ++i)
     array[i] = tarray[index + i];
-  return new SIMD.float64x2(f64temp[0], f64temp[1]);
+  return SIMD.float64x2(f64temp[0], f64temp[1]);
 }
 
 /**
@@ -1755,7 +1755,7 @@ SIMD.float64x2.loadX = function(tarray, index) {
   var n = 8 / bpe;
   for (var i = 0; i < n; ++i)
     array[i] = tarray[index + i];
-  return new SIMD.float64x2(f64temp[0], 0.0);
+  return SIMD.float64x2(f64temp[0], 0.0);
 }
 
 /**
@@ -2176,7 +2176,7 @@ SIMD.int32x4.load = function(tarray, index) {
   for (var i = 0; i < n; ++i)
     array[i] = tarray[index + i];
   var i32temp = _PRIVATE._i32x4;
-  return new SIMD.int32x4(i32temp[0], i32temp[1], i32temp[2], i32temp[3]);
+  return SIMD.int32x4(i32temp[0], i32temp[1], i32temp[2], i32temp[3]);
 }
 
 /**
@@ -2200,7 +2200,7 @@ SIMD.int32x4.loadX = function(tarray, index) {
   for (var i = 0; i < n; ++i)
     array[i] = tarray[index + i];
   var i32temp = _PRIVATE._i32x4;
-  return new SIMD.int32x4(i32temp[0], 0, 0, 0);
+  return SIMD.int32x4(i32temp[0], 0, 0, 0);
 }
 
 /**
@@ -2224,7 +2224,7 @@ SIMD.int32x4.loadXY = function(tarray, index) {
   for (var i = 0; i < n; ++i)
     array[i] = tarray[index + i];
   var i32temp = _PRIVATE._i32x4;
-  return new SIMD.int32x4(i32temp[0], i32temp[1], 0, 0);
+  return SIMD.int32x4(i32temp[0], i32temp[1], 0, 0);
 }
 
 /**
@@ -2248,7 +2248,7 @@ SIMD.int32x4.loadXYZ = function(tarray, index) {
   for (var i = 0; i < n; ++i)
     array[i] = tarray[index + i];
   var i32temp = _PRIVATE._i32x4;
-  return new SIMD.int32x4(i32temp[0], i32temp[1], i32temp[2], 0);
+  return SIMD.int32x4(i32temp[0], i32temp[1], i32temp[2], 0);
 }
 
 /**
@@ -2616,8 +2616,8 @@ SIMD.int16x8.load = function(tarray, index) {
   var n = 16 / bpe;
   for (var i = 0; i < n; ++i)
     array[i] = tarray[index + i];
-  return new SIMD.int16x8(i16temp[0], i16temp[1], i16temp[2], i16temp[3],
-                          i16temp[4], i16temp[5], i16temp[6], i16temp[7]);
+  return SIMD.int16x8(i16temp[0], i16temp[1], i16temp[2], i16temp[3],
+                      i16temp[4], i16temp[5], i16temp[6], i16temp[7]);
 }
 
 /**
@@ -2971,10 +2971,10 @@ SIMD.int8x16.load = function(tarray, index) {
   var n = 16 / bpe;
   for (var i = 0; i < n; ++i)
     array[i] = tarray[index + i];
-  return new SIMD.int8x16(i8temp[0], i8temp[1], i8temp[2], i8temp[3],
-                          i8temp[4], i8temp[5], i8temp[6], i8temp[7],
-                          i8temp[8], i8temp[9], i8temp[10], i8temp[11],
-                          i8temp[12], i8temp[13], i8temp[14], i8temp[15]);
+  return SIMD.int8x16(i8temp[0], i8temp[1], i8temp[2], i8temp[3],
+                      i8temp[4], i8temp[5], i8temp[6], i8temp[7],
+                      i8temp[8], i8temp[9], i8temp[10], i8temp[11],
+                      i8temp[12], i8temp[13], i8temp[14], i8temp[15]);
 }
 
 /**
