@@ -1982,6 +1982,22 @@ SIMD.int32x4.equal = function(t, other) {
   * @param {int32x4} t An instance of int32x4.
   * @param {int32x4} other An instance of int32x4.
   * @return {int32x4} true or false in each lane depending on
+  * the result of t != other.
+  */
+SIMD.int32x4.notEqual = function(t, other) {
+  checkInt32x4(t);
+  checkInt32x4(other);
+  var cx = t.x != other.x;
+  var cy = t.y != other.y;
+  var cz = t.z != other.z;
+  var cw = t.w != other.w;
+  return SIMD.int32x4.bool(cx, cy, cz, cw);
+}
+
+/**
+  * @param {int32x4} t An instance of int32x4.
+  * @param {int32x4} other An instance of int32x4.
+  * @return {int32x4} true or false in each lane depending on
   * the result of t > other.
   */
 SIMD.int32x4.greaterThan = function(t, other) {
@@ -1998,6 +2014,22 @@ SIMD.int32x4.greaterThan = function(t, other) {
   * @param {int32x4} t An instance of int32x4.
   * @param {int32x4} other An instance of int32x4.
   * @return {int32x4} true or false in each lane depending on
+  * the result of t >= other.
+  */
+SIMD.int32x4.greaterThanOrEqual = function(t, other) {
+  checkInt32x4(t);
+  checkInt32x4(other);
+  var cx = t.x >= other.x;
+  var cy = t.y >= other.y;
+  var cz = t.z >= other.z;
+  var cw = t.w >= other.w;
+  return SIMD.int32x4.bool(cx, cy, cz, cw);
+}
+
+/**
+  * @param {int32x4} t An instance of int32x4.
+  * @param {int32x4} other An instance of int32x4.
+  * @return {int32x4} true or false in each lane depending on
   * the result of t < other.
   */
 SIMD.int32x4.lessThan = function(t, other) {
@@ -2007,6 +2039,22 @@ SIMD.int32x4.lessThan = function(t, other) {
   var cy = t.y < other.y;
   var cz = t.z < other.z;
   var cw = t.w < other.w;
+  return SIMD.int32x4.bool(cx, cy, cz, cw);
+}
+
+/**
+  * @param {int32x4} t An instance of int32x4.
+  * @param {int32x4} other An instance of int32x4.
+  * @return {int32x4} true or false in each lane depending on
+  * the result of t <= other.
+  */
+SIMD.int32x4.lessThanOrEqual = function(t, other) {
+  checkInt32x4(t);
+  checkInt32x4(other);
+  var cx = t.x <= other.x;
+  var cy = t.y <= other.y;
+  var cz = t.z <= other.z;
+  var cw = t.w <= other.w;
   return SIMD.int32x4.bool(cx, cy, cz, cw);
 }
 

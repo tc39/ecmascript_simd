@@ -2213,15 +2213,33 @@ test('int32x4 comparisons', function() {
   equal(0x0, cmp.z);
   equal(-1, cmp.w);
 
+  cmp = SIMD.int32x4.lessThanOrEqual(m, n);
+  equal(0x0, cmp.x);
+  equal(-1, cmp.y);
+  equal(0x0, cmp.z);
+  equal(-1, cmp.w);
+
   cmp = SIMD.int32x4.equal(m, n);
   equal(0x0, cmp.x);
   equal(-1, cmp.y);
   equal(0x0, cmp.z);
   equal(0x0, cmp.w);
 
+  cmp = SIMD.int32x4.notEqual(m, n);
+  equal(-1, cmp.x);
+  equal(0x0, cmp.y);
+  equal(-1, cmp.z);
+  equal(-1, cmp.w);
+
   cmp = SIMD.int32x4.greaterThan(m, n);
   equal(-1, cmp.x);
   equal(0x0, cmp.y);
+  equal(-1, cmp.z);
+  equal(0x0, cmp.w);
+
+  cmp = SIMD.int32x4.greaterThanOrEqual(m, n);
+  equal(-1, cmp.x);
+  equal(-1, cmp.y);
   equal(-1, cmp.z);
   equal(0x0, cmp.w);
 });
