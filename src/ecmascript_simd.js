@@ -2067,7 +2067,7 @@ SIMD.int32x4.lessThan = function(t, other) {
 
 /**
   * @param {int32x4} a An instance of int32x4.
-  * @param {int} bits Bit count to shift by.
+  * @param {integer} bits Bit count to shift by.
   * @return {int32x4} lanes in a shifted by bits.
   */
 SIMD.int32x4.shiftLeftByScalar = function(a, bits) {
@@ -2081,7 +2081,7 @@ SIMD.int32x4.shiftLeftByScalar = function(a, bits) {
 
 /**
   * @param {int32x4} a An instance of int32x4.
-  * @param {int} bits Bit count to shift by.
+  * @param {integer} bits Bit count to shift by.
   * @return {int32x4} lanes in a shifted by bits.
   */
 SIMD.int32x4.shiftRightLogicalByScalar = function(a, bits) {
@@ -2095,7 +2095,7 @@ SIMD.int32x4.shiftRightLogicalByScalar = function(a, bits) {
 
 /**
   * @param {int32x4} a An instance of int32x4.
-  * @param {int} bits Bit count to shift by.
+  * @param {integer} bits Bit count to shift by.
   * @return {int32x4} lanes in a shifted by bits.
   */
 SIMD.int32x4.shiftRightArithmeticByScalar = function(a, bits) {
@@ -2495,7 +2495,7 @@ SIMD.int16x8.lessThan = function(t, other) {
 
 /**
   * @param {int16x8} a An instance of int16x8.
-  * @param {int} bits Bit count to shift by.
+  * @param {integer} bits Bit count to shift by.
   * @return {int16x8} lanes in a shifted by bits.
   */
 SIMD.int16x8.shiftLeftByScalar = function(a, bits) {
@@ -2513,7 +2513,7 @@ SIMD.int16x8.shiftLeftByScalar = function(a, bits) {
 
 /**
   * @param {int16x8} a An instance of int16x8.
-  * @param {int} bits Bit count to shift by.
+  * @param {integer} bits Bit count to shift by.
   * @return {int16x8} lanes in a shifted by bits.
   */
 SIMD.int16x8.shiftRightLogicalByScalar = function(a, bits) {
@@ -2531,7 +2531,7 @@ SIMD.int16x8.shiftRightLogicalByScalar = function(a, bits) {
 
 /**
   * @param {int16x8} a An instance of int16x8.
-  * @param {int} bits Bit count to shift by.
+  * @param {integer} bits Bit count to shift by.
   * @return {int16x8} lanes in a shifted by bits.
   */
 SIMD.int16x8.shiftRightArithmeticByScalar = function(a, bits) {
@@ -2823,7 +2823,7 @@ SIMD.int8x16.lessThan = function(t, other) {
 
 /**
   * @param {int8x16} a An instance of int8x16.
-  * @param {int} bits Bit count to shift by.
+  * @param {integer} bits Bit count to shift by.
   * @return {int8x16} lanes in a shifted by bits.
   */
 SIMD.int8x16.shiftLeftByScalar = function(a, bits) {
@@ -2850,7 +2850,7 @@ SIMD.int8x16.shiftLeftByScalar = function(a, bits) {
 
 /**
   * @param {int8x16} a An instance of int8x16.
-  * @param {int} bits Bit count to shift by.
+  * @param {integer} bits Bit count to shift by.
   * @return {int8x16} lanes in a shifted by bits.
   */
 SIMD.int8x16.shiftRightLogicalByScalar = function(a, bits) {
@@ -2877,7 +2877,7 @@ SIMD.int8x16.shiftRightLogicalByScalar = function(a, bits) {
 
 /**
   * @param {int8x16} a An instance of int8x16.
-  * @param {int} bits Bit count to shift by.
+  * @param {integer} bits Bit count to shift by.
   * @return {int8x16} lanes in a shifted by bits.
   */
 SIMD.int8x16.shiftRightArithmeticByScalar = function(a, bits) {
