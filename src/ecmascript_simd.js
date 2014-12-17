@@ -286,7 +286,7 @@ SIMD.float64x2 = function(x, y) {
     return new SIMD.float64x2(x, y);
   }
 
-  // Use unary + to force coersion to Number.
+  // Use unary + to force coercion to Number.
   this.x_ = +x;
   this.y_ = +y;
 }
@@ -701,9 +701,10 @@ SIMD.int8x16.fromInt16x8Bits = function(t) {
 }
 
 /**
-* @return {float32x4} New instance of float32x4 with absolute values of
-* t.
-*/
+  * @param {float32x4} t An instance of float32x4.
+  * @return {float32x4} New instance of float32x4 with absolute values of
+  * t.
+  */
 SIMD.float32x4.abs = function(t) {
   checkFloat32x4(t);
   return SIMD.float32x4(Math.abs(t.x), Math.abs(t.y), Math.abs(t.z),
@@ -711,6 +712,7 @@ SIMD.float32x4.abs = function(t) {
 }
 
 /**
+  * @param {float32x4} t An instance of float32x4.
   * @return {float32x4} New instance of float32x4 with negated values of
   * t.
   */
@@ -720,6 +722,8 @@ SIMD.float32x4.neg = function(t) {
 }
 
 /**
+  * @param {float32x4} a An instance of float32x4.
+  * @param {float32x4} b An instance of float32x4.
   * @return {float32x4} New instance of float32x4 with a + b.
   */
 SIMD.float32x4.add = function(a, b) {
@@ -729,6 +733,8 @@ SIMD.float32x4.add = function(a, b) {
 }
 
 /**
+  * @param {float32x4} a An instance of float32x4.
+  * @param {float32x4} b An instance of float32x4.
   * @return {float32x4} New instance of float32x4 with a - b.
   */
 SIMD.float32x4.sub = function(a, b) {
@@ -738,6 +744,8 @@ SIMD.float32x4.sub = function(a, b) {
 }
 
 /**
+  * @param {float32x4} a An instance of float32x4.
+  * @param {float32x4} b An instance of float32x4.
   * @return {float32x4} New instance of float32x4 with a * b.
   */
 SIMD.float32x4.mul = function(a, b) {
@@ -747,6 +755,8 @@ SIMD.float32x4.mul = function(a, b) {
 }
 
 /**
+  * @param {float32x4} a An instance of float32x4.
+  * @param {float32x4} b An instance of float32x4.
   * @return {float32x4} New instance of float32x4 with a / b.
   */
 SIMD.float32x4.div = function(a, b) {
@@ -756,6 +766,9 @@ SIMD.float32x4.div = function(a, b) {
 }
 
 /**
+  * @param {float32x4} t An instance of float32x4.
+  * @param {float32x4} lowerLimit An instance of float32x4.
+  * @param {float32x4} upperLimit An instance of float32x4.
   * @return {float32x4} New instance of float32x4 with t's values clamped
   * between lowerLimit and upperLimit.
   */
@@ -775,6 +788,8 @@ SIMD.float32x4.clamp = function(t, lowerLimit, upperLimit) {
 }
 
 /**
+  * @param {float32x4} t An instance of float32x4.
+  * @param {float32x4} other An instance of float32x4.
   * @return {float32x4} New instance of float32x4 with the minimum value of
   * t and other.
   */
@@ -789,6 +804,8 @@ SIMD.float32x4.min = function(t, other) {
 }
 
 /**
+  * @param {float32x4} t An instance of float32x4.
+  * @param {float32x4} other An instance of float32x4.
   * @return {float32x4} New instance of float32x4 with the maximum value of
   * t and other.
   */
@@ -803,6 +820,8 @@ SIMD.float32x4.max = function(t, other) {
 }
 
 /**
+  * @param {float32x4} t An instance of float32x4.
+  * @param {float32x4} other An instance of float32x4.
   * @return {float32x4} New instance of float32x4 with the minimum value of
   * t and other, preferring numbers over NaNs.
   */
@@ -817,6 +836,8 @@ SIMD.float32x4.minNum = function(t, other) {
 }
 
 /**
+  * @param {float32x4} t An instance of float32x4.
+  * @param {float32x4} other An instance of float32x4.
   * @return {float32x4} New instance of float32x4 with the maximum value of
   * t and other, preferring numbers over NaNs.
   */
@@ -831,6 +852,7 @@ SIMD.float32x4.maxNum = function(t, other) {
 }
 
 /**
+  * @param {float32x4} t An instance of float32x4.
   * @return {float32x4} New instance of float32x4 with reciprocal value of
   * t.
   */
@@ -840,6 +862,7 @@ SIMD.float32x4.reciprocal = function(t) {
 }
 
 /**
+  * @param {float32x4} t An instance of float32x4.
   * @return {float32x4} New instance of float32x4 with square root of the
   * reciprocal value of t.
   */
@@ -850,6 +873,7 @@ SIMD.float32x4.reciprocalSqrt = function(t) {
 }
 
 /**
+  * @param {float32x4} t An instance of float32x4.
   * @return {float32x4} New instance of float32x4 with square root of
   * values of t.
   */
@@ -902,6 +926,7 @@ SIMD.float32x4.shuffle = function(t1, t2, x, y, z, w) {
 }
 
 /**
+  * @param {float32x4} t An instance of float32x4.
   * @param {double} value used for x lane.
   * @return {float32x4} New instance of float32x4 with the values in t and
   * x replaced with {x}.
@@ -912,6 +937,7 @@ SIMD.float32x4.withX = function(t, x) {
 }
 
 /**
+  * @param {float32x4} t An instance of float32x4.
   * @param {double} value used for y lane.
   * @return {float32x4} New instance of float32x4 with the values in t and
   * y replaced with {y}.
@@ -922,6 +948,7 @@ SIMD.float32x4.withY = function(t, y) {
 }
 
 /**
+  * @param {float32x4} t An instance of float32x4.
   * @param {double} value used for z lane.
   * @return {float32x4} New instance of float32x4 with the values in t and
   * z replaced with {z}.
@@ -932,6 +959,7 @@ SIMD.float32x4.withZ = function(t, z) {
 }
 
 /**
+  * @param {float32x4} t An instance of float32x4.
   * @param {double} value used for w lane.
   * @return {float32x4} New instance of float32x4 with the values in t and
   * w replaced with {w}.
@@ -1340,15 +1368,17 @@ SIMD.float32x4.storeXYZ = function(tarray, index, value) {
 }
 
 /**
-* @return {float64x2} New instance of float64x2 with absolute values of
-* t.
-*/
+  * @param {float64x2} t An instance of float64x2.
+  * @return {float64x2} New instance of float64x2 with absolute values of
+  * t.
+  */
 SIMD.float64x2.abs = function(t) {
   checkFloat64x2(t);
   return SIMD.float64x2(Math.abs(t.x), Math.abs(t.y));
 }
 
 /**
+  * @param {float64x2} t An instance of float64x2.
   * @return {float64x2} New instance of float64x2 with negated values of
   * t.
   */
@@ -1358,6 +1388,8 @@ SIMD.float64x2.neg = function(t) {
 }
 
 /**
+  * @param {float64x2} a An instance of float64x2.
+  * @param {float64x2} b An instance of float64x2.
   * @return {float64x2} New instance of float64x2 with a + b.
   */
 SIMD.float64x2.add = function(a, b) {
@@ -1367,6 +1399,8 @@ SIMD.float64x2.add = function(a, b) {
 }
 
 /**
+  * @param {float64x2} a An instance of float64x2.
+  * @param {float64x2} b An instance of float64x2.
   * @return {float64x2} New instance of float64x2 with a - b.
   */
 SIMD.float64x2.sub = function(a, b) {
@@ -1376,6 +1410,8 @@ SIMD.float64x2.sub = function(a, b) {
 }
 
 /**
+  * @param {float64x2} a An instance of float64x2.
+  * @param {float64x2} b An instance of float64x2.
   * @return {float64x2} New instance of float64x2 with a * b.
   */
 SIMD.float64x2.mul = function(a, b) {
@@ -1385,6 +1421,8 @@ SIMD.float64x2.mul = function(a, b) {
 }
 
 /**
+  * @param {float64x2} a An instance of float64x2.
+  * @param {float64x2} b An instance of float64x2.
   * @return {float64x2} New instance of float64x2 with a / b.
   */
 SIMD.float64x2.div = function(a, b) {
@@ -1394,6 +1432,9 @@ SIMD.float64x2.div = function(a, b) {
 }
 
 /**
+  * @param {float64x2} t An instance of float64x2.
+  * @param {float64x2} lowerLimit An instance of float64x2.
+  * @param {float64x2} upperLimit An instance of float64x2.
   * @return {float64x2} New instance of float64x2 with t's values clamped
   * between lowerLimit and upperLimit.
   */
@@ -1409,6 +1450,8 @@ SIMD.float64x2.clamp = function(t, lowerLimit, upperLimit) {
 }
 
 /**
+  * @param {float64x2} t An instance of float64x2.
+  * @param {float64x2} other An instance of float64x2.
   * @return {float64x2} New instance of float64x2 with the minimum value of
   * t and other.
   */
@@ -1421,6 +1464,8 @@ SIMD.float64x2.min = function(t, other) {
 }
 
 /**
+  * @param {float64x2} t An instance of float64x2.
+  * @param {float64x2} other An instance of float64x2.
   * @return {float64x2} New instance of float64x2 with the maximum value of
   * t and other.
   */
@@ -1433,6 +1478,8 @@ SIMD.float64x2.max = function(t, other) {
 }
 
 /**
+  * @param {float64x2} t An instance of float64x2.
+  * @param {float64x2} other An instance of float64x2.
   * @return {float64x2} New instance of float64x2 with the minimum value of
   * t and other, preferring numbers over NaNs.
   */
@@ -1445,6 +1492,8 @@ SIMD.float64x2.minNum = function(t, other) {
 }
 
 /**
+  * @param {float64x2} t An instance of float64x2.
+  * @param {float64x2} other An instance of float64x2.
   * @return {float64x2} New instance of float64x2 with the maximum value of
   * t and other, preferring numbers over NaNs.
   */
@@ -1457,6 +1506,7 @@ SIMD.float64x2.maxNum = function(t, other) {
 }
 
 /**
+  * @param {float64x2} t An instance of float64x2.
   * @return {float64x2} New instance of float64x2 with reciprocal value of
   * t.
   */
@@ -1466,6 +1516,7 @@ SIMD.float64x2.reciprocal = function(t) {
 }
 
 /**
+  * @param {float64x2} t An instance of float64x2.
   * @return {float64x2} New instance of float64x2 with square root of the
   * reciprocal value of t.
   */
@@ -1475,6 +1526,7 @@ SIMD.float64x2.reciprocalSqrt = function(t) {
 }
 
 /**
+  * @param {float64x2} t An instance of float64x2.
   * @return {float64x2} New instance of float32x4 with square root of
   * values of t.
   */
@@ -1516,6 +1568,7 @@ SIMD.float64x2.shuffle = function(t1, t2, x, y) {
 }
 
 /**
+  * @param {float64x2} t An instance of float64x2.
   * @param {double} value used for x lane.
   * @return {float64x2} New instance of float64x2 with the values in t and
   * x replaced with {x}.
@@ -1526,6 +1579,7 @@ SIMD.float64x2.withX = function(t, x) {
 }
 
 /**
+  * @param {float64x2} t An instance of float64x2.
   * @param {double} value used for y lane.
   * @return {float64x2} New instance of float64x2 with the values in t and
   * y replaced with {y}.
@@ -1931,7 +1985,7 @@ SIMD.int32x4.withX = function(t, x) {
 }
 
 /**
-  * param {int32x4} t An instance of int32x4.
+  * @param {int32x4} t An instance of int32x4.
   * @param {integer} 32-bit value used for y lane.
   * @return {int32x4} New instance of int32x4 with the values in t and
   * y lane replaced with {y}.
@@ -1953,6 +2007,7 @@ SIMD.int32x4.withZ = function(t, z) {
 }
 
 /**
+  * @param {int32x4} t An instance of int32x4.
   * @param {integer} 32-bit value used for w lane.
   * @return {int32x4} New instance of int32x4 with the values in t and
   * w lane replaced with {w}.
@@ -2060,7 +2115,7 @@ SIMD.int32x4.lessThanOrEqual = function(t, other) {
 
 /**
   * @param {int32x4} a An instance of int32x4.
-  * @param {int} bits Bit count to shift by.
+  * @param {integer} bits Bit count to shift by.
   * @return {int32x4} lanes in a shifted by bits.
   */
 SIMD.int32x4.shiftLeftByScalar = function(a, bits) {
@@ -2074,7 +2129,7 @@ SIMD.int32x4.shiftLeftByScalar = function(a, bits) {
 
 /**
   * @param {int32x4} a An instance of int32x4.
-  * @param {int} bits Bit count to shift by.
+  * @param {integer} bits Bit count to shift by.
   * @return {int32x4} lanes in a shifted by bits.
   */
 SIMD.int32x4.shiftRightLogicalByScalar = function(a, bits) {
@@ -2088,7 +2143,7 @@ SIMD.int32x4.shiftRightLogicalByScalar = function(a, bits) {
 
 /**
   * @param {int32x4} a An instance of int32x4.
-  * @param {int} bits Bit count to shift by.
+  * @param {integer} bits Bit count to shift by.
   * @return {int32x4} lanes in a shifted by bits.
   */
 SIMD.int32x4.shiftRightArithmeticByScalar = function(a, bits) {
@@ -2488,7 +2543,7 @@ SIMD.int16x8.lessThan = function(t, other) {
 
 /**
   * @param {int16x8} a An instance of int16x8.
-  * @param {int} bits Bit count to shift by.
+  * @param {integer} bits Bit count to shift by.
   * @return {int16x8} lanes in a shifted by bits.
   */
 SIMD.int16x8.shiftLeftByScalar = function(a, bits) {
@@ -2506,7 +2561,7 @@ SIMD.int16x8.shiftLeftByScalar = function(a, bits) {
 
 /**
   * @param {int16x8} a An instance of int16x8.
-  * @param {int} bits Bit count to shift by.
+  * @param {integer} bits Bit count to shift by.
   * @return {int16x8} lanes in a shifted by bits.
   */
 SIMD.int16x8.shiftRightLogicalByScalar = function(a, bits) {
@@ -2524,7 +2579,7 @@ SIMD.int16x8.shiftRightLogicalByScalar = function(a, bits) {
 
 /**
   * @param {int16x8} a An instance of int16x8.
-  * @param {int} bits Bit count to shift by.
+  * @param {integer} bits Bit count to shift by.
   * @return {int16x8} lanes in a shifted by bits.
   */
 SIMD.int16x8.shiftRightArithmeticByScalar = function(a, bits) {
@@ -2816,7 +2871,7 @@ SIMD.int8x16.lessThan = function(t, other) {
 
 /**
   * @param {int8x16} a An instance of int8x16.
-  * @param {int} bits Bit count to shift by.
+  * @param {integer} bits Bit count to shift by.
   * @return {int8x16} lanes in a shifted by bits.
   */
 SIMD.int8x16.shiftLeftByScalar = function(a, bits) {
@@ -2843,7 +2898,7 @@ SIMD.int8x16.shiftLeftByScalar = function(a, bits) {
 
 /**
   * @param {int8x16} a An instance of int8x16.
-  * @param {int} bits Bit count to shift by.
+  * @param {integer} bits Bit count to shift by.
   * @return {int8x16} lanes in a shifted by bits.
   */
 SIMD.int8x16.shiftRightLogicalByScalar = function(a, bits) {
@@ -2870,7 +2925,7 @@ SIMD.int8x16.shiftRightLogicalByScalar = function(a, bits) {
 
 /**
   * @param {int8x16} a An instance of int8x16.
-  * @param {int} bits Bit count to shift by.
+  * @param {integer} bits Bit count to shift by.
   * @return {int8x16} lanes in a shifted by bits.
   */
 SIMD.int8x16.shiftRightArithmeticByScalar = function(a, bits) {
