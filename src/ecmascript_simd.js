@@ -1985,7 +1985,7 @@ SIMD.int32x4.withX = function(t, x) {
 }
 
 /**
-  * param {int32x4} t An instance of int32x4.
+  * @param {int32x4} t An instance of int32x4.
   * @param {integer} 32-bit value used for y lane.
   * @return {int32x4} New instance of int32x4 with the values in t and
   * y lane replaced with {y}.
