@@ -2372,12 +2372,12 @@ if (typeof SIMD.int32x4.mul === "undefined") {
 
 if (typeof SIMD.int32x4.swizzle === "undefined") {
   /**
-    * @param {int32x4} t An instance of float32x4 to be swizzled.
+    * @param {int32x4} t An instance of int32x4 to be swizzled.
     * @param {integer} x - Index in t for lane x
     * @param {integer} y - Index in t for lane y
     * @param {integer} z - Index in t for lane z
     * @param {integer} w - Index in t for lane w
-    * @return {int32x4} New instance of float32x4 with lanes swizzled.
+    * @return {int32x4} New instance of int32x4 with lanes swizzled.
     */
   SIMD.int32x4.swizzle = function(t, x, y, z, w) {
     t = SIMD.int32x4(t);
@@ -2392,13 +2392,13 @@ if (typeof SIMD.int32x4.swizzle === "undefined") {
 
 if (typeof SIMD.int32x4.shuffle === "undefined") {
   /**
-    * @param {int32x4} t1 An instance of float32x4 to be shuffled.
-    * @param {int32x4} t2 An instance of float32x4 to be shuffled.
+    * @param {int32x4} t1 An instance of int32x4 to be shuffled.
+    * @param {int32x4} t2 An instance of int32x4 to be shuffled.
     * @param {integer} x - Index in concatenation of t1 and t2 for lane x
     * @param {integer} y - Index in concatenation of t1 and t2 for lane y
     * @param {integer} z - Index in concatenation of t1 and t2 for lane z
     * @param {integer} w - Index in concatenation of t1 and t2 for lane w
-    * @return {int32x4} New instance of float32x4 with lanes shuffled.
+    * @return {int32x4} New instance of int32x4 with lanes shuffled.
     */
   SIMD.int32x4.shuffle = function(t1, t2, x, y, z, w) {
     t1 = SIMD.int32x4(t1);
@@ -2412,7 +2412,7 @@ if (typeof SIMD.int32x4.shuffle === "undefined") {
     storage[5] = t2.y;
     storage[6] = t2.z;
     storage[7] = t2.w;
-    return SIMD.float32x4(storage[x], storage[y], storage[z], storage[w]);
+    return SIMD.int32x4(storage[x], storage[y], storage[z], storage[w]);
   }
 }
 

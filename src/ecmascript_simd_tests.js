@@ -1983,7 +1983,7 @@ test('int32x4 fromFloat64x2Bits constructor', function() {
 
 test('int32x4 shuffle', function() {
   var a    = SIMD.int32x4(1, 2, 3, 4);
-  var b    = SIMD.int32x4(5, 6, 7, 8);
+  var b    = SIMD.int32x4(5, 6, 7, 2147483647);
   var xyxy = SIMD.int32x4.shuffle(a, b, 0, 1, 4, 5);
   var zwzw = SIMD.int32x4.shuffle(a, b, 2, 3, 6, 7);
   var xxxx = SIMD.int32x4.shuffle(a, b, 0, 0, 4, 4);
@@ -1994,7 +1994,7 @@ test('int32x4 shuffle', function() {
   equal(3, zwzw.x);
   equal(4, zwzw.y);
   equal(7, zwzw.z);
-  equal(8, zwzw.w);
+  equal(2147483647, zwzw.w);
   equal(1, xxxx.x);
   equal(1, xxxx.y);
   equal(5, xxxx.z);
@@ -2010,7 +2010,7 @@ test('int32x4 shuffle', function() {
   equal(3, d.x);
   equal(7, d.y);
   equal(4, d.z);
-  equal(8, d.w);
+  equal(2147483647, d.w);
   equal(1, e.x);
   equal(5, e.y);
   equal(1, e.z);
