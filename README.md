@@ -178,17 +178,17 @@ except the the value in the **x** lane being given the value of **x**.
 **float32x4 withY(double y)**
 
 Return a new instance with all lane values matching lane values of **this**
-except the the value in the **y** lane being given the value of **x**.
+except the the value in the **y** lane being given the value of **y**.
 
 **float32x4 withZ(double z)**
 
 Return a new instance with all lane values matching lane values of **this**
-except the the value in the **z** lane being given the value of **x**.
+except the the value in the **z** lane being given the value of **z**.
 
 **float32x4 withW(double w)**
 
 Return a new instance with all lane values matching lane values of **this**
-except the the value in the **w** lane being given the value of **x**.
+except the the value in the **w** lane being given the value of **w**.
 
 ## int32x4
 
