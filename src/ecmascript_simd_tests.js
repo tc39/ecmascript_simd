@@ -1250,9 +1250,9 @@ test('float64x2 scalar getters', function() {
 });
 
 test('float64x2 signMask getter', function() {
-  var a = SIMD.float32x4(1.0, 2.0);
+  var a = SIMD.float64x2(1.0, 2.0);
   equal(0x0, a.signMask);
-  var b = SIMD.float32x4(-1.0, 2.0);
+  var b = SIMD.float64x2(-1.0, 2.0);
   equal(0x1, b.signMask);
   var c = SIMD.float64x2(1.0, -2.0);
   equal(0x2, c.signMask);
