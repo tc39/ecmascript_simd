@@ -29,6 +29,7 @@ if (typeof SIMD === "undefined") {
 // private stuff.
 var _SIMD_PRIVATE = {};
 
+// Temporary buffers for swizzles and bitcasts.
 _SIMD_PRIVATE._f32x4 = new Float32Array(4);
 _SIMD_PRIVATE._f64x2 = new Float64Array(_SIMD_PRIVATE._f32x4.buffer);
 _SIMD_PRIVATE._i32x4 = new Int32Array(_SIMD_PRIVATE._f32x4.buffer);
@@ -51,6 +52,8 @@ if (typeof Math.fround !== 'undefined') {
     return _SIMD_PRIVATE._f32[0];
   }
 }
+
+// Type checking functions.
 
 _SIMD_PRIVATE.isNumber = function(o) {
   return typeof o === "number" || (typeof o === "object" && o.constructor === Number);
@@ -693,7 +696,7 @@ if (typeof SIMD.int16x8 === "undefined") {
 
 if (typeof SIMD.int16x8.bool === "undefined") {
   /**
-    * Construct a new instance of int16x8 number with 0xFFFF or 0x0 in each
+    * Construct a new instance of int16x8 number with true or false in each
     * lane, depending on the truth value in s0, s1, s2, s3, s4, s5, s6, and s7.
     * @param {boolean} flag used for s0 lane.
     * @param {boolean} flag used for s1 lane.
@@ -921,7 +924,7 @@ if (typeof SIMD.int8x16 === "undefined") {
 
 if (typeof SIMD.int8x16.bool === "undefined") {
   /**
-    * Construct a new instance of int8x16 number with 0xFF or 0x0 in each
+    * Construct a new instance of int8x16 number with true or false in each
     * lane, depending on the truth value in s0, s1, s2, s3, s4, s5, s6, s7,
     * s8, s9, s10, s11, s12, s13, s14, and s15.
     * @param {boolean} flag used for s0 lane.
@@ -3009,9 +3012,9 @@ if (typeof SIMD.int16x8.select === "undefined") {
   /**
     * @param {int16x8} t Selector mask. An instance of int16x8
     * @param {int16x8} trueValue Pick lane from here if corresponding
-    * selector lane is 0xFFFF
+    * selector lane is true
     * @param {int16x8} falseValue Pick lane from here if corresponding
-    * selector lane is 0x0
+    * selector lane is false
     * @return {int16x8} Mix of lanes from trueValue or falseValue as
     * indicated
     */
@@ -3029,7 +3032,7 @@ if (typeof SIMD.int16x8.equal === "undefined") {
   /**
     * @param {int16x8} t An instance of int16x8.
     * @param {int16x8} other An instance of int16x8.
-    * @return {int16x8} 0xFFFF or 0x0 in each lane depending on
+    * @return {int16x8} true or false in each lane depending on
     * the result of t == other.
     */
   SIMD.int16x8.equal = function(t, other) {
@@ -3051,7 +3054,7 @@ if (typeof SIMD.int16x8.greaterThan === "undefined") {
   /**
     * @param {int16x8} t An instance of int16x8.
     * @param {int16x8} other An instance of int16x8.
-    * @return {int16x8} 0xFFFF or 0x0 in each lane depending on
+    * @return {int16x8} true or false in each lane depending on
     * the result of t > other.
     */
   SIMD.int16x8.greaterThan = function(t, other) {
@@ -3073,7 +3076,7 @@ if (typeof SIMD.int16x8.lessThan === "undefined") {
   /**
     * @param {int16x8} t An instance of int16x8.
     * @param {int16x8} other An instance of int16x8.
-    * @return {int16x8} 0xFFFF or 0x0 in each lane depending on
+    * @return {int16x8} true or false in each lane depending on
     * the result of t < other.
     */
   SIMD.int16x8.lessThan = function(t, other) {
@@ -3344,9 +3347,9 @@ if (typeof SIMD.int8x16.select === "undefined") {
   /**
     * @param {int8x16} t Selector mask. An instance of int8x16
     * @param {int8x16} trueValue Pick lane from here if corresponding
-    * selector lane is 0xFF
+    * selector lane is true
     * @param {int8x16} falseValue Pick lane from here if corresponding
-    * selector lane is 0x0
+    * selector lane is false
     * @return {int8x16} Mix of lanes from trueValue or falseValue as
     * indicated
     */
@@ -3364,7 +3367,7 @@ if (typeof SIMD.int8x16.equal === "undefined") {
   /**
     * @param {int8x16} t An instance of int8x16.
     * @param {int8x16} other An instance of int8x16.
-    * @return {int8x16} 0xFF or 0x0 in each lane depending on
+    * @return {int8x16} true or false in each lane depending on
     * the result of t == other.
     */
   SIMD.int8x16.equal = function(t, other) {
@@ -3395,7 +3398,7 @@ if (typeof SIMD.int8x16.greaterThan === "undefined") {
   /**
     * @param {int8x16} t An instance of int8x16.
     * @param {int8x16} other An instance of int8x16.
-    * @return {int8x16} 0xFF or 0x0 in each lane depending on
+    * @return {int8x16} true or false in each lane depending on
     * the result of t > other.
     */
   SIMD.int8x16.greaterThan = function(t, other) {
@@ -3426,7 +3429,7 @@ if (typeof SIMD.int8x16.lessThan === "undefined") {
   /**
     * @param {int8x16} t An instance of int8x16.
     * @param {int8x16} other An instance of int8x16.
-    * @return {int8x16} 0xFF or 0x0 in each lane depending on
+    * @return {int8x16} true or false in each lane depending on
     * the result of t < other.
     */
   SIMD.int8x16.lessThan = function(t, other) {
@@ -3542,7 +3545,7 @@ if (typeof SIMD.int8x16.shiftRightArithmeticByScalar === "undefined") {
 
 if (typeof SIMD.int8x16.load === "undefined") {
   /**
-    * @param {Typed array} buffer An instance of a typed array.
+    * @param {Typed array} tarray An instance of a typed array.
     * @param {Number} index An instance of Number.
     * @return {int8x16} New instance of int8x16.
     */
