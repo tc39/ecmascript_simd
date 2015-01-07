@@ -36,12 +36,6 @@ _SIMD_PRIVATE._i32x4 = new Int32Array(_SIMD_PRIVATE._f32x4.buffer);
 _SIMD_PRIVATE._i16x8 = new Int16Array(_SIMD_PRIVATE._f32x4.buffer);
 _SIMD_PRIVATE._i8x16 = new Int8Array(_SIMD_PRIVATE._f32x4.buffer);
 
-_SIMD_PRIVATE._f32x8 = new Float32Array(8);
-_SIMD_PRIVATE._f64x4 = new Float64Array(4);
-_SIMD_PRIVATE._i32x8 = new Int32Array(8);
-_SIMD_PRIVATE._i16x16 = new Int16Array(16);
-_SIMD_PRIVATE._i8x32 = new Int8Array(32);
-
 if (typeof Math.fround !== 'undefined') {
   _SIMD_PRIVATE.truncatef32 = Math.fround;
 } else {
@@ -1255,6 +1249,9 @@ if (typeof SIMD.float32x4.swizzle === "undefined") {
 }
 
 if (typeof SIMD.float32x4.shuffle === "undefined") {
+
+  _SIMD_PRIVATE._f32x8 = new Float32Array(8);
+
   /**
     * @param {float32x4} t1 An instance of float32x4 to be shuffled.
     * @param {float32x4} t2 An instance of float32x4 to be shuffled.
@@ -1983,6 +1980,9 @@ if (typeof SIMD.float64x2.swizzle === "undefined") {
 }
 
 if (typeof SIMD.float64x2.shuffle === "undefined") {
+
+  _SIMD_PRIVATE._f64x4 = new Float64Array(4);
+
   /**
     * @param {float64x2} t1 An instance of float64x2 to be shuffled.
     * @param {float64x2} t2 An instance of float64x2 to be shuffled.
@@ -2394,6 +2394,9 @@ if (typeof SIMD.int32x4.swizzle === "undefined") {
 }
 
 if (typeof SIMD.int32x4.shuffle === "undefined") {
+
+  _SIMD_PRIVATE._i32x8 = new Int32Array(8);
+
   /**
     * @param {int32x4} t1 An instance of int32x4 to be shuffled.
     * @param {int32x4} t2 An instance of int32x4 to be shuffled.
