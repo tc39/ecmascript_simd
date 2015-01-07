@@ -3053,6 +3053,28 @@ if (typeof SIMD.int16x8.equal === "undefined") {
   }
 }
 
+if (typeof SIMD.int16x8.notEqual === "undefined") {
+  /**
+    * @param {int16x8} t An instance of int16x8.
+    * @param {int16x8} other An instance of int16x8.
+    * @return {int16x8} true or false in each lane depending on
+    * the result of t != other.
+    */
+  SIMD.int16x8.notEqual = function(t, other) {
+    t = SIMD.int16x8(t);
+    other = SIMD.int16x8(other);
+    var cs0 = t.s0 != other.s0;
+    var cs1 = t.s1 != other.s1;
+    var cs2 = t.s2 != other.s2;
+    var cs3 = t.s3 != other.s3;
+    var cs4 = t.s4 != other.s4;
+    var cs5 = t.s5 != other.s5;
+    var cs6 = t.s6 != other.s6;
+    var cs7 = t.s7 != other.s7;
+    return SIMD.int16x8.bool(cs0, cs1, cs2, cs3, cs4, cs5, cs6, cs7);
+  }
+}
+
 if (typeof SIMD.int16x8.greaterThan === "undefined") {
   /**
     * @param {int16x8} t An instance of int16x8.
@@ -3075,6 +3097,28 @@ if (typeof SIMD.int16x8.greaterThan === "undefined") {
   }
 }
 
+if (typeof SIMD.int16x8.greaterThanOrEqual === "undefined") {
+  /**
+    * @param {int16x8} t An instance of int16x8.
+    * @param {int16x8} other An instance of int16x8.
+    * @return {int16x8} true or false in each lane depending on
+    * the result of t >= other.
+    */
+  SIMD.int16x8.greaterThanOrEqual = function(t, other) {
+    t = SIMD.int16x8(t);
+    other = SIMD.int16x8(other);
+    var cs0 = t.s0 >= other.s0;
+    var cs1 = t.s1 >= other.s1;
+    var cs2 = t.s2 >= other.s2;
+    var cs3 = t.s3 >= other.s3;
+    var cs4 = t.s4 >= other.s4;
+    var cs5 = t.s5 >= other.s5;
+    var cs6 = t.s6 >= other.s6;
+    var cs7 = t.s7 >= other.s7;
+    return SIMD.int16x8.bool(cs0, cs1, cs2, cs3, cs4, cs5, cs6, cs7);
+  }
+}
+
 if (typeof SIMD.int16x8.lessThan === "undefined") {
   /**
     * @param {int16x8} t An instance of int16x8.
@@ -3093,6 +3137,28 @@ if (typeof SIMD.int16x8.lessThan === "undefined") {
     var cs5 = t.s5 < other.s5;
     var cs6 = t.s6 < other.s6;
     var cs7 = t.s7 < other.s7;
+    return SIMD.int16x8.bool(cs0, cs1, cs2, cs3, cs4, cs5, cs6, cs7);
+  }
+}
+
+if (typeof SIMD.int16x8.lessThanOrEqual === "undefined") {
+  /**
+    * @param {int16x8} t An instance of int16x8.
+    * @param {int16x8} other An instance of int16x8.
+    * @return {int16x8} true or false in each lane depending on
+    * the result of t <= other.
+    */
+  SIMD.int16x8.lessThanOrEqual = function(t, other) {
+    t = SIMD.int16x8(t);
+    other = SIMD.int16x8(other);
+    var cs0 = t.s0 <= other.s0;
+    var cs1 = t.s1 <= other.s1;
+    var cs2 = t.s2 <= other.s2;
+    var cs3 = t.s3 <= other.s3;
+    var cs4 = t.s4 <= other.s4;
+    var cs5 = t.s5 <= other.s5;
+    var cs6 = t.s6 <= other.s6;
+    var cs7 = t.s7 <= other.s7;
     return SIMD.int16x8.bool(cs0, cs1, cs2, cs3, cs4, cs5, cs6, cs7);
   }
 }
@@ -3397,6 +3463,37 @@ if (typeof SIMD.int8x16.equal === "undefined") {
   }
 }
 
+if (typeof SIMD.int8x16.notEqual === "undefined") {
+  /**
+    * @param {int8x16} t An instance of int8x16.
+    * @param {int8x16} other An instance of int8x16.
+    * @return {int8x16} true or false in each lane depending on
+    * the result of t != other.
+    */
+  SIMD.int8x16.notEqual = function(t, other) {
+    t = SIMD.int8x16(t);
+    other = SIMD.int8x16(other);
+    var cs0 = t.s0 != other.s0;
+    var cs1 = t.s1 != other.s1;
+    var cs2 = t.s2 != other.s2;
+    var cs3 = t.s3 != other.s3;
+    var cs4 = t.s4 != other.s4;
+    var cs5 = t.s5 != other.s5;
+    var cs6 = t.s6 != other.s6;
+    var cs7 = t.s7 != other.s7;
+    var cs8 = t.s8 != other.s8;
+    var cs9 = t.s9 != other.s9;
+    var cs10 = t.s10 != other.s10;
+    var cs11 = t.s11 != other.s11;
+    var cs12 = t.s12 != other.s12;
+    var cs13 = t.s13 != other.s13;
+    var cs14 = t.s14 != other.s14;
+    var cs15 = t.s15 != other.s15;
+    return SIMD.int8x16.bool(cs0, cs1, cs2, cs3, cs4, cs5, cs6, cs7,
+                             cs8, cs9, cs10, cs11, cs12, cs13, cs14, cs15);
+  }
+}
+
 if (typeof SIMD.int8x16.greaterThan === "undefined") {
   /**
     * @param {int8x16} t An instance of int8x16.
@@ -3428,6 +3525,37 @@ if (typeof SIMD.int8x16.greaterThan === "undefined") {
   }
 }
 
+if (typeof SIMD.int8x16.greaterThanOrEqual === "undefined") {
+  /**
+    * @param {int8x16} t An instance of int8x16.
+    * @param {int8x16} other An instance of int8x16.
+    * @return {int8x16} true or false in each lane depending on
+    * the result of t >= other.
+    */
+  SIMD.int8x16.greaterThanOrEqual = function(t, other) {
+    t = SIMD.int8x16(t);
+    other = SIMD.int8x16(other);
+    var cs0 = t.s0 >= other.s0;
+    var cs1 = t.s1 >= other.s1;
+    var cs2 = t.s2 >= other.s2;
+    var cs3 = t.s3 >= other.s3;
+    var cs4 = t.s4 >= other.s4;
+    var cs5 = t.s5 >= other.s5;
+    var cs6 = t.s6 >= other.s6;
+    var cs7 = t.s7 >= other.s7;
+    var cs8 = t.s8 >= other.s8;
+    var cs9 = t.s9 >= other.s9;
+    var cs10 = t.s10 >= other.s10;
+    var cs11 = t.s11 >= other.s11;
+    var cs12 = t.s12 >= other.s12;
+    var cs13 = t.s13 >= other.s13;
+    var cs14 = t.s14 >= other.s14;
+    var cs15 = t.s15 >= other.s15;
+    return SIMD.int8x16.bool(cs0, cs1, cs2, cs3, cs4, cs5, cs6, cs7,
+                             cs8, cs9, cs10, cs11, cs12, cs13, cs14, cs15);
+  }
+}
+
 if (typeof SIMD.int8x16.lessThan === "undefined") {
   /**
     * @param {int8x16} t An instance of int8x16.
@@ -3454,6 +3582,37 @@ if (typeof SIMD.int8x16.lessThan === "undefined") {
     var cs13 = t.s13 < other.s13;
     var cs14 = t.s14 < other.s14;
     var cs15 = t.s15 < other.s15;
+    return SIMD.int8x16.bool(cs0, cs1, cs2, cs3, cs4, cs5, cs6, cs7,
+                             cs8, cs9, cs10, cs11, cs12, cs13, cs14, cs15);
+  }
+}
+
+if (typeof SIMD.int8x16.lessThanOrEqual === "undefined") {
+  /**
+    * @param {int8x16} t An instance of int8x16.
+    * @param {int8x16} other An instance of int8x16.
+    * @return {int8x16} true or false in each lane depending on
+    * the result of t <= other.
+    */
+  SIMD.int8x16.lessThanOrEqual = function(t, other) {
+    t = SIMD.int8x16(t);
+    other = SIMD.int8x16(other);
+    var cs0 = t.s0 <= other.s0;
+    var cs1 = t.s1 <= other.s1;
+    var cs2 = t.s2 <= other.s2;
+    var cs3 = t.s3 <= other.s3;
+    var cs4 = t.s4 <= other.s4;
+    var cs5 = t.s5 <= other.s5;
+    var cs6 = t.s6 <= other.s6;
+    var cs7 = t.s7 <= other.s7;
+    var cs8 = t.s8 <= other.s8;
+    var cs9 = t.s9 <= other.s9;
+    var cs10 = t.s10 <= other.s10;
+    var cs11 = t.s11 <= other.s11;
+    var cs12 = t.s12 <= other.s12;
+    var cs13 = t.s13 <= other.s13;
+    var cs14 = t.s14 <= other.s14;
+    var cs15 = t.s15 <= other.s15;
     return SIMD.int8x16.bool(cs0, cs1, cs2, cs3, cs4, cs5, cs6, cs7,
                              cs8, cs9, cs10, cs11, cs12, cs13, cs14, cs15);
   }
