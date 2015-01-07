@@ -1097,30 +1097,6 @@ if (typeof SIMD.float32x4.div === "undefined") {
   }
 }
 
-if (typeof SIMD.float32x4.clamp === "undefined") {
-  /**
-    * @param {float32x4} t An instance of float32x4.
-    * @param {float32x4} lowerLimit An instance of float32x4.
-    * @param {float32x4} upperLimit An instance of float32x4.
-    * @return {float32x4} New instance of float32x4 with t's values clamped
-    * between lowerLimit and upperLimit.
-    */
-  SIMD.float32x4.clamp = function(t, lowerLimit, upperLimit) {
-    t = SIMD.float32x4(t);
-    lowerLimit = SIMD.float32x4(lowerLimit);
-    upperLimit = SIMD.float32x4(upperLimit);
-    var cx = t.x < lowerLimit.x ? lowerLimit.x : t.x;
-    var cy = t.y < lowerLimit.y ? lowerLimit.y : t.y;
-    var cz = t.z < lowerLimit.z ? lowerLimit.z : t.z;
-    var cw = t.w < lowerLimit.w ? lowerLimit.w : t.w;
-    cx = cx > upperLimit.x ? upperLimit.x : cx;
-    cy = cy > upperLimit.y ? upperLimit.y : cy;
-    cz = cz > upperLimit.z ? upperLimit.z : cz;
-    cw = cw > upperLimit.w ? upperLimit.w : cw;
-    return SIMD.float32x4(cx, cy, cz, cw);
-  }
-}
-
 if (typeof SIMD.float32x4.min === "undefined") {
   /**
     * @param {float32x4} t An instance of float32x4.
@@ -1840,26 +1816,6 @@ if (typeof SIMD.float64x2.div === "undefined") {
     a = SIMD.float64x2(a);
     b = SIMD.float64x2(b);
     return SIMD.float64x2(a.x / b.x, a.y / b.y);
-  }
-}
-
-if (typeof SIMD.float64x2.clamp === "undefined") {
-  /**
-    * @param {float64x2} t An instance of float64x2.
-    * @param {float64x2} lowerLimit An instance of float64x2.
-    * @param {float64x2} upperLimit An instance of float64x2.
-    * @return {float64x2} New instance of float64x2 with t's values clamped
-    * between lowerLimit and upperLimit.
-    */
-  SIMD.float64x2.clamp = function(t, lowerLimit, upperLimit) {
-    t = SIMD.float64x2(t);
-    lowerLimit = SIMD.float64x2(lowerLimit);
-    upperLimit = SIMD.float64x2(upperLimit);
-    var cx = t.x < lowerLimit.x ? lowerLimit.x : t.x;
-    var cy = t.y < lowerLimit.y ? lowerLimit.y : t.y;
-    cx = cx > upperLimit.x ? upperLimit.x : cx;
-    cy = cy > upperLimit.y ? upperLimit.y : cy;
-    return SIMD.float64x2(cx, cy);
   }
 }
 
