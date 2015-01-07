@@ -1551,14 +1551,14 @@ if (typeof SIMD.float32x4.load === "undefined") {
     var bpe = tarray.BYTES_PER_ELEMENT;
     if (index < 0 || (index * bpe + 16) > tarray.byteLength)
       throw new RangeError("The value of index is invalid.");
+    var f32temp = _SIMD_PRIVATE._f32x4;
     var array = bpe == 1 ? _SIMD_PRIVATE._i8x16 :
                 bpe == 2 ? _SIMD_PRIVATE._i16x8 :
-                bpe == 4 ? (tarray instanceof Float32Array ? _SIMD_PRIVATE._f32x4 : _SIMD_PRIVATE._i32x4) :
+                bpe == 4 ? (tarray instanceof Float32Array ? f32temp : _SIMD_PRIVATE._i32x4) :
                 _SIMD_PRIVATE._f64x2;
     var n = 16 / bpe;
     for (var i = 0; i < n; ++i)
       array[i] = tarray[index + i];
-    var f32temp = _SIMD_PRIVATE._f32x4;
     return SIMD.float32x4(f32temp[0], f32temp[1], f32temp[2], f32temp[3]);
   }
 }
@@ -1577,14 +1577,14 @@ if (typeof SIMD.float32x4.loadX === "undefined") {
     var bpe = tarray.BYTES_PER_ELEMENT;
     if (index < 0 || (index * bpe + 4) > tarray.byteLength)
       throw new RangeError("The value of index is invalid.");
+    var f32temp = _SIMD_PRIVATE._f32x4;
     var array = bpe == 1 ? _SIMD_PRIVATE._i8x16 :
                 bpe == 2 ? _SIMD_PRIVATE._i16x8 :
-                bpe == 4 ? (tarray instanceof Float32Array ? _SIMD_PRIVATE._f32x4 : _SIMD_PRIVATE._i32x4) :
+                bpe == 4 ? (tarray instanceof Float32Array ? f32temp : _SIMD_PRIVATE._i32x4) :
                 _SIMD_PRIVATE._f64x2;
     var n = 4 / bpe;
     for (var i = 0; i < n; ++i)
       array[i] = tarray[index + i];
-    var f32temp = _SIMD_PRIVATE._f32x4;
     return SIMD.float32x4(f32temp[0], 0.0, 0.0, 0.0);
   }
 }
@@ -1603,14 +1603,14 @@ if (typeof SIMD.float32x4.loadXY === "undefined") {
     var bpe = tarray.BYTES_PER_ELEMENT;
     if (index < 0 || (index * bpe + 8) > tarray.byteLength)
       throw new RangeError("The value of index is invalid.");
+    var f32temp = _SIMD_PRIVATE._f32x4;
     var array = bpe == 1 ? _SIMD_PRIVATE._i8x16 :
                 bpe == 2 ? _SIMD_PRIVATE._i16x8 :
-                bpe == 4 ? (tarray instanceof Float32Array ? _SIMD_PRIVATE._f32x4 : _SIMD_PRIVATE._i32x4) :
+                bpe == 4 ? (tarray instanceof Float32Array ? f32temp : _SIMD_PRIVATE._i32x4) :
                 _SIMD_PRIVATE._f64x2;
     var n = 8 / bpe;
     for (var i = 0; i < n; ++i)
       array[i] = tarray[index + i];
-    var f32temp = _SIMD_PRIVATE._f32x4;
     return SIMD.float32x4(f32temp[0], f32temp[1], 0.0, 0.0);
   }
 }
@@ -1629,14 +1629,14 @@ if (typeof SIMD.float32x4.loadXYZ === "undefined") {
     var bpe = tarray.BYTES_PER_ELEMENT;
     if (index < 0 || (index * bpe + 12) > tarray.byteLength)
       throw new RangeError("The value of index is invalid.");
+    var f32temp = _SIMD_PRIVATE._f32x4;
     var array = bpe == 1 ? _SIMD_PRIVATE._i8x16 :
                 bpe == 2 ? _SIMD_PRIVATE._i16x8 :
-                bpe == 4 ? (tarray instanceof Float32Array ? _SIMD_PRIVATE._f32x4 : _SIMD_PRIVATE._i32x4) :
+                bpe == 4 ? (tarray instanceof Float32Array ? f32temp : _SIMD_PRIVATE._i32x4) :
                 _SIMD_PRIVATE._f64x2;
     var n = 12 / bpe;
     for (var i = 0; i < n; ++i)
       array[i] = tarray[index + i];
-    var f32temp = _SIMD_PRIVATE._f32x4;
     return SIMD.float32x4(f32temp[0], f32temp[1], f32temp[2], 0.0);
   }
 }
@@ -2685,14 +2685,14 @@ if (typeof SIMD.int32x4.load === "undefined") {
     var bpe = tarray.BYTES_PER_ELEMENT;
     if (index < 0 || (index * bpe + 16) > tarray.byteLength)
       throw new RangeError("The value of index is invalid.");
+    var i32temp = _SIMD_PRIVATE._i32x4;
     var array = bpe == 1 ? _SIMD_PRIVATE._i8x16 :
                 bpe == 2 ? _SIMD_PRIVATE._i16x8 :
-                bpe == 4 ? (tarray instanceof Float32Array ? _SIMD_PRIVATE._f32x4 : _SIMD_PRIVATE._i32x4) :
+                bpe == 4 ? (tarray instanceof Float32Array ? _SIMD_PRIVATE._f32x4 : i32temp) :
                 _SIMD_PRIVATE._f64x2;
     var n = 16 / bpe;
     for (var i = 0; i < n; ++i)
       array[i] = tarray[index + i];
-    var i32temp = _SIMD_PRIVATE._i32x4;
     return SIMD.int32x4(i32temp[0], i32temp[1], i32temp[2], i32temp[3]);
   }
 }
@@ -2711,14 +2711,14 @@ if (typeof SIMD.int32x4.loadX === "undefined") {
     var bpe = tarray.BYTES_PER_ELEMENT;
     if (index < 0 || (index * bpe + 4) > tarray.byteLength)
       throw new RangeError("The value of index is invalid.");
+    var i32temp = _SIMD_PRIVATE._i32x4;
     var array = bpe == 1 ? _SIMD_PRIVATE._i8x16 :
                 bpe == 2 ? _SIMD_PRIVATE._i16x8 :
-                bpe == 4 ? (tarray instanceof Float32Array ? _SIMD_PRIVATE._f32x4 : _SIMD_PRIVATE._i32x4) :
+                bpe == 4 ? (tarray instanceof Float32Array ? _SIMD_PRIVATE._f32x4 : i32temp) :
                 _SIMD_PRIVATE._f64x2;
     var n = 4 / bpe;
     for (var i = 0; i < n; ++i)
       array[i] = tarray[index + i];
-    var i32temp = _SIMD_PRIVATE._i32x4;
     return SIMD.int32x4(i32temp[0], 0, 0, 0);
   }
 }
@@ -2737,14 +2737,14 @@ if (typeof SIMD.int32x4.loadXY === "undefined") {
     var bpe = tarray.BYTES_PER_ELEMENT;
     if (index < 0 || (index * bpe + 8) > tarray.byteLength)
       throw new RangeError("The value of index is invalid.");
+    var i32temp = _SIMD_PRIVATE._i32x4;
     var array = bpe == 1 ? _SIMD_PRIVATE._i8x16 :
                 bpe == 2 ? _SIMD_PRIVATE._i16x8 :
-                bpe == 4 ? (tarray instanceof Float32Array ? _SIMD_PRIVATE._f32x4 : _SIMD_PRIVATE._i32x4) :
+                bpe == 4 ? (tarray instanceof Float32Array ? _SIMD_PRIVATE._f32x4 : i32temp) :
                 _SIMD_PRIVATE._f64x2;
     var n = 8 / bpe;
     for (var i = 0; i < n; ++i)
       array[i] = tarray[index + i];
-    var i32temp = _SIMD_PRIVATE._i32x4;
     return SIMD.int32x4(i32temp[0], i32temp[1], 0, 0);
   }
 }
@@ -2763,14 +2763,14 @@ if (typeof SIMD.int32x4.loadXYZ === "undefined") {
     var bpe = tarray.BYTES_PER_ELEMENT;
     if (index < 0 || (index * bpe + 12) > tarray.byteLength)
       throw new RangeError("The value of index is invalid.");
+    var i32temp = _SIMD_PRIVATE._i32x4;
     var array = bpe == 1 ? _SIMD_PRIVATE._i8x16 :
                 bpe == 2 ? _SIMD_PRIVATE._i16x8 :
-                bpe == 4 ? (tarray instanceof Float32Array ? _SIMD_PRIVATE._f32x4 : _SIMD_PRIVATE._i32x4) :
+                bpe == 4 ? (tarray instanceof Float32Array ? _SIMD_PRIVATE._f32x4 : i32temp) :
                 _SIMD_PRIVATE._f64x2;
     var n = 12 / bpe;
     for (var i = 0; i < n; ++i)
       array[i] = tarray[index + i];
-    var i32temp = _SIMD_PRIVATE._i32x4;
     return SIMD.int32x4(i32temp[0], i32temp[1], i32temp[2], 0);
   }
 }
