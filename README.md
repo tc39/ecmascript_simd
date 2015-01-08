@@ -168,28 +168,6 @@ single precision to double precision before being returned.
 Access the value stored in the **w** lane. The value will be converted from
 single precision to double precision before being returned.
 
-### Lane Mutators
-
-**float32x4 withX(double x)**
-
-Return a new instance with all lane values matching lane values of **this**
-except the the value in the **x** lane being given the value of **x**.
-
-**float32x4 withY(double y)**
-
-Return a new instance with all lane values matching lane values of **this**
-except the the value in the **y** lane being given the value of **y**.
-
-**float32x4 withZ(double z)**
-
-Return a new instance with all lane values matching lane values of **this**
-except the the value in the **z** lane being given the value of **z**.
-
-**float32x4 withW(double w)**
-
-Return a new instance with all lane values matching lane values of **this**
-except the the value in the **w** lane being given the value of **w**.
-
 ## int32x4
 
 ### Constructors
@@ -245,22 +223,3 @@ be false.
 Access the boolean value stored in the **w** lane. If the **w** lane is not 0
 the boolean value will be true. If the **w** lane is 0 the boolean value will
 be false.
-
-### Lane Mutators
-
-**int32x4 withX(integer x)**
-
-**int32x4 withY(integer y)**
-
-**int32x4 withZ(integer z)**
-
-**int32x4 withW(integer w)**
-
-**int32x4 withFlagX(boolean x)**
-
-**int32x4 withFlagY(boolean y)**
-
-**int32x4 withFlagZ(boolean z)**
-
-**int32x4 withFlagW(boolean w)**
-
