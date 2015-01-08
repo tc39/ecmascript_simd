@@ -1277,58 +1277,6 @@ if (typeof SIMD.float32x4.shuffle === "undefined") {
   }
 }
 
-if (typeof SIMD.float32x4.withX === "undefined") {
-  /**
-    * @param {float32x4} t An instance of float32x4.
-    * @param {double} value used for x lane.
-    * @return {float32x4} New instance of float32x4 with the values in t and
-    * x replaced with {x}.
-    */
-  SIMD.float32x4.withX = function(t, x) {
-    t = SIMD.float32x4(t);
-    return SIMD.float32x4(x, t.y, t.z, t.w);
-  }
-}
-
-if (typeof SIMD.float32x4.withY === "undefined") {
-  /**
-    * @param {float32x4} t An instance of float32x4.
-    * @param {double} value used for y lane.
-    * @return {float32x4} New instance of float32x4 with the values in t and
-    * y replaced with {y}.
-    */
-  SIMD.float32x4.withY = function(t, y) {
-    t = SIMD.float32x4(t);
-    return SIMD.float32x4(t.x, y, t.z, t.w);
-  }
-}
-
-if (typeof SIMD.float32x4.withZ === "undefined") {
-  /**
-    * @param {float32x4} t An instance of float32x4.
-    * @param {double} value used for z lane.
-    * @return {float32x4} New instance of float32x4 with the values in t and
-    * z replaced with {z}.
-    */
-  SIMD.float32x4.withZ = function(t, z) {
-    t = SIMD.float32x4(t);
-    return SIMD.float32x4(t.x, t.y, z, t.w);
-  }
-}
-
-if (typeof SIMD.float32x4.withW === "undefined") {
-  /**
-    * @param {float32x4} t An instance of float32x4.
-    * @param {double} value used for w lane.
-    * @return {float32x4} New instance of float32x4 with the values in t and
-    * w replaced with {w}.
-    */
-  SIMD.float32x4.withW = function(t, w) {
-    t = SIMD.float32x4(t);
-    return SIMD.float32x4(t.x, t.y, t.z, w);
-  }
-}
-
 if (typeof SIMD.float32x4.lessThan === "undefined") {
   /**
     * @param {float32x4} t An instance of float32x4.
@@ -1999,32 +1947,6 @@ if (typeof SIMD.float64x2.shuffle === "undefined") {
   }
 }
 
-if (typeof SIMD.float64x2.withX === "undefined") {
-  /**
-    * @param {float64x2} t An instance of float64x2.
-    * @param {double} value used for x lane.
-    * @return {float64x2} New instance of float64x2 with the values in t and
-    * x replaced with {x}.
-    */
-  SIMD.float64x2.withX = function(t, x) {
-    t = SIMD.float64x2(t);
-    return SIMD.float64x2(x, t.y);
-  }
-}
-
-if (typeof SIMD.float64x2.withY === "undefined") {
-  /**
-    * @param {float64x2} t An instance of float64x2.
-    * @param {double} value used for y lane.
-    * @return {float64x2} New instance of float64x2 with the values in t and
-    * y replaced with {y}.
-    */
-  SIMD.float64x2.withY = function(t, y) {
-    t = SIMD.float64x2(t);
-    return SIMD.float64x2(t.x, y);
-  }
-}
-
 if (typeof SIMD.float64x2.lessThan === "undefined") {
   /**
     * @param {float64x2} t An instance of float64x2.
@@ -2454,58 +2376,6 @@ if (typeof SIMD.int32x4.bitselect === "undefined") {
     var tr = SIMD.int32x4.and(t, trueValue);
     var fr = SIMD.int32x4.and(SIMD.int32x4.not(t), falseValue);
     return SIMD.int32x4.or(tr, fr);
-  }
-}
-
-if (typeof SIMD.int32x4.withX === "undefined") {
-  /**
-    * @param {int32x4} t An instance of int32x4.
-    * @param {integer} 32-bit value used for x lane.
-    * @return {int32x4} New instance of int32x4 with the values in t and
-    * x lane replaced with {x}.
-    */
-  SIMD.int32x4.withX = function(t, x) {
-    t = SIMD.int32x4(t);
-    return SIMD.int32x4(x, t.y, t.z, t.w);
-  }
-}
-
-if (typeof SIMD.int32x4.withY === "undefined") {
-  /**
-    * @param {int32x4} t An instance of int32x4.
-    * @param {integer} 32-bit value used for y lane.
-    * @return {int32x4} New instance of int32x4 with the values in t and
-    * y lane replaced with {y}.
-    */
-  SIMD.int32x4.withY = function(t, y) {
-    t = SIMD.int32x4(t);
-    return SIMD.int32x4(t.x, y, t.z, t.w);
-  }
-}
-
-if (typeof SIMD.int32x4.withZ === "undefined") {
-  /**
-    * @param {int32x4} t An instance of int32x4.
-    * @param {integer} 32-bit value used for z lane.
-    * @return {int32x4} New instance of int32x4 with the values in t and
-    * z lane replaced with {z}.
-    */
-  SIMD.int32x4.withZ = function(t, z) {
-    t = SIMD.int32x4(t);
-    return SIMD.int32x4(t.x, t.y, z, t.w);
-  }
-}
-
-if (typeof SIMD.int32x4.withW === "undefined") {
-  /**
-    * @param {int32x4} t An instance of int32x4.
-    * @param {integer} 32-bit value used for w lane.
-    * @return {int32x4} New instance of int32x4 with the values in t and
-    * w lane replaced with {w}.
-    */
-  SIMD.int32x4.withW = function(t, w) {
-    t = SIMD.int32x4(t);
-    return SIMD.int32x4(t.x, t.y, t.z, w);
   }
 }
 
