@@ -31,31 +31,31 @@ test('float32x4 constructor', function() {
   notEqual(undefined, SIMD.float32x4(1.0, 2.0, 3.0, 4.0));  // New object.
 });
 
-test('coercive constructors', function() {
+test('simd128 types check', function() {
   var x = SIMD.float32x4(1.0, 2.0, 3.0, 4.0);
-  equal(SIMD.float32x4(x), x);
-  throws(function() {SIMD.float32x4(1)});
-  throws(function() {SIMD.float32x4('hi')});
+  equal(SIMD.float32x4.check(x), x);
+  throws(function() {SIMD.float32x4.check(1)});
+  throws(function() {SIMD.float32x4.check('hi')});
 
   var y = SIMD.int32x4(1, 2, 3, 4);
-  equal(SIMD.int32x4(y), y);
-  throws(function() {SIMD.int32x4(1)});
-  throws(function() {SIMD.int32x4('hi')});
+  equal(SIMD.int32x4.check(y), y);
+  throws(function() {SIMD.int32x4.check(1)});
+  throws(function() {SIMD.int32x4.check('hi')});
 
   var z = SIMD.float64x2(1.0, 2.0);
-  equal(SIMD.float64x2(z), z);
-  throws(function() {SIMD.float64x2(1)});
-  throws(function() {SIMD.float64x2('hi')});
+  equal(SIMD.float64x2.check(z), z);
+  throws(function() {SIMD.float64x2.check(1)});
+  throws(function() {SIMD.float64x2.check('hi')});
 
   var u = SIMD.int16x8(1, 2, 3, 4, 5, 6, 7, 8);
-  equal(SIMD.int16x8(u), u);
-  throws(function() {SIMD.int16x8(1)});
-  throws(function() {SIMD.int16x8('hi')});
+  equal(SIMD.int16x8.check(u), u);
+  throws(function() {SIMD.int16x8.check(1)});
+  throws(function() {SIMD.int16x8.check('hi')});
 
   var v = SIMD.int8x16(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16);
-  equal(SIMD.int8x16(v), v);
-  throws(function() {SIMD.int8x16(1)});
-  throws(function() {SIMD.int8x16('hi')});
+  equal(SIMD.int8x16.check(v), v);
+  throws(function() {SIMD.int8x16.check(1)});
+  throws(function() {SIMD.int8x16.check('hi')});
 });
 
 test('float32x4 fromFloat64x2 constructor', function() {
