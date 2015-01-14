@@ -1,9 +1,6 @@
 "use strict"
 
-if (typeof SIMD === "undefined") {
-  load ('../ecmascript_simd.js');
-}
-
+load ('../ecmascript_simd.js');
 load ('base.js');
 
 // load individual benchmarks
