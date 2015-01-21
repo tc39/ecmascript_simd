@@ -63,31 +63,31 @@ class NonSIMDMandelbrotBenchmark extends BenchmarkBase {
 
 class SIMDMandelbrotBenchmark extends BenchmarkBase {
   const SIMDMandelbrotBenchmark() : super("SIMDMandelbrot");
-  final Uint32x4 one4 = new Uint32x4(1, 1, 1, 1);
+  final Int32x4 one4 = new Int32x4(1, 1, 1, 1);
 
   static void main() {
     new SIMDMandelbrotBenchmark().report();
   }
 
-  Uint32x4 mandelx4(Float32x4 c_re4, Float32x4 c_im4, int max_iterations) {
+  Int32x4 mandelx4(Float32x4 c_re4, Float32x4 c_im4, int max_iterations) {
     Float32x4 z_re4  = c_re4;
     Float32x4 z_im4  = c_im4;
     Float32x4 four4  = new Float32x4.splat(4.0);
     Float32x4 two4   = new Float32x4.splat(2.0);
-    Uint32x4 count4  = new Uint32x4(0, 0, 0, 0);
+    Int32x4 count4  = new Int32x4(0, 0, 0, 0);
 
     int i;
     bool done = false;
     for (i = 0; !done && i < max_iterations; ++i) {
       Float32x4 z_re24 = z_re4 * z_re4;
       Float32x4 z_im24 = z_im4 * z_im4;
-      Uint32x4 mi4 = (z_re24 + z_im24).lessThan(four4);
+      Int32x4 mi4 = (z_re24 + z_im24).lessThan(four4);
       done = mi4.signMask == 0x0;
       Float32x4 new_re4 = z_re24 - z_im24;
       Float32x4 new_im4 = two4 * z_re4 * z_im4;
       z_re4 = c_re4 + new_re4;
       z_im4 = c_im4 + new_im4;
-      Uint32x4 add01 = mi4 & one4;
+      Int32x4 add01 = mi4 & one4;
       count4 = count4 + add01;
     }
     return count4;

@@ -18,9 +18,6 @@
   3. This notice may not be removed or altered from any source distribution.
 */
 
-"use strict";
-
-
 function Int32x4Array(a, b, c) {
 
   function isNumber(o) {
@@ -57,7 +54,7 @@ function Int32x4Array(a, b, c) {
     this.storage_ = new Int32Array(a.length * 4);
     this.length_ = a.length;
     this.byteOffset_ = 0;
-    // Copy floats.
+    // Copy integers.
     for (var i = 0; i < a.length*4; i++) {
       this.storage_[i] = a.storage_[i];
     }
@@ -70,7 +67,7 @@ function Int32x4Array(a, b, c) {
       this.storage_ = new Int32Array(a, b, c);
     }
     else {
-      // Note: new Int32Array(a, b) is NOT equivalent to new Float32Array(a, b, undefined)
+      // Note: new Int32Array(a, b) is NOT equivalent to new Int32Array(a, b, undefined)
       this.storage_ = new Int32Array(a, b);
     }
     this.length_ = this.storage_.length / 4;
@@ -80,28 +77,28 @@ function Int32x4Array(a, b, c) {
   }
 }
 
-Object.defineProperty(Int32x4Array.prototype, 'length',
-  { get: function() { return this.length_; }
+Object.defineProperty(Int32x4Array.prototype, 'length', {
+  get: function() { return this.length_; }
 });
 
-Object.defineProperty(Int32x4Array.prototype, 'byteLength',
-  { get: function() { return this.length_ * Int32x4Array.BYTES_PER_ELEMENT; }
+Object.defineProperty(Int32x4Array.prototype, 'byteLength', {
+  get: function() { return this.length_ * Int32x4Array.BYTES_PER_ELEMENT; }
 });
 
-Object.defineProperty(Int32x4Array, 'BYTES_PER_ELEMENT',
-  { get: function() { return 16; }
+Object.defineProperty(Int32x4Array, 'BYTES_PER_ELEMENT', {
+  get: function() { return 16; }
 });
 
-Object.defineProperty(Int32x4Array.prototype, 'BYTES_PER_ELEMENT',
-  { get: function() { return 16; }
+Object.defineProperty(Int32x4Array.prototype, 'BYTES_PER_ELEMENT', {
+  get: function() { return 16; }
 });
 
-Object.defineProperty(Int32x4Array.prototype, 'byteOffset',
-  { get: function() { return this.byteOffset_; }
+Object.defineProperty(Int32x4Array.prototype, 'byteOffset', {
+  get: function() { return this.byteOffset_; }
 });
 
-Object.defineProperty(Int32x4Array.prototype, 'buffer',
-  { get: function() { return this.storage_.buffer; }
+Object.defineProperty(Int32x4Array.prototype, 'buffer', {
+  get: function() { return this.storage_.buffer; }
 });
 
 Int32x4Array.prototype.getAt = function(i) {
@@ -115,7 +112,7 @@ Int32x4Array.prototype.getAt = function(i) {
   var y = this.storage_[i*4+1];
   var z = this.storage_[i*4+2];
   var w = this.storage_[i*4+3];
-  return float32x4(x, y, z, w);
+  return SIMD.int32x4(x, y, z, w);
 }
 
 Int32x4Array.prototype.setAt = function(i, v) {
@@ -125,7 +122,7 @@ Int32x4Array.prototype.setAt = function(i, v) {
   if (i >= this.length) {
     throw "Index out of bounds.";
   }
-  if (!(v instanceof int32x4)) {
+  if (!(v instanceof SIMD.int32x4)) {
     throw "Value is not a int32x4.";
   }
   this.storage_[i*4+0] = v.x;

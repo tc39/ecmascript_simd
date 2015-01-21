@@ -44,10 +44,10 @@
   function mandelx4(c_re4, c_im4, max_iterations) {
     var z_re4  = c_re4;
     var z_im4  = c_im4;
-    var four4  = float32x4.splat (4.0);
-    var two4   = float32x4.splat (2.0);
-    var count4 = int32x4.splat (0);
-    var one4   = int32x4.splat (1);
+    var four4  = SIMD.float32x4.splat (4.0);
+    var two4   = SIMD.float32x4.splat (2.0);
+    var count4 = SIMD.int32x4.splat (0);
+    var one4   = SIMD.int32x4.splat (1);
 
     for (var i = 0; i < max_iterations; ++i) {
       var z_re24 = SIMD.float32x4.mul (z_re4, z_re4);
@@ -105,7 +105,7 @@
   // SIMD version of the kernel
   function simdMandelbrot (n) {
     var result = new Array (4);
-    var vec0  = float32x4.splat (0.01);
+    var vec0  = SIMD.float32x4.splat (0.01);
     for (var i = 0; i < n; ++i) {
       var r = mandelx4 (vec0, vec0, 100);
       result [0] = r.x;

@@ -111,100 +111,100 @@
 
     // Transpose the source matrix.  Sort of.  Not a true transpose operation
 
-    tmp1 = SIMD.float32x4.shuffleMix(src0, src1, SIMD.XYXY);
-    row1 = SIMD.float32x4.shuffleMix(src2, src3, SIMD.XYXY);
-    row0 = SIMD.float32x4.shuffleMix(tmp1, row1, SIMD.XZXZ);
-    row1 = SIMD.float32x4.shuffleMix(row1, tmp1, SIMD.YWYW);
+    tmp1 = SIMD.float32x4.shuffle(src0, src1, 0, 1, 4, 5);
+    row1 = SIMD.float32x4.shuffle(src2, src3, 0, 1, 4, 5);
+    row0 = SIMD.float32x4.shuffle(tmp1, row1, 0, 2, 4, 6);
+    row1 = SIMD.float32x4.shuffle(row1, tmp1, 1, 3, 5, 7);
 
-    tmp1 = SIMD.float32x4.shuffleMix(src0, src1, SIMD.ZWZW);
-    row3 = SIMD.float32x4.shuffleMix(src2, src3, SIMD.ZWZW);
-    row2 = SIMD.float32x4.shuffleMix(tmp1, row3, SIMD.XZXZ);
-    row3 = SIMD.float32x4.shuffleMix(row3, tmp1, SIMD.YWYW);
+    tmp1 = SIMD.float32x4.shuffle(src0, src1, 2, 3, 6, 7);
+    row3 = SIMD.float32x4.shuffle(src2, src3, 2, 3, 6, 7);
+    row2 = SIMD.float32x4.shuffle(tmp1, row3, 0, 2, 4, 6);
+    row3 = SIMD.float32x4.shuffle(row3, tmp1, 1, 3, 5, 7);
 
     // This is a true transposition, but it will lead to an incorrect result
 
-    //tmp1 = SIMD.float32x4.shuffleMix(src0, src1, SIMD.XYXY);
-    //tmp2 = SIMD.float32x4.shuffleMix(src2, src3, SIMD.XYXY);
-    //row0  = SIMD.float32x4.shuffleMix(tmp1, tmp2, SIMD.XZXZ);
-    //row1  = SIMD.float32x4.shuffleMix(tmp1, tmp2, SIMD.YWYW);
+    //tmp1 = SIMD.float32x4.shuffle(src0, src1, 0, 1, 4, 5);
+    //tmp2 = SIMD.float32x4.shuffle(src2, src3, 0, 1, 4, 5);
+    //row0  = SIMD.float32x4.shuffle(tmp1, tmp2, 0, 2, 4, 6);
+    //row1  = SIMD.float32x4.shuffle(tmp1, tmp2, 1, 3, 5, 7);
 
-    //tmp1 = SIMD.float32x4.shuffleMix(src0, src1, SIMD.ZWZW);
-    //tmp2 = SIMD.float32x4.shuffleMix(src2, src3, SIMD.ZWZW);
-    //row2  = SIMD.float32x4.shuffleMix(tmp1, tmp2, SIMD.XZXZ);
-    //row3  = SIMD.float32x4.shuffleMix(tmp1, tmp2, SIMD.YWYW);
+    //tmp1 = SIMD.float32x4.shuffle(src0, src1, 2, 3, 6, 7);
+    //tmp2 = SIMD.float32x4.shuffle(src2, src3, 2, 3, 6, 7);
+    //row2  = SIMD.float32x4.shuffle(tmp1, tmp2, 0, 2, 4, 6);
+    //row3  = SIMD.float32x4.shuffle(tmp1, tmp2, 1, 3, 5, 7);
 
     // ----
     tmp1   = SIMD.float32x4.mul(row2, row3);
-    tmp1   = SIMD.float32x4.shuffle(tmp1, SIMD.YXWZ); // 0xB1 = 10110001
+    tmp1   = SIMD.float32x4.swizzle(tmp1, 1, 0, 3, 2); // 0xB1 = 10110001
     minor0 = SIMD.float32x4.mul(row1, tmp1);
     minor1 = SIMD.float32x4.mul(row0, tmp1);
-    tmp1   = SIMD.float32x4.shuffle(tmp1, SIMD.ZWXY); // 0x4E = 01001110
+    tmp1   = SIMD.float32x4.swizzle(tmp1, 2, 3, 0, 1); // 0x4E = 01001110
     minor0 = SIMD.float32x4.sub(SIMD.float32x4.mul(row1, tmp1), minor0);
     minor1 = SIMD.float32x4.sub(SIMD.float32x4.mul(row0, tmp1), minor1);
-    minor1 = SIMD.float32x4.shuffle(minor1, SIMD.ZWXY); // 0x4E = 01001110
+    minor1 = SIMD.float32x4.swizzle(minor1, 2, 3, 0, 1); // 0x4E = 01001110
 
     // ----
     tmp1   = SIMD.float32x4.mul(row1, row2);
-    tmp1   = SIMD.float32x4.shuffle(tmp1, SIMD.YXWZ); // 0xB1 = 10110001
+    tmp1   = SIMD.float32x4.swizzle(tmp1, 1, 0, 3, 2); // 0xB1 = 10110001
     minor0 = SIMD.float32x4.add(SIMD.float32x4.mul(row3, tmp1), minor0);
     minor3 = SIMD.float32x4.mul(row0, tmp1);
-    tmp1   = SIMD.float32x4.shuffle(tmp1, SIMD.ZWXY); // 0x4E = 01001110
+    tmp1   = SIMD.float32x4.swizzle(tmp1, 2, 3, 0, 1); // 0x4E = 01001110
     minor0 = SIMD.float32x4.sub(minor0, SIMD.float32x4.mul(row3, tmp1));
     minor3 = SIMD.float32x4.sub(SIMD.float32x4.mul(row0, tmp1), minor3);
-    minor3 = SIMD.float32x4.shuffle(minor3, SIMD.ZWXY); // 0x4E = 01001110
+    minor3 = SIMD.float32x4.swizzle(minor3, 2, 3, 0, 1); // 0x4E = 01001110
 
     // ----
-    tmp1   = SIMD.float32x4.mul(SIMD.float32x4.shuffle(row1, SIMD.ZWXY), row3); // 0x4E = 01001110
-    tmp1   = SIMD.float32x4.shuffle(tmp1, SIMD.YXWZ); // 0xB1 = 10110001
-    row2   = SIMD.float32x4.shuffle(row2, SIMD.ZWXY);  // 0x4E = 01001110
+    tmp1   = SIMD.float32x4.mul(SIMD.float32x4.swizzle(row1, 2, 3, 0, 1), row3); // 0x4E = 01001110
+    tmp1   = SIMD.float32x4.swizzle(tmp1, 1, 0, 3, 2); // 0xB1 = 10110001
+    row2   = SIMD.float32x4.swizzle(row2, 2, 3, 0, 1);  // 0x4E = 01001110
     minor0 = SIMD.float32x4.add(SIMD.float32x4.mul(row2, tmp1), minor0);
     minor2 = SIMD.float32x4.mul(row0, tmp1);
-    tmp1   = SIMD.float32x4.shuffle(tmp1, SIMD.ZWXY); // 0x4E = 01001110
+    tmp1   = SIMD.float32x4.swizzle(tmp1, 2, 3, 0, 1); // 0x4E = 01001110
     minor0 = SIMD.float32x4.sub(minor0, SIMD.float32x4.mul(row2, tmp1));
     minor2 = SIMD.float32x4.sub(SIMD.float32x4.mul(row0, tmp1), minor2);
-    minor2 = SIMD.float32x4.shuffle(minor2, SIMD.ZWXY); // 0x4E = 01001110
+    minor2 = SIMD.float32x4.swizzle(minor2, 2, 3, 0, 1); // 0x4E = 01001110
 
     // ----
     tmp1   = SIMD.float32x4.mul(row0, row1);
-    tmp1   = SIMD.float32x4.shuffle(tmp1, SIMD.YXWZ); // 0xB1 = 10110001
+    tmp1   = SIMD.float32x4.swizzle(tmp1, 1, 0, 3, 2); // 0xB1 = 10110001
     minor2 = SIMD.float32x4.add(SIMD.float32x4.mul(row3, tmp1), minor2);
     minor3 = SIMD.float32x4.sub(SIMD.float32x4.mul(row2, tmp1), minor3);
-    tmp1   = SIMD.float32x4.shuffle(tmp1, SIMD.ZWXY); // 0x4E = 01001110
+    tmp1   = SIMD.float32x4.swizzle(tmp1, 2, 3, 0, 1); // 0x4E = 01001110
     minor2 = SIMD.float32x4.sub(SIMD.float32x4.mul(row3, tmp1), minor2);
     minor3 = SIMD.float32x4.sub(minor3, SIMD.float32x4.mul(row2, tmp1));
 
     // ----
     tmp1   = SIMD.float32x4.mul(row0, row3);
-    tmp1   = SIMD.float32x4.shuffle(tmp1, SIMD.YXWZ); // 0xB1 = 10110001
+    tmp1   = SIMD.float32x4.swizzle(tmp1, 1, 0, 3, 2); // 0xB1 = 10110001
     minor1 = SIMD.float32x4.sub(minor1, SIMD.float32x4.mul(row2, tmp1));
     minor2 = SIMD.float32x4.add(SIMD.float32x4.mul(row1, tmp1), minor2);
-    tmp1   = SIMD.float32x4.shuffle(tmp1, SIMD.ZWXY); // 0x4E = 01001110
+    tmp1   = SIMD.float32x4.swizzle(tmp1, 2, 3, 0, 1); // 0x4E = 01001110
     minor1 = SIMD.float32x4.add(SIMD.float32x4.mul(row2, tmp1), minor1);
     minor2 = SIMD.float32x4.sub(minor2, SIMD.float32x4.mul(row1, tmp1));
 
     // ----
     tmp1   = SIMD.float32x4.mul(row0, row2);
-    tmp1   = SIMD.float32x4.shuffle(tmp1, SIMD.YXWZ); // 0xB1 = 10110001
+    tmp1   = SIMD.float32x4.swizzle(tmp1, 1, 0, 3, 2); // 0xB1 = 10110001
     minor1 = SIMD.float32x4.add(SIMD.float32x4.mul(row3, tmp1), minor1);
     minor3 = SIMD.float32x4.sub(minor3, SIMD.float32x4.mul(row1, tmp1));
-    tmp1   = SIMD.float32x4.shuffle(tmp1, SIMD.ZWXY); // 0x4E = 01001110
+    tmp1   = SIMD.float32x4.swizzle(tmp1, 2, 3, 0, 1); // 0x4E = 01001110
     minor1 = SIMD.float32x4.sub(minor1, SIMD.float32x4.mul(row3, tmp1));
     minor3 = SIMD.float32x4.add(SIMD.float32x4.mul(row1, tmp1), minor3);
 
     // Compute determinant
     det   = SIMD.float32x4.mul(row0, minor0);
-    det   = SIMD.float32x4.add(SIMD.float32x4.shuffle(det, SIMD.ZWXY), det); // 0x4E = 01001110
-    det   = SIMD.float32x4.add(SIMD.float32x4.shuffle(det, SIMD.YXWZ), det); // 0xB1 = 10110001
+    det   = SIMD.float32x4.add(SIMD.float32x4.swizzle(det, 2, 3, 0, 1), det); // 0x4E = 01001110
+    det   = SIMD.float32x4.add(SIMD.float32x4.swizzle(det, 1, 0, 3, 2), det); // 0xB1 = 10110001
     tmp1  = SIMD.float32x4.reciprocal(det);
     det   = SIMD.float32x4.sub(SIMD.float32x4.add(tmp1, tmp1), SIMD.float32x4.mul(det, SIMD.float32x4.mul(tmp1, tmp1)));
-    det   = SIMD.float32x4.shuffle(det, SIMD.XXXX);
+    det   = SIMD.float32x4.swizzle(det, 0, 0, 0, 0);
 
     // These shuffles aren't necessary if the faulty transposition is done
     // up at the top of this function.
-    //minor0 = SIMD.float32x4.shuffle(minor0, SIMD.ZYXW);
-    //minor1 = SIMD.float32x4.shuffle(minor1, SIMD.ZYXW);
-    //minor2 = SIMD.float32x4.shuffle(minor2, SIMD.ZYXW);
-    //minor3 = SIMD.float32x4.shuffle(minor3, SIMD.ZYXW);
+    //minor0 = SIMD.float32x4.swizzle(minor0, 2, 1, 0, 3);
+    //minor1 = SIMD.float32x4.swizzle(minor1, 2, 1, 0, 3);
+    //minor2 = SIMD.float32x4.swizzle(minor2, 2, 1, 0, 3);
+    //minor3 = SIMD.float32x4.swizzle(minor3, 2, 1, 0, 3);
 
     // Compute final values by multiplying with 1/det
     minor0 = SIMD.float32x4.mul(det, minor0);
@@ -320,100 +320,100 @@
 
       // Transpose the source matrix.  Sort of.  Not a true transpose operation
 
-      tmp1 = SIMD.float32x4.shuffleMix(src0, src1, SIMD.XYXY);
-      row1 = SIMD.float32x4.shuffleMix(src2, src3, SIMD.XYXY);
-      row0 = SIMD.float32x4.shuffleMix(tmp1, row1, SIMD.XZXZ);
-      row1 = SIMD.float32x4.shuffleMix(row1, tmp1, SIMD.YWYW);
+      tmp1 = SIMD.float32x4.shuffle(src0, src1, 0, 1, 4, 5);
+      row1 = SIMD.float32x4.shuffle(src2, src3, 0, 1, 4, 5);
+      row0 = SIMD.float32x4.shuffle(tmp1, row1, 0, 2, 4, 6);
+      row1 = SIMD.float32x4.shuffle(row1, tmp1, 1, 3, 5, 7);
 
-      tmp1 = SIMD.float32x4.shuffleMix(src0, src1, SIMD.ZWZW);
-      row3 = SIMD.float32x4.shuffleMix(src2, src3, SIMD.ZWZW);
-      row2 = SIMD.float32x4.shuffleMix(tmp1, row3, SIMD.XZXZ);
-      row3 = SIMD.float32x4.shuffleMix(row3, tmp1, SIMD.YWYW);
+      tmp1 = SIMD.float32x4.shuffle(src0, src1, 2, 3, 6, 7);
+      row3 = SIMD.float32x4.shuffle(src2, src3, 2, 3, 6, 7);
+      row2 = SIMD.float32x4.shuffle(tmp1, row3, 0, 2, 4, 6);
+      row3 = SIMD.float32x4.shuffle(row3, tmp1, 1, 3, 5, 7);
 
       // This is a true transposition, but it will lead to an incorrect result
 
-      //tmp1 = SIMD.float32x4.shuffleMix(src0, src1, SIMD.XYXY);
-      //tmp2 = SIMD.float32x4.shuffleMix(src2, src3, SIMD.XYXY);
-      //row0  = SIMD.float32x4.shuffleMix(tmp1, tmp2, SIMD.XZXZ);
-      //row1  = SIMD.float32x4.shuffleMix(tmp1, tmp2, SIMD.YWYW);
+      //tmp1 = SIMD.float32x4.shuffle(src0, src1, 0, 1, 4, 5);
+      //tmp2 = SIMD.float32x4.shuffle(src2, src3, 0, 1, 4, 5);
+      //row0  = SIMD.float32x4.shuffle(tmp1, tmp2, 0, 2, 4, 6);
+      //row1  = SIMD.float32x4.shuffle(tmp1, tmp2, 1, 3, 5, 7);
 
-      //tmp1 = SIMD.float32x4.shuffleMix(src0, src1, SIMD.ZWZW);
-      //tmp2 = SIMD.float32x4.shuffleMix(src2, src3, SIMD.ZWZW);
-      //row2  = SIMD.float32x4.shuffleMix(tmp1, tmp2, SIMD.XZXZ);
-      //row3  = SIMD.float32x4.shuffleMix(tmp1, tmp2, SIMD.YWYW);
+      //tmp1 = SIMD.float32x4.shuffle(src0, src1, 2, 3, 6, 7);
+      //tmp2 = SIMD.float32x4.shuffle(src2, src3, 2, 3, 6, 7);
+      //row2  = SIMD.float32x4.shuffle(tmp1, tmp2, 0, 2, 4, 6);
+      //row3  = SIMD.float32x4.shuffle(tmp1, tmp2, 1, 3, 5, 7);
 
       // ----
       tmp1 = SIMD.float32x4.mul(row2, row3);
-      tmp1 = SIMD.float32x4.shuffle(tmp1, SIMD.YXWZ); // 0xB1 = 10110001
+      tmp1 = SIMD.float32x4.swizzle(tmp1, 1, 0, 3, 2); // 0xB1 = 10110001
       minor0 = SIMD.float32x4.mul(row1, tmp1);
       minor1 = SIMD.float32x4.mul(row0, tmp1);
-      tmp1 = SIMD.float32x4.shuffle(tmp1, SIMD.ZWXY); // 0x4E = 01001110
+      tmp1 = SIMD.float32x4.swizzle(tmp1, 2, 3, 0, 1); // 0x4E = 01001110
       minor0 = SIMD.float32x4.sub(SIMD.float32x4.mul(row1, tmp1), minor0);
       minor1 = SIMD.float32x4.sub(SIMD.float32x4.mul(row0, tmp1), minor1);
-      minor1 = SIMD.float32x4.shuffle(minor1, SIMD.ZWXY); // 0x4E = 01001110
+      minor1 = SIMD.float32x4.swizzle(minor1, 2, 3, 0, 1); // 0x4E = 01001110
 
       // ----
       tmp1 = SIMD.float32x4.mul(row1, row2);
-      tmp1 = SIMD.float32x4.shuffle(tmp1, SIMD.YXWZ); // 0xB1 = 10110001
+      tmp1 = SIMD.float32x4.swizzle(tmp1, 1, 0, 3, 2); // 0xB1 = 10110001
       minor0 = SIMD.float32x4.add(SIMD.float32x4.mul(row3, tmp1), minor0);
       minor3 = SIMD.float32x4.mul(row0, tmp1);
-      tmp1 = SIMD.float32x4.shuffle(tmp1, SIMD.ZWXY); // 0x4E = 01001110
+      tmp1 = SIMD.float32x4.swizzle(tmp1, 2, 3, 0, 1); // 0x4E = 01001110
       minor0 = SIMD.float32x4.sub(minor0, SIMD.float32x4.mul(row3, tmp1));
       minor3 = SIMD.float32x4.sub(SIMD.float32x4.mul(row0, tmp1), minor3);
-      minor3 = SIMD.float32x4.shuffle(minor3, SIMD.ZWXY); // 0x4E = 01001110
+      minor3 = SIMD.float32x4.swizzle(minor3, 2, 3, 0, 1); // 0x4E = 01001110
 
       // ----
-      tmp1 = SIMD.float32x4.mul(SIMD.float32x4.shuffle(row1, SIMD.ZWXY), row3); // 0x4E = 01001110
-      tmp1 = SIMD.float32x4.shuffle(tmp1, SIMD.YXWZ); // 0xB1 = 10110001
-      row2 = SIMD.float32x4.shuffle(row2, SIMD.ZWXY);  // 0x4E = 01001110
+      tmp1 = SIMD.float32x4.mul(SIMD.float32x4.swizzle(row1, 2, 3, 0, 1), row3); // 0x4E = 01001110
+      tmp1 = SIMD.float32x4.swizzle(tmp1, 1, 0, 3, 2); // 0xB1 = 10110001
+      row2 = SIMD.float32x4.swizzle(row2, 2, 3, 0, 1);  // 0x4E = 01001110
       minor0 = SIMD.float32x4.add(SIMD.float32x4.mul(row2, tmp1), minor0);
       minor2 = SIMD.float32x4.mul(row0, tmp1);
-      tmp1 = SIMD.float32x4.shuffle(tmp1, SIMD.ZWXY); // 0x4E = 01001110
+      tmp1 = SIMD.float32x4.swizzle(tmp1, 2, 3, 0, 1); // 0x4E = 01001110
       minor0 = SIMD.float32x4.sub(minor0, SIMD.float32x4.mul(row2, tmp1));
       minor2 = SIMD.float32x4.sub(SIMD.float32x4.mul(row0, tmp1), minor2);
-      minor2 = SIMD.float32x4.shuffle(minor2, SIMD.ZWXY); // 0x4E = 01001110
+      minor2 = SIMD.float32x4.swizzle(minor2, 2, 3, 0, 1); // 0x4E = 01001110
 
       // ----
       tmp1 = SIMD.float32x4.mul(row0, row1);
-      tmp1 = SIMD.float32x4.shuffle(tmp1, SIMD.YXWZ); // 0xB1 = 10110001
+      tmp1 = SIMD.float32x4.swizzle(tmp1, 1, 0, 3, 2); // 0xB1 = 10110001
       minor2 = SIMD.float32x4.add(SIMD.float32x4.mul(row3, tmp1), minor2);
       minor3 = SIMD.float32x4.sub(SIMD.float32x4.mul(row2, tmp1), minor3);
-      tmp1 = SIMD.float32x4.shuffle(tmp1, SIMD.ZWXY); // 0x4E = 01001110
+      tmp1 = SIMD.float32x4.swizzle(tmp1, 2, 3, 0, 1); // 0x4E = 01001110
       minor2 = SIMD.float32x4.sub(SIMD.float32x4.mul(row3, tmp1), minor2);
       minor3 = SIMD.float32x4.sub(minor3, SIMD.float32x4.mul(row2, tmp1));
 
       // ----
       tmp1 = SIMD.float32x4.mul(row0, row3);
-      tmp1 = SIMD.float32x4.shuffle(tmp1, SIMD.YXWZ); // 0xB1 = 10110001
+      tmp1 = SIMD.float32x4.swizzle(tmp1, 1, 0, 3, 2); // 0xB1 = 10110001
       minor1 = SIMD.float32x4.sub(minor1, SIMD.float32x4.mul(row2, tmp1));
       minor2 = SIMD.float32x4.add(SIMD.float32x4.mul(row1, tmp1), minor2);
-      tmp1 = SIMD.float32x4.shuffle(tmp1, SIMD.ZWXY); // 0x4E = 01001110
+      tmp1 = SIMD.float32x4.swizzle(tmp1, 2, 3, 0, 1); // 0x4E = 01001110
       minor1 = SIMD.float32x4.add(SIMD.float32x4.mul(row2, tmp1), minor1);
       minor2 = SIMD.float32x4.sub(minor2, SIMD.float32x4.mul(row1, tmp1));
 
       // ----
       tmp1 = SIMD.float32x4.mul(row0, row2);
-      tmp1 = SIMD.float32x4.shuffle(tmp1, SIMD.YXWZ); // 0xB1 = 10110001
+      tmp1 = SIMD.float32x4.swizzle(tmp1, 1, 0, 3, 2); // 0xB1 = 10110001
       minor1 = SIMD.float32x4.add(SIMD.float32x4.mul(row3, tmp1), minor1);
       minor3 = SIMD.float32x4.sub(minor3, SIMD.float32x4.mul(row1, tmp1));
-      tmp1 = SIMD.float32x4.shuffle(tmp1, SIMD.ZWXY); // 0x4E = 01001110
+      tmp1 = SIMD.float32x4.swizzle(tmp1, 2, 3, 0, 1); // 0x4E = 01001110
       minor1 = SIMD.float32x4.sub(minor1, SIMD.float32x4.mul(row3, tmp1));
       minor3 = SIMD.float32x4.add(SIMD.float32x4.mul(row1, tmp1), minor3);
 
       // Compute determinant
       det = SIMD.float32x4.mul(row0, minor0);
-      det = SIMD.float32x4.add(SIMD.float32x4.shuffle(det, SIMD.ZWXY), det); // 0x4E = 01001110
-      det = SIMD.float32x4.add(SIMD.float32x4.shuffle(det, SIMD.YXWZ), det); // 0xB1 = 10110001
+      det = SIMD.float32x4.add(SIMD.float32x4.swizzle(det, 2, 3, 0, 1), det); // 0x4E = 01001110
+      det = SIMD.float32x4.add(SIMD.float32x4.swizzle(det, 1, 0, 3, 2), det); // 0xB1 = 10110001
       tmp1 = SIMD.float32x4.reciprocal(det);
       det = SIMD.float32x4.sub(SIMD.float32x4.add(tmp1, tmp1), SIMD.float32x4.mul(det, SIMD.float32x4.mul(tmp1, tmp1)));
-      det = SIMD.float32x4.shuffle(det, SIMD.XXXX);
+      det = SIMD.float32x4.swizzle(det, 0, 0, 0, 0);
 
       // These shuffles aren't necessary if the faulty transposition is done
       // up at the top of this function.
-      //minor0 = SIMD.float32x4.shuffle(minor0, SIMD.ZYXW);
-      //minor1 = SIMD.float32x4.shuffle(minor1, SIMD.ZYXW);
-      //minor2 = SIMD.float32x4.shuffle(minor2, SIMD.ZYXW);
-      //minor3 = SIMD.float32x4.shuffle(minor3, SIMD.ZYXW);
+      //minor0 = SIMD.float32x4.swizzle(minor0, 2, 1, 0, 3);
+      //minor1 = SIMD.float32x4.swizzle(minor1, 2, 1, 0, 3);
+      //minor2 = SIMD.float32x4.swizzle(minor2, 2, 1, 0, 3);
+      //minor3 = SIMD.float32x4.swizzle(minor3, 2, 1, 0, 3);
 
       // Compute final values by multiplying with 1/det
       minor0 = SIMD.float32x4.mul(det, minor0);

@@ -24,7 +24,7 @@
   var tsrc   = new Float32Array(16);
   var tsrcx4 = new Float32x4Array(tsrc.buffer);
 
-  var sel_ttff = int32x4.bool(true, true, false, false);
+  var sel_ttff = SIMD.int32x4.bool(true, true, false, false);
 
   function initMatrix(matrix, matrixTransposed) {
     for (var r = 0; r < 4; ++r) {
@@ -79,7 +79,7 @@
     return init();
   }
 
-  // SIMD version of the kernel with SIMD.float32x4.shuffleMix operation
+  // SIMD version of the kernel with SIMD.float32x4.shuffle operation
   function simdTransposeMix() {
     var src0     = srcx4.getAt(0);
     var src1     = srcx4.getAt(1);
@@ -92,15 +92,15 @@
     var tmp01;
     var tmp23;
 
-    tmp01 = SIMD.float32x4.shuffleMix(src0, src1, SIMD.XYXY);
-    tmp23 = SIMD.float32x4.shuffleMix(src2, src3, SIMD.XYXY);
-    dst0  = SIMD.float32x4.shuffleMix(tmp01, tmp23, SIMD.XZXZ);
-    dst1  = SIMD.float32x4.shuffleMix(tmp01, tmp23, SIMD.YWYW);
+    tmp01 = SIMD.float32x4.shuffle(src0, src1, 0, 1, 4, 5);
+    tmp23 = SIMD.float32x4.shuffle(src2, src3, 0, 1, 4, 5);
+    dst0  = SIMD.float32x4.shuffle(tmp01, tmp23, 0, 2, 4, 6);
+    dst1  = SIMD.float32x4.shuffle(tmp01, tmp23, 1, 3, 5, 7);
 
-    tmp01 = SIMD.float32x4.shuffleMix(src0, src1, SIMD.ZWZW);
-    tmp23 = SIMD.float32x4.shuffleMix(src2, src3, SIMD.ZWZW);
-    dst2  = SIMD.float32x4.shuffleMix(tmp01, tmp23, SIMD.XZXZ);
-    dst3  = SIMD.float32x4.shuffleMix(tmp01, tmp23, SIMD.YWYW);
+    tmp01 = SIMD.float32x4.shuffle(src0, src1, 2, 3, 6, 7);
+    tmp23 = SIMD.float32x4.shuffle(src2, src3, 2, 3, 6, 7);
+    dst2  = SIMD.float32x4.shuffle(tmp01, tmp23, 0, 2, 4, 6);
+    dst3  = SIMD.float32x4.shuffle(tmp01, tmp23, 1, 3, 5, 7);
 
     dstx4.setAt(0, dst0);
     dstx4.setAt(1, dst1);
@@ -121,15 +121,15 @@
     var tmp01;
     var tmp23;
 
-    tmp01 = SIMD.int32x4.select(sel_ttff, src0, SIMD.float32x4.shuffle(src1, SIMD.XXXY));
-    tmp23 = SIMD.int32x4.select(sel_ttff, src2, SIMD.float32x4.shuffle(src3, SIMD.XXXY));
-    dst0  = SIMD.int32x4.select(sel_ttff, SIMD.float32x4.shuffle(tmp01, SIMD.XZXX), SIMD.float32x4.shuffle(tmp23, SIMD.XXXZ));
-    dst1  = SIMD.int32x4.select(sel_ttff, SIMD.float32x4.shuffle(tmp01, SIMD.YWXX), SIMD.float32x4.shuffle(tmp23, SIMD.XXYW));
+    tmp01 = SIMD.float32x4.select(sel_ttff, src0, SIMD.float32x4.swizzle(src1, 0, 0, 0, 1));
+    tmp23 = SIMD.float32x4.select(sel_ttff, src2, SIMD.float32x4.swizzle(src3, 0, 0, 0, 1));
+    dst0  = SIMD.float32x4.select(sel_ttff, SIMD.float32x4.swizzle(tmp01, 0, 2, 0, 0), SIMD.float32x4.swizzle(tmp23, 0, 0, 0, 2));
+    dst1  = SIMD.float32x4.select(sel_ttff, SIMD.float32x4.swizzle(tmp01, 1, 3, 0, 0), SIMD.float32x4.swizzle(tmp23, 0, 0, 1, 3));
 
-    tmp01 = SIMD.int32x4.select(sel_ttff, SIMD.float32x4.shuffle(src0, SIMD.ZWXX), src1);
-    tmp23 = SIMD.int32x4.select(sel_ttff, SIMD.float32x4.shuffle(src2, SIMD.ZWXX), src3);
-    dst2  = SIMD.int32x4.select(sel_ttff, SIMD.float32x4.shuffle(tmp01, SIMD.XZXX), SIMD.float32x4.shuffle(tmp23, SIMD.XXXZ));
-    dst3  = SIMD.int32x4.select(sel_ttff, SIMD.float32x4.shuffle(tmp01, SIMD.YWXX), SIMD.float32x4.shuffle(tmp23, SIMD.XXYW));
+    tmp01 = SIMD.float32x4.select(sel_ttff, SIMD.float32x4.swizzle(src0, 2, 3, 0, 0), src1);
+    tmp23 = SIMD.float32x4.select(sel_ttff, SIMD.float32x4.swizzle(src2, 2, 3, 0, 0), src3);
+    dst2  = SIMD.float32x4.select(sel_ttff, SIMD.float32x4.swizzle(tmp01, 0, 2, 0, 0), SIMD.float32x4.swizzle(tmp23, 0, 0, 0, 2));
+    dst3  = SIMD.float32x4.select(sel_ttff, SIMD.float32x4.swizzle(tmp01, 1, 3, 0, 0), SIMD.float32x4.swizzle(tmp23, 0, 0, 1, 3));
 
     dstx4.setAt(0, dst0);
     dstx4.setAt(1, dst1);
@@ -170,15 +170,15 @@
       var tmp01;
       var tmp23;
 
-      tmp01 = SIMD.float32x4.shuffleMix(src0, src1, SIMD.XYXY);
-      tmp23 = SIMD.float32x4.shuffleMix(src2, src3, SIMD.XYXY);
-      dst0 = SIMD.float32x4.shuffleMix(tmp01, tmp23, SIMD.XZXZ);
-      dst1 = SIMD.float32x4.shuffleMix(tmp01, tmp23, SIMD.YWYW);
+      tmp01 = SIMD.float32x4.shuffle(src0, src1, 0, 1, 4, 5);
+      tmp23 = SIMD.float32x4.shuffle(src2, src3, 0, 1, 4, 5);
+      dst0 = SIMD.float32x4.shuffle(tmp01, tmp23, 0, 2, 4, 6);
+      dst1 = SIMD.float32x4.shuffle(tmp01, tmp23, 1, 3, 5, 7);
 
-      tmp01 = SIMD.float32x4.shuffleMix(src0, src1, SIMD.ZWZW);
-      tmp23 = SIMD.float32x4.shuffleMix(src2, src3, SIMD.ZWZW);
-      dst2 = SIMD.float32x4.shuffleMix(tmp01, tmp23, SIMD.XZXZ);
-      dst3 = SIMD.float32x4.shuffleMix(tmp01, tmp23, SIMD.YWYW);
+      tmp01 = SIMD.float32x4.shuffle(src0, src1, 2, 3, 6, 7);
+      tmp23 = SIMD.float32x4.shuffle(src2, src3, 2, 3, 6, 7);
+      dst2 = SIMD.float32x4.shuffle(tmp01, tmp23, 0, 2, 4, 6);
+      dst3 = SIMD.float32x4.shuffle(tmp01, tmp23, 1, 3, 5, 7);
 
       dstx4.setAt(0, dst0);
       dstx4.setAt(1, dst1);

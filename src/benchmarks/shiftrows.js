@@ -105,13 +105,13 @@
     for (var r = 1; r < 4; ++r) {
       var rx4 = statex4.getAt(r);
       if (r == 1) {
-        statex4.setAt(r, SIMD.int32x4.shuffle(rx4, SIMD.YZWX));
+        statex4.setAt(r, SIMD.int32x4.swizzle(rx4, 1, 2, 3, 0));
       }
       else if (r == 2) {
-        statex4.setAt(r, SIMD.int32x4.shuffle(rx4, SIMD.ZWXY));
+        statex4.setAt(r, SIMD.int32x4.swizzle(rx4, 2, 3, 0, 1));
       }
       else { // r == 3
-        statex4.setAt(r, SIMD.int32x4.shuffle(rx4, SIMD.WXYZ));
+        statex4.setAt(r, SIMD.int32x4.swizzle(rx4, 3, 0, 1, 2));
       }
     }
   }

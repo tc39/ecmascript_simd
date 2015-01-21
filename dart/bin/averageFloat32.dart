@@ -66,9 +66,9 @@ class SIMDAverageBenchmark extends BenchmarkBase {
   }
 }
 
-class AverageBenchmark {
+class AverageFloat32Benchmark {
   static Object create() {
-    return new BenchmarkContrast("Average",
+    return new BenchmarkContrast("AverageFloat32",
                                  new NonSIMDAverageBenchmark(),
                                  new SIMDAverageBenchmark());
   }

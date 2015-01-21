@@ -19,7 +19,8 @@
 
 */
 
-import 'average.dart';
+import 'averageFloat32.dart';
+import 'averageFloat64.dart';
 import 'mandelbrot.dart';
 import 'matrix_multiply.dart';
 import 'vector_transform.dart';
@@ -27,7 +28,8 @@ import 'vector_transform.dart';
 main() {
   var Benchmarks = [];
 
-  Benchmarks.add(AverageBenchmark.create());
+  Benchmarks.add(AverageFloat32Benchmark.create());
+  Benchmarks.add(AverageFloat64Benchmark.create());
   Benchmarks.add(MandelbrotBenchmark.create());
   Benchmarks.add(MatrixMultiplyBenchmark.create());
   Benchmarks.add(VectorTransformBenchmark.create());
