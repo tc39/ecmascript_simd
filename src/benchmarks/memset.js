@@ -24,8 +24,6 @@
   var HEAP8  = new Int8Array(buffer);
   var HEAP32 = new Int32Array(buffer);
 
-  var HEAP32x4 = new Int32x4Array(buffer);
-
   var LEN = TOTAL_MEMORY/16;
   var ptr1 = 0;
   var ptr2 = ptr1 + LEN; 
@@ -106,7 +104,7 @@
 
 
       while ((ptr|0) < (stop16|0)) {
-        SIMD.int32x4.store(HEAP8, ((ptr)>>0), value16);
+        SIMD.int32x4.store(HEAP8, ((ptr)>>0), value16); 
         ptr = (ptr+16)|0;
       }
 
