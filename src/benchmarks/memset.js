@@ -1,4 +1,4 @@
-// Simple performance test of SIMD.add operation.  Use SIMD.add to memset a buffer 
+// Simple performance test memset using SIMD.
 // Author: Moh Haghighat 
 // December 10, 2014
 
@@ -19,13 +19,12 @@
 
   // Benchmark data, initialization and kernel functions
   var TOTAL_MEMORY = 4096*32;
-  var DIST = 16384;
   var buffer = new ArrayBuffer(TOTAL_MEMORY); 
 
-  var LEN = TOTAL_MEMORY/16;
+  var LEN  = TOTAL_MEMORY/16;
   var ptr1 = 0;
   var ptr2 = ptr1 + LEN; 
-  var VAL = 200;
+  var VAL  = 200;
 
   function sanityCheck() {
     var HEAP8 = new Uint8Array(buffer);
