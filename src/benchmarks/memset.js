@@ -125,7 +125,7 @@
 
 
         while ((ptr|0) < (stop16|0)) {
-          i4store(HEAP8, ((ptr)>>0), value16);
+          i4store(HEAPU8, ((ptr)>>0), value16);
           ptr = (ptr+16)|0;
         }
 
