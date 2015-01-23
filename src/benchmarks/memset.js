@@ -19,7 +19,10 @@
 
   // Benchmark data, initialization and kernel functions
   var TOTAL_MEMORY = 4096*32;
-  var buffer = new ArrayBuffer(TOTAL_MEMORY); 
+  var buffer = new ArrayBuffer(TOTAL_MEMORY);
+  var HEAP8 = new Int8Array(buffer);
+  var HEAP32 = new Int32Array(buffer);
+  var HEAPU8 = new Uint8Array(buffer);
 
   var LEN  = TOTAL_MEMORY/16;
   var ptr1 = 0;
@@ -27,7 +30,6 @@
   var VAL  = 200;
 
   function sanityCheck() {
-    var HEAP8 = new Uint8Array(buffer);
     for (var j = 0; j < LEN; ++j) {
       if (HEAP8[ptr1+j] != HEAP8[ptr2+j]) {
         return false; 
@@ -46,7 +48,8 @@
 
   function NonSimdAsmjsModule (global, imp, buffer) {
     "use asm"
-    var HEAP8 = new global.Uint8Array(buffer);
+
+    var HEAP8 = new global.Int8Array(buffer);
     var HEAP32 = new global.Int32Array(buffer);
 
     function _memset(ptr, value, num) {
@@ -85,8 +88,10 @@
 
   function SimdAsmjsModule (global, imp, buffer) {
     "use asm"
-    var HEAP8 = new global.Uint8Array(buffer);
+
+    var HEAP8 = new global.Int8Array(buffer);
     var HEAP32 = new global.Int32Array(buffer);
+    var HEAPU8 = new global.Uint8Array(buffer);
     var i4 = global.SIMD.int32x4;
     var i4splat = i4.splat;
     var i4store = i4.store;
@@ -120,7 +125,7 @@
 
 
         while ((ptr|0) < (stop16|0)) {
-          i4store(HEAP8, ((ptr)>>0), value16); 
+          i4store(HEAPU8, ((ptr)>>0), value16);
           ptr = (ptr+16)|0;
         }
 
