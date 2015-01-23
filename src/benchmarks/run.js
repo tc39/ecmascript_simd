@@ -13,6 +13,7 @@ if (typeof Int32x4Array === "undefined") {
 load ('base.js');
 
 // load individual benchmarks
+
 load ('kernel-template.js');
 load ('averageFloat32x4.js');
 load ('averageFloat32x4Load.js');
@@ -32,6 +33,7 @@ load ('transpose4x4.js');
 load ('inverse4x4.js');
 load ('sinx4.js');
 load ('memset.js');
+load ('memcpy.js');
 
 function printResult (str) {
   print (str);
