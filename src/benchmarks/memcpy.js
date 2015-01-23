@@ -165,7 +165,7 @@
     for (var i = 0; i < n; ++i) {
       // try memcpy of variable lengths, from 0 to LEN
       for (var j = 0; j < LEN; ++j) {
-        // try different alignments mode 16 from 0 to 15
+        // try different (alignment mod 16) from 0 to 15
         for (var k = 0; k < 16; k++){
           func (ptr2+k, ptr1, j);
         }
@@ -179,7 +179,7 @@
     for (var i = 0; i < n; ++i) {
       // try memcpy of variable lengths, from 0 to LEN
       for (var j = 0; j < LEN; ++j) {
-        // try different alignments mode 16 from 0 to 15
+        // try different (alignment mod 16) from 0 to 15
         for (var k = 0; k < 16; k++){
           func (ptr3+k, ptr1, j);
         }
