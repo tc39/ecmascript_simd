@@ -3242,6 +3242,21 @@ test('int16x8 select', function() {
   equal(16, s.s7);
 });
 
+test('int16x8 bitselect', function() {
+  var m = SIMD.int16x8(0xaaaaaaaa, 0xbbbbbbbb, 0xcccccccc, 0xdddddddd, 0xeeeeeeee, 0xffffffff, 0x00000000, 0x55555555);
+  var t = SIMD.int16x8(1, 2, 3, 4, 5, 6, 7, 8);
+  var f = SIMD.int16x8(9, 10, 11, 12, 13, 14, 15, 16);
+  var s = SIMD.int16x8.bitselect(m, t, f);
+  equal(1, s.s0);
+  equal(2, s.s1);
+  equal(3, s.s2);
+  equal(4, s.s3);
+  equal(5, s.s4);
+  equal(6, s.s5);
+  equal(15, s.s6);
+  equal(0, s.s7);
+});
+
 test('int8x16 and', function() {
   var m = SIMD.int8x16(0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 170, 170, 170, 170, 0xAA, 0xAA, 0xAA, 0xAA);
   var n = SIMD.int8x16(0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55);
@@ -3829,6 +3844,30 @@ test('int8x16 select', function() {
   equal(30, s.s13);
   equal(31, s.s14);
   equal(32, s.s15);
+});
+
+test('int8x16 bitselect', function() {
+  var m = SIMD.int8x16(0xaaaaaaaa, 0xbbbbbbbb, 0xcccccccc, 0xdddddddd, 0xeeeeeeee, 0xffffffff, 0x00000000, 0x11111111,
+                       0x22222222, 0x33333333, 0x44444444, 0x55555555, 0x66666666, 0x77777777, 0x88888888, 0x99999999);
+  var t = SIMD.int8x16(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16);
+  var f = SIMD.int8x16(17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32);
+  var s = SIMD.int8x16.bitselect(m, t, f);
+  equal(17, s.s0);
+  equal(2, s.s1);
+  equal(19, s.s2);
+  equal(4, s.s3);
+  equal(21, s.s4);
+  equal(6, s.s5);
+  equal(23, s.s6);
+  equal(8, s.s7);
+  equal(25, s.s8);
+  equal(10, s.s9);
+  equal(27, s.s10);
+  equal(12, s.s11);
+  equal(29, s.s12);
+  equal(14, s.s13);
+  equal(31, s.s14);
+  equal(48, s.s15);
 });
 
 test('int8x16 fromFloat32x4Bits constructor', function() {

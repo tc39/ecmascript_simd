@@ -3060,6 +3060,31 @@ if (typeof SIMD.int16x8.select === "undefined") {
     t = SIMD.int16x8.check(t);
     trueValue = SIMD.int16x8.check(trueValue);
     falseValue = SIMD.int16x8.check(falseValue);
+    return SIMD.int16x8(_SIMD_PRIVATE.tobool(t.s0) ? trueValue.s0 : falseValue.s0,
+                        _SIMD_PRIVATE.tobool(t.s1) ? trueValue.s1 : falseValue.s1,
+                        _SIMD_PRIVATE.tobool(t.s2) ? trueValue.s2 : falseValue.s2,
+                        _SIMD_PRIVATE.tobool(t.s3) ? trueValue.s3 : falseValue.s3,
+                        _SIMD_PRIVATE.tobool(t.s4) ? trueValue.s4 : falseValue.s4,
+                        _SIMD_PRIVATE.tobool(t.s5) ? trueValue.s5 : falseValue.s5,
+                        _SIMD_PRIVATE.tobool(t.s6) ? trueValue.s6 : falseValue.s6,
+                        _SIMD_PRIVATE.tobool(t.s7) ? trueValue.s7 : falseValue.s7);
+  }
+}
+
+if (typeof SIMD.int16x8.bitselect === "undefined") {
+  /**
+    * @param {int16x8} t Selector mask. An instance of int16x8
+    * @param {int16x8} trueValue Pick lane from here if corresponding
+    * selector bit is 1
+    * @param {int16x8} falseValue Pick lane from here if corresponding
+    * selector bit is 0
+    * @return {int16x8} Mix of lanes from trueValue or falseValue as
+    * indicated
+    */
+  SIMD.int16x8.bitselect = function(t, trueValue, falseValue) {
+    t = SIMD.int16x8.check(t);
+    trueValue = SIMD.int16x8.check(trueValue);
+    falseValue = SIMD.int16x8.check(falseValue);
     var tr = SIMD.int16x8.and(t, trueValue);
     var fr = SIMD.int16x8.and(SIMD.int16x8.not(t), falseValue);
     return SIMD.int16x8.or(tr, fr);
@@ -3458,6 +3483,39 @@ if (typeof SIMD.int8x16.select === "undefined") {
     * indicated
     */
   SIMD.int8x16.select = function(t, trueValue, falseValue) {
+    t = SIMD.int8x16.check(t);
+    trueValue = SIMD.int8x16.check(trueValue);
+    falseValue = SIMD.int8x16.check(falseValue);
+    return SIMD.int8x16(_SIMD_PRIVATE.tobool(t.s0) ? trueValue.s0 : falseValue.s0,
+                        _SIMD_PRIVATE.tobool(t.s1) ? trueValue.s1 : falseValue.s1,
+                        _SIMD_PRIVATE.tobool(t.s2) ? trueValue.s2 : falseValue.s2,
+                        _SIMD_PRIVATE.tobool(t.s3) ? trueValue.s3 : falseValue.s3,
+                        _SIMD_PRIVATE.tobool(t.s4) ? trueValue.s4 : falseValue.s4,
+                        _SIMD_PRIVATE.tobool(t.s5) ? trueValue.s5 : falseValue.s5,
+                        _SIMD_PRIVATE.tobool(t.s6) ? trueValue.s6 : falseValue.s6,
+                        _SIMD_PRIVATE.tobool(t.s7) ? trueValue.s7 : falseValue.s7,
+                        _SIMD_PRIVATE.tobool(t.s8) ? trueValue.s8 : falseValue.s8,
+                        _SIMD_PRIVATE.tobool(t.s9) ? trueValue.s9 : falseValue.s9,
+                        _SIMD_PRIVATE.tobool(t.s10) ? trueValue.s10 : falseValue.s10,
+                        _SIMD_PRIVATE.tobool(t.s11) ? trueValue.s11 : falseValue.s11,
+                        _SIMD_PRIVATE.tobool(t.s12) ? trueValue.s12 : falseValue.s12,
+                        _SIMD_PRIVATE.tobool(t.s13) ? trueValue.s13 : falseValue.s13,
+                        _SIMD_PRIVATE.tobool(t.s14) ? trueValue.s14 : falseValue.s14,
+                        _SIMD_PRIVATE.tobool(t.s15) ? trueValue.s15 : falseValue.s15);
+  }
+}
+
+if (typeof SIMD.int8x16.bitselect === "undefined") {
+  /**
+    * @param {int8x16} t Selector mask. An instance of int8x16
+    * @param {int8x16} trueValue Pick lane from here if corresponding
+    * selector bit is 1
+    * @param {int8x16} falseValue Pick lane from here if corresponding
+    * selector bit is 0
+    * @return {int8x16} Mix of lanes from trueValue or falseValue as
+    * indicated
+    */
+  SIMD.int8x16.bitselect = function(t, trueValue, falseValue) {
     t = SIMD.int8x16.check(t);
     trueValue = SIMD.int8x16.check(trueValue);
     falseValue = SIMD.int8x16.check(falseValue);
