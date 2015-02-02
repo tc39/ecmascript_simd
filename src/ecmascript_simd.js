@@ -29,17 +29,12 @@ if (typeof SIMD === "undefined") {
 // private stuff.
 var _SIMD_PRIVATE = {};
 
+// Temporary buffers for swizzles and bitcasts.
 _SIMD_PRIVATE._f32x4 = new Float32Array(4);
 _SIMD_PRIVATE._f64x2 = new Float64Array(_SIMD_PRIVATE._f32x4.buffer);
 _SIMD_PRIVATE._i32x4 = new Int32Array(_SIMD_PRIVATE._f32x4.buffer);
 _SIMD_PRIVATE._i16x8 = new Int16Array(_SIMD_PRIVATE._f32x4.buffer);
 _SIMD_PRIVATE._i8x16 = new Int8Array(_SIMD_PRIVATE._f32x4.buffer);
-
-_SIMD_PRIVATE._f32x8 = new Float32Array(8);
-_SIMD_PRIVATE._f64x4 = new Float64Array(4);
-_SIMD_PRIVATE._i32x8 = new Int32Array(8);
-_SIMD_PRIVATE._i16x16 = new Int16Array(16);
-_SIMD_PRIVATE._i8x32 = new Int8Array(32);
 
 if (typeof Math.fround !== 'undefined') {
   _SIMD_PRIVATE.truncatef32 = Math.fround;
@@ -51,6 +46,8 @@ if (typeof Math.fround !== 'undefined') {
     return _SIMD_PRIVATE._f32[0];
   }
 }
+
+// Type checking functions.
 
 _SIMD_PRIVATE.isNumber = function(o) {
   return typeof o === "number" || (typeof o === "object" && o.constructor === Number);
@@ -721,7 +718,7 @@ if (typeof SIMD.int16x8.check === "undefined") {
 
 if (typeof SIMD.int16x8.bool === "undefined") {
   /**
-    * Construct a new instance of int16x8 number with 0xFFFF or 0x0 in each
+    * Construct a new instance of int16x8 number with true or false in each
     * lane, depending on the truth value in s0, s1, s2, s3, s4, s5, s6, and s7.
     * @param {boolean} flag used for s0 lane.
     * @param {boolean} flag used for s1 lane.
@@ -956,7 +953,7 @@ if (typeof SIMD.int8x16.check === "undefined") {
 
 if (typeof SIMD.int8x16.bool === "undefined") {
   /**
-    * Construct a new instance of int8x16 number with 0xFF or 0x0 in each
+    * Construct a new instance of int8x16 number with true or false in each
     * lane, depending on the truth value in s0, s1, s2, s3, s4, s5, s6, s7,
     * s8, s9, s10, s11, s12, s13, s14, and s15.
     * @param {boolean} flag used for s0 lane.
@@ -1287,6 +1284,9 @@ if (typeof SIMD.float32x4.swizzle === "undefined") {
 }
 
 if (typeof SIMD.float32x4.shuffle === "undefined") {
+
+  _SIMD_PRIVATE._f32x8 = new Float32Array(8);
+
   /**
     * @param {float32x4} t1 An instance of float32x4 to be shuffled.
     * @param {float32x4} t2 An instance of float32x4 to be shuffled.
@@ -1586,14 +1586,14 @@ if (typeof SIMD.float32x4.load === "undefined") {
     var bpe = tarray.BYTES_PER_ELEMENT;
     if (index < 0 || (index * bpe + 16) > tarray.byteLength)
       throw new RangeError("The value of index is invalid.");
+    var f32temp = _SIMD_PRIVATE._f32x4;
     var array = bpe == 1 ? _SIMD_PRIVATE._i8x16 :
                 bpe == 2 ? _SIMD_PRIVATE._i16x8 :
-                bpe == 4 ? (tarray instanceof Float32Array ? _SIMD_PRIVATE._f32x4 : _SIMD_PRIVATE._i32x4) :
+                bpe == 4 ? (tarray instanceof Float32Array ? f32temp : _SIMD_PRIVATE._i32x4) :
                 _SIMD_PRIVATE._f64x2;
     var n = 16 / bpe;
     for (var i = 0; i < n; ++i)
       array[i] = tarray[index + i];
-    var f32temp = _SIMD_PRIVATE._f32x4;
     return SIMD.float32x4(f32temp[0], f32temp[1], f32temp[2], f32temp[3]);
   }
 }
@@ -1612,14 +1612,14 @@ if (typeof SIMD.float32x4.loadX === "undefined") {
     var bpe = tarray.BYTES_PER_ELEMENT;
     if (index < 0 || (index * bpe + 4) > tarray.byteLength)
       throw new RangeError("The value of index is invalid.");
+    var f32temp = _SIMD_PRIVATE._f32x4;
     var array = bpe == 1 ? _SIMD_PRIVATE._i8x16 :
                 bpe == 2 ? _SIMD_PRIVATE._i16x8 :
-                bpe == 4 ? (tarray instanceof Float32Array ? _SIMD_PRIVATE._f32x4 : _SIMD_PRIVATE._i32x4) :
+                bpe == 4 ? (tarray instanceof Float32Array ? f32temp : _SIMD_PRIVATE._i32x4) :
                 _SIMD_PRIVATE._f64x2;
     var n = 4 / bpe;
     for (var i = 0; i < n; ++i)
       array[i] = tarray[index + i];
-    var f32temp = _SIMD_PRIVATE._f32x4;
     return SIMD.float32x4(f32temp[0], 0.0, 0.0, 0.0);
   }
 }
@@ -1638,14 +1638,14 @@ if (typeof SIMD.float32x4.loadXY === "undefined") {
     var bpe = tarray.BYTES_PER_ELEMENT;
     if (index < 0 || (index * bpe + 8) > tarray.byteLength)
       throw new RangeError("The value of index is invalid.");
+    var f32temp = _SIMD_PRIVATE._f32x4;
     var array = bpe == 1 ? _SIMD_PRIVATE._i8x16 :
                 bpe == 2 ? _SIMD_PRIVATE._i16x8 :
-                bpe == 4 ? (tarray instanceof Float32Array ? _SIMD_PRIVATE._f32x4 : _SIMD_PRIVATE._i32x4) :
+                bpe == 4 ? (tarray instanceof Float32Array ? f32temp : _SIMD_PRIVATE._i32x4) :
                 _SIMD_PRIVATE._f64x2;
     var n = 8 / bpe;
     for (var i = 0; i < n; ++i)
       array[i] = tarray[index + i];
-    var f32temp = _SIMD_PRIVATE._f32x4;
     return SIMD.float32x4(f32temp[0], f32temp[1], 0.0, 0.0);
   }
 }
@@ -1664,14 +1664,14 @@ if (typeof SIMD.float32x4.loadXYZ === "undefined") {
     var bpe = tarray.BYTES_PER_ELEMENT;
     if (index < 0 || (index * bpe + 12) > tarray.byteLength)
       throw new RangeError("The value of index is invalid.");
+    var f32temp = _SIMD_PRIVATE._f32x4;
     var array = bpe == 1 ? _SIMD_PRIVATE._i8x16 :
                 bpe == 2 ? _SIMD_PRIVATE._i16x8 :
-                bpe == 4 ? (tarray instanceof Float32Array ? _SIMD_PRIVATE._f32x4 : _SIMD_PRIVATE._i32x4) :
+                bpe == 4 ? (tarray instanceof Float32Array ? f32temp : _SIMD_PRIVATE._i32x4) :
                 _SIMD_PRIVATE._f64x2;
     var n = 12 / bpe;
     for (var i = 0; i < n; ++i)
       array[i] = tarray[index + i];
-    var f32temp = _SIMD_PRIVATE._f32x4;
     return SIMD.float32x4(f32temp[0], f32temp[1], f32temp[2], 0.0);
   }
 }
@@ -2015,6 +2015,9 @@ if (typeof SIMD.float64x2.swizzle === "undefined") {
 }
 
 if (typeof SIMD.float64x2.shuffle === "undefined") {
+
+  _SIMD_PRIVATE._f64x4 = new Float64Array(4);
+
   /**
     * @param {float64x2} t1 An instance of float64x2 to be shuffled.
     * @param {float64x2} t2 An instance of float64x2 to be shuffled.
@@ -2407,12 +2410,12 @@ if (typeof SIMD.int32x4.mul === "undefined") {
 
 if (typeof SIMD.int32x4.swizzle === "undefined") {
   /**
-    * @param {int32x4} t An instance of float32x4 to be swizzled.
+    * @param {int32x4} t An instance of int32x4 to be swizzled.
     * @param {integer} x - Index in t for lane x
     * @param {integer} y - Index in t for lane y
     * @param {integer} z - Index in t for lane z
     * @param {integer} w - Index in t for lane w
-    * @return {int32x4} New instance of float32x4 with lanes swizzled.
+    * @return {int32x4} New instance of int32x4 with lanes swizzled.
     */
   SIMD.int32x4.swizzle = function(t, x, y, z, w) {
     t = SIMD.int32x4.check(t);
@@ -2426,14 +2429,17 @@ if (typeof SIMD.int32x4.swizzle === "undefined") {
 }
 
 if (typeof SIMD.int32x4.shuffle === "undefined") {
+
+  _SIMD_PRIVATE._i32x8 = new Int32Array(8);
+
   /**
-    * @param {int32x4} t1 An instance of float32x4 to be shuffled.
-    * @param {int32x4} t2 An instance of float32x4 to be shuffled.
+    * @param {int32x4} t1 An instance of int32x4 to be shuffled.
+    * @param {int32x4} t2 An instance of int32x4 to be shuffled.
     * @param {integer} x - Index in concatenation of t1 and t2 for lane x
     * @param {integer} y - Index in concatenation of t1 and t2 for lane y
     * @param {integer} z - Index in concatenation of t1 and t2 for lane z
     * @param {integer} w - Index in concatenation of t1 and t2 for lane w
-    * @return {int32x4} New instance of float32x4 with lanes shuffled.
+    * @return {int32x4} New instance of int32x4 with lanes shuffled.
     */
   SIMD.int32x4.shuffle = function(t1, t2, x, y, z, w) {
     t1 = SIMD.int32x4.check(t1);
@@ -2447,7 +2453,7 @@ if (typeof SIMD.int32x4.shuffle === "undefined") {
     storage[5] = t2.y;
     storage[6] = t2.z;
     storage[7] = t2.w;
-    return SIMD.float32x4(storage[x], storage[y], storage[z], storage[w]);
+    return SIMD.int32x4(storage[x], storage[y], storage[z], storage[w]);
   }
 }
 
@@ -2714,14 +2720,14 @@ if (typeof SIMD.int32x4.load === "undefined") {
     var bpe = tarray.BYTES_PER_ELEMENT;
     if (index < 0 || (index * bpe + 16) > tarray.byteLength)
       throw new RangeError("The value of index is invalid.");
+    var i32temp = _SIMD_PRIVATE._i32x4;
     var array = bpe == 1 ? _SIMD_PRIVATE._i8x16 :
                 bpe == 2 ? _SIMD_PRIVATE._i16x8 :
-                bpe == 4 ? (tarray instanceof Float32Array ? _SIMD_PRIVATE._f32x4 : _SIMD_PRIVATE._i32x4) :
+                bpe == 4 ? (tarray instanceof Float32Array ? _SIMD_PRIVATE._f32x4 : i32temp) :
                 _SIMD_PRIVATE._f64x2;
     var n = 16 / bpe;
     for (var i = 0; i < n; ++i)
       array[i] = tarray[index + i];
-    var i32temp = _SIMD_PRIVATE._i32x4;
     return SIMD.int32x4(i32temp[0], i32temp[1], i32temp[2], i32temp[3]);
   }
 }
@@ -2740,14 +2746,14 @@ if (typeof SIMD.int32x4.loadX === "undefined") {
     var bpe = tarray.BYTES_PER_ELEMENT;
     if (index < 0 || (index * bpe + 4) > tarray.byteLength)
       throw new RangeError("The value of index is invalid.");
+    var i32temp = _SIMD_PRIVATE._i32x4;
     var array = bpe == 1 ? _SIMD_PRIVATE._i8x16 :
                 bpe == 2 ? _SIMD_PRIVATE._i16x8 :
-                bpe == 4 ? (tarray instanceof Float32Array ? _SIMD_PRIVATE._f32x4 : _SIMD_PRIVATE._i32x4) :
+                bpe == 4 ? (tarray instanceof Float32Array ? _SIMD_PRIVATE._f32x4 : i32temp) :
                 _SIMD_PRIVATE._f64x2;
     var n = 4 / bpe;
     for (var i = 0; i < n; ++i)
       array[i] = tarray[index + i];
-    var i32temp = _SIMD_PRIVATE._i32x4;
     return SIMD.int32x4(i32temp[0], 0, 0, 0);
   }
 }
@@ -2766,14 +2772,14 @@ if (typeof SIMD.int32x4.loadXY === "undefined") {
     var bpe = tarray.BYTES_PER_ELEMENT;
     if (index < 0 || (index * bpe + 8) > tarray.byteLength)
       throw new RangeError("The value of index is invalid.");
+    var i32temp = _SIMD_PRIVATE._i32x4;
     var array = bpe == 1 ? _SIMD_PRIVATE._i8x16 :
                 bpe == 2 ? _SIMD_PRIVATE._i16x8 :
-                bpe == 4 ? (tarray instanceof Float32Array ? _SIMD_PRIVATE._f32x4 : _SIMD_PRIVATE._i32x4) :
+                bpe == 4 ? (tarray instanceof Float32Array ? _SIMD_PRIVATE._f32x4 : i32temp) :
                 _SIMD_PRIVATE._f64x2;
     var n = 8 / bpe;
     for (var i = 0; i < n; ++i)
       array[i] = tarray[index + i];
-    var i32temp = _SIMD_PRIVATE._i32x4;
     return SIMD.int32x4(i32temp[0], i32temp[1], 0, 0);
   }
 }
@@ -2792,14 +2798,14 @@ if (typeof SIMD.int32x4.loadXYZ === "undefined") {
     var bpe = tarray.BYTES_PER_ELEMENT;
     if (index < 0 || (index * bpe + 12) > tarray.byteLength)
       throw new RangeError("The value of index is invalid.");
+    var i32temp = _SIMD_PRIVATE._i32x4;
     var array = bpe == 1 ? _SIMD_PRIVATE._i8x16 :
                 bpe == 2 ? _SIMD_PRIVATE._i16x8 :
-                bpe == 4 ? (tarray instanceof Float32Array ? _SIMD_PRIVATE._f32x4 : _SIMD_PRIVATE._i32x4) :
+                bpe == 4 ? (tarray instanceof Float32Array ? _SIMD_PRIVATE._f32x4 : i32temp) :
                 _SIMD_PRIVATE._f64x2;
     var n = 12 / bpe;
     for (var i = 0; i < n; ++i)
       array[i] = tarray[index + i];
-    var i32temp = _SIMD_PRIVATE._i32x4;
     return SIMD.int32x4(i32temp[0], i32temp[1], i32temp[2], 0);
   }
 }
@@ -3044,9 +3050,9 @@ if (typeof SIMD.int16x8.select === "undefined") {
   /**
     * @param {int16x8} t Selector mask. An instance of int16x8
     * @param {int16x8} trueValue Pick lane from here if corresponding
-    * selector lane is 0xFFFF
+    * selector lane is true
     * @param {int16x8} falseValue Pick lane from here if corresponding
-    * selector lane is 0x0
+    * selector lane is false
     * @return {int16x8} Mix of lanes from trueValue or falseValue as
     * indicated
     */
@@ -3064,7 +3070,7 @@ if (typeof SIMD.int16x8.equal === "undefined") {
   /**
     * @param {int16x8} t An instance of int16x8.
     * @param {int16x8} other An instance of int16x8.
-    * @return {int16x8} 0xFFFF or 0x0 in each lane depending on
+    * @return {int16x8} true or false in each lane depending on
     * the result of t == other.
     */
   SIMD.int16x8.equal = function(t, other) {
@@ -3082,11 +3088,33 @@ if (typeof SIMD.int16x8.equal === "undefined") {
   }
 }
 
+if (typeof SIMD.int16x8.notEqual === "undefined") {
+  /**
+    * @param {int16x8} t An instance of int16x8.
+    * @param {int16x8} other An instance of int16x8.
+    * @return {int16x8} true or false in each lane depending on
+    * the result of t != other.
+    */
+  SIMD.int16x8.notEqual = function(t, other) {
+    t = SIMD.int16x8(t);
+    other = SIMD.int16x8(other);
+    var cs0 = t.s0 != other.s0;
+    var cs1 = t.s1 != other.s1;
+    var cs2 = t.s2 != other.s2;
+    var cs3 = t.s3 != other.s3;
+    var cs4 = t.s4 != other.s4;
+    var cs5 = t.s5 != other.s5;
+    var cs6 = t.s6 != other.s6;
+    var cs7 = t.s7 != other.s7;
+    return SIMD.int16x8.bool(cs0, cs1, cs2, cs3, cs4, cs5, cs6, cs7);
+  }
+}
+
 if (typeof SIMD.int16x8.greaterThan === "undefined") {
   /**
     * @param {int16x8} t An instance of int16x8.
     * @param {int16x8} other An instance of int16x8.
-    * @return {int16x8} 0xFFFF or 0x0 in each lane depending on
+    * @return {int16x8} true or false in each lane depending on
     * the result of t > other.
     */
   SIMD.int16x8.greaterThan = function(t, other) {
@@ -3104,11 +3132,33 @@ if (typeof SIMD.int16x8.greaterThan === "undefined") {
   }
 }
 
+if (typeof SIMD.int16x8.greaterThanOrEqual === "undefined") {
+  /**
+    * @param {int16x8} t An instance of int16x8.
+    * @param {int16x8} other An instance of int16x8.
+    * @return {int16x8} true or false in each lane depending on
+    * the result of t >= other.
+    */
+  SIMD.int16x8.greaterThanOrEqual = function(t, other) {
+    t = SIMD.int16x8(t);
+    other = SIMD.int16x8(other);
+    var cs0 = t.s0 >= other.s0;
+    var cs1 = t.s1 >= other.s1;
+    var cs2 = t.s2 >= other.s2;
+    var cs3 = t.s3 >= other.s3;
+    var cs4 = t.s4 >= other.s4;
+    var cs5 = t.s5 >= other.s5;
+    var cs6 = t.s6 >= other.s6;
+    var cs7 = t.s7 >= other.s7;
+    return SIMD.int16x8.bool(cs0, cs1, cs2, cs3, cs4, cs5, cs6, cs7);
+  }
+}
+
 if (typeof SIMD.int16x8.lessThan === "undefined") {
   /**
     * @param {int16x8} t An instance of int16x8.
     * @param {int16x8} other An instance of int16x8.
-    * @return {int16x8} 0xFFFF or 0x0 in each lane depending on
+    * @return {int16x8} true or false in each lane depending on
     * the result of t < other.
     */
   SIMD.int16x8.lessThan = function(t, other) {
@@ -3122,6 +3172,28 @@ if (typeof SIMD.int16x8.lessThan === "undefined") {
     var cs5 = t.s5 < other.s5;
     var cs6 = t.s6 < other.s6;
     var cs7 = t.s7 < other.s7;
+    return SIMD.int16x8.bool(cs0, cs1, cs2, cs3, cs4, cs5, cs6, cs7);
+  }
+}
+
+if (typeof SIMD.int16x8.lessThanOrEqual === "undefined") {
+  /**
+    * @param {int16x8} t An instance of int16x8.
+    * @param {int16x8} other An instance of int16x8.
+    * @return {int16x8} true or false in each lane depending on
+    * the result of t <= other.
+    */
+  SIMD.int16x8.lessThanOrEqual = function(t, other) {
+    t = SIMD.int16x8(t);
+    other = SIMD.int16x8(other);
+    var cs0 = t.s0 <= other.s0;
+    var cs1 = t.s1 <= other.s1;
+    var cs2 = t.s2 <= other.s2;
+    var cs3 = t.s3 <= other.s3;
+    var cs4 = t.s4 <= other.s4;
+    var cs5 = t.s5 <= other.s5;
+    var cs6 = t.s6 <= other.s6;
+    var cs7 = t.s7 <= other.s7;
     return SIMD.int16x8.bool(cs0, cs1, cs2, cs3, cs4, cs5, cs6, cs7);
   }
 }
@@ -3379,9 +3451,9 @@ if (typeof SIMD.int8x16.select === "undefined") {
   /**
     * @param {int8x16} t Selector mask. An instance of int8x16
     * @param {int8x16} trueValue Pick lane from here if corresponding
-    * selector lane is 0xFF
+    * selector lane is true
     * @param {int8x16} falseValue Pick lane from here if corresponding
-    * selector lane is 0x0
+    * selector lane is false
     * @return {int8x16} Mix of lanes from trueValue or falseValue as
     * indicated
     */
@@ -3399,7 +3471,7 @@ if (typeof SIMD.int8x16.equal === "undefined") {
   /**
     * @param {int8x16} t An instance of int8x16.
     * @param {int8x16} other An instance of int8x16.
-    * @return {int8x16} 0xFF or 0x0 in each lane depending on
+    * @return {int8x16} true or false in each lane depending on
     * the result of t == other.
     */
   SIMD.int8x16.equal = function(t, other) {
@@ -3426,11 +3498,42 @@ if (typeof SIMD.int8x16.equal === "undefined") {
   }
 }
 
+if (typeof SIMD.int8x16.notEqual === "undefined") {
+  /**
+    * @param {int8x16} t An instance of int8x16.
+    * @param {int8x16} other An instance of int8x16.
+    * @return {int8x16} true or false in each lane depending on
+    * the result of t != other.
+    */
+  SIMD.int8x16.notEqual = function(t, other) {
+    t = SIMD.int8x16(t);
+    other = SIMD.int8x16(other);
+    var cs0 = t.s0 != other.s0;
+    var cs1 = t.s1 != other.s1;
+    var cs2 = t.s2 != other.s2;
+    var cs3 = t.s3 != other.s3;
+    var cs4 = t.s4 != other.s4;
+    var cs5 = t.s5 != other.s5;
+    var cs6 = t.s6 != other.s6;
+    var cs7 = t.s7 != other.s7;
+    var cs8 = t.s8 != other.s8;
+    var cs9 = t.s9 != other.s9;
+    var cs10 = t.s10 != other.s10;
+    var cs11 = t.s11 != other.s11;
+    var cs12 = t.s12 != other.s12;
+    var cs13 = t.s13 != other.s13;
+    var cs14 = t.s14 != other.s14;
+    var cs15 = t.s15 != other.s15;
+    return SIMD.int8x16.bool(cs0, cs1, cs2, cs3, cs4, cs5, cs6, cs7,
+                             cs8, cs9, cs10, cs11, cs12, cs13, cs14, cs15);
+  }
+}
+
 if (typeof SIMD.int8x16.greaterThan === "undefined") {
   /**
     * @param {int8x16} t An instance of int8x16.
     * @param {int8x16} other An instance of int8x16.
-    * @return {int8x16} 0xFF or 0x0 in each lane depending on
+    * @return {int8x16} true or false in each lane depending on
     * the result of t > other.
     */
   SIMD.int8x16.greaterThan = function(t, other) {
@@ -3457,11 +3560,42 @@ if (typeof SIMD.int8x16.greaterThan === "undefined") {
   }
 }
 
+if (typeof SIMD.int8x16.greaterThanOrEqual === "undefined") {
+  /**
+    * @param {int8x16} t An instance of int8x16.
+    * @param {int8x16} other An instance of int8x16.
+    * @return {int8x16} true or false in each lane depending on
+    * the result of t >= other.
+    */
+  SIMD.int8x16.greaterThanOrEqual = function(t, other) {
+    t = SIMD.int8x16(t);
+    other = SIMD.int8x16(other);
+    var cs0 = t.s0 >= other.s0;
+    var cs1 = t.s1 >= other.s1;
+    var cs2 = t.s2 >= other.s2;
+    var cs3 = t.s3 >= other.s3;
+    var cs4 = t.s4 >= other.s4;
+    var cs5 = t.s5 >= other.s5;
+    var cs6 = t.s6 >= other.s6;
+    var cs7 = t.s7 >= other.s7;
+    var cs8 = t.s8 >= other.s8;
+    var cs9 = t.s9 >= other.s9;
+    var cs10 = t.s10 >= other.s10;
+    var cs11 = t.s11 >= other.s11;
+    var cs12 = t.s12 >= other.s12;
+    var cs13 = t.s13 >= other.s13;
+    var cs14 = t.s14 >= other.s14;
+    var cs15 = t.s15 >= other.s15;
+    return SIMD.int8x16.bool(cs0, cs1, cs2, cs3, cs4, cs5, cs6, cs7,
+                             cs8, cs9, cs10, cs11, cs12, cs13, cs14, cs15);
+  }
+}
+
 if (typeof SIMD.int8x16.lessThan === "undefined") {
   /**
     * @param {int8x16} t An instance of int8x16.
     * @param {int8x16} other An instance of int8x16.
-    * @return {int8x16} 0xFF or 0x0 in each lane depending on
+    * @return {int8x16} true or false in each lane depending on
     * the result of t < other.
     */
   SIMD.int8x16.lessThan = function(t, other) {
@@ -3483,6 +3617,37 @@ if (typeof SIMD.int8x16.lessThan === "undefined") {
     var cs13 = t.s13 < other.s13;
     var cs14 = t.s14 < other.s14;
     var cs15 = t.s15 < other.s15;
+    return SIMD.int8x16.bool(cs0, cs1, cs2, cs3, cs4, cs5, cs6, cs7,
+                             cs8, cs9, cs10, cs11, cs12, cs13, cs14, cs15);
+  }
+}
+
+if (typeof SIMD.int8x16.lessThanOrEqual === "undefined") {
+  /**
+    * @param {int8x16} t An instance of int8x16.
+    * @param {int8x16} other An instance of int8x16.
+    * @return {int8x16} true or false in each lane depending on
+    * the result of t <= other.
+    */
+  SIMD.int8x16.lessThanOrEqual = function(t, other) {
+    t = SIMD.int8x16(t);
+    other = SIMD.int8x16(other);
+    var cs0 = t.s0 <= other.s0;
+    var cs1 = t.s1 <= other.s1;
+    var cs2 = t.s2 <= other.s2;
+    var cs3 = t.s3 <= other.s3;
+    var cs4 = t.s4 <= other.s4;
+    var cs5 = t.s5 <= other.s5;
+    var cs6 = t.s6 <= other.s6;
+    var cs7 = t.s7 <= other.s7;
+    var cs8 = t.s8 <= other.s8;
+    var cs9 = t.s9 <= other.s9;
+    var cs10 = t.s10 <= other.s10;
+    var cs11 = t.s11 <= other.s11;
+    var cs12 = t.s12 <= other.s12;
+    var cs13 = t.s13 <= other.s13;
+    var cs14 = t.s14 <= other.s14;
+    var cs15 = t.s15 <= other.s15;
     return SIMD.int8x16.bool(cs0, cs1, cs2, cs3, cs4, cs5, cs6, cs7,
                              cs8, cs9, cs10, cs11, cs12, cs13, cs14, cs15);
   }
@@ -3577,7 +3742,7 @@ if (typeof SIMD.int8x16.shiftRightArithmeticByScalar === "undefined") {
 
 if (typeof SIMD.int8x16.load === "undefined") {
   /**
-    * @param {Typed array} buffer An instance of a typed array.
+    * @param {Typed array} tarray An instance of a typed array.
     * @param {Number} index An instance of Number.
     * @return {int8x16} New instance of int8x16.
     */

@@ -1,15 +1,6 @@
 "use strict"
 
-if (typeof SIMD === "undefined") {
-  load ('../ecmascript_simd.js');
-}
-if (typeof Float32x4Array === "undefined") {
-  load ('../float32x4array.js');
-}
-if (typeof Int32x4Array === "undefined") {
-  load ('../int32x4array.js');
-}
-
+load ('../ecmascript_simd.js');
 load ('base.js');
 
 // load individual benchmarks
