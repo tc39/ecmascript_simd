@@ -91,6 +91,12 @@ _SIMD_PRIVATE.frombool = function(x) {
   return !x - 1;
 }
 
+_SIMD_PRIVATE.int32FromFloat = function(x) {
+  if (x >= -0x80000000 && x <= 0x7fffffff)
+      return x|0;
+  throw new RangeError("Conversion from floating-point to integer failed");
+}
+
 // Save/Restore utilities for implementing bitwise conversions.
 
 _SIMD_PRIVATE.saveFloat64x2 = function(x) {
@@ -564,7 +570,10 @@ if (typeof SIMD.int32x4.fromFloat32x4 === "undefined") {
     */
   SIMD.int32x4.fromFloat32x4 = function(t) {
     t = SIMD.float32x4.check(t);
-    return SIMD.int32x4(t.x, t.y, t.z, t.w);
+    return SIMD.int32x4(_SIMD_PRIVATE.int32FromFloat(t.x),
+                        _SIMD_PRIVATE.int32FromFloat(t.y),
+                        _SIMD_PRIVATE.int32FromFloat(t.z),
+                        _SIMD_PRIVATE.int32FromFloat(t.w));
   }
 }
 
@@ -575,7 +584,10 @@ if (typeof SIMD.int32x4.fromFloat64x2 === "undefined") {
     */
   SIMD.int32x4.fromFloat64x2 = function(t) {
     t = SIMD.float64x2.check(t);
-    return SIMD.int32x4(t.x, t.y, 0, 0);
+    return SIMD.int32x4(_SIMD_PRIVATE.int32FromFloat(t.x),
+                        _SIMD_PRIVATE.int32FromFloat(t.y),
+                        0,
+                        0);
   }
 }
 
