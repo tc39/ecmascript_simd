@@ -400,18 +400,18 @@ test('float32x4 max exceptions', function() {
   });
 });
 
-test('float32x4 reciprocal', function() {
+test('float32x4 reciprocal approximation', function() {
   var a = SIMD.float32x4(8.0, 4.0, 2.0, -2.0);
-  var c = SIMD.float32x4.reciprocal(a);
-  equal(0.125, c.x);
-  equal(0.250, c.y);
-  equal(0.5, c.z);
-  equal(-0.5, c.w);
+  var c = SIMD.float32x4.reciprocalApproximation(a);
+  almostEqual(0.125, c.x);
+  almostEqual(0.250, c.y);
+  almostEqual(0.5, c.z);
+  almostEqual(-0.5, c.w);
 });
 
-test('float32x4 reciprocal sqrt', function() {
+test('float32x4 reciprocal sqrt approximation', function() {
   var a = SIMD.float32x4(1.0, 0.25, 0.111111, 0.0625);
-  var c = SIMD.float32x4.reciprocalSqrt(a);
+  var c = SIMD.float32x4.reciprocalSqrtApproximation(a);
   almostEqual(1.0, c.x);
   almostEqual(2.0, c.y);
   almostEqual(3.0, c.z);
@@ -1500,16 +1500,16 @@ test('float64x2 max exceptions', function() {
   });
 });
 
-test('float64x2 reciprocal', function() {
+test('float64x2 reciprocal approximation', function() {
   var a = SIMD.float64x2(2.0, -2.0);
-  var c = SIMD.float64x2.reciprocal(a);
-  equal(0.5, c.x);
-  equal(-0.5, c.y);
+  var c = SIMD.float64x2.reciprocalApproximation(a);
+  almostEqual(0.5, c.x);
+  almostEqual(-0.5, c.y);
 });
 
-test('float64x2 reciprocal sqrt', function() {
+test('float64x2 reciprocal sqrt approximation', function() {
   var a = SIMD.float64x2(1.0, 0.25);
-  var c = SIMD.float64x2.reciprocalSqrt(a);
+  var c = SIMD.float64x2.reciprocalSqrtApproximation(a);
   almostEqual(1.0, c.x);
   almostEqual(2.0, c.y);
 });
