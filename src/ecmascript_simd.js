@@ -2173,8 +2173,10 @@ if (typeof SIMD.float64x2.select === "undefined") {
     t = SIMD.int32x4.check(t);
     trueValue = SIMD.float64x2.check(trueValue);
     falseValue = SIMD.float64x2.check(falseValue);
+    // We use t.z for the second element because t is an int32x4, because
+    // int64x2 isn't available.
     return SIMD.float64x2(_SIMD_PRIVATE.tobool(t.x) ? trueValue.x : falseValue.x,
-                          _SIMD_PRIVATE.tobool(t.y) ? trueValue.y : falseValue.y);
+                          _SIMD_PRIVATE.tobool(t.z) ? trueValue.y : falseValue.y);
   }
 }
 
