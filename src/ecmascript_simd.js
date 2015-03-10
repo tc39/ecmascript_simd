@@ -1237,25 +1237,25 @@ if (typeof SIMD.float32x4.maxNum === "undefined") {
   }
 }
 
-if (typeof SIMD.float32x4.reciprocal === "undefined") {
+if (typeof SIMD.float32x4.reciprocalApproximation === "undefined") {
   /**
     * @param {float32x4} t An instance of float32x4.
-    * @return {float32x4} New instance of float32x4 with reciprocal value of
-    * t.
+    * @return {float32x4} New instance of float32x4 with an approximation of the
+    * reciprocal value of t.
     */
-  SIMD.float32x4.reciprocal = function(t) {
+  SIMD.float32x4.reciprocalApproximation = function(t) {
     t = SIMD.float32x4.check(t);
     return SIMD.float32x4(1.0 / t.x, 1.0 / t.y, 1.0 / t.z, 1.0 / t.w);
   }
 }
 
-if (typeof SIMD.float32x4.reciprocalSqrt === "undefined") {
+if (typeof SIMD.float32x4.reciprocalSqrtApproximation === "undefined") {
   /**
     * @param {float32x4} t An instance of float32x4.
-    * @return {float32x4} New instance of float32x4 with square root of the
-    * reciprocal value of t.
+    * @return {float32x4} New instance of float32x4 with an approximation of the
+    * square root of the reciprocal value of t.
     */
-  SIMD.float32x4.reciprocalSqrt = function(t) {
+  SIMD.float32x4.reciprocalSqrtApproximation = function(t) {
     t = SIMD.float32x4.check(t);
     return SIMD.float32x4(Math.sqrt(1.0 / t.x), Math.sqrt(1.0 / t.y),
                           Math.sqrt(1.0 / t.z), Math.sqrt(1.0 / t.w));
@@ -1974,25 +1974,25 @@ if (typeof SIMD.float64x2.maxNum === "undefined") {
   }
 }
 
-if (typeof SIMD.float64x2.reciprocal === "undefined") {
+if (typeof SIMD.float64x2.reciprocalApproximation === "undefined") {
   /**
     * @param {float64x2} t An instance of float64x2.
-    * @return {float64x2} New instance of float64x2 with reciprocal value of
-    * t.
+    * @return {float64x2} New instance of float64x2 with an approximation of the
+    * reciprocal value of t.
     */
-  SIMD.float64x2.reciprocal = function(t) {
+  SIMD.float64x2.reciprocalApproximation = function(t) {
     t = SIMD.float64x2.check(t);
     return SIMD.float64x2(1.0 / t.x, 1.0 / t.y);
   }
 }
 
-if (typeof SIMD.float64x2.reciprocalSqrt === "undefined") {
+if (typeof SIMD.float64x2.reciprocalSqrtApproximation === "undefined") {
   /**
     * @param {float64x2} t An instance of float64x2.
-    * @return {float64x2} New instance of float64x2 with square root of the
-    * reciprocal value of t.
+    * @return {float64x2} New instance of float64x2 with an approximation of the
+    * square root of the reciprocal value of t.
     */
-  SIMD.float64x2.reciprocalSqrt = function(t) {
+  SIMD.float64x2.reciprocalSqrtApproximation = function(t) {
     t = SIMD.float64x2.check(t);
     return SIMD.float64x2(Math.sqrt(1.0 / t.x), Math.sqrt(1.0 / t.y));
   }
