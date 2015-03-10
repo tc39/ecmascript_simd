@@ -1320,7 +1320,7 @@ if (typeof SIMD.float32x4.withX === "undefined") {
     * x replaced with {x}.
     */
   SIMD.float32x4.withX = function(t, x) {
-    t = SIMD.float32x4(t);
+    t = SIMD.float32x4.check(t);
     return SIMD.float32x4(x, t.y, t.z, t.w);
   }
 }
@@ -1333,7 +1333,7 @@ if (typeof SIMD.float32x4.withY === "undefined") {
     * y replaced with {y}.
     */
   SIMD.float32x4.withY = function(t, y) {
-    t = SIMD.float32x4(t);
+    t = SIMD.float32x4.check(t);
     return SIMD.float32x4(t.x, y, t.z, t.w);
   }
 }
@@ -1346,7 +1346,7 @@ if (typeof SIMD.float32x4.withZ === "undefined") {
     * z replaced with {z}.
     */
   SIMD.float32x4.withZ = function(t, z) {
-    t = SIMD.float32x4(t);
+    t = SIMD.float32x4.check(t);
     return SIMD.float32x4(t.x, t.y, z, t.w);
   }
 }
@@ -1359,7 +1359,7 @@ if (typeof SIMD.float32x4.withW === "undefined") {
     * w replaced with {w}.
     */
   SIMD.float32x4.withW = function(t, w) {
-    t = SIMD.float32x4(t);
+    t = SIMD.float32x4.check(t);
     return SIMD.float32x4(t.x, t.y, t.z, w);
   }
 }
@@ -2045,7 +2045,7 @@ if (typeof SIMD.float64x2.withX === "undefined") {
     * x replaced with {x}.
     */
   SIMD.float64x2.withX = function(t, x) {
-    t = SIMD.float64x2(t);
+    t = SIMD.float64x2.check(t);
     return SIMD.float64x2(x, t.y);
   }
 }
@@ -2058,7 +2058,7 @@ if (typeof SIMD.float64x2.withY === "undefined") {
     * y replaced with {y}.
     */
   SIMD.float64x2.withY = function(t, y) {
-    t = SIMD.float64x2(t);
+    t = SIMD.float64x2.check(t);
     return SIMD.float64x2(t.x, y);
   }
 }
@@ -2506,7 +2506,7 @@ if (typeof SIMD.int32x4.withX === "undefined") {
     * x lane replaced with {x}.
     */
   SIMD.int32x4.withX = function(t, x) {
-    t = SIMD.int32x4(t);
+    t = SIMD.int32x4.check(t);
     return SIMD.int32x4(x, t.y, t.z, t.w);
   }
 }
@@ -2519,7 +2519,7 @@ if (typeof SIMD.int32x4.withY === "undefined") {
     * y lane replaced with {y}.
     */
   SIMD.int32x4.withY = function(t, y) {
-    t = SIMD.int32x4(t);
+    t = SIMD.int32x4.check(t);
     return SIMD.int32x4(t.x, y, t.z, t.w);
   }
 }
@@ -2532,7 +2532,7 @@ if (typeof SIMD.int32x4.withZ === "undefined") {
     * z lane replaced with {z}.
     */
   SIMD.int32x4.withZ = function(t, z) {
-    t = SIMD.int32x4(t);
+    t = SIMD.int32x4.check(t);
     return SIMD.int32x4(t.x, t.y, z, t.w);
   }
 }
@@ -2545,7 +2545,7 @@ if (typeof SIMD.int32x4.withW === "undefined") {
     * w lane replaced with {w}.
     */
   SIMD.int32x4.withW = function(t, w) {
-    t = SIMD.int32x4(t);
+    t = SIMD.int32x4.check(t);
     return SIMD.int32x4(t.x, t.y, t.z, w);
   }
 }
@@ -2666,6 +2666,8 @@ if (typeof SIMD.int32x4.shiftLeftByScalar === "undefined") {
     */
   SIMD.int32x4.shiftLeftByScalar = function(a, bits) {
     a = SIMD.int32x4.check(a);
+    if (bits>>>0 >= 32)
+      return SIMD.int32x4.splat(0.0);
     var x = a.x << bits;
     var y = a.y << bits;
     var z = a.z << bits;
@@ -2682,6 +2684,8 @@ if (typeof SIMD.int32x4.shiftRightLogicalByScalar === "undefined") {
     */
   SIMD.int32x4.shiftRightLogicalByScalar = function(a, bits) {
     a = SIMD.int32x4.check(a);
+    if (bits>>>0 >= 32)
+      return SIMD.int32x4.splat(0.0);
     var x = a.x >>> bits;
     var y = a.y >>> bits;
     var z = a.z >>> bits;
@@ -2698,6 +2702,8 @@ if (typeof SIMD.int32x4.shiftRightArithmeticByScalar === "undefined") {
     */
   SIMD.int32x4.shiftRightArithmeticByScalar = function(a, bits) {
     a = SIMD.int32x4.check(a);
+    if (bits>>>0 >= 32)
+      bits = 31;
     var x = a.x >> bits;
     var y = a.y >> bits;
     var z = a.z >> bits;
@@ -3121,8 +3127,8 @@ if (typeof SIMD.int16x8.notEqual === "undefined") {
     * the result of t != other.
     */
   SIMD.int16x8.notEqual = function(t, other) {
-    t = SIMD.int16x8(t);
-    other = SIMD.int16x8(other);
+    t = SIMD.int16x8.check(t);
+    other = SIMD.int16x8.check(other);
     var cs0 = t.s0 != other.s0;
     var cs1 = t.s1 != other.s1;
     var cs2 = t.s2 != other.s2;
@@ -3165,8 +3171,8 @@ if (typeof SIMD.int16x8.greaterThanOrEqual === "undefined") {
     * the result of t >= other.
     */
   SIMD.int16x8.greaterThanOrEqual = function(t, other) {
-    t = SIMD.int16x8(t);
-    other = SIMD.int16x8(other);
+    t = SIMD.int16x8.check(t);
+    other = SIMD.int16x8.check(other);
     var cs0 = t.s0 >= other.s0;
     var cs1 = t.s1 >= other.s1;
     var cs2 = t.s2 >= other.s2;
@@ -3209,8 +3215,8 @@ if (typeof SIMD.int16x8.lessThanOrEqual === "undefined") {
     * the result of t <= other.
     */
   SIMD.int16x8.lessThanOrEqual = function(t, other) {
-    t = SIMD.int16x8(t);
-    other = SIMD.int16x8(other);
+    t = SIMD.int16x8.check(t);
+    other = SIMD.int16x8.check(other);
     var cs0 = t.s0 <= other.s0;
     var cs1 = t.s1 <= other.s1;
     var cs2 = t.s2 <= other.s2;
@@ -3231,6 +3237,8 @@ if (typeof SIMD.int16x8.shiftLeftByScalar === "undefined") {
     */
   SIMD.int16x8.shiftLeftByScalar = function(a, bits) {
     a = SIMD.int16x8.check(a);
+    if (bits>>>0 > 16)
+      bits = 16;
     var s0 = a.s0 << bits;
     var s1 = a.s1 << bits;
     var s2 = a.s2 << bits;
@@ -3251,6 +3259,8 @@ if (typeof SIMD.int16x8.shiftRightLogicalByScalar === "undefined") {
     */
   SIMD.int16x8.shiftRightLogicalByScalar = function(a, bits) {
     a = SIMD.int16x8.check(a);
+    if (bits>>>0 > 16)
+      bits = 16;
     var s0 = (a.s0 & 0xffff) >>> bits;
     var s1 = (a.s1 & 0xffff) >>> bits;
     var s2 = (a.s2 & 0xffff) >>> bits;
@@ -3271,6 +3281,8 @@ if (typeof SIMD.int16x8.shiftRightArithmeticByScalar === "undefined") {
     */
   SIMD.int16x8.shiftRightArithmeticByScalar = function(a, bits) {
     a = SIMD.int16x8.check(a);
+    if (bits>>>0 > 16)
+      bits = 16;
     var s0 = a.s0 >> bits;
     var s1 = a.s1 >> bits;
     var s2 = a.s2 >> bits;
@@ -3564,8 +3576,8 @@ if (typeof SIMD.int8x16.notEqual === "undefined") {
     * the result of t != other.
     */
   SIMD.int8x16.notEqual = function(t, other) {
-    t = SIMD.int8x16(t);
-    other = SIMD.int8x16(other);
+    t = SIMD.int8x16.check(t);
+    other = SIMD.int8x16.check(other);
     var cs0 = t.s0 != other.s0;
     var cs1 = t.s1 != other.s1;
     var cs2 = t.s2 != other.s2;
@@ -3626,8 +3638,8 @@ if (typeof SIMD.int8x16.greaterThanOrEqual === "undefined") {
     * the result of t >= other.
     */
   SIMD.int8x16.greaterThanOrEqual = function(t, other) {
-    t = SIMD.int8x16(t);
-    other = SIMD.int8x16(other);
+    t = SIMD.int8x16.check(t);
+    other = SIMD.int8x16.check(other);
     var cs0 = t.s0 >= other.s0;
     var cs1 = t.s1 >= other.s1;
     var cs2 = t.s2 >= other.s2;
@@ -3688,8 +3700,8 @@ if (typeof SIMD.int8x16.lessThanOrEqual === "undefined") {
     * the result of t <= other.
     */
   SIMD.int8x16.lessThanOrEqual = function(t, other) {
-    t = SIMD.int8x16(t);
-    other = SIMD.int8x16(other);
+    t = SIMD.int8x16.check(t);
+    other = SIMD.int8x16.check(other);
     var cs0 = t.s0 <= other.s0;
     var cs1 = t.s1 <= other.s1;
     var cs2 = t.s2 <= other.s2;
@@ -3719,6 +3731,8 @@ if (typeof SIMD.int8x16.shiftLeftByScalar === "undefined") {
     */
   SIMD.int8x16.shiftLeftByScalar = function(a, bits) {
     a = SIMD.int8x16.check(a);
+    if (bits>>>0 > 8)
+      bits = 8;
     var s0 = a.s0 << bits;
     var s1 = a.s1 << bits;
     var s2 = a.s2 << bits;
@@ -3748,6 +3762,8 @@ if (typeof SIMD.int8x16.shiftRightLogicalByScalar === "undefined") {
     */
   SIMD.int8x16.shiftRightLogicalByScalar = function(a, bits) {
     a = SIMD.int8x16.check(a);
+    if (bits>>>0 > 8)
+      bits = 8;
     var s0 = (a.s0 & 0xff) >>> bits;
     var s1 = (a.s1 & 0xff) >>> bits;
     var s2 = (a.s2 & 0xff) >>> bits;
@@ -3777,6 +3793,8 @@ if (typeof SIMD.int8x16.shiftRightArithmeticByScalar === "undefined") {
     */
   SIMD.int8x16.shiftRightArithmeticByScalar = function(a, bits) {
     a = SIMD.int8x16.check(a);
+    if (bits>>>0 > 8)
+      bits = 8;
     var s0 = a.s0 >> bits;
     var s1 = a.s1 >> bits;
     var s2 = a.s2 >> bits;
