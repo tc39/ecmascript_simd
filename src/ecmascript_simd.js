@@ -3066,6 +3066,77 @@ if (typeof SIMD.int16x8.mul === "undefined") {
   }
 }
 
+if (typeof SIMD.int16x8.swizzle === "undefined") {
+  /**
+    * @param {int16x8} t An instance of int16x8 to be swizzled.
+    * @param {integer} s0 - Index in t for lane s0
+    * @param {integer} s1 - Index in t for lane s1
+    * @param {integer} s2 - Index in t for lane s2
+    * @param {integer} s3 - Index in t for lane s3
+    * @param {integer} s4 - Index in t for lane s4
+    * @param {integer} s5 - Index in t for lane s5
+    * @param {integer} s6 - Index in t for lane s6
+    * @param {integer} s7 - Index in t for lane s7
+    * @return {int16x8} New instance of int16x8 with lanes swizzled.
+    */
+  SIMD.int16x8.swizzle = function(t, s0, s1, s2, s3, s4, s5, s6, s7) {
+    t = SIMD.int16x8.check(t);
+    var storage = _SIMD_PRIVATE._i16x8;
+    storage[0] = t.s0;
+    storage[1] = t.s1;
+    storage[2] = t.s2;
+    storage[3] = t.s3;
+    storage[4] = t.s4;
+    storage[5] = t.s5;
+    storage[6] = t.s6;
+    storage[7] = t.s7;
+    return SIMD.int16x8(storage[s0], storage[s1], storage[s2], storage[s3],
+                        storage[s4], storage[s5], storage[s6], storage[s7]);
+  }
+}
+
+if (typeof SIMD.int16x8.shuffle === "undefined") {
+
+  _SIMD_PRIVATE._i16x16 = new Int16Array(16);
+
+  /**
+    * @param {int16x8} t0 An instance of int16x8 to be shuffled.
+    * @param {int16x8} t1 An instance of int16x8 to be shuffled.
+    * @param {integer} s0 - Index in concatenation of t0 and t1 for lane s0
+    * @param {integer} s1 - Index in concatenation of t0 and t1 for lane s1
+    * @param {integer} s2 - Index in concatenation of t0 and t1 for lane s2
+    * @param {integer} s3 - Index in concatenation of t0 and t1 for lane s3
+    * @param {integer} s4 - Index in concatenation of t0 and t1 for lane s4
+    * @param {integer} s5 - Index in concatenation of t0 and t1 for lane s5
+    * @param {integer} s6 - Index in concatenation of t0 and t1 for lane s6
+    * @param {integer} s7 - Index in concatenation of t0 and t1 for lane s7
+    * @return {int16x8} New instance of int16x8 with lanes shuffled.
+    */
+  SIMD.int16x8.shuffle = function(t0, t1, s0, s1, s2, s3, s4, s5, s6, s7) {
+    t0 = SIMD.int16x8.check(t0);
+    t1 = SIMD.int16x8.check(t1);
+    var storage = _SIMD_PRIVATE._i16x16;
+    storage[0] = t0.s0;
+    storage[1] = t0.s1;
+    storage[2] = t0.s2;
+    storage[3] = t0.s3;
+    storage[4] = t0.s4;
+    storage[5] = t0.s5;
+    storage[6] = t0.s6;
+    storage[7] = t0.s7;
+    storage[8] = t1.s0;
+    storage[9] = t1.s1;
+    storage[10] = t1.s2;
+    storage[11] = t1.s3;
+    storage[12] = t1.s4;
+    storage[13] = t1.s5;
+    storage[14] = t1.s6;
+    storage[15] = t1.s7;
+    return SIMD.int16x8(storage[s0], storage[s1], storage[s2], storage[s3],
+                        storage[s4], storage[s5], storage[s6], storage[s7]);
+  }
+}
+
 if (typeof SIMD.int16x8.select === "undefined") {
   /**
     * @param {int16x8} t Selector mask. An instance of int16x8
@@ -3495,6 +3566,123 @@ if (typeof SIMD.int8x16.mul === "undefined") {
                         Math.imul(a.s10, b.s10), Math.imul(a.s11, b.s11),
                         Math.imul(a.s12, b.s12), Math.imul(a.s13, b.s13),
                         Math.imul(a.s14, b.s14), Math.imul(a.s15, b.s15));
+  }
+}
+
+if (typeof SIMD.int8x16.swizzle === "undefined") {
+  /**
+    * @param {int8x16} t An instance of int8x16 to be swizzled.
+    * @param {integer} s0 - Index in t for lane s0
+    * @param {integer} s1 - Index in t for lane s1
+    * @param {integer} s2 - Index in t for lane s2
+    * @param {integer} s3 - Index in t for lane s3
+    * @param {integer} s4 - Index in t for lane s4
+    * @param {integer} s5 - Index in t for lane s5
+    * @param {integer} s6 - Index in t for lane s6
+    * @param {integer} s7 - Index in t for lane s7
+    * @param {integer} s8 - Index in t for lane s8
+    * @param {integer} s9 - Index in t for lane s9
+    * @param {integer} s10 - Index in t for lane s10
+    * @param {integer} s11 - Index in t for lane s11
+    * @param {integer} s12 - Index in t for lane s12
+    * @param {integer} s13 - Index in t for lane s13
+    * @param {integer} s14 - Index in t for lane s14
+    * @param {integer} s15 - Index in t for lane s15
+    * @return {int8x16} New instance of int8x16 with lanes swizzled.
+    */
+  SIMD.int8x16.swizzle = function(t, s0, s1, s2, s3, s4, s5, s6, s7,
+                                     s8, s9, s10, s11, s12, s13, s14, s15) {
+    t = SIMD.int8x16.check(t);
+    var storage = _SIMD_PRIVATE._i8x16;
+    storage[0] = t.s0;
+    storage[1] = t.s1;
+    storage[2] = t.s2;
+    storage[3] = t.s3;
+    storage[4] = t.s4;
+    storage[5] = t.s5;
+    storage[6] = t.s6;
+    storage[7] = t.s7;
+    storage[8] = t.s8;
+    storage[9] = t.s9;
+    storage[10] = t.s10;
+    storage[11] = t.s11;
+    storage[12] = t.s12;
+    storage[13] = t.s13;
+    storage[14] = t.s14;
+    storage[15] = t.s15;
+    return SIMD.int8x16(storage[s0], storage[s1], storage[s2], storage[s3],
+                        storage[s4], storage[s5], storage[s6], storage[s7],
+                        storage[s8], storage[s9], storage[s10], storage[s11],
+                        storage[s12], storage[s13], storage[s14], storage[s15]);
+  }
+}
+
+if (typeof SIMD.int8x16.shuffle === "undefined") {
+
+  _SIMD_PRIVATE._i8x32 = new Int8Array(32);
+
+  /**
+    * @param {int8x16} t0 An instance of int8x16 to be shuffled.
+    * @param {int8x16} t1 An instance of int8x16 to be shuffled.
+    * @param {integer} s0 - Index in concatenation of t0 and t1 for lane s0
+    * @param {integer} s1 - Index in concatenation of t0 and t1 for lane s1
+    * @param {integer} s2 - Index in concatenation of t0 and t1 for lane s2
+    * @param {integer} s3 - Index in concatenation of t0 and t1 for lane s3
+    * @param {integer} s4 - Index in concatenation of t0 and t1 for lane s4
+    * @param {integer} s5 - Index in concatenation of t0 and t1 for lane s5
+    * @param {integer} s6 - Index in concatenation of t0 and t1 for lane s6
+    * @param {integer} s7 - Index in concatenation of t0 and t1 for lane s7
+    * @param {integer} s8 - Index in concatenation of t0 and t1 for lane s8
+    * @param {integer} s9 - Index in concatenation of t0 and t1 for lane s9
+    * @param {integer} s10 - Index in concatenation of t0 and t1 for lane s10
+    * @param {integer} s11 - Index in concatenation of t0 and t1 for lane s11
+    * @param {integer} s12 - Index in concatenation of t0 and t1 for lane s12
+    * @param {integer} s13 - Index in concatenation of t0 and t1 for lane s13
+    * @param {integer} s14 - Index in concatenation of t0 and t1 for lane s14
+    * @param {integer} s15 - Index in concatenation of t0 and t1 for lane s15
+    * @return {int8x16} New instance of int8x16 with lanes shuffled.
+    */
+  SIMD.int8x16.shuffle = function(t0, t1, s0, s1, s2, s3, s4, s5, s6, s7,
+                                          s8, s9, s10, s11, s12, s13, s14, s15) {
+    t0 = SIMD.int8x16.check(t0);
+    t1 = SIMD.int8x16.check(t1);
+    var storage = _SIMD_PRIVATE._i8x32;
+    storage[0] = t0.s0;
+    storage[1] = t0.s1;
+    storage[2] = t0.s2;
+    storage[3] = t0.s3;
+    storage[4] = t0.s4;
+    storage[5] = t0.s5;
+    storage[6] = t0.s6;
+    storage[7] = t0.s7;
+    storage[8] = t0.s8;
+    storage[9] = t0.s9;
+    storage[10] = t0.s10;
+    storage[11] = t0.s11;
+    storage[12] = t0.s12;
+    storage[13] = t0.s13;
+    storage[14] = t0.s14;
+    storage[15] = t0.s15;
+    storage[16] = t1.s0;
+    storage[17] = t1.s1;
+    storage[18] = t1.s2;
+    storage[19] = t1.s3;
+    storage[20] = t1.s4;
+    storage[21] = t1.s5;
+    storage[22] = t1.s6;
+    storage[23] = t1.s7;
+    storage[24] = t1.s8;
+    storage[25] = t1.s9;
+    storage[26] = t1.s10;
+    storage[27] = t1.s11;
+    storage[28] = t1.s12;
+    storage[29] = t1.s13;
+    storage[30] = t1.s14;
+    storage[31] = t1.s15;
+    return SIMD.int8x16(storage[s0], storage[s1], storage[s2], storage[s3],
+                        storage[s4], storage[s5], storage[s6], storage[s7],
+                        storage[s8], storage[s9], storage[s10], storage[s11],
+                        storage[s12], storage[s13], storage[s14], storage[s15]);
   }
 }
 
