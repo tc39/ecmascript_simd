@@ -1702,7 +1702,7 @@ test('float64x2 comparisons', function() {
 });
 
 test('float64x2 select', function() {
-  var m = SIMD.int32x4(0xaaaaaaaa, 0x55555555);
+  var m = SIMD.int32x4(0xaaaaaaaa, 0, 0x55555555, 0);
   var t = SIMD.float64x2(1.0, 2.0);
   var f = SIMD.float64x2(3.0, 4.0);
   var s = SIMD.float64x2.select(m, t, f);
