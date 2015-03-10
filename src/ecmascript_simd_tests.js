@@ -1931,6 +1931,28 @@ test('int32x4 fromFloat32x4 constructor', function() {
   equal(0, n.y);
   equal(-1, n.z);
   equal(-3, n.w);
+
+  throws(function() {
+    SIMD.int32x4.fromFloat32x4(SIMD.float32x4(0x7fffffff, 0, 0, 0));
+  });
+  throws(function() {
+    SIMD.int32x4.fromFloat32x4(SIMD.float32x4(0, -0x80000081, 0, 0));
+  });
+  throws(function() {
+    SIMD.int32x4.fromFloat32x4(SIMD.float32x4(0, 0, 2147483648, 0));
+  });
+  throws(function() {
+    SIMD.int32x4.fromFloat32x4(SIMD.float32x4(0, 0, 0, -2147483904));
+  });
+  throws(function() {
+    SIMD.int32x4.fromFloat32x4(SIMD.float32x4(Infinity, 0, 0, 0));
+  });
+  throws(function() {
+    SIMD.int32x4.fromFloat32x4(SIMD.float32x4(0, -Infinity, 0, 0));
+  });
+  throws(function() {
+    SIMD.int32x4.fromFloat32x4(SIMD.float32x4(0, 0, NaN, 0));
+  });
 });
 
 test('int32x4 fromFloat64x2 constructor', function() {
@@ -1961,6 +1983,22 @@ test('int32x4 fromFloat64x2 constructor', function() {
   equal(-3, n.y);
   equal(0, n.z);
   equal(0, n.w);
+
+  throws(function() {
+    SIMD.int32x4.fromFloat64x2(SIMD.float64x2(0x80000000, 0));
+  });
+  throws(function() {
+    SIMD.int32x4.fromFloat64x2(SIMD.float64x2(0, -0x80000001));
+  });
+  throws(function() {
+    SIMD.int32x4.fromFloat64x2(SIMD.float64x2(Infinity, 0));
+  });
+  throws(function() {
+    SIMD.int32x4.fromFloat64x2(SIMD.float64x2(0, -Infinity));
+  });
+  throws(function() {
+    SIMD.int32x4.fromFloat64x2(SIMD.float64x2(NaN, 0));
+  });
 });
 
 test('int32x4 fromFloat32x4Bits constructor', function() {
