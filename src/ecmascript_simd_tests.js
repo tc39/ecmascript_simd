@@ -411,6 +411,20 @@ test('float32x4 reciprocal approximation', function() {
   almostEqual(0.250, c.y);
   almostEqual(0.5, c.z);
   almostEqual(-0.5, c.w);
+  a = SIMD.float32x4(NaN, Infinity, -Infinity, -0);
+  c = SIMD.float32x4.reciprocalApproximation(a);
+  notEqual(c.x, c.x);
+  equal(0, c.y);
+  equal(1/c.y, Infinity);
+  equal(0, c.z);
+  equal(1/c.z, -Infinity);
+  equal(-Infinity, c.w);
+  a = SIMD.float32x4(0, 2.3, -4.5, 7.8);
+  c = SIMD.float32x4.reciprocalApproximation(a);
+  equal(Infinity, c.x);
+  almostEqual(1/a.y, c.y);
+  almostEqual(1/a.z, c.z);
+  almostEqual(1/a.w, c.w);
 });
 
 test('float32x4 reciprocal sqrt approximation', function() {
@@ -1521,6 +1535,24 @@ test('float64x2 reciprocal approximation', function() {
   var c = SIMD.float64x2.reciprocalApproximation(a);
   almostEqual(0.5, c.x);
   almostEqual(-0.5, c.y);
+  a = SIMD.float64x2(NaN, Infinity);
+  c = SIMD.float64x2.reciprocalApproximation(a);
+  notEqual(c.x, c.x);
+  equal(0, c.y);
+  equal(1/c.y, Infinity);
+  a = SIMD.float64x2(-Infinity, -0);
+  c = SIMD.float64x2.reciprocalApproximation(a);
+  equal(0, c.x);
+  equal(1/c.x, -Infinity);
+  equal(-Infinity, c.y);
+  a = SIMD.float64x2(0, 2.3);
+  c = SIMD.float64x2.reciprocalApproximation(a);
+  equal(Infinity, c.x);
+  almostEqual(1/a.y, c.y);
+  a = SIMD.float64x2(-4.5, 7.8);
+  c = SIMD.float64x2.reciprocalApproximation(a);
+  almostEqual(1/a.x, c.x);
+  almostEqual(1/a.y, c.y);
 });
 
 test('float64x2 reciprocal sqrt approximation', function() {

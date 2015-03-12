@@ -1245,7 +1245,7 @@ if (typeof SIMD.float32x4.reciprocalApproximation === "undefined") {
     */
   SIMD.float32x4.reciprocalApproximation = function(t) {
     t = SIMD.float32x4.check(t);
-    return SIMD.float32x4(1.0 / t.x, 1.0 / t.y, 1.0 / t.z, 1.0 / t.w);
+    return SIMD.float32x4.div(SIMD.float32x4.splat(1.0), t);
   }
 }
 
@@ -1981,7 +1981,7 @@ if (typeof SIMD.float64x2.reciprocalApproximation === "undefined") {
     */
   SIMD.float64x2.reciprocalApproximation = function(t) {
     t = SIMD.float64x2.check(t);
-    return SIMD.float64x2(1.0 / t.x, 1.0 / t.y);
+    return SIMD.float64x2.div(SIMD.float64x2.splat(1.0), t);
   }
 }
 
