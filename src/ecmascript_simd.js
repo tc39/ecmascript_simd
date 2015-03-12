@@ -3207,6 +3207,46 @@ if (typeof SIMD.int16x8.shuffle === "undefined") {
   }
 }
 
+if (typeof SIMD.int16x8.addSaturate === "undefined") {
+  /**
+    * @param {int16x8} a An instance of int16x8.
+    * @param {int16x8} b An instance of int16x8.
+    * @return {int16x8} New instance of int16x8 with values of a + b with
+    * signed saturating behavior on overflow.
+    */
+  SIMD.int16x8.addSaturate = function(a, b) {
+    a = SIMD.int16x8.check(a);
+    b = SIMD.int16x8.check(b);
+    var c = SIMD.int16x8.add(a, b);
+    var max = SIMD.int16x8.splat(0x7fff);
+    var min = SIMD.int16x8.splat(0x8000);
+    var mask = SIMD.int16x8.lessThan(c, a);
+    return SIMD.int16x8.select(SIMD.int16x8.and(mask, SIMD.int16x8.not(b)), max,
+             SIMD.int16x8.select(SIMD.int16x8.and(SIMD.int16x8.not(mask), b), min,
+               c));
+  }
+}
+
+if (typeof SIMD.int16x8.subSaturating === "undefined") {
+  /**
+    * @param {int16x8} a An instance of int16x8.
+    * @param {int16x8} b An instance of int16x8.
+    * @return {int16x8} New instance of int16x8 with values of a - b with
+    * signed saturating behavior on overflow.
+    */
+  SIMD.int16x8.subSaturating = function(a, b) {
+    a = SIMD.int16x8.check(a);
+    b = SIMD.int16x8.check(b);
+    var c = SIMD.int16x8.sub(a, b);
+    var max = SIMD.int16x8.splat(0x7fff);
+    var min = SIMD.int16x8.splat(0x8000);
+    var mask = SIMD.int16x8.greaterThan(c, a);
+    return SIMD.int16x8.select(SIMD.int16x8.and(mask, SIMD.int16x8.not(b)), min,
+             SIMD.int16x8.select(SIMD.int16x8.and(SIMD.int16x8.not(mask), b), max,
+               c));
+  }
+}
+
 if (typeof SIMD.int16x8.select === "undefined") {
   /**
     * @param {int16x8} t Selector mask. An instance of int16x8
@@ -3787,6 +3827,46 @@ if (typeof SIMD.int8x16.shuffle === "undefined") {
                         storage[s4], storage[s5], storage[s6], storage[s7],
                         storage[s8], storage[s9], storage[s10], storage[s11],
                         storage[s12], storage[s13], storage[s14], storage[s15]);
+  }
+}
+
+if (typeof SIMD.int8x16.addSaturate === "undefined") {
+  /**
+    * @param {int8x16} a An instance of int8x16.
+    * @param {int8x16} b An instance of int8x16.
+    * @return {int8x16} New instance of int8x16 with values of a + b with
+    * signed saturating behavior on overflow.
+    */
+  SIMD.int8x16.addSaturate = function(a, b) {
+    a = SIMD.int8x16.check(a);
+    b = SIMD.int8x16.check(b);
+    var c = SIMD.int8x16.add(a, b);
+    var max = SIMD.int8x16.splat(0x7f);
+    var min = SIMD.int8x16.splat(0x80);
+    var mask = SIMD.int8x16.lessThan(c, a);
+    return SIMD.int8x16.select(SIMD.int8x16.and(mask, SIMD.int8x16.not(b)), max,
+             SIMD.int8x16.select(SIMD.int8x16.and(SIMD.int8x16.not(mask), b), min,
+               c));
+  }
+}
+
+if (typeof SIMD.int8x16.subSaturating === "undefined") {
+  /**
+    * @param {int8x16} a An instance of int8x16.
+    * @param {int8x16} b An instance of int8x16.
+    * @return {int8x16} New instance of int8x16 with values of a - b with
+    * signed saturating behavior on overflow.
+    */
+  SIMD.int8x16.subSaturating = function(a, b) {
+    a = SIMD.int8x16.check(a);
+    b = SIMD.int8x16.check(b);
+    var c = SIMD.int8x16.sub(a, b);
+    var max = SIMD.int8x16.splat(0x7f);
+    var min = SIMD.int8x16.splat(0x80);
+    var mask = SIMD.int8x16.greaterThan(c, a);
+    return SIMD.int8x16.select(SIMD.int8x16.and(mask, SIMD.int8x16.not(b)), min,
+             SIMD.int8x16.select(SIMD.int8x16.and(SIMD.int8x16.not(mask), b), max,
+               c));
   }
 }
 
