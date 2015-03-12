@@ -18,6 +18,18 @@
   3. This notice may not be removed or altered from any source distribution.
 */
 
+// A conforming SIMD.js implementation may contain the following deviations to
+// normal JS numeric behavior:
+//  - Subnormal numbers may or may not be flushed to zero on input or output of
+//    any SIMD operation.
+
+// Many of the operations in SIMD.js have semantics which correspond to scalar
+// operations in JS, however there are a few differences:
+//  - The conversion of integers to booleans uses <0 rather than !=0.
+//  - Vector shifts don't mask the shift count.
+//  - Conversions from float to int32 throw on error.
+//  - Load and store operations throw when out of bounds.
+
 if (typeof SIMD === "undefined") {
   // SIMD module. We don't use the var keyword here, so that we put the
   // SIMD object in the global scope even if this polyfill code is included
