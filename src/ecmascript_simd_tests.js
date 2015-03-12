@@ -455,6 +455,20 @@ test('float32x4 sqrt', function() {
   equal(3.0, c.y);
   equal(2.0, c.z);
   equal(1.0, c.w);
+  a = SIMD.float32x4(0.0, -0.0, Infinity, -Infinity);
+  c = SIMD.float32x4.sqrt(a);
+  equal(0.0, c.x);
+  equal(1/c.x, Infinity);
+  equal(-0.0, c.y);
+  equal(1/c.y, -Infinity);
+  equal(Infinity, c.z);
+  notEqual(c.w, c.w);
+  a = SIMD.float32x4(NaN, 2.0, 0.5, 121.0);
+  c = SIMD.float32x4.sqrt(a);
+  notEqual(c.x, c.x);
+  equal(Math.fround(Math.SQRT2), c.y);
+  equal(Math.fround(Math.SQRT1_2), c.z);
+  equal(11.0, c.w);
 });
 
 test('float32x4 shuffle', function() {
@@ -1583,6 +1597,24 @@ test('float64x2 sqrt', function() {
   var c = SIMD.float64x2.sqrt(a);
   equal(4.0, c.x);
   equal(3.0, c.y);
+  a = SIMD.float64x2(0.0, -0.0);
+  c = SIMD.float64x2.sqrt(a);
+  equal(0.0, c.x);
+  equal(1/c.x, Infinity);
+  equal(-0.0, c.y);
+  equal(1/c.y, -Infinity);
+  a = SIMD.float64x2(Infinity, -Infinity);
+  c = SIMD.float64x2.sqrt(a);
+  equal(Infinity, c.x);
+  notEqual(c.w, c.y);
+  a = SIMD.float64x2(NaN, 2.0);
+  c = SIMD.float64x2.sqrt(a);
+  notEqual(c.x, c.x);
+  equal(Math.SQRT2, c.y);
+  a = SIMD.float64x2(0.5, 121.0);
+  c = SIMD.float64x2.sqrt(a);
+  equal(Math.SQRT1_2, c.x);
+  equal(11.0, c.y);
 });
 
 test('float64x2 swizzle', function() {
