@@ -1253,12 +1253,11 @@ if (typeof SIMD.float32x4.reciprocalSqrtApproximation === "undefined") {
   /**
     * @param {float32x4} t An instance of float32x4.
     * @return {float32x4} New instance of float32x4 with an approximation of the
-    * square root of the reciprocal value of t.
+    * reciprocal value of the square root of t.
     */
   SIMD.float32x4.reciprocalSqrtApproximation = function(t) {
     t = SIMD.float32x4.check(t);
-    return SIMD.float32x4(Math.sqrt(1.0 / t.x), Math.sqrt(1.0 / t.y),
-                          Math.sqrt(1.0 / t.z), Math.sqrt(1.0 / t.w));
+    return SIMD.float32x4.reciprocalApproximation(SIMD.float32x4.sqrt(t));
   }
 }
 
@@ -1990,11 +1989,11 @@ if (typeof SIMD.float64x2.reciprocalSqrtApproximation === "undefined") {
   /**
     * @param {float64x2} t An instance of float64x2.
     * @return {float64x2} New instance of float64x2 with an approximation of the
-    * square root of the reciprocal value of t.
+    * reciprocal value of the square root of t.
     */
   SIMD.float64x2.reciprocalSqrtApproximation = function(t) {
     t = SIMD.float64x2.check(t);
-    return SIMD.float64x2(Math.sqrt(1.0 / t.x), Math.sqrt(1.0 / t.y));
+    return SIMD.float64x2.reciprocalApproximation(SIMD.float64x2.sqrt(t));
   }
 }
 
