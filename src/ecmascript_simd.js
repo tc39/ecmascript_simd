@@ -3870,6 +3870,27 @@ if (typeof SIMD.int8x16.subSaturating === "undefined") {
   }
 }
 
+if (typeof SIMD.int8x16.sumOfAbsoluteDifferences === "undefined") {
+  /**
+    * @param {int8x16} a An instance of int8x16.
+    * @param {int8x16} b An instance of int8x16.
+    * @return {Number} The sum of the absolute differences (SAD) of the
+    * corresponding elements of a and b.
+    */
+  SIMD.int8x16.sumOfAbsoluteDifferences = function(a, b) {
+    a = SIMD.int8x16.check(a);
+    b = SIMD.int8x16.check(b);
+    return Math.abs(a.s0 - b.s0) + Math.abs(a.s1 - b.s1) +
+           Math.abs(a.s2 - b.s2) + Math.abs(a.s3 - b.s3) +
+           Math.abs(a.s4 - b.s4) + Math.abs(a.s5 - b.s5) +
+           Math.abs(a.s6 - b.s6) + Math.abs(a.s7 - b.s7) +
+           Math.abs(a.s8 - b.s8) + Math.abs(a.s9 - b.s9) +
+           Math.abs(a.s10 - b.s10) + Math.abs(a.s11 - b.s11) +
+           Math.abs(a.s12 - b.s12) + Math.abs(a.s13 - b.s13) +
+           Math.abs(a.s14 - b.s14) + Math.abs(a.s15 - b.s15);
+  }
+}
+
 if (typeof SIMD.int8x16.select === "undefined") {
   /**
     * @param {int8x16} t Selector mask. An instance of int8x16

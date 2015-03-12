@@ -4043,6 +4043,13 @@ test('int8x16 subSaturating', function() {
   equal(19, e.s15);
 });
 
+test('int8x16 sumOfAbsoluteDifferences', function() {
+  var a = SIMD.int8x16(0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x7f, 0xff, 0xff, 0xff, 0x0, 0x0, 0x0, 0x0);
+  var b = SIMD.int8x16(0x0, 0x0, 0x0, 0x1, 0xFF, 0xFF, 0xFF, 0xFF, 0x0, 0x0, 0x0, 0x1, 0xFF, 0xFF, 0xFF, 0xFF);
+  var c = SIMD.int8x16.sumOfAbsoluteDifferences(a, b);
+  equal(c, 140);
+});
+
 test('int8x16 comparisons', function() {
   var m = SIMD.int8x16(1000, 2000, 100, 1, -1000, -2000, -100, 1, 0, 0, 0, 0, -1, 1, -2, 2);
   var n = SIMD.int8x16(-2000, 2000, 1, 100, 2000, -2000, -1, -100, -1, 1, -2, 2, 0, 0, 0, 0);
