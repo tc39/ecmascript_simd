@@ -18,12 +18,20 @@
   3. This notice may not be removed or altered from any source distribution.
 */
 
-almostEqual = function(a, b) {
-  if (Math.abs(a - b) < 0.00001) {
-    ok(true);
-    return;
-  }
-  ok(false);
+function almostEqual(a, b) {
+  ok(Math.abs(a - b) < 0.00001);
+}
+
+function isPositiveZero(x) {
+  ok(x == 0 && 1/x == Infinity);
+}
+
+function isNegativeZero(x) {
+  ok(x == 0 && 1/x == -Infinity);
+}
+
+function isNaN(x) {
+  ok(x != x);
 }
 
 test('float32x4 constructor', function() {
@@ -67,15 +75,15 @@ test('float32x4 fromFloat64x2 constructor', function() {
   var n = SIMD.float32x4.fromFloat64x2(m);
   equal(1.0, n.x);
   equal(2.0, n.y);
-  equal(0.0, n.z);
-  equal(0.0, n.w);
+  isPositiveZero(n.z);
+  isPositiveZero(n.w);
 
   m = SIMD.float64x2(3.402824e+38, 7.006492e-46);
   n = SIMD.float32x4.fromFloat64x2(m);
   equal(Infinity, n.x);
-  equal(0.0, n.y);
-  equal(0.0, n.z);
-  equal(0.0, n.w);
+  isPositiveZero(n.y);
+  isPositiveZero(n.z);
+  isPositiveZero(n.w);
 });
 
 test('float32x4 fromInt32x4 constructor', function() {
@@ -88,7 +96,7 @@ test('float32x4 fromInt32x4 constructor', function() {
 
   m = SIMD.int32x4(0, 2147483647, -2147483648, -1);
   n = SIMD.float32x4.fromInt32x4(m);
-  equal(0, n.x);
+  isPositiveZero(n.x);
   equal(2147483648, n.y);
   equal(-2147483648, n.z);
   equal(-1, n.w);
@@ -197,15 +205,13 @@ test('float32x4 abs', function() {
   var e = SIMD.float32x4.abs(d);
   var f = SIMD.float32x4(-NaN, -Infinity, -0.0, -1.0);
   var g = SIMD.float32x4.abs(f);
-  notEqual(e.x, e.x);
+  isNaN(e.x)
   equal(e.y, Infinity);
-  equal(e.z, 0.0);
-  equal(1 / e.z, Infinity);
+  isPositiveZero(e.z);
   equal(e.w, 1.0);
-  notEqual(g.x, g.x);
+  isNaN(g.x)
   equal(g.y, Infinity);
-  equal(g.z, 0.0);
-  equal(1 / g.z, Infinity);
+  isPositiveZero(g.z);
   equal(g.w, 1.0);
 });
 
@@ -226,13 +232,11 @@ test('float32x4 neg', function() {
   var f = SIMD.float32x4.neg(d);
   equal(-Infinity, f.x);
   equal(Infinity, f.y);
-  equal(0.0, f.z);
-  equal(-Infinity, 1 / f.z);
-  equal(0.0, f.w);
-  equal(Infinity, 1 / f.w);
+  isNegativeZero(f.z);
+  isPositiveZero(f.w);
 
   var g = SIMD.float32x4.neg(SIMD.float32x4.splat(NaN));
-  notEqual(g.x, g.x);
+  isNaN(g.x)
 });
 
 test('float32x4 add', function() {
@@ -277,10 +281,10 @@ test('float32x4 div', function() {
   var d = SIMD.float32x4(1.0, 0.0, Infinity, NaN);
   var e = SIMD.float32x4(Infinity, 0.0, Infinity, 1.0);
   var f = SIMD.float32x4.div(d, e);
-  equal(f.x, 0.0);
-  notEqual(f.y, f.y);
-  notEqual(f.z, f.z);
-  notEqual(f.w, f.w);
+  isPositiveZero(f.x);
+  isNaN(f.y)
+  isNaN(f.z)
+  isNaN(f.w)
 
   var g = SIMD.float32x4(1.0, 1.0, -1.0, -1.0);
   var h = SIMD.float32x4(0.0, -0.0, 0.0, -0.0);
@@ -309,17 +313,15 @@ test('float32x4 min', function() {
   equal(-20.0, c.x);
   equal(1.0, c.y);
   equal(30.0, c.z);
-  equal(0.0, c.w);
+  isPositiveZero(c.w);
 
   var x = SIMD.float32x4(-0, 0, NaN, 0);
   var y = SIMD.float32x4(0, -0, 0, NaN);
   var z = SIMD.float32x4.min(x, y);
-  equal(0, z.x);
-  equal(1 / z.x, -Infinity);
-  equal(0, z.y);
-  equal(1 / z.y, -Infinity);
-  notEqual(z.z, z.z);
-  notEqual(z.w, z.w);
+  isNegativeZero(z.x);
+  isNegativeZero(z.y);
+  isNaN(z.z)
+  isNaN(z.w)
 });
 
 test('float32x4 minNum', function() {
@@ -329,17 +331,15 @@ test('float32x4 minNum', function() {
   equal(-20.0, c.x);
   equal(1.0, c.y);
   equal(30.0, c.z);
-  equal(0.0, c.w);
+  isPositiveZero(c.w);
 
   var x = SIMD.float32x4(-0, 0, NaN, 0);
   var y = SIMD.float32x4(0, -0, 0, NaN);
   var z = SIMD.float32x4.minNum(x, y);
-  equal(0, z.x);
-  equal(1 / z.x, -Infinity);
-  equal(0, z.y);
-  equal(1 / z.y, -Infinity);
-  equal(0, z.z);
-  equal(0, z.w);
+  isNegativeZero(z.x);
+  isNegativeZero(z.y);
+  isPositiveZero(z.z);
+  isPositiveZero(z.w);
 });
 
 test('float32x4 min exceptions', function() {
@@ -365,12 +365,10 @@ test('float32x4 max', function() {
   var x = SIMD.float32x4(-0, 0, NaN, 0);
   var y = SIMD.float32x4(0, -0, 0, NaN);
   var z = SIMD.float32x4.max(x, y);
-  equal(0, z.x);
-  equal(1 / z.x, Infinity);
-  equal(0, z.y);
-  equal(1 / z.y, Infinity);
-  notEqual(z.z, z.z);
-  notEqual(z.w, z.w);
+  isPositiveZero(z.x);
+  isPositiveZero(z.y);
+  isNaN(z.z)
+  isNaN(z.w)
 });
 
 test('float32x4 maxNum', function() {
@@ -385,12 +383,10 @@ test('float32x4 maxNum', function() {
   var x = SIMD.float32x4(-0, 0, NaN, 0);
   var y = SIMD.float32x4(0, -0, 0, NaN);
   var z = SIMD.float32x4.maxNum(x, y);
-  equal(0, z.x);
-  equal(1 / z.x, Infinity);
-  equal(0, z.y);
-  equal(1 / z.y, Infinity);
-  equal(0, z.z);
-  equal(0, z.w);
+  isPositiveZero(z.x);
+  isPositiveZero(z.y);
+  isPositiveZero(z.z);
+  isPositiveZero(z.w);
 });
 
 test('float32x4 max exceptions', function() {
@@ -413,11 +409,9 @@ test('float32x4 reciprocal approximation', function() {
   almostEqual(-0.5, c.w);
   a = SIMD.float32x4(NaN, Infinity, -Infinity, -0);
   c = SIMD.float32x4.reciprocalApproximation(a);
-  notEqual(c.x, c.x);
-  equal(0, c.y);
-  equal(1/c.y, Infinity);
-  equal(0, c.z);
-  equal(1/c.z, -Infinity);
+  isNaN(c.x)
+  isPositiveZero(c.y);
+  isNegativeZero(c.z);
   equal(-Infinity, c.w);
   a = SIMD.float32x4(0, 2.3, -4.5, 7.8);
   c = SIMD.float32x4.reciprocalApproximation(a);
@@ -436,14 +430,14 @@ test('float32x4 reciprocal sqrt approximation', function() {
   almostEqual(4.0, c.w);
   a = SIMD.float32x4(-Infinity, Infinity, NaN, 0);
   c = SIMD.float32x4.reciprocalSqrtApproximation(a);
-  notEqual(c.x, c.x);
-  equal(0, c.y);
-  notEqual(c.z, c.z);
+  isNaN(c.x)
+  isPositiveZero(c.y);
+  isNaN(c.z)
   equal(Infinity, c.w);
   a = SIMD.float32x4(-0, -1, 121, 144);
   c = SIMD.float32x4.reciprocalSqrtApproximation(a);
   equal(-Infinity, c.x);
-  notEqual(c.y, c.y);
+  isNaN(c.y)
   almostEqual(1/11, c.z);
   almostEqual(1/12, c.w);
 });
@@ -457,15 +451,13 @@ test('float32x4 sqrt', function() {
   equal(1.0, c.w);
   a = SIMD.float32x4(0.0, -0.0, Infinity, -Infinity);
   c = SIMD.float32x4.sqrt(a);
-  equal(0.0, c.x);
-  equal(1/c.x, Infinity);
-  equal(-0.0, c.y);
-  equal(1/c.y, -Infinity);
+  isPositiveZero(c.x);
+  isNegativeZero(c.y);
   equal(Infinity, c.z);
-  notEqual(c.w, c.w);
+  isNaN(c.w)
   a = SIMD.float32x4(NaN, 2.0, 0.5, 121.0);
   c = SIMD.float32x4.sqrt(a);
-  notEqual(c.x, c.x);
+  isNaN(c.x)
   equal(Math.fround(Math.SQRT2), c.y);
   equal(Math.fround(Math.SQRT1_2), c.z);
   equal(11.0, c.w);
@@ -751,9 +743,9 @@ test('float32x4 loadX', function() {
   for (var i = 0; i < a.length; i++) {
     var v = SIMD.float32x4.loadX(a, i);
     equal(i, v.x);
-    equal(0.0, v.y);
-    equal(0.0, v.z);
-    equal(0.0, v.w);
+    isPositiveZero(v.y);
+    isPositiveZero(v.z);
+    isPositiveZero(v.w);
   }
 });
 
@@ -767,9 +759,9 @@ test('float32x4 overaligned loadX', function() {
   for (var i = 0; i < a.length; i += 2) {
     var v = SIMD.float32x4.loadX(af, i / 2);
     equal(i, v.x);
-    equal(0.0, v.y);
-    equal(0.0, v.z);
-    equal(0.0, v.w);
+    isPositiveZero(v.y);
+    isPositiveZero(v.z);
+    isPositiveZero(v.w);
   }
 });
 
@@ -790,9 +782,9 @@ test('float32x4 unaligned loadX', function() {
   for (var i = 0; i < a.length; i++) {
     var v = SIMD.float32x4.loadX(b, i * 4 + 1);
     equal(i, v.x);
-    equal(0.0, v.y);
-    equal(0.0, v.z);
-    equal(0.0, v.w);
+    isPositiveZero(v.y);
+    isPositiveZero(v.z);
+    isPositiveZero(v.w);
   }
 });
 
@@ -805,8 +797,8 @@ test('float32x4 loadXY', function() {
     var v = SIMD.float32x4.loadXY(a, i);
     equal(i, v.x);
     equal(i+1, v.y);
-    equal(0.0, v.z);
-    equal(0.0, v.w);
+    isPositiveZero(v.z);
+    isPositiveZero(v.w);
   }
 });
 
@@ -821,8 +813,8 @@ test('float32x4 overaligned loadXY', function() {
     var v = SIMD.float32x4.loadXY(af, i / 2);
     equal(i, v.x);
     equal(i+1, v.y);
-    equal(0.0, v.z);
-    equal(0.0, v.w);
+    isPositiveZero(v.z);
+    isPositiveZero(v.w);
   }
 });
 
@@ -844,8 +836,8 @@ test('float32x4 unaligned loadXY', function() {
     var v = SIMD.float32x4.loadXY(b, i * 4 + 1);
     equal(i, v.x);
     equal(i+1, v.y);
-    equal(0.0, v.z);
-    equal(0.0, v.w);
+    isPositiveZero(v.z);
+    isPositiveZero(v.w);
   }
 });
 
@@ -859,7 +851,7 @@ test('float32x4 loadXYZ', function() {
     equal(i, v.x);
     equal(i+1, v.y);
     equal(i+2, v.z);
-    equal(0.0, v.w);
+    isPositiveZero(v.w);
   }
 });
 
@@ -875,7 +867,7 @@ test('float32x4 overaligned loadXYZ', function() {
     equal(i, v.x);
     equal(i+1, v.y);
     equal(i+2, v.z);
-    equal(0.0, v.w);
+    isPositiveZero(v.w);
   }
 });
 
@@ -898,7 +890,7 @@ test('float32x4 unaligned loadXYZ', function() {
     equal(i, v.x);
     equal(i+1, v.y);
     equal(i+2, v.z);
-    equal(0.0, v.w);
+    isPositiveZero(v.w);
   }
 });
 
@@ -1234,8 +1226,8 @@ test('float64x2 constructor', function() {
   equal(2.0, m.y);
 
   m = SIMD.float64x2('hello', 'world');
-  notEqual(m.x, m.x);
-  notEqual(m.y, m.y);
+  isNaN(m.x)
+  isNaN(m.y)
 });
 
 test('float64x2 splat constructor', function() {
@@ -1325,15 +1317,13 @@ test('float64x2 abs', function() {
   var f1 = SIMD.float64x2(-0.0, -1.0);
   var g0 = SIMD.float64x2.abs(f0);
   var g1 = SIMD.float64x2.abs(f1);
-  notEqual(e0.x, e0.x);
+  isNaN(e0.x)
   equal(e0.y, Infinity);
-  equal(e1.x, 0.0);
-  equal(1 / e1.x, Infinity);
+  isPositiveZero(e1.x, 0.0);
   equal(e1.y, 1.0);
-  notEqual(g0.x, g0.x);
+  isNaN(g0.x)
   equal(g0.y, Infinity);
-  equal(g1.x, 0.0);
-  equal(1 / g1.x, Infinity);
+  isPositiveZero(g1.x);
   equal(g1.y, 1.0);
 });
 
@@ -1352,13 +1342,11 @@ test('float64x2 neg', function() {
   var f1 = SIMD.float64x2.neg(d1);
   equal(-Infinity, f0.x);
   equal(Infinity, f0.y);
-  equal(0.0, f1.x);
-  equal(-Infinity, 1 / f1.x);
-  equal(0.0, f1.y);
-  equal(Infinity, 1 / f1.y);
+  isNegativeZero(f1.x);
+  isPositiveZero(f1.y);
 
   var g = SIMD.float64x2.neg(SIMD.float64x2.splat(NaN));
-  notEqual(g.x, g.x);
+  isNaN(g.x)
 });
 
 test('float64x2 add', function() {
@@ -1399,9 +1387,9 @@ test('float64x2 div', function() {
   var f0 = SIMD.float64x2.div(d0, e0);
   var f1 = SIMD.float64x2.div(d1, e1);
   equal(f0.x, Infinity);
-  notEqual(f0.y, f0.y);
-  notEqual(f1.x, f1.x);
-  notEqual(f1.y, f1.y);
+  isNaN(f0.y)
+  isNaN(f1.x)
+  isNaN(f1.y)
 
   var g0 = SIMD.float64x2(1.0, 1.0);
   var g1 = SIMD.float64x2(-1.0, -1.0);
@@ -1448,15 +1436,13 @@ test('float64x2 min', function() {
   var x = SIMD.float64x2(-0, 0);
   var y = SIMD.float64x2(0, -0);
   var z = SIMD.float64x2.min(x, y);
-  equal(0, z.x);
-  equal(1 / z.x, -Infinity);
-  equal(0, z.y);
-  equal(1 / z.y, -Infinity);
+  isNegativeZero(z.x);
+  isNegativeZero(z.y);
   x = SIMD.float64x2(NaN, 0);
   y = SIMD.float64x2(0, NaN);
   z = SIMD.float64x2.min(x, y);
-  notEqual(z.x, z.x);
-  notEqual(z.y, z.y);
+  isNaN(z.x)
+  isNaN(z.y)
 });
 
 test('float64x2 minNum', function() {
@@ -1469,15 +1455,13 @@ test('float64x2 minNum', function() {
   var x = SIMD.float64x2(-0, 0);
   var y = SIMD.float64x2(0, -0);
   var z = SIMD.float64x2.minNum(x, y);
-  equal(0, z.x);
-  equal(1 / z.x, -Infinity);
-  equal(0, z.y);
-  equal(1 / z.y, -Infinity);
+  isNegativeZero(z.x);
+  isNegativeZero(z.y);
   x = SIMD.float64x2(NaN, 0);
   y = SIMD.float64x2(0, NaN);
   z = SIMD.float64x2.minNum(x, y);
-  equal(0, z.x);
-  equal(0, z.y);
+  isPositiveZero(z.x);
+  isPositiveZero(z.y);
 });
 
 test('float64x2 min exceptions', function() {
@@ -1501,15 +1485,13 @@ test('float64x2 max', function() {
   var x = SIMD.float64x2(-0, 0);
   var y = SIMD.float64x2(0, -0);
   var z = SIMD.float64x2.max(x, y);
-  equal(0, z.x);
-  equal(1 / z.x, Infinity);
-  equal(0, z.y);
-  equal(1 / z.y, Infinity);
+  isPositiveZero(z.x);
+  isPositiveZero(z.y);
   x = SIMD.float64x2(NaN, 0);
   y = SIMD.float64x2(0, NaN);
   z = SIMD.float64x2.max(x, y);
-  notEqual(z.x, z.x);
-  notEqual(z.y, z.y);
+  isNaN(z.x)
+  isNaN(z.y)
 });
 
 test('float64x2 maxNum', function() {
@@ -1522,15 +1504,13 @@ test('float64x2 maxNum', function() {
   var x = SIMD.float64x2(-0, 0);
   var y = SIMD.float64x2(0, -0);
   var z = SIMD.float64x2.maxNum(x, y);
-  equal(0, z.x);
-  equal(1 / z.x, Infinity);
-  equal(0, z.y);
-  equal(1 / z.y, Infinity);
+  isPositiveZero(z.x);
+  isPositiveZero(z.y);
   x = SIMD.float64x2(NaN, 0);
   y = SIMD.float64x2(0, NaN);
   z = SIMD.float64x2.maxNum(x, y);
-  equal(0, z.x);
-  equal(0, z.y);
+  isPositiveZero(z.x);
+  isPositiveZero(z.y);
 });
 
 test('float64x2 max exceptions', function() {
@@ -1551,13 +1531,11 @@ test('float64x2 reciprocal approximation', function() {
   almostEqual(-0.5, c.y);
   a = SIMD.float64x2(NaN, Infinity);
   c = SIMD.float64x2.reciprocalApproximation(a);
-  notEqual(c.x, c.x);
-  equal(0, c.y);
-  equal(1/c.y, Infinity);
+  isNaN(c.x)
+  isPositiveZero(c.y);
   a = SIMD.float64x2(-Infinity, -0);
   c = SIMD.float64x2.reciprocalApproximation(a);
-  equal(0, c.x);
-  equal(1/c.x, -Infinity);
+  isNegativeZero(c.x);
   equal(-Infinity, c.y);
   a = SIMD.float64x2(0, 2.3);
   c = SIMD.float64x2.reciprocalApproximation(a);
@@ -1576,16 +1554,16 @@ test('float64x2 reciprocal sqrt approximation', function() {
   almostEqual(2.0, c.y);
   a = SIMD.float64x2(-Infinity, Infinity);
   c = SIMD.float64x2.reciprocalSqrtApproximation(a);
-  notEqual(c.x, c.x);
-  equal(0, c.y);
+  isNaN(c.x)
+  isPositiveZero(c.y);
   a = SIMD.float64x2(NaN, 0);
   c = SIMD.float64x2.reciprocalSqrtApproximation(a);
-  notEqual(c.x, c.x);
+  isNaN(c.x)
   equal(Infinity, c.y);
   a = SIMD.float64x2(-0, -1);
   c = SIMD.float64x2.reciprocalSqrtApproximation(a);
   equal(-Infinity, c.x);
-  notEqual(c.y, c.y);
+  isNaN(c.y)
   a = SIMD.float64x2(121, 144);
   c = SIMD.float64x2.reciprocalSqrtApproximation(a);
   almostEqual(1/11, c.x);
@@ -1599,17 +1577,15 @@ test('float64x2 sqrt', function() {
   equal(3.0, c.y);
   a = SIMD.float64x2(0.0, -0.0);
   c = SIMD.float64x2.sqrt(a);
-  equal(0.0, c.x);
-  equal(1/c.x, Infinity);
-  equal(-0.0, c.y);
-  equal(1/c.y, -Infinity);
+  isPositiveZero(c.x);
+  isNegativeZero(c.y);
   a = SIMD.float64x2(Infinity, -Infinity);
   c = SIMD.float64x2.sqrt(a);
   equal(Infinity, c.x);
   notEqual(c.w, c.y);
   a = SIMD.float64x2(NaN, 2.0);
   c = SIMD.float64x2.sqrt(a);
-  notEqual(c.x, c.x);
+  isNaN(c.x)
   equal(Math.SQRT2, c.y);
   a = SIMD.float64x2(0.5, 121.0);
   c = SIMD.float64x2.sqrt(a);
@@ -1856,7 +1832,7 @@ test('float64x2 loadX', function() {
   for (var i = 0; i < a.length; i++) {
     var v = SIMD.float64x2.loadX(a, i);
     equal(i, v.x);
-    equal(0.0, v.y);
+    isPositiveZero(v.y);
   }
 });
 
@@ -1877,7 +1853,7 @@ test('float64x2 unaligned loadX', function() {
   for (var i = 0; i < a.length; i++) {
     var v = SIMD.float64x2.loadX(b, i * 8 + 1);
     equal(i, v.x);
-    equal(0.0, v.y);
+    isPositiveZero(v.y);
   }
 });
 
@@ -4551,22 +4527,22 @@ test('Float32Array view values', function() {
   var d = new Float32x4Array(a.buffer, 0, 1);
   var start = 100;
   for (var i = 0; i < b.length; i++) {
-    equal(0.0, b.getAt(i).x);
-    equal(0.0, b.getAt(i).y);
-    equal(0.0, b.getAt(i).z);
-    equal(0.0, b.getAt(i).w);
+    isPositiveZero(b.getAt(i).x);
+    isPositiveZero(b.getAt(i).y);
+    isPositiveZero(b.getAt(i).z);
+    isPositiveZero(b.getAt(i).w);
   }
   for (var i = 0; i < c.length; i++) {
-    equal(0.0, c.getAt(i).x);
-    equal(0.0, c.getAt(i).y);
-    equal(0.0, c.getAt(i).z);
-    equal(0.0, c.getAt(i).w);
+    isPositiveZero(c.getAt(i).x);
+    isPositiveZero(c.getAt(i).y);
+    isPositiveZero(c.getAt(i).z);
+    isPositiveZero(c.getAt(i).w);
   }
   for (var i = 0; i < d.length; i++) {
-    equal(0.0, d.getAt(i).x);
-    equal(0.0, d.getAt(i).y);
-    equal(0.0, d.getAt(i).z);
-    equal(0.0, d.getAt(i).w);
+    isPositiveZero(d.getAt(i).x);
+    isPositiveZero(d.getAt(i).y);
+    isPositiveZero(d.getAt(i).z);
+    isPositiveZero(d.getAt(i).w);
   }
   for (var i = 0; i < a.length; i++) {
     a[i] = i+start;
