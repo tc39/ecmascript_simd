@@ -7,7 +7,7 @@ var anyFailures = false;
 
 function fail(str)
 {
-  e = Error(str);
+  var e = Error(str);
   console.log(e.toString());
   console.log(e.stack);
   anyFailures = true;
