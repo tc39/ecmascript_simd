@@ -3,12 +3,14 @@
 load("ecmascript_simd.js");
 
 var currentName = '';
+var anyFailures = false;
 
 function fail(str)
 {
   e = Error(str);
   console.log(e.toString());
   console.log(e.stack);
+  anyFailures = true;
 }
 
 function test(name, func) {
@@ -49,3 +51,6 @@ function ok(x) {
 }
 
 load("ecmascript_simd_tests.js");
+
+if (anyFailures)
+    quit(1);
