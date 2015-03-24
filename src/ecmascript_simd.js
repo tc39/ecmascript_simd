@@ -1628,8 +1628,8 @@ if (typeof SIMD.float32x4.load === "undefined") {
   SIMD.float32x4.load = function(tarray, index) {
     if (!_SIMD_PRIVATE.isTypedArray(tarray))
       throw new TypeError("The 1st argument must be a typed array.");
-    if (!_SIMD_PRIVATE.isNumber(index))
-      throw new TypeError("The 2nd argument must be a Number.");
+    if (!_SIMD_PRIVATE.isInt32(index))
+      throw new TypeError("The 2nd argument must be an Int32.");
     var bpe = tarray.BYTES_PER_ELEMENT;
     if (index < 0 || (index * bpe + 16) > tarray.byteLength)
       throw new RangeError("The value of index is invalid.");
@@ -1654,8 +1654,8 @@ if (typeof SIMD.float32x4.loadX === "undefined") {
   SIMD.float32x4.loadX = function(tarray, index) {
     if (!_SIMD_PRIVATE.isTypedArray(tarray))
       throw new TypeError("The 1st argument must be a typed array.");
-    if (!_SIMD_PRIVATE.isNumber(index))
-      throw new TypeError("The 2nd argument must be a Number.");
+    if (!_SIMD_PRIVATE.isInt32(index))
+      throw new TypeError("The 2nd argument must be an Int32.");
     var bpe = tarray.BYTES_PER_ELEMENT;
     if (index < 0 || (index * bpe + 4) > tarray.byteLength)
       throw new RangeError("The value of index is invalid.");
@@ -1680,8 +1680,8 @@ if (typeof SIMD.float32x4.loadXY === "undefined") {
   SIMD.float32x4.loadXY = function(tarray, index) {
     if (!_SIMD_PRIVATE.isTypedArray(tarray))
       throw new TypeError("The 1st argument must be a typed array.");
-    if (!_SIMD_PRIVATE.isNumber(index))
-      throw new TypeError("The 2nd argument must be a Number.");
+    if (!_SIMD_PRIVATE.isInt32(index))
+      throw new TypeError("The 2nd argument must be an Int32.");
     var bpe = tarray.BYTES_PER_ELEMENT;
     if (index < 0 || (index * bpe + 8) > tarray.byteLength)
       throw new RangeError("The value of index is invalid.");
@@ -1706,8 +1706,8 @@ if (typeof SIMD.float32x4.loadXYZ === "undefined") {
   SIMD.float32x4.loadXYZ = function(tarray, index) {
     if (!_SIMD_PRIVATE.isTypedArray(tarray))
       throw new TypeError("The 1st argument must be a typed array.");
-    if (!_SIMD_PRIVATE.isNumber(index))
-      throw new TypeError("The 2nd argument must be a Number.");
+    if (!_SIMD_PRIVATE.isInt32(index))
+      throw new TypeError("The 2nd argument must be an Int32.");
     var bpe = tarray.BYTES_PER_ELEMENT;
     if (index < 0 || (index * bpe + 12) > tarray.byteLength)
       throw new RangeError("The value of index is invalid.");
@@ -1733,8 +1733,8 @@ if (typeof SIMD.float32x4.store === "undefined") {
   SIMD.float32x4.store = function(tarray, index, value) {
     if (!_SIMD_PRIVATE.isTypedArray(tarray))
       throw new TypeError("The 1st argument must be a typed array.");
-    if (!_SIMD_PRIVATE.isNumber(index))
-      throw new TypeError("The 2nd argument must be a Number.");
+    if (!_SIMD_PRIVATE.isInt32(index))
+      throw new TypeError("The 2nd argument must be an Int32.");
     var bpe = tarray.BYTES_PER_ELEMENT;
     if (index < 0 || (index * bpe + 16) > tarray.byteLength)
       throw new RangeError("The value of index is invalid.");
@@ -1763,8 +1763,8 @@ if (typeof SIMD.float32x4.storeX === "undefined") {
   SIMD.float32x4.storeX = function(tarray, index, value) {
     if (!_SIMD_PRIVATE.isTypedArray(tarray))
       throw new TypeError("The 1st argument must be a typed array.");
-    if (!_SIMD_PRIVATE.isNumber(index))
-      throw new TypeError("The 2nd argument must be a Number.");
+    if (!_SIMD_PRIVATE.isInt32(index))
+      throw new TypeError("The 2nd argument must be an Int32.");
     var bpe = tarray.BYTES_PER_ELEMENT;
     if (index < 0 || (index * bpe + 4) > tarray.byteLength)
       throw new RangeError("The value of index is invalid.");
@@ -1795,8 +1795,8 @@ if (typeof SIMD.float32x4.storeXY === "undefined") {
   SIMD.float32x4.storeXY = function(tarray, index, value) {
     if (!_SIMD_PRIVATE.isTypedArray(tarray))
       throw new TypeError("The 1st argument must be a typed array.");
-    if (!_SIMD_PRIVATE.isNumber(index))
-      throw new TypeError("The 2nd argument must be a Number.");
+    if (!_SIMD_PRIVATE.isInt32(index))
+      throw new TypeError("The 2nd argument must be an Int32.");
     var bpe = tarray.BYTES_PER_ELEMENT;
     if (index < 0 || (index * bpe + 8) > tarray.byteLength)
       throw new RangeError("The value of index is invalid.");
@@ -1823,8 +1823,8 @@ if (typeof SIMD.float32x4.storeXYZ === "undefined") {
   SIMD.float32x4.storeXYZ = function(tarray, index, value) {
     if (!_SIMD_PRIVATE.isTypedArray(tarray))
       throw new TypeError("The 1st argument must be a typed array.");
-    if (!_SIMD_PRIVATE.isNumber(index))
-      throw new TypeError("The 2nd argument must be a Number.");
+    if (!_SIMD_PRIVATE.isInt32(index))
+      throw new TypeError("The 2nd argument must be an Int32.");
     var bpe = tarray.BYTES_PER_ELEMENT;
     if (index < 0 || (index * bpe + 12) > tarray.byteLength)
       throw new RangeError("The value of index is invalid.");
@@ -2264,8 +2264,8 @@ if (typeof SIMD.float64x2.load === "undefined") {
   SIMD.float64x2.load = function(tarray, index) {
     if (!_SIMD_PRIVATE.isTypedArray(tarray))
       throw new TypeError("The 1st argument must be a typed array.");
-    if (!_SIMD_PRIVATE.isNumber(index))
-      throw new TypeError("The 2nd argument must be a Number.");
+    if (!_SIMD_PRIVATE.isInt32(index))
+      throw new TypeError("The 2nd argument must be an Int32.");
     var bpe = tarray.BYTES_PER_ELEMENT;
     if (index < 0 || (index * bpe + 16) > tarray.byteLength)
       throw new RangeError("The value of index is invalid.");
@@ -2290,8 +2290,8 @@ if (typeof SIMD.float64x2.loadX === "undefined") {
   SIMD.float64x2.loadX = function(tarray, index) {
     if (!_SIMD_PRIVATE.isTypedArray(tarray))
       throw new TypeError("The 1st argument must be a typed array.");
-    if (!_SIMD_PRIVATE.isNumber(index))
-      throw new TypeError("The 2nd argument must be a Number.");
+    if (!_SIMD_PRIVATE.isInt32(index))
+      throw new TypeError("The 2nd argument must be an Int32.");
     var bpe = tarray.BYTES_PER_ELEMENT;
     if (index < 0 || (index * bpe + 8) > tarray.byteLength)
       throw new RangeError("The value of index is invalid.");
@@ -2317,8 +2317,8 @@ if (typeof SIMD.float64x2.store === "undefined") {
   SIMD.float64x2.store = function(tarray, index, value) {
     if (!_SIMD_PRIVATE.isTypedArray(tarray))
       throw new TypeError("The 1st argument must be a typed array.");
-    if (!_SIMD_PRIVATE.isNumber(index))
-      throw new TypeError("The 2nd argument must be a Number.");
+    if (!_SIMD_PRIVATE.isInt32(index))
+      throw new TypeError("The 2nd argument must be an Int32.");
     var bpe = tarray.BYTES_PER_ELEMENT;
     if (index < 0 || (index * bpe + 16) > tarray.byteLength)
       throw new RangeError("The value of index is invalid.");
@@ -2345,8 +2345,8 @@ if (typeof SIMD.float64x2.storeX === "undefined") {
   SIMD.float64x2.storeX = function(tarray, index, value) {
     if (!_SIMD_PRIVATE.isTypedArray(tarray))
       throw new TypeError("The 1st argument must be a typed array.");
-    if (!_SIMD_PRIVATE.isNumber(index))
-      throw new TypeError("The 2nd argument must be a Number.");
+    if (!_SIMD_PRIVATE.isInt32(index))
+      throw new TypeError("The 2nd argument must be an Int32.");
     var bpe = tarray.BYTES_PER_ELEMENT;
     if (index < 0 || (index * bpe + 8) > tarray.byteLength)
       throw new RangeError("The value of index is invalid.");
@@ -2786,8 +2786,8 @@ if (typeof SIMD.int32x4.load === "undefined") {
   SIMD.int32x4.load = function(tarray, index) {
     if (!_SIMD_PRIVATE.isTypedArray(tarray))
       throw new TypeError("The 1st argument must be a typed array.");
-    if (!_SIMD_PRIVATE.isNumber(index))
-      throw new TypeError("The 2nd argument must be a Number.");
+    if (!_SIMD_PRIVATE.isInt32(index))
+      throw new TypeError("The 2nd argument must be an Int32.");
     var bpe = tarray.BYTES_PER_ELEMENT;
     if (index < 0 || (index * bpe + 16) > tarray.byteLength)
       throw new RangeError("The value of index is invalid.");
@@ -2812,8 +2812,8 @@ if (typeof SIMD.int32x4.loadX === "undefined") {
   SIMD.int32x4.loadX = function(tarray, index) {
     if (!_SIMD_PRIVATE.isTypedArray(tarray))
       throw new TypeError("The 1st argument must be a typed array.");
-    if (!_SIMD_PRIVATE.isNumber(index))
-      throw new TypeError("The 2nd argument must be a Number.");
+    if (!_SIMD_PRIVATE.isInt32(index))
+      throw new TypeError("The 2nd argument must be an Int32.");
     var bpe = tarray.BYTES_PER_ELEMENT;
     if (index < 0 || (index * bpe + 4) > tarray.byteLength)
       throw new RangeError("The value of index is invalid.");
@@ -2838,8 +2838,8 @@ if (typeof SIMD.int32x4.loadXY === "undefined") {
   SIMD.int32x4.loadXY = function(tarray, index) {
     if (!_SIMD_PRIVATE.isTypedArray(tarray))
       throw new TypeError("The 1st argument must be a typed array.");
-    if (!_SIMD_PRIVATE.isNumber(index))
-      throw new TypeError("The 2nd argument must be a Number.");
+    if (!_SIMD_PRIVATE.isInt32(index))
+      throw new TypeError("The 2nd argument must be an Int32.");
     var bpe = tarray.BYTES_PER_ELEMENT;
     if (index < 0 || (index * bpe + 8) > tarray.byteLength)
       throw new RangeError("The value of index is invalid.");
@@ -2864,8 +2864,8 @@ if (typeof SIMD.int32x4.loadXYZ === "undefined") {
   SIMD.int32x4.loadXYZ = function(tarray, index) {
     if (!_SIMD_PRIVATE.isTypedArray(tarray))
       throw new TypeError("The 1st argument must be a typed array.");
-    if (!_SIMD_PRIVATE.isNumber(index))
-      throw new TypeError("The 2nd argument must be a Number.");
+    if (!_SIMD_PRIVATE.isInt32(index))
+      throw new TypeError("The 2nd argument must be an Int32.");
     var bpe = tarray.BYTES_PER_ELEMENT;
     if (index < 0 || (index * bpe + 12) > tarray.byteLength)
       throw new RangeError("The value of index is invalid.");
@@ -2891,8 +2891,8 @@ if (typeof SIMD.int32x4.store === "undefined") {
   SIMD.int32x4.store = function(tarray, index, value) {
     if (!_SIMD_PRIVATE.isTypedArray(tarray))
       throw new TypeError("The 1st argument must be a typed array.");
-    if (!_SIMD_PRIVATE.isNumber(index))
-      throw new TypeError("The 2nd argument must be a Number.");
+    if (!_SIMD_PRIVATE.isInt32(index))
+      throw new TypeError("The 2nd argument must be an Int32.");
     var bpe = tarray.BYTES_PER_ELEMENT;
     if (index < 0 || (index * bpe + 16) > tarray.byteLength)
       throw new RangeError("The value of index is invalid.");
@@ -2921,8 +2921,8 @@ if (typeof SIMD.int32x4.storeX === "undefined") {
   SIMD.int32x4.storeX = function(tarray, index, value) {
     if (!_SIMD_PRIVATE.isTypedArray(tarray))
       throw new TypeError("The 1st argument must be a typed array.");
-    if (!_SIMD_PRIVATE.isNumber(index))
-      throw new TypeError("The 2nd argument must be a Number.");
+    if (!_SIMD_PRIVATE.isInt32(index))
+      throw new TypeError("The 2nd argument must be an Int32.");
     var bpe = tarray.BYTES_PER_ELEMENT;
     if (index < 0 || (index * bpe + 4) > tarray.byteLength)
       throw new RangeError("The value of index is invalid.");
@@ -2953,8 +2953,8 @@ if (typeof SIMD.int32x4.storeXY === "undefined") {
   SIMD.int32x4.storeXY = function(tarray, index, value) {
     if (!_SIMD_PRIVATE.isTypedArray(tarray))
       throw new TypeError("The 1st argument must be a typed array.");
-    if (!_SIMD_PRIVATE.isNumber(index))
-      throw new TypeError("The 2nd argument must be a Number.");
+    if (!_SIMD_PRIVATE.isInt32(index))
+      throw new TypeError("The 2nd argument must be an Int32.");
     var bpe = tarray.BYTES_PER_ELEMENT;
     if (index < 0 || (index * bpe + 8) > tarray.byteLength)
       throw new RangeError("The value of index is invalid.");
@@ -2981,8 +2981,8 @@ if (typeof SIMD.int32x4.storeXYZ === "undefined") {
   SIMD.int32x4.storeXYZ = function(tarray, index, value) {
     if (!_SIMD_PRIVATE.isTypedArray(tarray))
       throw new TypeError("The 1st argument must be a typed array.");
-    if (!_SIMD_PRIVATE.isNumber(index))
-      throw new TypeError("The 2nd argument must be a Number.");
+    if (!_SIMD_PRIVATE.isInt32(index))
+      throw new TypeError("The 2nd argument must be an Int32.");
     var bpe = tarray.BYTES_PER_ELEMENT;
     if (index < 0 || (index * bpe + 12) > tarray.byteLength)
       throw new RangeError("The value of index is invalid.");
@@ -3458,8 +3458,8 @@ if (typeof SIMD.int16x8.load === "undefined") {
   SIMD.int16x8.load = function(tarray, index) {
     if (!_SIMD_PRIVATE.isTypedArray(tarray))
       throw new TypeError("The 1st argument must be a typed array.");
-    if (!_SIMD_PRIVATE.isNumber(index))
-      throw new TypeError("The 2nd argument must be a Number.");
+    if (!_SIMD_PRIVATE.isInt32(index))
+      throw new TypeError("The 2nd argument must be an Int32.");
     var bpe = tarray.BYTES_PER_ELEMENT;
     if (index < 0 || (index * bpe + 16) > tarray.byteLength)
       throw new RangeError("The value of index is invalid.");
@@ -3486,8 +3486,8 @@ if (typeof SIMD.int16x8.store === "undefined") {
   SIMD.int16x8.store = function(tarray, index, value) {
     if (!_SIMD_PRIVATE.isTypedArray(tarray))
       throw new TypeError("The 1st argument must be a typed array.");
-    if (!_SIMD_PRIVATE.isNumber(index))
-      throw new TypeError("The 2nd argument must be a Number.");
+    if (!_SIMD_PRIVATE.isInt32(index))
+      throw new TypeError("The 2nd argument must be an Int32.");
     var bpe = tarray.BYTES_PER_ELEMENT;
     if (index < 0 || (index * bpe + 16) > tarray.byteLength)
       throw new RangeError("The value of index is invalid.");
@@ -4130,8 +4130,8 @@ if (typeof SIMD.int8x16.load === "undefined") {
   SIMD.int8x16.load = function(tarray, index) {
     if (!_SIMD_PRIVATE.isTypedArray(tarray))
       throw new TypeError("The 1st argument must be a typed array.");
-    if (!_SIMD_PRIVATE.isNumber(index))
-      throw new TypeError("The 2nd argument must be a Number.");
+    if (!_SIMD_PRIVATE.isInt32(index))
+      throw new TypeError("The 2nd argument must be an Int32.");
     var bpe = tarray.BYTES_PER_ELEMENT;
     if (index < 0 || (index * bpe + 16) > tarray.byteLength)
       throw new RangeError("The value of index is invalid.");
@@ -4160,8 +4160,8 @@ if (typeof SIMD.int8x16.store === "undefined") {
   SIMD.int8x16.store = function(tarray, index, value) {
     if (!_SIMD_PRIVATE.isTypedArray(tarray))
       throw new TypeError("The 1st argument must be a typed array.");
-    if (!_SIMD_PRIVATE.isNumber(index))
-      throw new TypeError("The 2nd argument must be a Number.");
+    if (!_SIMD_PRIVATE.isInt32(index))
+      throw new TypeError("The 2nd argument must be an Int32.");
     var bpe = tarray.BYTES_PER_ELEMENT;
     if (index < 0 || (index * bpe + 16) > tarray.byteLength)
       throw new RangeError("The value of index is invalid.");
