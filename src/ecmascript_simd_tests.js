@@ -465,6 +465,18 @@ test('float32x4 shuffle', function() {
   equal(5.0, e.y);
   equal(1.0, e.z);
   equal(5.0, e.w);
+
+  function testIndexCheck(index) {
+      throws(function() { SIMD.float32x4.shuffle(a, b, index, 0, 0, 0); });
+  }
+  testIndexCheck(13.37);
+  testIndexCheck(null);
+  testIndexCheck(undefined);
+  testIndexCheck({});
+  testIndexCheck(true);
+  testIndexCheck('yo');
+  testIndexCheck(-1);
+  testIndexCheck(8);
 });
 
 test('float32x4 withX', function() {
@@ -1539,6 +1551,18 @@ test('float64x2 swizzle', function() {
   equal(1.0, yx.y);
   equal(2.0, yy.x);
   equal(2.0, yy.y);
+
+  function testIndexCheck(index) {
+      throws(function() { SIMD.float64x2.swizzle(a, index, 0); });
+  }
+  testIndexCheck(13.37);
+  testIndexCheck(null);
+  testIndexCheck(undefined);
+  testIndexCheck({});
+  testIndexCheck(true);
+  testIndexCheck('yo');
+  testIndexCheck(-1);
+  testIndexCheck(2);
 });
 
 test('float64x2 shuffle', function() {
@@ -1569,6 +1593,18 @@ test('float64x2 shuffle', function() {
   equal(2.0, e.y);
   equal(1.0, f.x);
   equal(3.0, f.y);
+
+  function testIndexCheck(index) {
+      throws(function() { SIMD.float64x2.shuffle(a, b, index, 0); });
+  }
+  testIndexCheck(13.37);
+  testIndexCheck(null);
+  testIndexCheck(undefined);
+  testIndexCheck({});
+  testIndexCheck(true);
+  testIndexCheck('yo');
+  testIndexCheck(-1);
+  testIndexCheck(4);
 });
 
 test('float64x2 withX', function() {
@@ -2040,6 +2076,18 @@ test('int32x4 swizzle', function() {
   equal(1, xxxx.y);
   equal(1, xxxx.z);
   equal(1, xxxx.w);
+
+  function testIndexCheck(index) {
+      throws(function() { SIMD.int32x4.swizzle(a, index, 0, 0, 0); });
+  }
+  testIndexCheck(13.37);
+  testIndexCheck(null);
+  testIndexCheck(undefined);
+  testIndexCheck({});
+  testIndexCheck(true);
+  testIndexCheck('yo');
+  testIndexCheck(-1);
+  testIndexCheck(4);
 });
 
 test('int32x4 shuffle', function() {
@@ -2076,6 +2124,18 @@ test('int32x4 shuffle', function() {
   equal(5, e.y);
   equal(1, e.z);
   equal(5, e.w);
+
+  function testIndexCheck(index) {
+      throws(function() { SIMD.int32x4.shuffle(a, b, index, 0, 0, 0); });
+  }
+  testIndexCheck(13.37);
+  testIndexCheck(null);
+  testIndexCheck(undefined);
+  testIndexCheck({});
+  testIndexCheck(true);
+  testIndexCheck('yo');
+  testIndexCheck(-1);
+  testIndexCheck(8);
 });
 
 test('int32x4 withX', function() {
@@ -3013,6 +3073,18 @@ test('int16x8 swizzle', function() {
   equal(1, xxxx.s5);
   equal(1, xxxx.s6);
   equal(1, xxxx.s7);
+
+  function testIndexCheck(index) {
+      throws(function() { SIMD.int16x8.swizzle(a, index, 0, 0, 0, 0, 0, 0, 0); });
+  }
+  testIndexCheck(13.37);
+  testIndexCheck(null);
+  testIndexCheck(undefined);
+  testIndexCheck({});
+  testIndexCheck(true);
+  testIndexCheck('yo');
+  testIndexCheck(-1);
+  testIndexCheck(8);
 });
 
 test('int16x8 shuffle', function() {
@@ -3045,6 +3117,18 @@ test('int16x8 shuffle', function() {
   equal(9, xxxx.s5);
   equal(9, xxxx.s6);
   equal(9, xxxx.s7);
+
+  function testIndexCheck(index) {
+      throws(function() { SIMD.int16x8.shuffle(a, b, index, 0, 0, 0, 0, 0, 0, 0); });
+  }
+  testIndexCheck(13.37);
+  testIndexCheck(null);
+  testIndexCheck(undefined);
+  testIndexCheck({});
+  testIndexCheck(true);
+  testIndexCheck('yo');
+  testIndexCheck(-1);
+  testIndexCheck(16);
 });
 
 test('int16x8 and', function() {
@@ -3518,6 +3602,18 @@ test('int8x16 swizzle', function() {
   equal(1, xxxx.s13);
   equal(1, xxxx.s14);
   equal(1, xxxx.s15);
+
+  function testIndexCheck(index) {
+      throws(function() { SIMD.int8x16.swizzle(a, index, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0); });
+  }
+  testIndexCheck(13.37);
+  testIndexCheck(null);
+  testIndexCheck(undefined);
+  testIndexCheck({});
+  testIndexCheck(true);
+  testIndexCheck('yo');
+  testIndexCheck(-1);
+  testIndexCheck(16);
 });
 
 test('int8x16 shuffle', function() {
@@ -3574,6 +3670,18 @@ test('int8x16 shuffle', function() {
   equal(17, xxxx.s13);
   equal(17, xxxx.s14);
   equal(17, xxxx.s15);
+
+  function testIndexCheck(index) {
+      throws(function() { SIMD.int8x16.shuffle(a, b, index, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0); });
+  }
+  testIndexCheck(13.37);
+  testIndexCheck(null);
+  testIndexCheck(undefined);
+  testIndexCheck({});
+  testIndexCheck(true);
+  testIndexCheck('yo');
+  testIndexCheck(-1);
+  testIndexCheck(32);
 });
 
 test('int8x16 and', function() {
