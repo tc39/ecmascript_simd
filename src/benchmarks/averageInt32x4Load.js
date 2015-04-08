@@ -20,7 +20,6 @@
   // Benchmark data, initialization and kernel functions
   var a   = new Int32Array(10000);
   var a1  = new Int32Array(10000);
-  var ax4 = new Int32x4Array(a.buffer);
   var b = new Int8Array(a.buffer);
 
   function sanityCheck() {

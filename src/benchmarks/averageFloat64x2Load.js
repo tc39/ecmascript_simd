@@ -19,7 +19,6 @@
 
   // Benchmark data, initialization and kernel functions
   var a   = new Float64Array(10000);
-  var ax2 = new Float64x2Array(a.buffer);
 
   function sanityCheck() {
      return Math.abs(average(1) - simdAverage(1)) < 0.0001;

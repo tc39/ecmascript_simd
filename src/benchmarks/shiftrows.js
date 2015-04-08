@@ -21,7 +21,6 @@
 
   var state   = new Int32Array(16);    // 4x4 state matrix
   var temp    = new Int32Array (1000); // Big enough for 1000 columns
-  var statex4 = new Int32x4Array (state.buffer);
 
   function printState() {
     for (var r = 0; r < 4; ++r) {
@@ -103,15 +102,15 @@
       shiftRows(state, Nc);
     }
     for (var r = 1; r < 4; ++r) {
-      var rx4 = statex4.getAt(r);
+      var rx4 = SIMD.int32x4.load(state, r << 2);
       if (r == 1) {
-        statex4.setAt(r, SIMD.int32x4.swizzle(rx4, 1, 2, 3, 0));
+        SIMD.int32x4.store(state, 4, SIMD.int32x4.swizzle(rx4, 1, 2, 3, 0));
       }
       else if (r == 2) {
-        statex4.setAt(r, SIMD.int32x4.swizzle(rx4, 2, 3, 0, 1));
+        SIMD.int32x4.store(state, 8, SIMD.int32x4.swizzle(rx4, 2, 3, 0, 1));
       }
       else { // r == 3
-        statex4.setAt(r, SIMD.int32x4.swizzle(rx4, 3, 0, 1, 2));
+        SIMD.int32x4.store(state, 12, SIMD.int32x4.swizzle(rx4, 3, 0, 1, 2));
       }
     }
   }

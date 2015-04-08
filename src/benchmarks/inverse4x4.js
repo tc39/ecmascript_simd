@@ -19,11 +19,8 @@
 
   // Global Variables
   var src    = new Float32Array(16);            // Source matrix
-  var srcx4  = new Float32x4Array(src.buffer);  // Source matrix
   var dst    = new Float32Array(16);            // Result matrix
-  var dstx4  = new Float32x4Array(dst.buffer);  // Result matrix
   var tsrc   = new Float32Array(16);            // Transposed version of 'src'
-  var tsrcx4 = new Float32x4Array(tsrc.buffer); // Transposed version of 'src'
   var tmp   = new Float32Array(12);             // Temporary array of multiply results
   var ident = new Float32Array(
                     [1,0,0,0,
@@ -104,10 +101,10 @@
     var det;
 
     // Load the 4 rows
-    var src0 = srcx4.getAt(0);
-    var src1 = srcx4.getAt(1);
-    var src2 = srcx4.getAt(2);
-    var src3 = srcx4.getAt(3);
+    var src0 = SIMD.float32x4.load(src, 0);
+    var src1 = SIMD.float32x4.load(src, 4);
+    var src2 = SIMD.float32x4.load(src, 8);
+    var src3 = SIMD.float32x4.load(src, 16);
 
     // Transpose the source matrix.  Sort of.  Not a true transpose operation
 
@@ -212,10 +209,10 @@
     minor2 = SIMD.float32x4.mul(det, minor2);
     minor3 = SIMD.float32x4.mul(det, minor3);
 
-    dstx4.setAt(0, minor0);
-    dstx4.setAt(1, minor1);
-    dstx4.setAt(2, minor2);
-    dstx4.setAt(3, minor3);
+    SIMD.float32x4.store(dst, 0,  minor0);
+    SIMD.float32x4.store(dst, 4,  minor1);
+    SIMD.float32x4.store(dst, 8,  minor2);
+    SIMD.float32x4.store(dst, 12, minor3);
   }
 
   function nonSimdMatrixInverse() {
@@ -313,10 +310,10 @@
       var det;
 
       // Load the 4 rows
-      var src0 = srcx4.getAt(0);
-      var src1 = srcx4.getAt(1);
-      var src2 = srcx4.getAt(2);
-      var src3 = srcx4.getAt(3);
+      var src0 = SIMD.float32x4.load(src, 0);
+      var src1 = SIMD.float32x4.load(src, 4);
+      var src2 = SIMD.float32x4.load(src, 8);
+      var src3 = SIMD.float32x4.load(src, 12);
 
       // Transpose the source matrix.  Sort of.  Not a true transpose operation
 
@@ -421,10 +418,10 @@
       minor2 = SIMD.float32x4.mul(det, minor2);
       minor3 = SIMD.float32x4.mul(det, minor3);
 
-      dstx4.setAt(0, minor0);
-      dstx4.setAt(1, minor1);
-      dstx4.setAt(2, minor2);
-      dstx4.setAt(3, minor3);
+      SIMD.float32x4.store(dst, 0,  minor0);
+      SIMD.float32x4.store(dst, 4,  minor1);
+      SIMD.float32x4.store(dst, 8,  minor2);
+      SIMD.float32x4.store(dst, 12, minor3);
     }
   }
 
