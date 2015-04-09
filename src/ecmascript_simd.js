@@ -118,7 +118,7 @@ function frombool(x) {
 }
 
 function int32FromFloat(x) {
-  if (x >= -0x80000000 && x <= 0x7fffffff)
+  if (x > -2147483649.0 && x < 2147483648.0)
     return x|0;
   throw new RangeError("Conversion from floating-point to integer failed");
 }

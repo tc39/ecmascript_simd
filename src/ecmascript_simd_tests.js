@@ -689,7 +689,7 @@ test('float32x4 int32x4 bit conversion', function() {
 
 test('float32x4 float64x2 conversion', function() {
   var m = SIMD.float32x4(1.0, 2.0, 3.0, 4.0);
-   var n = SIMD.float64x2.fromFloat32x4(m);
+  var n = SIMD.float64x2.fromFloat32x4(m);
   equal(1.0, n.x);
   equal(2.0, n.y);
 });
@@ -2091,6 +2091,11 @@ test('int32x4 fromFloat64x2 constructor', function() {
   equal(-3, n.y);
   equal(0, n.z);
   equal(0, n.w);
+
+  m = SIMD.float64x2(2147483647.9, -2147483648.9);
+  n = SIMD.int32x4.fromFloat64x2(m);
+  equal(2147483647, n.x);
+  equal(-2147483648, n.y);
 
   throws(function() {
     SIMD.int32x4.fromFloat64x2(SIMD.float64x2(0x80000000, 0));
