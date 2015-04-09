@@ -3347,6 +3347,54 @@ test('int16x8 mul', function() {
   equal(0, c.s7);
 });
 
+test('int16x8 addSaturate', function() {
+  var a = SIMD.int16x8(0, 1, 0x7fff, 0x8000, -1, 0x7ffe, 0x8001, 10);
+  var b = SIMD.int16x8.splat(1);
+  var c = SIMD.int16x8.splat(-1);
+  var d = SIMD.int16x8.addSaturate(a, b);
+  var e = SIMD.int16x8.addSaturate(a, c);
+  equal(1, d.s0);
+  equal(2, d.s1);
+  equal(0x7fff, d.s2);
+  equal(-0x7fff, d.s3);
+  equal(0, d.s4);
+  equal(0x7fff, d.s5);
+  equal(-0x7ffe, d.s6);
+  equal(11, d.s7);
+  equal(-1, e.s0);
+  equal(0, e.s1);
+  equal(0x7ffe, e.s2);
+  equal(-0x8000, e.s3);
+  equal(-2, e.s4);
+  equal(0x7ffd, e.s5);
+  equal(-0x8000, e.s6);
+  equal(9, e.s7);
+});
+
+test('int16x8 subSaturating', function() {
+  var a = SIMD.int16x8(0, 1, 0x7fff, 0x8000, -1, 0x7ffe, 0x8001, 10);
+  var b = SIMD.int16x8.splat(1);
+  var c = SIMD.int16x8.splat(-1);
+  var d = SIMD.int16x8.subSaturating(a, b);
+  var e = SIMD.int16x8.subSaturating(a, c);
+  equal(-1, d.s0);
+  equal(0, d.s1);
+  equal(0x7ffe, d.s2);
+  equal(-0x8000, d.s3);
+  equal(-2, d.s4);
+  equal(0x7ffd, d.s5);
+  equal(-0x8000, d.s6);
+  equal(9, d.s7);
+  equal(1, e.s0);
+  equal(2, e.s1);
+  equal(0x7fff, e.s2);
+  equal(-0x7fff, e.s3);
+  equal(0, e.s4);
+  equal(0x7fff, e.s5);
+  equal(-0x7ffe, e.s6);
+  equal(11, e.s7);
+});
+
 test('int16x8 comparisons', function() {
   var m = SIMD.int16x8(1000, 2000, 100, 1, -1000, -2000, -100, 1);
   var n = SIMD.int16x8(-2000, 2000, 1, 100, 2000, -2000, -1, -100);
@@ -3986,6 +4034,93 @@ test('int8x16 mul', function() {
   equal(0, c.s13);
   equal(0, c.s14);
   equal(0, c.s15);
+});
+
+test('int8x16 addSaturate', function() {
+  var a = SIMD.int8x16(0, 1, 0x7f, 0x80, -1, 0x7e, 0x81, 10, 11, 12, 13, 14, 15, 16, 17, 18);
+  var b = SIMD.int8x16.splat(1);
+  var c = SIMD.int8x16.splat(-1);
+  var d = SIMD.int8x16.addSaturate(a, b);
+  var e = SIMD.int8x16.addSaturate(a, c);
+  equal(1, d.s0);
+  equal(2, d.s1);
+  equal(0x7f, d.s2);
+  equal(-0x7f, d.s3);
+  equal(0, d.s4);
+  equal(0x7f, d.s5);
+  equal(-0x7e, d.s6);
+  equal(11, d.s7);
+  equal(12, d.s8);
+  equal(13, d.s9);
+  equal(14, d.s10);
+  equal(15, d.s11);
+  equal(16, d.s12);
+  equal(17, d.s13);
+  equal(18, d.s14);
+  equal(19, d.s15);
+  equal(-1, e.s0);
+  equal(0, e.s1);
+  equal(0x7e, e.s2);
+  equal(-0x80, e.s3);
+  equal(-2, e.s4);
+  equal(0x7d, e.s5);
+  equal(-0x80, e.s6);
+  equal(9, e.s7);
+  equal(10, e.s8);
+  equal(11, e.s9);
+  equal(12, e.s10);
+  equal(13, e.s11);
+  equal(14, e.s12);
+  equal(15, e.s13);
+  equal(16, e.s14);
+  equal(17, e.s15);
+});
+
+test('int8x16 subSaturating', function() {
+  var a = SIMD.int8x16(0, 1, 0x7f, 0x80, -1, 0x7e, 0x81, 10, 11, 12, 13, 14, 15, 16, 17, 18);
+  var b = SIMD.int8x16.splat(1);
+  var c = SIMD.int8x16.splat(-1);
+  var d = SIMD.int8x16.subSaturating(a, b);
+  var e = SIMD.int8x16.subSaturating(a, c);
+  equal(-1, d.s0);
+  equal(0, d.s1);
+  equal(0x7e, d.s2);
+  equal(-0x80, d.s3);
+  equal(-2, d.s4);
+  equal(0x7d, d.s5);
+  equal(-0x80, d.s6);
+  equal(9, d.s7);
+  equal(10, d.s8);
+  equal(11, d.s9);
+  equal(12, d.s10);
+  equal(13, d.s11);
+  equal(14, d.s12);
+  equal(15, d.s13);
+  equal(16, d.s14);
+  equal(17, d.s15);
+  equal(1, e.s0);
+  equal(2, e.s1);
+  equal(0x7f, e.s2);
+  equal(-0x7f, e.s3);
+  equal(0, e.s4);
+  equal(0x7f, e.s5);
+  equal(-0x7e, e.s6);
+  equal(11, e.s7);
+  equal(12, e.s8);
+  equal(13, e.s9);
+  equal(14, e.s10);
+  equal(15, e.s11);
+  equal(16, e.s12);
+  equal(17, e.s13);
+  equal(18, e.s14);
+  equal(19, e.s15);
+});
+
+test('int8x16 sumOfAbsoluteDifferences', function() {
+  var a = SIMD.int8x16(0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x7f, 0xff, 0xff, 0xff, 0x0, 0x0, 0x0, 0x0);
+  var b = SIMD.int8x16(0x0, 0x0, 0x0, 0x1, 0xFF, 0xFF, 0xFF, 0xFF, 0x0, 0x0, 0x0, 0x1, 0xFF, 0xFF, 0xFF, 0xFF);
+  var c = SIMD.int8x16.sumOfAbsoluteDifferences(a, b);
+  equal(c, 140);
 });
 
 test('int8x16 comparisons', function() {
