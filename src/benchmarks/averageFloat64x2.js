@@ -19,7 +19,6 @@
 
   // Benchmark data, initialization and kernel functions
   var a   = new Float64Array(10000);
-  var ax2 = new Float64x2Array(a.buffer);
 
   function sanityCheck() {
      return Math.abs(average(1) - simdAverage(1)) < 0.0001;
@@ -52,11 +51,11 @@
   }
 
   function simdAverage(n) {
-    var ax2_length = ax2.length;
+    var a_length = a.length;
     for (var i = 0; i < n; ++i) {
       var sum2 = SIMD.float64x2.splat(0.0);
-      for (var j = 0; j < ax2_length; ++j) {
-        sum2 = SIMD.float64x2.add(sum2, ax2.getAt(j));
+      for (var j = 0; j < a_length; j += 2) {
+        sum2 = SIMD.float64x2.add(sum2, SIMD.float64x2.load(a, j));
       }
     }
     return (sum2.x + sum2.y)/a.length;

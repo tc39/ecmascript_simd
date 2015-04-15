@@ -20,9 +20,9 @@
   var T = new Float32Array(16);
   var V = new Float32Array(4);
   var Out = new Float32Array(4);
-  var Tx4 = new Float32x4Array(4);
-  var Vx4 = new Float32x4Array(1);
-  var Outx4 = new Float32x4Array(1);
+  var Tx = new Float32Array(16);
+  var Vx = new Float32Array(4);
+  var Outx = new Float32Array(4);
 
   function init() {
     T[0] = 1.0;
@@ -33,15 +33,15 @@
     V[1] = 2.0;
     V[2] = 3.0;
     V[3] = 1.0;
-    Tx4.setAt(0, SIMD.float32x4(1.0, 0.0, 0.0, 0.0));
-    Tx4.setAt(1, SIMD.float32x4(0.0, 1.0, 0.0, 0.0));
-    Tx4.setAt(2, SIMD.float32x4(0.0, 0.0, 1.0, 0.0));
-    Tx4.setAt(3, SIMD.float32x4(0.0, 0.0, 0.0, 1.0));
-    Vx4.setAt(0, SIMD.float32x4(1.0, 2.0, 3.0, 1.0));
+    SIMD.float32x4.store(Tx, 0,  SIMD.float32x4(1.0, 0.0, 0.0, 0.0));
+    SIMD.float32x4.store(Tx, 4,  SIMD.float32x4(0.0, 1.0, 0.0, 0.0));
+    SIMD.float32x4.store(Tx, 8,  SIMD.float32x4(0.0, 0.0, 1.0, 0.0));
+    SIMD.float32x4.store(Tx, 12, SIMD.float32x4(0.0, 0.0, 0.0, 1.0));
+    SIMD.float32x4.store(Vx, 0, SIMD.float32x4(1.0, 2.0, 3.0, 1.0));
     simdVertexTransform(1);
     vertexTransform(1);
-    return (Outx4.getAt(0).x == Out[0]) && (Outx4.getAt(0).y == Out[1]) &&
-           (Outx4.getAt(0).z == Out[2]) && (Outx4.getAt(0).w == Out[3]);
+    return (SIMD.float32x4.load(Outx, 0).x == Out[0]) && (SIMD.float32x4.load(Outx, 0).y == Out[1]) &&
+           (SIMD.float32x4.load(Outx, 0).z == Out[2]) && (SIMD.float32x4.load(Outx, 0).w == Out[3]);
   }
 
   function cleanup() {
@@ -79,16 +79,16 @@
 
   function simdVertexTransform(n) {
     for (var i = 0; i < n; i++) {
-      var xxxx = SIMD.float32x4.swizzle(Vx4.getAt(0), 0, 0, 0, 0);
+      var xxxx = SIMD.float32x4.swizzle(SIMD.float32x4.load(Vx, 0), 0, 0, 0, 0);
       var z = SIMD.float32x4.splat(0.0);
-      z = SIMD.float32x4.add(z, SIMD.float32x4.mul(xxxx, Tx4.getAt(0)));
-      var yyyy = SIMD.float32x4.swizzle(Vx4.getAt(0), 1, 1, 1, 1);
-      z = SIMD.float32x4.add(z, SIMD.float32x4.mul(yyyy, Tx4.getAt(1)));
-      var zzzz = SIMD.float32x4.swizzle(Vx4.getAt(0), 2, 2, 2, 2);
-      z = SIMD.float32x4.add(z, SIMD.float32x4.mul(zzzz, Tx4.getAt(2)));
-      var wwww = SIMD.float32x4.swizzle(Vx4.getAt(0), 3, 3, 3, 3);
-      z = SIMD.float32x4.add(z, SIMD.float32x4.mul(wwww, Tx4.getAt(3)));
-      Outx4.setAt(0, z);
+      z = SIMD.float32x4.add(z, SIMD.float32x4.mul(xxxx, SIMD.float32x4.load(Tx, 0)));
+      var yyyy = SIMD.float32x4.swizzle(SIMD.float32x4.load(Vx, 0), 1, 1, 1, 1);
+      z = SIMD.float32x4.add(z, SIMD.float32x4.mul(yyyy, SIMD.float32x4.load(Tx, 4)));
+      var zzzz = SIMD.float32x4.swizzle(SIMD.float32x4.load(Vx, 0), 2, 2, 2, 2);
+      z = SIMD.float32x4.add(z, SIMD.float32x4.mul(zzzz, SIMD.float32x4.load(Tx, 8)));
+      var wwww = SIMD.float32x4.swizzle(SIMD.float32x4.load(Vx, 0), 3, 3, 3, 3);
+      z = SIMD.float32x4.add(z, SIMD.float32x4.mul(wwww, SIMD.float32x4.load(Tx, 12)));
+      SIMD.float32x4.store(Outx, 0, z);
     }
   }
 

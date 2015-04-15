@@ -18,11 +18,8 @@
   // Global object allocations
 
   var src    = new Float32Array(16);
-  var srcx4  = new Float32x4Array(src.buffer);
   var dst    = new Float32Array(16);
-  var dstx4  = new Float32x4Array(dst.buffer);
   var tsrc   = new Float32Array(16);
-  var tsrcx4 = new Float32x4Array(tsrc.buffer);
 
   var sel_ttff = SIMD.int32x4.bool(true, true, false, false);
 
@@ -81,10 +78,10 @@
 
   // SIMD version of the kernel with SIMD.float32x4.shuffle operation
   function simdTransposeMix() {
-    var src0     = srcx4.getAt(0);
-    var src1     = srcx4.getAt(1);
-    var src2     = srcx4.getAt(2);
-    var src3     = srcx4.getAt(3);
+    var src0     = SIMD.float32x4.load(src, 0);
+    var src1     = SIMD.float32x4.load(src, 4);
+    var src2     = SIMD.float32x4.load(src, 8);
+    var src3     = SIMD.float32x4.load(src, 12);
     var dst0;
     var dst1;
     var dst2;
@@ -102,18 +99,18 @@
     dst2  = SIMD.float32x4.shuffle(tmp01, tmp23, 0, 2, 4, 6);
     dst3  = SIMD.float32x4.shuffle(tmp01, tmp23, 1, 3, 5, 7);
 
-    dstx4.setAt(0, dst0);
-    dstx4.setAt(1, dst1);
-    dstx4.setAt(2, dst2);
-    dstx4.setAt(3, dst3);
+    SIMD.float32x4.store(dst, 0,  dst0);
+    SIMD.float32x4.store(dst, 4,  dst1);
+    SIMD.float32x4.store(dst, 8,  dst2);
+    SIMD.float32x4.store(dst, 12, dst3);
   }
 
   // SIMD version of the kernel
   function simdTranspose() {
-    var src0     = srcx4.getAt(0);
-    var src1     = srcx4.getAt(1);
-    var src2     = srcx4.getAt(2);
-    var src3     = srcx4.getAt(3);
+    var src0     = SIMD.float32x4.load(src, 0);
+    var src1     = SIMD.float32x4.load(src, 4);
+    var src2     = SIMD.float32x4.load(src, 8);
+    var src3     = SIMD.float32x4.load(src, 12);
     var dst0;
     var dst1;
     var dst2;
@@ -131,10 +128,10 @@
     dst2  = SIMD.float32x4.select(sel_ttff, SIMD.float32x4.swizzle(tmp01, 0, 2, 0, 0), SIMD.float32x4.swizzle(tmp23, 0, 0, 0, 2));
     dst3  = SIMD.float32x4.select(sel_ttff, SIMD.float32x4.swizzle(tmp01, 1, 3, 0, 0), SIMD.float32x4.swizzle(tmp23, 0, 0, 1, 3));
 
-    dstx4.setAt(0, dst0);
-    dstx4.setAt(1, dst1);
-    dstx4.setAt(2, dst2);
-    dstx4.setAt(3, dst3);
+    SIMD.float32x4.store(dst, 0,  dst0);
+    SIMD.float32x4.store(dst, 4,  dst1);
+    SIMD.float32x4.store(dst, 8,  dst2);
+    SIMD.float32x4.store(dst, 12, dst3);
   }
 
   // Non SIMD version of the kernel
@@ -159,10 +156,10 @@
 
   function simdTransposeN(n) {
     for (var i = 0; i < n; ++i) {
-      var src0 = srcx4.getAt(0);
-      var src1 = srcx4.getAt(1);
-      var src2 = srcx4.getAt(2);
-      var src3 = srcx4.getAt(3);
+      var src0 = SIMD.float32x4.load(src, 0);
+      var src1 = SIMD.float32x4.load(src, 4);
+      var src2 = SIMD.float32x4.load(src, 8);
+      var src3 = SIMD.float32x4.load(src, 12);
       var dst0;
       var dst1;
       var dst2;
@@ -180,10 +177,10 @@
       dst2 = SIMD.float32x4.shuffle(tmp01, tmp23, 0, 2, 4, 6);
       dst3 = SIMD.float32x4.shuffle(tmp01, tmp23, 1, 3, 5, 7);
 
-      dstx4.setAt(0, dst0);
-      dstx4.setAt(1, dst1);
-      dstx4.setAt(2, dst2);
-      dstx4.setAt(3, dst3);
+      SIMD.float32x4.store(dst, 0,  dst0);
+      SIMD.float32x4.store(dst, 4,  dst1);
+      SIMD.float32x4.store(dst, 8,  dst2);
+      SIMD.float32x4.store(dst, 12, dst3);
     }
   }
 

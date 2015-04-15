@@ -20,27 +20,27 @@
   var T1 = new Float32Array(16);
   var T2 = new Float32Array(16);
   var Out = new Float32Array(16);
-  var T1x4 = new Float32x4Array(4);
-  var T2x4 = new Float32x4Array(4);
-  var Outx4 = new Float32x4Array(4);
+  var T1x = new Float32Array(16);
+  var T2x = new Float32Array(16);
+  var Outx = new Float32Array(16);
 
   function equals(A, b) {
-    return (A[0] == b.getAt(0).x) &&
-           (A[1] == b.getAt(0).y) &&
-           (A[2] == b.getAt(0).z) &&
-           (A[3] == b.getAt(0).w) &&
-           (A[4] == b.getAt(1).x) &&
-           (A[5] == b.getAt(1).y) &&
-           (A[6] == b.getAt(1).z) &&
-           (A[7] == b.getAt(1).w) &&
-           (A[8] == b.getAt(2).x) &&
-           (A[9] == b.getAt(2).y) &&
-           (A[10] == b.getAt(2).z) &&
-           (A[11] == b.getAt(2).w) &&
-           (A[12] == b.getAt(3).x) &&
-           (A[13] == b.getAt(3).y) &&
-           (A[14] == b.getAt(3).z) &&
-           (A[15] == b.getAt(3).w);
+    return (A[0] == SIMD.float32x4.load(b, 0).x) &&
+           (A[1] == SIMD.float32x4.load(b, 0).y) &&
+           (A[2] == SIMD.float32x4.load(b, 0).z) &&
+           (A[3] == SIMD.float32x4.load(b, 0).w) &&
+           (A[4] == SIMD.float32x4.load(b, 4).x) &&
+           (A[5] == SIMD.float32x4.load(b, 4).y) &&
+           (A[6] == SIMD.float32x4.load(b, 4).z) &&
+           (A[7] == SIMD.float32x4.load(b, 4).w) &&
+           (A[8] == SIMD.float32x4.load(b, 8).x) &&
+           (A[9] == SIMD.float32x4.load(b, 8).y) &&
+           (A[10] == SIMD.float32x4.load(b, 8).z) &&
+           (A[11] == SIMD.float32x4.load(b, 8).w) &&
+           (A[12] == SIMD.float32x4.load(b, 12).x) &&
+           (A[13] == SIMD.float32x4.load(b, 12).y) &&
+           (A[14] == SIMD.float32x4.load(b, 12).z) &&
+           (A[15] == SIMD.float32x4.load(b, 12).w);
   }
 
   function init() {
@@ -54,19 +54,19 @@
     T2[10] = 2.0;
     T2[15] = 2.0;
 
-    T1x4.setAt(0, SIMD.float32x4(1.0, 0.0, 0.0, 0.0));
-    T1x4.setAt(1, SIMD.float32x4(0.0, 1.0, 0.0, 0.0));
-    T1x4.setAt(2, SIMD.float32x4(0.0, 0.0, 1.0, 0.0));
-    T1x4.setAt(3, SIMD.float32x4(0.0, 0.0, 0.0, 1.0));
+    SIMD.float32x4.store(T1x, 0,  SIMD.float32x4(1.0, 0.0, 0.0, 0.0));
+    SIMD.float32x4.store(T1x, 4,  SIMD.float32x4(0.0, 1.0, 0.0, 0.0));
+    SIMD.float32x4.store(T1x, 8,  SIMD.float32x4(0.0, 0.0, 1.0, 0.0));
+    SIMD.float32x4.store(T1x, 12, SIMD.float32x4(0.0, 0.0, 0.0, 1.0));
 
-    T2x4.setAt(0, SIMD.float32x4(2.0, 0.0, 0.0, 0.0));
-    T2x4.setAt(1, SIMD.float32x4(0.0, 2.0, 0.0, 0.0));
-    T2x4.setAt(2, SIMD.float32x4(0.0, 0.0, 2.0, 0.0));
-    T2x4.setAt(3, SIMD.float32x4(0.0, 0.0, 0.0, 2.0));
+    SIMD.float32x4.store(T2x, 0,  SIMD.float32x4(2.0, 0.0, 0.0, 0.0));
+    SIMD.float32x4.store(T2x, 4,  SIMD.float32x4(0.0, 2.0, 0.0, 0.0));
+    SIMD.float32x4.store(T2x, 8,  SIMD.float32x4(0.0, 0.0, 2.0, 0.0));
+    SIMD.float32x4.store(T2x, 12, SIMD.float32x4(0.0, 0.0, 0.0, 2.0));
 
     multiply(1);
     simdMultiply(1);
-    return equals(T1, T1x4) && equals(T2, T2x4) && equals(Out, Outx4);
+    return equals(T1, T1x) && equals(T2, T2x) && equals(Out, Outx);
   }
 
   function cleanup() {
@@ -132,42 +132,46 @@
 
   function simdMultiply(n) {
     for (var i = 0; i < n; i++) {
-      var a0 = T1x4.getAt(0);
-      var a1 = T1x4.getAt(1);
-      var a2 = T1x4.getAt(2);
-      var a3 = T1x4.getAt(3);
-      var b0 = T2x4.getAt(0);
-      Outx4.setAt(0, SIMD.float32x4.add(
+      var a0 = SIMD.float32x4.load(T1x, 0);
+      var a1 = SIMD.float32x4.load(T1x, 4);
+      var a2 = SIMD.float32x4.load(T1x, 8);
+      var a3 = SIMD.float32x4.load(T1x, 12);
+      var b0 = SIMD.float32x4.load(T2x, 0);
+      SIMD.float32x4.store(Outx, 0,
+                  SIMD.float32x4.add(
                       SIMD.float32x4.mul(SIMD.float32x4.swizzle(b0, 0, 0, 0, 0), a0),
                     SIMD.float32x4.add(
                       SIMD.float32x4.mul(SIMD.float32x4.swizzle(b0, 1, 1, 1, 1), a1),
                     SIMD.float32x4.add(
                       SIMD.float32x4.mul(SIMD.float32x4.swizzle(b0, 2, 2, 2, 2), a2),
-                      SIMD.float32x4.mul(SIMD.float32x4.swizzle(b0, 3, 3, 3, 3), a3)))))
-      var b1 = T2x4.getAt(1);
-      Outx4.setAt(1, SIMD.float32x4.add(
+                      SIMD.float32x4.mul(SIMD.float32x4.swizzle(b0, 3, 3, 3, 3), a3)))));
+      var b1 = SIMD.float32x4.load(T2x, 4);
+      SIMD.float32x4.store(Outx, 4,
+                  SIMD.float32x4.add(
                       SIMD.float32x4.mul(SIMD.float32x4.swizzle(b1, 0, 0, 0, 0), a0),
                     SIMD.float32x4.add(
                       SIMD.float32x4.mul(SIMD.float32x4.swizzle(b1, 1, 1, 1, 1), a1),
                     SIMD.float32x4.add(
                       SIMD.float32x4.mul(SIMD.float32x4.swizzle(b1, 2, 2, 2, 2), a2),
-                      SIMD.float32x4.mul(SIMD.float32x4.swizzle(b1, 3, 3, 3, 3), a3)))))
-      var b2 = T2x4.getAt(2);
-      Outx4.setAt(2, SIMD.float32x4.add(
+                      SIMD.float32x4.mul(SIMD.float32x4.swizzle(b1, 3, 3, 3, 3), a3)))));
+      var b2 = SIMD.float32x4.load(T2x, 8);
+      SIMD.float32x4.store(Outx, 8,
+                  SIMD.float32x4.add(
                       SIMD.float32x4.mul(SIMD.float32x4.swizzle(b2, 0, 0, 0, 0), a0),
                     SIMD.float32x4.add(
                       SIMD.float32x4.mul(SIMD.float32x4.swizzle(b2, 1, 1, 1, 1), a1),
                     SIMD.float32x4.add(
                       SIMD.float32x4.mul(SIMD.float32x4.swizzle(b2, 2, 2, 2, 2), a2),
-                      SIMD.float32x4.mul(SIMD.float32x4.swizzle(b2, 3, 3, 3, 3), a3)))))
-      var b3 = T2x4.getAt(3);
-      Outx4.setAt(3, SIMD.float32x4.add(
+                      SIMD.float32x4.mul(SIMD.float32x4.swizzle(b2, 3, 3, 3, 3), a3)))));
+      var b3 = SIMD.float32x4.load(T2x, 12);
+      SIMD.float32x4.store(Outx, 12,
+                  SIMD.float32x4.add(
                       SIMD.float32x4.mul(SIMD.float32x4.swizzle(b3, 0, 0, 0, 0), a0),
                     SIMD.float32x4.add(
                       SIMD.float32x4.mul(SIMD.float32x4.swizzle(b3, 1, 1, 1, 1), a1),
                     SIMD.float32x4.add(
                       SIMD.float32x4.mul(SIMD.float32x4.swizzle(b3, 2, 2, 2, 2), a2),
-                      SIMD.float32x4.mul(SIMD.float32x4.swizzle(b3, 3, 3, 3, 3), a3)))))
+                      SIMD.float32x4.mul(SIMD.float32x4.swizzle(b3, 3, 3, 3, 3), a3)))));
     }
   }
 
