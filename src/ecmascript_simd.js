@@ -1652,13 +1652,13 @@ if (typeof SIMD.float32x4.load === "undefined") {
   }
 }
 
-if (typeof SIMD.float32x4.loadX === "undefined") {
+if (typeof SIMD.float32x4.load1 === "undefined") {
   /**
     * @param {Typed array} tarray An instance of a typed array.
     * @param {Number} index An instance of Number.
     * @return {float32x4} New instance of float32x4.
     */
-  SIMD.float32x4.loadX = function(tarray, index) {
+  SIMD.float32x4.load1 = function(tarray, index) {
     if (!isTypedArray(tarray))
       throw new TypeError("The 1st argument must be a typed array.");
     if (!isInt32(index))
@@ -1678,13 +1678,13 @@ if (typeof SIMD.float32x4.loadX === "undefined") {
   }
 }
 
-if (typeof SIMD.float32x4.loadXY === "undefined") {
+if (typeof SIMD.float32x4.load2 === "undefined") {
   /**
     * @param {Typed array} tarray An instance of a typed array.
     * @param {Number} index An instance of Number.
     * @return {float32x4} New instance of float32x4.
     */
-  SIMD.float32x4.loadXY = function(tarray, index) {
+  SIMD.float32x4.load2 = function(tarray, index) {
     if (!isTypedArray(tarray))
       throw new TypeError("The 1st argument must be a typed array.");
     if (!isInt32(index))
@@ -1704,13 +1704,13 @@ if (typeof SIMD.float32x4.loadXY === "undefined") {
   }
 }
 
-if (typeof SIMD.float32x4.loadXYZ === "undefined") {
+if (typeof SIMD.float32x4.load3 === "undefined") {
   /**
     * @param {Typed array} tarray An instance of a typed array.
     * @param {Number} index An instance of Number.
     * @return {float32x4} New instance of float32x4.
     */
-  SIMD.float32x4.loadXYZ = function(tarray, index) {
+  SIMD.float32x4.load3 = function(tarray, index) {
     if (!isTypedArray(tarray))
       throw new TypeError("The 1st argument must be a typed array.");
     if (!isInt32(index))
@@ -1760,14 +1760,14 @@ if (typeof SIMD.float32x4.store === "undefined") {
   }
 }
 
-if (typeof SIMD.float32x4.storeX === "undefined") {
+if (typeof SIMD.float32x4.store1 === "undefined") {
   /**
     * @param {Typed array} tarray An instance of a typed array.
     * @param {Number} index An instance of Number.
     * @param {float32x4} value An instance of float32x4.
     * @return {void}
     */
-  SIMD.float32x4.storeX = function(tarray, index, value) {
+  SIMD.float32x4.store1 = function(tarray, index, value) {
     if (!isTypedArray(tarray))
       throw new TypeError("The 1st argument must be a typed array.");
     if (!isInt32(index))
@@ -1792,14 +1792,14 @@ if (typeof SIMD.float32x4.storeX === "undefined") {
   }
 }
 
-if (typeof SIMD.float32x4.storeXY === "undefined") {
+if (typeof SIMD.float32x4.store2 === "undefined") {
   /**
     * @param {Typed array} tarray An instance of a typed array.
     * @param {Number} index An instance of Number.
     * @param {float32x4} value An instance of float32x4.
     * @return {void}
     */
-  SIMD.float32x4.storeXY = function(tarray, index, value) {
+  SIMD.float32x4.store2 = function(tarray, index, value) {
     if (!isTypedArray(tarray))
       throw new TypeError("The 1st argument must be a typed array.");
     if (!isInt32(index))
@@ -1820,14 +1820,14 @@ if (typeof SIMD.float32x4.storeXY === "undefined") {
   }
 }
 
-if (typeof SIMD.float32x4.storeXYZ === "undefined") {
+if (typeof SIMD.float32x4.store3 === "undefined") {
   /**
     * @param {Typed array} tarray An instance of a typed array.
     * @param {Number} index An instance of Number.
     * @param {float32x4} value An instance of float32x4.
     * @return {void}
     */
-  SIMD.float32x4.storeXYZ = function(tarray, index, value) {
+  SIMD.float32x4.store3 = function(tarray, index, value) {
     if (!isTypedArray(tarray))
       throw new TypeError("The 1st argument must be a typed array.");
     if (!isInt32(index))
@@ -2288,13 +2288,13 @@ if (typeof SIMD.float64x2.load === "undefined") {
   }
 }
 
-if (typeof SIMD.float64x2.loadX === "undefined") {
+if (typeof SIMD.float64x2.load1 === "undefined") {
   /**
     * @param {Typed array} tarray An instance of a typed array.
     * @param {Number} index An instance of Number.
     * @return {float64x2} New instance of float64x2.
     */
-  SIMD.float64x2.loadX = function(tarray, index) {
+  SIMD.float64x2.load1 = function(tarray, index) {
     if (!isTypedArray(tarray))
       throw new TypeError("The 1st argument must be a typed array.");
     if (!isInt32(index))
@@ -2342,14 +2342,14 @@ if (typeof SIMD.float64x2.store === "undefined") {
   }
 }
 
-if (typeof SIMD.float64x2.storeX === "undefined") {
+if (typeof SIMD.float64x2.store1 === "undefined") {
   /**
     * @param {Typed array} tarray An instance of a typed array.
     * @param {Number} index An instance of Number.
     * @param {float64x2} value An instance of float64x2.
     * @return {void}
     */
-  SIMD.float64x2.storeX = function(tarray, index, value) {
+  SIMD.float64x2.store1 = function(tarray, index, value) {
     if (!isTypedArray(tarray))
       throw new TypeError("The 1st argument must be a typed array.");
     if (!isInt32(index))
@@ -2810,13 +2810,13 @@ if (typeof SIMD.int32x4.load === "undefined") {
   }
 }
 
-if (typeof SIMD.int32x4.loadX === "undefined") {
+if (typeof SIMD.int32x4.load1 === "undefined") {
   /**
     * @param {Typed array} tarray An instance of a typed array.
     * @param {Number} index An instance of Number.
     * @return {int32x4} New instance of int32x4.
     */
-  SIMD.int32x4.loadX = function(tarray, index) {
+  SIMD.int32x4.load1 = function(tarray, index) {
     if (!isTypedArray(tarray))
       throw new TypeError("The 1st argument must be a typed array.");
     if (!isInt32(index))
@@ -2836,13 +2836,13 @@ if (typeof SIMD.int32x4.loadX === "undefined") {
   }
 }
 
-if (typeof SIMD.int32x4.loadXY === "undefined") {
+if (typeof SIMD.int32x4.load2 === "undefined") {
   /**
     * @param {Typed array} tarray An instance of a typed array.
     * @param {Number} index An instance of Number.
     * @return {int32x4} New instance of int32x4.
     */
-  SIMD.int32x4.loadXY = function(tarray, index) {
+  SIMD.int32x4.load2 = function(tarray, index) {
     if (!isTypedArray(tarray))
       throw new TypeError("The 1st argument must be a typed array.");
     if (!isInt32(index))
@@ -2862,13 +2862,13 @@ if (typeof SIMD.int32x4.loadXY === "undefined") {
   }
 }
 
-if (typeof SIMD.int32x4.loadXYZ === "undefined") {
+if (typeof SIMD.int32x4.load3 === "undefined") {
   /**
     * @param {Typed array} tarray An instance of a typed array.
     * @param {Number} index An instance of Number.
     * @return {int32x4} New instance of int32x4.
     */
-  SIMD.int32x4.loadXYZ = function(tarray, index) {
+  SIMD.int32x4.load3 = function(tarray, index) {
     if (!isTypedArray(tarray))
       throw new TypeError("The 1st argument must be a typed array.");
     if (!isInt32(index))
@@ -2918,14 +2918,14 @@ if (typeof SIMD.int32x4.store === "undefined") {
   }
 }
 
-if (typeof SIMD.int32x4.storeX === "undefined") {
+if (typeof SIMD.int32x4.store1 === "undefined") {
   /**
     * @param {Typed array} tarray An instance of a typed array.
     * @param {Number} index An instance of Number.
     * @param {int32x4} value An instance of int32x4.
     * @return {void}
     */
-  SIMD.int32x4.storeX = function(tarray, index, value) {
+  SIMD.int32x4.store1 = function(tarray, index, value) {
     if (!isTypedArray(tarray))
       throw new TypeError("The 1st argument must be a typed array.");
     if (!isInt32(index))
@@ -2950,14 +2950,14 @@ if (typeof SIMD.int32x4.storeX === "undefined") {
   }
 }
 
-if (typeof SIMD.int32x4.storeXY === "undefined") {
+if (typeof SIMD.int32x4.store2 === "undefined") {
   /**
     * @param {Typed array} tarray An instance of a typed array.
     * @param {Number} index An instance of Number.
     * @param {int32x4} value An instance of int32x4.
     * @return {void}
     */
-  SIMD.int32x4.storeXY = function(tarray, index, value) {
+  SIMD.int32x4.store2 = function(tarray, index, value) {
     if (!isTypedArray(tarray))
       throw new TypeError("The 1st argument must be a typed array.");
     if (!isInt32(index))
@@ -2978,14 +2978,14 @@ if (typeof SIMD.int32x4.storeXY === "undefined") {
   }
 }
 
-if (typeof SIMD.int32x4.storeXYZ === "undefined") {
+if (typeof SIMD.int32x4.store3 === "undefined") {
   /**
     * @param {Typed array} tarray An instance of a typed array.
     * @param {Number} index An instance of Number.
     * @param {int32x4} value An instance of int32x4.
     * @return {void}
     */
-  SIMD.int32x4.storeXYZ = function(tarray, index, value) {
+  SIMD.int32x4.store3 = function(tarray, index, value) {
     if (!isTypedArray(tarray))
       throw new TypeError("The 1st argument must be a typed array.");
     if (!isInt32(index))

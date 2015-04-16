@@ -57,7 +57,7 @@
     for (var i = 0; i < n; ++i) {
       var sum4 = SIMD.float32x4.splat(0.0);
       for (var j = 0; j < a_length / 2; ++j) {
-        sum4 = SIMD.float32x4.add(sum4, SIMD.float32x4.loadXY(a, j << 1));
+        sum4 = SIMD.float32x4.add(sum4, SIMD.float32x4.load2(a, j << 1));
         //SIMD.float32x4.store(a1, j << 2, sum4);
       }
     }
