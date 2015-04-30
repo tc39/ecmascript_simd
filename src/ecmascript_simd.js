@@ -251,18 +251,6 @@ if (typeof SIMD.float32x4 === "undefined") {
     get: function() { return this.w_; }
   });
 
-  /**
-    * Extract the sign bit from each lane return them in the first 4 bits.
-    */
-  Object.defineProperty(SIMD.float32x4.prototype, 'signMask', {
-    get: function() {
-      var mx = (this.x < 0.0 || 1/this.x === -Infinity);
-      var my = (this.y < 0.0 || 1/this.y === -Infinity);
-      var mz = (this.z < 0.0 || 1/this.z === -Infinity);
-      var mw = (this.w < 0.0 || 1/this.w === -Infinity);
-      return mx | my << 1 | mz << 2 | mw << 3;
-    }
-  });
 }
 
 if (typeof SIMD.float32x4.check === "undefined") {
@@ -380,17 +368,6 @@ if (typeof SIMD.float64x2 === "undefined") {
 
   Object.defineProperty(SIMD.float64x2.prototype, 'y', {
     get: function() { return this.y_; }
-  });
-
-  /**
-    * Extract the sign bit from each lane return them in the first 2 bits.
-    */
-  Object.defineProperty(SIMD.float64x2.prototype, 'signMask', {
-    get: function() {
-      var mx = (this.x < 0.0 || 1/this.x === -Infinity);
-      var my = (this.y < 0.0 || 1/this.y === -Infinity);
-      return mx | my << 1;
-    }
   });
 }
 
@@ -538,18 +515,40 @@ if (typeof SIMD.int32x4 === "undefined") {
     get: function() { return tobool(this.w); }
   });
 
+}
+
+if (typeof SIMD.int32x4.allTrue === "undefined") {
   /**
-    * Extract the sign bit from each lane return them in the first 4 bits.
+    * Check if all 4 lanes hold a true value (bit 31 == 1)
+    * @param {int32x4} v An instance of int32x4.
+    * @return {Boolean} All 4 lanes holds a true value
     */
-  Object.defineProperty(SIMD.int32x4.prototype, 'signMask', {
-    get: function() {
-      var mx = tobool(this.x);
-      var my = tobool(this.y);
-      var mz = tobool(this.z);
-      var mw = tobool(this.w);
-      return mx | my << 1 | mz << 2 | mw << 3;
+  SIMD.int32x4.allTrue = function(v) {
+    if (!(v instanceof SIMD.int32x4)) {
+      throw new TypeError("argument is not a int32x4.");
     }
-  });
+    return ((v.x & 0x80000000) !== 0) &&
+           ((v.y & 0x80000000) !== 0) &&
+           ((v.z & 0x80000000) !== 0) &&
+           ((v.w & 0x80000000) !== 0);
+  }
+}
+
+if (typeof SIMD.int32x4.anyTrue === "undefined") {
+  /**
+    * Check if any of the 4 lanes hold a true value (bit 31 == 1)
+    * @param {int32x4} v An instance of int32x4.
+    * @return {Boolean} Any of the 4 lanes holds a true value
+    */
+  SIMD.int32x4.anyTrue = function(v) {
+    if (!(v instanceof SIMD.int32x4)) {
+      throw new TypeError("argument is not a int32x4.");
+    }
+    return ((v.x & 0x80000000) !== 0) ||
+           ((v.y & 0x80000000) !== 0) ||
+           ((v.z & 0x80000000) !== 0) ||
+           ((v.w & 0x80000000) !== 0);
+  }
 }
 
 if (typeof SIMD.int32x4.check === "undefined") {
@@ -727,24 +726,48 @@ if (typeof SIMD.int16x8 === "undefined") {
   Object.defineProperty(SIMD.int16x8.prototype, 's7', {
     get: function() { return this.s7_; }
   });
+}
 
+if (typeof SIMD.int16x8.allTrue === "undefined") {
   /**
-    * Extract the sign bit from each lane return them in the first 8 bits.
+    * Check if all 8 lanes hold a true value (bit 15 == 1)
+    * @param {int16x8} v An instance of int16x8.
+    * @return {Boolean} All 8 lanes holds a true value
     */
-  Object.defineProperty(SIMD.int16x8.prototype, 'signMask', {
-    get: function() {
-      var ms0 = (this.s0 & 0x8000) >>> 15;
-      var ms1 = (this.s1 & 0x8000) >>> 15;
-      var ms2 = (this.s2 & 0x8000) >>> 15;
-      var ms3 = (this.s3 & 0x8000) >>> 15;
-      var ms4 = (this.s4 & 0x8000) >>> 15;
-      var ms5 = (this.s5 & 0x8000) >>> 15;
-      var ms6 = (this.s6 & 0x8000) >>> 15;
-      var ms7 = (this.s7 & 0x8000) >>> 15;
-      return ms0 | ms1 << 1 | ms2 << 2 | ms3 << 3 |
-             ms4 << 4 | ms5 << 5 | ms6 << 6 | ms7 << 7;
+  SIMD.int16x8.allTrue = function(v) {
+    if (!(v instanceof SIMD.int16x8)) {
+      throw new TypeError("argument is not a int16x8.");
     }
-  });
+    return ((v.s0 & 0x8000) !== 0) &&
+           ((v.s1 & 0x8000) !== 0) &&
+           ((v.s2 & 0x8000) !== 0) &&
+           ((v.s3 & 0x8000) !== 0) &&
+           ((v.s4 & 0x8000) !== 0) &&
+           ((v.s5 & 0x8000) !== 0) &&
+           ((v.s6 & 0x8000) !== 0) &&
+           ((v.s7 & 0x8000) !== 0);
+  }
+}
+
+if (typeof SIMD.int16x8.anyTrue === "undefined") {
+  /**
+    * Check if any of the 8 lanes hold a true value (bit 15 == 1)
+    * @param {int16x8} v An instance of int16x8.
+    * @return {Boolean} Any of the 8 lanes holds a true value
+    */
+  SIMD.int16x8.anyTrue = function(v) {
+    if (!(v instanceof SIMD.int16x8)) {
+      throw new TypeError("argument is not a int16x8.");
+    }
+    return ((v.s0 & 0x8000) !== 0) ||
+           ((v.s1 & 0x8000) !== 0) ||
+           ((v.s2 & 0x8000) !== 0) ||
+           ((v.s3 & 0x8000) !== 0) ||
+           ((v.s4 & 0x8000) !== 0) ||
+           ((v.s5 & 0x8000) !== 0) ||
+           ((v.s6 & 0x8000) !== 0) ||
+           ((v.s7 & 0x8000) !== 0);
+  }
 }
 
 if (typeof SIMD.int16x8.check === "undefined") {
@@ -953,33 +976,64 @@ if (typeof SIMD.int8x16 === "undefined") {
     get: function() { return this.s15_; }
   });
 
+}
+
+if (typeof SIMD.int8x16.allTrue === "undefined") {
   /**
-    * Extract the sign bit from each lane return them in the first 16 bits.
+    * Check if all 16 lanes hold a true value (bit 7 == 1)
+    * @param {int8x16} v An instance of int8x16.
+    * @return {Boolean} All 16 lanes holds a true value
     */
-  Object.defineProperty(SIMD.int8x16.prototype, 'signMask', {
-    get: function() {
-      var ms0 = (this.s0 & 0x80) >>> 7;
-      var ms1 = (this.s1 & 0x80) >>> 7;
-      var ms2 = (this.s2 & 0x80) >>> 7;
-      var ms3 = (this.s3 & 0x80) >>> 7;
-      var ms4 = (this.s4 & 0x80) >>> 7;
-      var ms5 = (this.s5 & 0x80) >>> 7;
-      var ms6 = (this.s6 & 0x80) >>> 7;
-      var ms7 = (this.s7 & 0x80) >>> 7;
-      var ms8 = (this.s8 & 0x80) >>> 7;
-      var ms9 = (this.s9 & 0x80) >>> 7;
-      var ms10 = (this.s10 & 0x80) >>> 7;
-      var ms11 = (this.s11 & 0x80) >>> 7;
-      var ms12 = (this.s12 & 0x80) >>> 7;
-      var ms13 = (this.s13 & 0x80) >>> 7;
-      var ms14 = (this.s14 & 0x80) >>> 7;
-      var ms15 = (this.s15 & 0x80) >>> 7;
-      return ms0 | ms1 << 1 | ms2 << 2 | ms3 << 3 |
-             ms4 << 4 | ms5 << 5 | ms6 << 6 | ms7 << 7 |
-             ms8 << 8 | ms9 << 9 | ms10 << 10 | ms11 << 11 |
-             ms12 << 12 | ms13 << 13 | ms14 << 14 | ms15 << 15;
+  SIMD.int8x16.allTrue = function(v) {
+    if (!(v instanceof SIMD.int8x16)) {
+      throw new TypeError("argument is not a int8x16.");
     }
-  });
+    return ((v.s0 & 0x80) !== 0) &&
+           ((v.s1 & 0x80) !== 0) &&
+           ((v.s2 & 0x80) !== 0) &&
+           ((v.s3 & 0x80) !== 0) &&
+           ((v.s4 & 0x80) !== 0) &&
+           ((v.s5 & 0x80) !== 0) &&
+           ((v.s6 & 0x80) !== 0) &&
+           ((v.s7 & 0x80) !== 0) &&
+           ((v.s8 & 0x80) !== 0) &&
+           ((v.s9 & 0x80) !== 0) &&
+           ((v.s10 & 0x80) !== 0) &&
+           ((v.s11 & 0x80) !== 0) &&
+           ((v.s12 & 0x80) !== 0) &&
+           ((v.s13 & 0x80) !== 0) &&
+           ((v.s14 & 0x80) !== 0) &&
+           ((v.s15 & 0x80) !== 0);
+  }
+}
+
+if (typeof SIMD.int8x16.anyTrue === "undefined") {
+  /**
+    * Check if any of the 16 lanes hold a true value (bit 7 == 1)
+    * @param {int8x16} v An instance of int16x8.
+    * @return {Boolean} Any of the 16 lanes holds a true value
+    */
+  SIMD.int8x16.anyTrue = function(v) {
+    if (!(v instanceof SIMD.int8x16)) {
+      throw new TypeError("argument is not a int8x16.");
+    }
+    return ((v.s0 & 0x8000) !== 0) ||
+           ((v.s1 & 0x8000) !== 0) ||
+           ((v.s2 & 0x8000) !== 0) ||
+           ((v.s3 & 0x8000) !== 0) ||
+           ((v.s4 & 0x8000) !== 0) ||
+           ((v.s5 & 0x8000) !== 0) ||
+           ((v.s6 & 0x8000) !== 0) ||
+           ((v.s7 & 0x8000) !== 0) ||
+           ((v.s8 & 0x8000) !== 0) ||
+           ((v.s9 & 0x8000) !== 0) ||
+           ((v.s10 & 0x8000) !== 0) ||
+           ((v.s11 & 0x8000) !== 0) ||
+           ((v.s12 & 0x8000) !== 0) ||
+           ((v.s13 & 0x8000) !== 0) ||
+           ((v.s14 & 0x8000) !== 0) ||
+           ((v.s15 & 0x8000) !== 0);
+  }
 }
 
 if (typeof SIMD.int8x16.check === "undefined") {
