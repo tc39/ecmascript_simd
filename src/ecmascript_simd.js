@@ -527,10 +527,7 @@ if (typeof SIMD.int32x4.allTrue === "undefined") {
     if (!(v instanceof SIMD.int32x4)) {
       throw new TypeError("argument is not a int32x4.");
     }
-    return ((v.x & 0x80000000) !== 0) &&
-           ((v.y & 0x80000000) !== 0) &&
-           ((v.z & 0x80000000) !== 0) &&
-           ((v.w & 0x80000000) !== 0);
+    return tobool(v.x) && tobool(v.y) && tobool(v.z) && tobool(v.w);
   }
 }
 
@@ -544,10 +541,7 @@ if (typeof SIMD.int32x4.anyTrue === "undefined") {
     if (!(v instanceof SIMD.int32x4)) {
       throw new TypeError("argument is not a int32x4.");
     }
-    return ((v.x & 0x80000000) !== 0) ||
-           ((v.y & 0x80000000) !== 0) ||
-           ((v.z & 0x80000000) !== 0) ||
-           ((v.w & 0x80000000) !== 0);
+    return tobool(v.x) || tobool(v.y) || tobool(v.z) || tobool(v.w);
   }
 }
 
@@ -738,14 +732,14 @@ if (typeof SIMD.int16x8.allTrue === "undefined") {
     if (!(v instanceof SIMD.int16x8)) {
       throw new TypeError("argument is not a int16x8.");
     }
-    return ((v.s0 & 0x8000) !== 0) &&
-           ((v.s1 & 0x8000) !== 0) &&
-           ((v.s2 & 0x8000) !== 0) &&
-           ((v.s3 & 0x8000) !== 0) &&
-           ((v.s4 & 0x8000) !== 0) &&
-           ((v.s5 & 0x8000) !== 0) &&
-           ((v.s6 & 0x8000) !== 0) &&
-           ((v.s7 & 0x8000) !== 0);
+    return tobool(v.s0) &&
+           tobool(v.s1) &&
+           tobool(v.s2) &&
+           tobool(v.s3) &&
+           tobool(v.s4) &&
+           tobool(v.s5) &&
+           tobool(v.s6) &&
+           tobool(v.s7);
   }
 }
 
@@ -759,14 +753,14 @@ if (typeof SIMD.int16x8.anyTrue === "undefined") {
     if (!(v instanceof SIMD.int16x8)) {
       throw new TypeError("argument is not a int16x8.");
     }
-    return ((v.s0 & 0x8000) !== 0) ||
-           ((v.s1 & 0x8000) !== 0) ||
-           ((v.s2 & 0x8000) !== 0) ||
-           ((v.s3 & 0x8000) !== 0) ||
-           ((v.s4 & 0x8000) !== 0) ||
-           ((v.s5 & 0x8000) !== 0) ||
-           ((v.s6 & 0x8000) !== 0) ||
-           ((v.s7 & 0x8000) !== 0);
+    return tobool(v.s0) ||
+           tobool(v.s1) ||
+           tobool(v.s2) ||
+           tobool(v.s3) ||
+           tobool(v.s4) ||
+           tobool(v.s5) ||
+           tobool(v.s6) ||
+           tobool(v.s7);
   }
 }
 
@@ -988,22 +982,22 @@ if (typeof SIMD.int8x16.allTrue === "undefined") {
     if (!(v instanceof SIMD.int8x16)) {
       throw new TypeError("argument is not a int8x16.");
     }
-    return ((v.s0 & 0x80) !== 0) &&
-           ((v.s1 & 0x80) !== 0) &&
-           ((v.s2 & 0x80) !== 0) &&
-           ((v.s3 & 0x80) !== 0) &&
-           ((v.s4 & 0x80) !== 0) &&
-           ((v.s5 & 0x80) !== 0) &&
-           ((v.s6 & 0x80) !== 0) &&
-           ((v.s7 & 0x80) !== 0) &&
-           ((v.s8 & 0x80) !== 0) &&
-           ((v.s9 & 0x80) !== 0) &&
-           ((v.s10 & 0x80) !== 0) &&
-           ((v.s11 & 0x80) !== 0) &&
-           ((v.s12 & 0x80) !== 0) &&
-           ((v.s13 & 0x80) !== 0) &&
-           ((v.s14 & 0x80) !== 0) &&
-           ((v.s15 & 0x80) !== 0);
+    return tobool(v.s0) &&
+           tobool(v.s1) &&
+           tobool(v.s2) &&
+           tobool(v.s3) &&
+           tobool(v.s4) &&
+           tobool(v.s5) &&
+           tobool(v.s6) &&
+           tobool(v.s7) &&
+           tobool(v.s8) &&
+           tobool(v.s9) &&
+           tobool(v.s10) &&
+           tobool(v.s11) &&
+           tobool(v.s12) &&
+           tobool(v.s13) &&
+           tobool(v.s14) &&
+           tobool(v.s15);
   }
 }
 
@@ -1017,22 +1011,22 @@ if (typeof SIMD.int8x16.anyTrue === "undefined") {
     if (!(v instanceof SIMD.int8x16)) {
       throw new TypeError("argument is not a int8x16.");
     }
-    return ((v.s0 & 0x8000) !== 0) ||
-           ((v.s1 & 0x8000) !== 0) ||
-           ((v.s2 & 0x8000) !== 0) ||
-           ((v.s3 & 0x8000) !== 0) ||
-           ((v.s4 & 0x8000) !== 0) ||
-           ((v.s5 & 0x8000) !== 0) ||
-           ((v.s6 & 0x8000) !== 0) ||
-           ((v.s7 & 0x8000) !== 0) ||
-           ((v.s8 & 0x8000) !== 0) ||
-           ((v.s9 & 0x8000) !== 0) ||
-           ((v.s10 & 0x8000) !== 0) ||
-           ((v.s11 & 0x8000) !== 0) ||
-           ((v.s12 & 0x8000) !== 0) ||
-           ((v.s13 & 0x8000) !== 0) ||
-           ((v.s14 & 0x8000) !== 0) ||
-           ((v.s15 & 0x8000) !== 0);
+    return tobool(v.s0) ||
+           tobool(v.s1) ||
+           tobool(v.s2) ||
+           tobool(v.s3) ||
+           tobool(v.s4) ||
+           tobool(v.s5) ||
+           tobool(v.s6) ||
+           tobool(v.s7) ||
+           tobool(v.s8) ||
+           tobool(v.s9) ||
+           tobool(v.s10) ||
+           tobool(v.s11) ||
+           tobool(v.s12) ||
+           tobool(v.s13) ||
+           tobool(v.s14) ||
+           tobool(v.s15);
   }
 }
 
