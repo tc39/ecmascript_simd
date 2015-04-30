@@ -107,11 +107,11 @@ function maxNum(x, y) {
          Math.max(x, y);
 }
 
-function tobool(x) {
+function toBool(x) {
   return x < 0;
 }
 
-function frombool(x) {
+function fromBool(x) {
   return !x - 1;
 }
 
@@ -500,19 +500,19 @@ if (typeof SIMD.int32x4 === "undefined") {
   });
 
   Object.defineProperty(SIMD.int32x4.prototype, 'flagX', {
-    get: function() { return tobool(this.x); }
+    get: function() { return toBool(this.x); }
   });
 
   Object.defineProperty(SIMD.int32x4.prototype, 'flagY', {
-    get: function() { return tobool(this.y); }
+    get: function() { return toBool(this.y); }
   });
 
   Object.defineProperty(SIMD.int32x4.prototype, 'flagZ', {
-    get: function() { return tobool(this.z); }
+    get: function() { return toBool(this.z); }
   });
 
   Object.defineProperty(SIMD.int32x4.prototype, 'flagW', {
-    get: function() { return tobool(this.w); }
+    get: function() { return toBool(this.w); }
   });
 
 }
@@ -527,7 +527,7 @@ if (typeof SIMD.int32x4.allTrue === "undefined") {
     if (!(v instanceof SIMD.int32x4)) {
       throw new TypeError("argument is not a int32x4.");
     }
-    return tobool(v.x) && tobool(v.y) && tobool(v.z) && tobool(v.w);
+    return toBool(v.x) && toBool(v.y) && toBool(v.z) && toBool(v.w);
   }
 }
 
@@ -541,7 +541,7 @@ if (typeof SIMD.int32x4.anyTrue === "undefined") {
     if (!(v instanceof SIMD.int32x4)) {
       throw new TypeError("argument is not a int32x4.");
     }
-    return tobool(v.x) || tobool(v.y) || tobool(v.z) || tobool(v.w);
+    return toBool(v.x) || toBool(v.y) || toBool(v.z) || toBool(v.w);
   }
 }
 
@@ -570,10 +570,10 @@ if (typeof SIMD.int32x4.bool === "undefined") {
     * @constructor
     */
   SIMD.int32x4.bool = function(x, y, z, w) {
-    return SIMD.int32x4(frombool(x),
-                        frombool(y),
-                        frombool(z),
-                        frombool(w));
+    return SIMD.int32x4(fromBool(x),
+                        fromBool(y),
+                        fromBool(z),
+                        fromBool(w));
   }
 }
 
@@ -732,14 +732,14 @@ if (typeof SIMD.int16x8.allTrue === "undefined") {
     if (!(v instanceof SIMD.int16x8)) {
       throw new TypeError("argument is not a int16x8.");
     }
-    return tobool(v.s0) &&
-           tobool(v.s1) &&
-           tobool(v.s2) &&
-           tobool(v.s3) &&
-           tobool(v.s4) &&
-           tobool(v.s5) &&
-           tobool(v.s6) &&
-           tobool(v.s7);
+    return toBool(v.s0) &&
+           toBool(v.s1) &&
+           toBool(v.s2) &&
+           toBool(v.s3) &&
+           toBool(v.s4) &&
+           toBool(v.s5) &&
+           toBool(v.s6) &&
+           toBool(v.s7);
   }
 }
 
@@ -753,14 +753,14 @@ if (typeof SIMD.int16x8.anyTrue === "undefined") {
     if (!(v instanceof SIMD.int16x8)) {
       throw new TypeError("argument is not a int16x8.");
     }
-    return tobool(v.s0) ||
-           tobool(v.s1) ||
-           tobool(v.s2) ||
-           tobool(v.s3) ||
-           tobool(v.s4) ||
-           tobool(v.s5) ||
-           tobool(v.s6) ||
-           tobool(v.s7);
+    return toBool(v.s0) ||
+           toBool(v.s1) ||
+           toBool(v.s2) ||
+           toBool(v.s3) ||
+           toBool(v.s4) ||
+           toBool(v.s5) ||
+           toBool(v.s6) ||
+           toBool(v.s7);
   }
 }
 
@@ -982,22 +982,22 @@ if (typeof SIMD.int8x16.allTrue === "undefined") {
     if (!(v instanceof SIMD.int8x16)) {
       throw new TypeError("argument is not a int8x16.");
     }
-    return tobool(v.s0) &&
-           tobool(v.s1) &&
-           tobool(v.s2) &&
-           tobool(v.s3) &&
-           tobool(v.s4) &&
-           tobool(v.s5) &&
-           tobool(v.s6) &&
-           tobool(v.s7) &&
-           tobool(v.s8) &&
-           tobool(v.s9) &&
-           tobool(v.s10) &&
-           tobool(v.s11) &&
-           tobool(v.s12) &&
-           tobool(v.s13) &&
-           tobool(v.s14) &&
-           tobool(v.s15);
+    return toBool(v.s0) &&
+           toBool(v.s1) &&
+           toBool(v.s2) &&
+           toBool(v.s3) &&
+           toBool(v.s4) &&
+           toBool(v.s5) &&
+           toBool(v.s6) &&
+           toBool(v.s7) &&
+           toBool(v.s8) &&
+           toBool(v.s9) &&
+           toBool(v.s10) &&
+           toBool(v.s11) &&
+           toBool(v.s12) &&
+           toBool(v.s13) &&
+           toBool(v.s14) &&
+           toBool(v.s15);
   }
 }
 
@@ -1011,22 +1011,22 @@ if (typeof SIMD.int8x16.anyTrue === "undefined") {
     if (!(v instanceof SIMD.int8x16)) {
       throw new TypeError("argument is not a int8x16.");
     }
-    return tobool(v.s0) ||
-           tobool(v.s1) ||
-           tobool(v.s2) ||
-           tobool(v.s3) ||
-           tobool(v.s4) ||
-           tobool(v.s5) ||
-           tobool(v.s6) ||
-           tobool(v.s7) ||
-           tobool(v.s8) ||
-           tobool(v.s9) ||
-           tobool(v.s10) ||
-           tobool(v.s11) ||
-           tobool(v.s12) ||
-           tobool(v.s13) ||
-           tobool(v.s14) ||
-           tobool(v.s15);
+    return toBool(v.s0) ||
+           toBool(v.s1) ||
+           toBool(v.s2) ||
+           toBool(v.s3) ||
+           toBool(v.s4) ||
+           toBool(v.s5) ||
+           toBool(v.s6) ||
+           toBool(v.s7) ||
+           toBool(v.s8) ||
+           toBool(v.s9) ||
+           toBool(v.s10) ||
+           toBool(v.s11) ||
+           toBool(v.s12) ||
+           toBool(v.s13) ||
+           toBool(v.s14) ||
+           toBool(v.s15);
   }
 }
 
@@ -1588,10 +1588,10 @@ if (typeof SIMD.float32x4.select === "undefined") {
     t = SIMD.int32x4.check(t);
     trueValue = SIMD.float32x4.check(trueValue);
     falseValue = SIMD.float32x4.check(falseValue);
-    return SIMD.float32x4(tobool(t.x) ? trueValue.x : falseValue.x,
-                          tobool(t.y) ? trueValue.y : falseValue.y,
-                          tobool(t.z) ? trueValue.z : falseValue.z,
-                          tobool(t.w) ? trueValue.w : falseValue.w);
+    return SIMD.float32x4(toBool(t.x) ? trueValue.x : falseValue.x,
+                          toBool(t.y) ? trueValue.y : falseValue.y,
+                          toBool(t.z) ? trueValue.z : falseValue.z,
+                          toBool(t.w) ? trueValue.w : falseValue.w);
   }
 }
 
@@ -2283,8 +2283,8 @@ if (typeof SIMD.float64x2.select === "undefined") {
     falseValue = SIMD.float64x2.check(falseValue);
     // We use t.z for the second element because t is an int32x4, because
     // int64x2 isn't available.
-    return SIMD.float64x2(tobool(t.x) ? trueValue.x : falseValue.x,
-                          tobool(t.z) ? trueValue.y : falseValue.y);
+    return SIMD.float64x2(toBool(t.x) ? trueValue.x : falseValue.x,
+                          toBool(t.z) ? trueValue.y : falseValue.y);
   }
 }
 
@@ -2591,10 +2591,10 @@ if (typeof SIMD.int32x4.select === "undefined") {
     t = SIMD.int32x4.check(t);
     trueValue = SIMD.int32x4.check(trueValue);
     falseValue = SIMD.int32x4.check(falseValue);
-    return SIMD.int32x4(tobool(t.x) ? trueValue.x : falseValue.x,
-                        tobool(t.y) ? trueValue.y : falseValue.y,
-                        tobool(t.z) ? trueValue.z : falseValue.z,
-                        tobool(t.w) ? trueValue.w : falseValue.w);
+    return SIMD.int32x4(toBool(t.x) ? trueValue.x : falseValue.x,
+                        toBool(t.y) ? trueValue.y : falseValue.y,
+                        toBool(t.z) ? trueValue.z : falseValue.z,
+                        toBool(t.w) ? trueValue.w : falseValue.w);
   }
 }
 
@@ -3315,14 +3315,14 @@ if (typeof SIMD.int16x8.select === "undefined") {
     t = SIMD.int16x8.check(t);
     trueValue = SIMD.int16x8.check(trueValue);
     falseValue = SIMD.int16x8.check(falseValue);
-    return SIMD.int16x8(tobool(t.s0) ? trueValue.s0 : falseValue.s0,
-                        tobool(t.s1) ? trueValue.s1 : falseValue.s1,
-                        tobool(t.s2) ? trueValue.s2 : falseValue.s2,
-                        tobool(t.s3) ? trueValue.s3 : falseValue.s3,
-                        tobool(t.s4) ? trueValue.s4 : falseValue.s4,
-                        tobool(t.s5) ? trueValue.s5 : falseValue.s5,
-                        tobool(t.s6) ? trueValue.s6 : falseValue.s6,
-                        tobool(t.s7) ? trueValue.s7 : falseValue.s7);
+    return SIMD.int16x8(toBool(t.s0) ? trueValue.s0 : falseValue.s0,
+                        toBool(t.s1) ? trueValue.s1 : falseValue.s1,
+                        toBool(t.s2) ? trueValue.s2 : falseValue.s2,
+                        toBool(t.s3) ? trueValue.s3 : falseValue.s3,
+                        toBool(t.s4) ? trueValue.s4 : falseValue.s4,
+                        toBool(t.s5) ? trueValue.s5 : falseValue.s5,
+                        toBool(t.s6) ? trueValue.s6 : falseValue.s6,
+                        toBool(t.s7) ? trueValue.s7 : falseValue.s7);
   }
 }
 
@@ -3959,22 +3959,22 @@ if (typeof SIMD.int8x16.select === "undefined") {
     t = SIMD.int8x16.check(t);
     trueValue = SIMD.int8x16.check(trueValue);
     falseValue = SIMD.int8x16.check(falseValue);
-    return SIMD.int8x16(tobool(t.s0) ? trueValue.s0 : falseValue.s0,
-                        tobool(t.s1) ? trueValue.s1 : falseValue.s1,
-                        tobool(t.s2) ? trueValue.s2 : falseValue.s2,
-                        tobool(t.s3) ? trueValue.s3 : falseValue.s3,
-                        tobool(t.s4) ? trueValue.s4 : falseValue.s4,
-                        tobool(t.s5) ? trueValue.s5 : falseValue.s5,
-                        tobool(t.s6) ? trueValue.s6 : falseValue.s6,
-                        tobool(t.s7) ? trueValue.s7 : falseValue.s7,
-                        tobool(t.s8) ? trueValue.s8 : falseValue.s8,
-                        tobool(t.s9) ? trueValue.s9 : falseValue.s9,
-                        tobool(t.s10) ? trueValue.s10 : falseValue.s10,
-                        tobool(t.s11) ? trueValue.s11 : falseValue.s11,
-                        tobool(t.s12) ? trueValue.s12 : falseValue.s12,
-                        tobool(t.s13) ? trueValue.s13 : falseValue.s13,
-                        tobool(t.s14) ? trueValue.s14 : falseValue.s14,
-                        tobool(t.s15) ? trueValue.s15 : falseValue.s15);
+    return SIMD.int8x16(toBool(t.s0) ? trueValue.s0 : falseValue.s0,
+                        toBool(t.s1) ? trueValue.s1 : falseValue.s1,
+                        toBool(t.s2) ? trueValue.s2 : falseValue.s2,
+                        toBool(t.s3) ? trueValue.s3 : falseValue.s3,
+                        toBool(t.s4) ? trueValue.s4 : falseValue.s4,
+                        toBool(t.s5) ? trueValue.s5 : falseValue.s5,
+                        toBool(t.s6) ? trueValue.s6 : falseValue.s6,
+                        toBool(t.s7) ? trueValue.s7 : falseValue.s7,
+                        toBool(t.s8) ? trueValue.s8 : falseValue.s8,
+                        toBool(t.s9) ? trueValue.s9 : falseValue.s9,
+                        toBool(t.s10) ? trueValue.s10 : falseValue.s10,
+                        toBool(t.s11) ? trueValue.s11 : falseValue.s11,
+                        toBool(t.s12) ? trueValue.s12 : falseValue.s12,
+                        toBool(t.s13) ? trueValue.s13 : falseValue.s13,
+                        toBool(t.s14) ? trueValue.s14 : falseValue.s14,
+                        toBool(t.s15) ? trueValue.s15 : falseValue.s15);
   }
 }
 
