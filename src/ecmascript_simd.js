@@ -107,11 +107,11 @@ function maxNum(x, y) {
          Math.max(x, y);
 }
 
-function tobool(x) {
+function toBool(x) {
   return x < 0;
 }
 
-function frombool(x) {
+function fromBool(x) {
   return !x - 1;
 }
 
@@ -251,18 +251,6 @@ if (typeof SIMD.float32x4 === "undefined") {
     get: function() { return this.w_; }
   });
 
-  /**
-    * Extract the sign bit from each lane return them in the first 4 bits.
-    */
-  Object.defineProperty(SIMD.float32x4.prototype, 'signMask', {
-    get: function() {
-      var mx = (this.x < 0.0 || 1/this.x === -Infinity);
-      var my = (this.y < 0.0 || 1/this.y === -Infinity);
-      var mz = (this.z < 0.0 || 1/this.z === -Infinity);
-      var mw = (this.w < 0.0 || 1/this.w === -Infinity);
-      return mx | my << 1 | mz << 2 | mw << 3;
-    }
-  });
 }
 
 if (typeof SIMD.float32x4.check === "undefined") {
@@ -380,17 +368,6 @@ if (typeof SIMD.float64x2 === "undefined") {
 
   Object.defineProperty(SIMD.float64x2.prototype, 'y', {
     get: function() { return this.y_; }
-  });
-
-  /**
-    * Extract the sign bit from each lane return them in the first 2 bits.
-    */
-  Object.defineProperty(SIMD.float64x2.prototype, 'signMask', {
-    get: function() {
-      var mx = (this.x < 0.0 || 1/this.x === -Infinity);
-      var my = (this.y < 0.0 || 1/this.y === -Infinity);
-      return mx | my << 1;
-    }
   });
 }
 
@@ -523,33 +500,49 @@ if (typeof SIMD.int32x4 === "undefined") {
   });
 
   Object.defineProperty(SIMD.int32x4.prototype, 'flagX', {
-    get: function() { return tobool(this.x); }
+    get: function() { return toBool(this.x); }
   });
 
   Object.defineProperty(SIMD.int32x4.prototype, 'flagY', {
-    get: function() { return tobool(this.y); }
+    get: function() { return toBool(this.y); }
   });
 
   Object.defineProperty(SIMD.int32x4.prototype, 'flagZ', {
-    get: function() { return tobool(this.z); }
+    get: function() { return toBool(this.z); }
   });
 
   Object.defineProperty(SIMD.int32x4.prototype, 'flagW', {
-    get: function() { return tobool(this.w); }
+    get: function() { return toBool(this.w); }
   });
 
+}
+
+if (typeof SIMD.int32x4.allTrue === "undefined") {
   /**
-    * Extract the sign bit from each lane return them in the first 4 bits.
+    * Check if all 4 lanes hold a true value (bit 31 == 1)
+    * @param {int32x4} v An instance of int32x4.
+    * @return {Boolean} All 4 lanes holds a true value
     */
-  Object.defineProperty(SIMD.int32x4.prototype, 'signMask', {
-    get: function() {
-      var mx = tobool(this.x);
-      var my = tobool(this.y);
-      var mz = tobool(this.z);
-      var mw = tobool(this.w);
-      return mx | my << 1 | mz << 2 | mw << 3;
+  SIMD.int32x4.allTrue = function(v) {
+    if (!(v instanceof SIMD.int32x4)) {
+      throw new TypeError("argument is not a int32x4.");
     }
-  });
+    return toBool(v.x) && toBool(v.y) && toBool(v.z) && toBool(v.w);
+  }
+}
+
+if (typeof SIMD.int32x4.anyTrue === "undefined") {
+  /**
+    * Check if any of the 4 lanes hold a true value (bit 31 == 1)
+    * @param {int32x4} v An instance of int32x4.
+    * @return {Boolean} Any of the 4 lanes holds a true value
+    */
+  SIMD.int32x4.anyTrue = function(v) {
+    if (!(v instanceof SIMD.int32x4)) {
+      throw new TypeError("argument is not a int32x4.");
+    }
+    return toBool(v.x) || toBool(v.y) || toBool(v.z) || toBool(v.w);
+  }
 }
 
 if (typeof SIMD.int32x4.check === "undefined") {
@@ -577,10 +570,10 @@ if (typeof SIMD.int32x4.bool === "undefined") {
     * @constructor
     */
   SIMD.int32x4.bool = function(x, y, z, w) {
-    return SIMD.int32x4(frombool(x),
-                        frombool(y),
-                        frombool(z),
-                        frombool(w));
+    return SIMD.int32x4(fromBool(x),
+                        fromBool(y),
+                        fromBool(z),
+                        fromBool(w));
   }
 }
 
@@ -727,24 +720,48 @@ if (typeof SIMD.int16x8 === "undefined") {
   Object.defineProperty(SIMD.int16x8.prototype, 's7', {
     get: function() { return this.s7_; }
   });
+}
 
+if (typeof SIMD.int16x8.allTrue === "undefined") {
   /**
-    * Extract the sign bit from each lane return them in the first 8 bits.
+    * Check if all 8 lanes hold a true value (bit 15 == 1)
+    * @param {int16x8} v An instance of int16x8.
+    * @return {Boolean} All 8 lanes holds a true value
     */
-  Object.defineProperty(SIMD.int16x8.prototype, 'signMask', {
-    get: function() {
-      var ms0 = (this.s0 & 0x8000) >>> 15;
-      var ms1 = (this.s1 & 0x8000) >>> 15;
-      var ms2 = (this.s2 & 0x8000) >>> 15;
-      var ms3 = (this.s3 & 0x8000) >>> 15;
-      var ms4 = (this.s4 & 0x8000) >>> 15;
-      var ms5 = (this.s5 & 0x8000) >>> 15;
-      var ms6 = (this.s6 & 0x8000) >>> 15;
-      var ms7 = (this.s7 & 0x8000) >>> 15;
-      return ms0 | ms1 << 1 | ms2 << 2 | ms3 << 3 |
-             ms4 << 4 | ms5 << 5 | ms6 << 6 | ms7 << 7;
+  SIMD.int16x8.allTrue = function(v) {
+    if (!(v instanceof SIMD.int16x8)) {
+      throw new TypeError("argument is not a int16x8.");
     }
-  });
+    return toBool(v.s0) &&
+           toBool(v.s1) &&
+           toBool(v.s2) &&
+           toBool(v.s3) &&
+           toBool(v.s4) &&
+           toBool(v.s5) &&
+           toBool(v.s6) &&
+           toBool(v.s7);
+  }
+}
+
+if (typeof SIMD.int16x8.anyTrue === "undefined") {
+  /**
+    * Check if any of the 8 lanes hold a true value (bit 15 == 1)
+    * @param {int16x8} v An instance of int16x8.
+    * @return {Boolean} Any of the 8 lanes holds a true value
+    */
+  SIMD.int16x8.anyTrue = function(v) {
+    if (!(v instanceof SIMD.int16x8)) {
+      throw new TypeError("argument is not a int16x8.");
+    }
+    return toBool(v.s0) ||
+           toBool(v.s1) ||
+           toBool(v.s2) ||
+           toBool(v.s3) ||
+           toBool(v.s4) ||
+           toBool(v.s5) ||
+           toBool(v.s6) ||
+           toBool(v.s7);
+  }
 }
 
 if (typeof SIMD.int16x8.check === "undefined") {
@@ -953,33 +970,64 @@ if (typeof SIMD.int8x16 === "undefined") {
     get: function() { return this.s15_; }
   });
 
+}
+
+if (typeof SIMD.int8x16.allTrue === "undefined") {
   /**
-    * Extract the sign bit from each lane return them in the first 16 bits.
+    * Check if all 16 lanes hold a true value (bit 7 == 1)
+    * @param {int8x16} v An instance of int8x16.
+    * @return {Boolean} All 16 lanes holds a true value
     */
-  Object.defineProperty(SIMD.int8x16.prototype, 'signMask', {
-    get: function() {
-      var ms0 = (this.s0 & 0x80) >>> 7;
-      var ms1 = (this.s1 & 0x80) >>> 7;
-      var ms2 = (this.s2 & 0x80) >>> 7;
-      var ms3 = (this.s3 & 0x80) >>> 7;
-      var ms4 = (this.s4 & 0x80) >>> 7;
-      var ms5 = (this.s5 & 0x80) >>> 7;
-      var ms6 = (this.s6 & 0x80) >>> 7;
-      var ms7 = (this.s7 & 0x80) >>> 7;
-      var ms8 = (this.s8 & 0x80) >>> 7;
-      var ms9 = (this.s9 & 0x80) >>> 7;
-      var ms10 = (this.s10 & 0x80) >>> 7;
-      var ms11 = (this.s11 & 0x80) >>> 7;
-      var ms12 = (this.s12 & 0x80) >>> 7;
-      var ms13 = (this.s13 & 0x80) >>> 7;
-      var ms14 = (this.s14 & 0x80) >>> 7;
-      var ms15 = (this.s15 & 0x80) >>> 7;
-      return ms0 | ms1 << 1 | ms2 << 2 | ms3 << 3 |
-             ms4 << 4 | ms5 << 5 | ms6 << 6 | ms7 << 7 |
-             ms8 << 8 | ms9 << 9 | ms10 << 10 | ms11 << 11 |
-             ms12 << 12 | ms13 << 13 | ms14 << 14 | ms15 << 15;
+  SIMD.int8x16.allTrue = function(v) {
+    if (!(v instanceof SIMD.int8x16)) {
+      throw new TypeError("argument is not a int8x16.");
     }
-  });
+    return toBool(v.s0) &&
+           toBool(v.s1) &&
+           toBool(v.s2) &&
+           toBool(v.s3) &&
+           toBool(v.s4) &&
+           toBool(v.s5) &&
+           toBool(v.s6) &&
+           toBool(v.s7) &&
+           toBool(v.s8) &&
+           toBool(v.s9) &&
+           toBool(v.s10) &&
+           toBool(v.s11) &&
+           toBool(v.s12) &&
+           toBool(v.s13) &&
+           toBool(v.s14) &&
+           toBool(v.s15);
+  }
+}
+
+if (typeof SIMD.int8x16.anyTrue === "undefined") {
+  /**
+    * Check if any of the 16 lanes hold a true value (bit 7 == 1)
+    * @param {int8x16} v An instance of int16x8.
+    * @return {Boolean} Any of the 16 lanes holds a true value
+    */
+  SIMD.int8x16.anyTrue = function(v) {
+    if (!(v instanceof SIMD.int8x16)) {
+      throw new TypeError("argument is not a int8x16.");
+    }
+    return toBool(v.s0) ||
+           toBool(v.s1) ||
+           toBool(v.s2) ||
+           toBool(v.s3) ||
+           toBool(v.s4) ||
+           toBool(v.s5) ||
+           toBool(v.s6) ||
+           toBool(v.s7) ||
+           toBool(v.s8) ||
+           toBool(v.s9) ||
+           toBool(v.s10) ||
+           toBool(v.s11) ||
+           toBool(v.s12) ||
+           toBool(v.s13) ||
+           toBool(v.s14) ||
+           toBool(v.s15);
+  }
 }
 
 if (typeof SIMD.int8x16.check === "undefined") {
@@ -1540,10 +1588,10 @@ if (typeof SIMD.float32x4.select === "undefined") {
     t = SIMD.int32x4.check(t);
     trueValue = SIMD.float32x4.check(trueValue);
     falseValue = SIMD.float32x4.check(falseValue);
-    return SIMD.float32x4(tobool(t.x) ? trueValue.x : falseValue.x,
-                          tobool(t.y) ? trueValue.y : falseValue.y,
-                          tobool(t.z) ? trueValue.z : falseValue.z,
-                          tobool(t.w) ? trueValue.w : falseValue.w);
+    return SIMD.float32x4(toBool(t.x) ? trueValue.x : falseValue.x,
+                          toBool(t.y) ? trueValue.y : falseValue.y,
+                          toBool(t.z) ? trueValue.z : falseValue.z,
+                          toBool(t.w) ? trueValue.w : falseValue.w);
   }
 }
 
@@ -2235,8 +2283,8 @@ if (typeof SIMD.float64x2.select === "undefined") {
     falseValue = SIMD.float64x2.check(falseValue);
     // We use t.z for the second element because t is an int32x4, because
     // int64x2 isn't available.
-    return SIMD.float64x2(tobool(t.x) ? trueValue.x : falseValue.x,
-                          tobool(t.z) ? trueValue.y : falseValue.y);
+    return SIMD.float64x2(toBool(t.x) ? trueValue.x : falseValue.x,
+                          toBool(t.z) ? trueValue.y : falseValue.y);
   }
 }
 
@@ -2543,10 +2591,10 @@ if (typeof SIMD.int32x4.select === "undefined") {
     t = SIMD.int32x4.check(t);
     trueValue = SIMD.int32x4.check(trueValue);
     falseValue = SIMD.int32x4.check(falseValue);
-    return SIMD.int32x4(tobool(t.x) ? trueValue.x : falseValue.x,
-                        tobool(t.y) ? trueValue.y : falseValue.y,
-                        tobool(t.z) ? trueValue.z : falseValue.z,
-                        tobool(t.w) ? trueValue.w : falseValue.w);
+    return SIMD.int32x4(toBool(t.x) ? trueValue.x : falseValue.x,
+                        toBool(t.y) ? trueValue.y : falseValue.y,
+                        toBool(t.z) ? trueValue.z : falseValue.z,
+                        toBool(t.w) ? trueValue.w : falseValue.w);
   }
 }
 
@@ -3267,14 +3315,14 @@ if (typeof SIMD.int16x8.select === "undefined") {
     t = SIMD.int16x8.check(t);
     trueValue = SIMD.int16x8.check(trueValue);
     falseValue = SIMD.int16x8.check(falseValue);
-    return SIMD.int16x8(tobool(t.s0) ? trueValue.s0 : falseValue.s0,
-                        tobool(t.s1) ? trueValue.s1 : falseValue.s1,
-                        tobool(t.s2) ? trueValue.s2 : falseValue.s2,
-                        tobool(t.s3) ? trueValue.s3 : falseValue.s3,
-                        tobool(t.s4) ? trueValue.s4 : falseValue.s4,
-                        tobool(t.s5) ? trueValue.s5 : falseValue.s5,
-                        tobool(t.s6) ? trueValue.s6 : falseValue.s6,
-                        tobool(t.s7) ? trueValue.s7 : falseValue.s7);
+    return SIMD.int16x8(toBool(t.s0) ? trueValue.s0 : falseValue.s0,
+                        toBool(t.s1) ? trueValue.s1 : falseValue.s1,
+                        toBool(t.s2) ? trueValue.s2 : falseValue.s2,
+                        toBool(t.s3) ? trueValue.s3 : falseValue.s3,
+                        toBool(t.s4) ? trueValue.s4 : falseValue.s4,
+                        toBool(t.s5) ? trueValue.s5 : falseValue.s5,
+                        toBool(t.s6) ? trueValue.s6 : falseValue.s6,
+                        toBool(t.s7) ? trueValue.s7 : falseValue.s7);
   }
 }
 
@@ -3911,22 +3959,22 @@ if (typeof SIMD.int8x16.select === "undefined") {
     t = SIMD.int8x16.check(t);
     trueValue = SIMD.int8x16.check(trueValue);
     falseValue = SIMD.int8x16.check(falseValue);
-    return SIMD.int8x16(tobool(t.s0) ? trueValue.s0 : falseValue.s0,
-                        tobool(t.s1) ? trueValue.s1 : falseValue.s1,
-                        tobool(t.s2) ? trueValue.s2 : falseValue.s2,
-                        tobool(t.s3) ? trueValue.s3 : falseValue.s3,
-                        tobool(t.s4) ? trueValue.s4 : falseValue.s4,
-                        tobool(t.s5) ? trueValue.s5 : falseValue.s5,
-                        tobool(t.s6) ? trueValue.s6 : falseValue.s6,
-                        tobool(t.s7) ? trueValue.s7 : falseValue.s7,
-                        tobool(t.s8) ? trueValue.s8 : falseValue.s8,
-                        tobool(t.s9) ? trueValue.s9 : falseValue.s9,
-                        tobool(t.s10) ? trueValue.s10 : falseValue.s10,
-                        tobool(t.s11) ? trueValue.s11 : falseValue.s11,
-                        tobool(t.s12) ? trueValue.s12 : falseValue.s12,
-                        tobool(t.s13) ? trueValue.s13 : falseValue.s13,
-                        tobool(t.s14) ? trueValue.s14 : falseValue.s14,
-                        tobool(t.s15) ? trueValue.s15 : falseValue.s15);
+    return SIMD.int8x16(toBool(t.s0) ? trueValue.s0 : falseValue.s0,
+                        toBool(t.s1) ? trueValue.s1 : falseValue.s1,
+                        toBool(t.s2) ? trueValue.s2 : falseValue.s2,
+                        toBool(t.s3) ? trueValue.s3 : falseValue.s3,
+                        toBool(t.s4) ? trueValue.s4 : falseValue.s4,
+                        toBool(t.s5) ? trueValue.s5 : falseValue.s5,
+                        toBool(t.s6) ? trueValue.s6 : falseValue.s6,
+                        toBool(t.s7) ? trueValue.s7 : falseValue.s7,
+                        toBool(t.s8) ? trueValue.s8 : falseValue.s8,
+                        toBool(t.s9) ? trueValue.s9 : falseValue.s9,
+                        toBool(t.s10) ? trueValue.s10 : falseValue.s10,
+                        toBool(t.s11) ? trueValue.s11 : falseValue.s11,
+                        toBool(t.s12) ? trueValue.s12 : falseValue.s12,
+                        toBool(t.s13) ? trueValue.s13 : falseValue.s13,
+                        toBool(t.s14) ? trueValue.s14 : falseValue.s14,
+                        toBool(t.s15) ? trueValue.s15 : falseValue.s15);
   }
 }
 
