@@ -61,7 +61,10 @@
         //SIMD.float32x4.store(a1, j << 2, sum4);
       }
     }
-    return (sum4.x + sum4.y + sum4.z + sum4.w)/a.length;
+    return (SIMD.float32x4.extractLane(sum4, 0) +
+        SIMD.float32x4.extractLane(sum4, 1) +
+        SIMD.float32x4.extractLane(sum4, 2) +
+        SIMD.float32x4.extractLane(sum4, 3)) / a.length;
   }
 
 } ());

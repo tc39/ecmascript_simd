@@ -40,8 +40,10 @@
     SIMD.float32x4.store(Vx, 0, SIMD.float32x4(1.0, 2.0, 3.0, 1.0));
     simdVertexTransform(1);
     vertexTransform(1);
-    return (SIMD.float32x4.load(Outx, 0).x == Out[0]) && (SIMD.float32x4.load(Outx, 0).y == Out[1]) &&
-           (SIMD.float32x4.load(Outx, 0).z == Out[2]) && (SIMD.float32x4.load(Outx, 0).w == Out[3]);
+    return (SIMD.float32x4.extractLane(SIMD.float32x4.load(Outx, 0), 0) == Out[0]) &&
+        (SIMD.float32x4.extractLane(SIMD.float32x4.load(Outx, 0), 1) == Out[1]) &&
+        (SIMD.float32x4.extractLane(SIMD.float32x4.load(Outx, 0), 2) == Out[2]) &&
+        (SIMD.float32x4.extractLane(SIMD.float32x4.load(Outx, 0), 3) == Out[3]);
   }
 
   function cleanup() {
