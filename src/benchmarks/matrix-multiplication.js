@@ -25,22 +25,22 @@
   var Outx = new Float32Array(16);
 
   function equals(A, b) {
-    return (A[0] == SIMD.float32x4.load(b, 0).x) &&
-           (A[1] == SIMD.float32x4.load(b, 0).y) &&
-           (A[2] == SIMD.float32x4.load(b, 0).z) &&
-           (A[3] == SIMD.float32x4.load(b, 0).w) &&
-           (A[4] == SIMD.float32x4.load(b, 4).x) &&
-           (A[5] == SIMD.float32x4.load(b, 4).y) &&
-           (A[6] == SIMD.float32x4.load(b, 4).z) &&
-           (A[7] == SIMD.float32x4.load(b, 4).w) &&
-           (A[8] == SIMD.float32x4.load(b, 8).x) &&
-           (A[9] == SIMD.float32x4.load(b, 8).y) &&
-           (A[10] == SIMD.float32x4.load(b, 8).z) &&
-           (A[11] == SIMD.float32x4.load(b, 8).w) &&
-           (A[12] == SIMD.float32x4.load(b, 12).x) &&
-           (A[13] == SIMD.float32x4.load(b, 12).y) &&
-           (A[14] == SIMD.float32x4.load(b, 12).z) &&
-           (A[15] == SIMD.float32x4.load(b, 12).w);
+    return (A[0] == SIMD.float32x4.extractLane(SIMD.float32x4.load(b, 0), 0)) &&
+           (A[1] == SIMD.float32x4.extractLane(SIMD.float32x4.load(b, 0), 1)) &&
+           (A[2] == SIMD.float32x4.extractLane(SIMD.float32x4.load(b, 0), 2)) &&
+           (A[3] == SIMD.float32x4.extractLane(SIMD.float32x4.load(b, 0), 3)) &&
+           (A[4] == SIMD.float32x4.extractLane(SIMD.float32x4.load(b, 4), 0)) &&
+           (A[5] == SIMD.float32x4.extractLane(SIMD.float32x4.load(b, 4), 1)) &&
+           (A[6] == SIMD.float32x4.extractLane(SIMD.float32x4.load(b, 4), 2)) &&
+           (A[7] == SIMD.float32x4.extractLane(SIMD.float32x4.load(b, 4), 3)) &&
+           (A[8] == SIMD.float32x4.extractLane(SIMD.float32x4.load(b, 8), 0)) &&
+           (A[9] == SIMD.float32x4.extractLane(SIMD.float32x4.load(b, 8), 1)) &&
+           (A[10] == SIMD.float32x4.extractLane(SIMD.float32x4.load(b, 8), 2)) &&
+           (A[11] == SIMD.float32x4.extractLane(SIMD.float32x4.load(b, 8), 3)) &&
+           (A[12] == SIMD.float32x4.extractLane(SIMD.float32x4.load(b, 12), 0)) &&
+           (A[13] == SIMD.float32x4.extractLane(SIMD.float32x4.load(b, 12), 1)) &&
+           (A[14] == SIMD.float32x4.extractLane(SIMD.float32x4.load(b, 12), 2)) &&
+           (A[15] == SIMD.float32x4.extractLane(SIMD.float32x4.load(b, 12), 3));
   }
 
   function init() {

@@ -339,7 +339,10 @@
       }
     }
 
-    occlusion = occlusionx4.x + occlusionx4.y + occlusionx4.z + occlusionx4.w;
+    occlusion = SIMD.float32x4.extractLane(occlusionx4, 0) +
+        SIMD.float32x4.extractLane(occlusionx4, 1) +
+        SIMD.float32x4.extractLane(occlusionx4, 2) +
+        SIMD.float32x4.extractLane(occlusionx4, 3);
 
     occlusion = (ntheta * nphi - occlusion) / (ntheta * nphi);
 
