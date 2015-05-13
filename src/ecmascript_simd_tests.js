@@ -3438,12 +3438,12 @@ test('int16x8 addSaturate', function() {
   equal(9, SIMD.int16x8.extractLane(e, 7));
 });
 
-test('int16x8 subSaturating', function() {
+test('int16x8 subSaturate', function() {
   var a = SIMD.int16x8(0, 1, 0x7fff, 0x8000, -1, 0x7ffe, 0x8001, 10);
   var b = SIMD.int16x8.splat(1);
   var c = SIMD.int16x8.splat(-1);
-  var d = SIMD.int16x8.subSaturating(a, b);
-  var e = SIMD.int16x8.subSaturating(a, c);
+  var d = SIMD.int16x8.subSaturate(a, b);
+  var e = SIMD.int16x8.subSaturate(a, c);
   equal(-1, SIMD.int16x8.extractLane(d, 0));
   equal(0, SIMD.int16x8.extractLane(d, 1));
   equal(0x7ffe, SIMD.int16x8.extractLane(d, 2));
@@ -4171,12 +4171,12 @@ test('int8x16 addSaturate', function() {
   equal(17, SIMD.int8x16.extractLane(e, 15));
 });
 
-test('int8x16 subSaturating', function() {
+test('int8x16 subSaturate', function() {
   var a = SIMD.int8x16(0, 1, 0x7f, 0x80, -1, 0x7e, 0x81, 10, 11, 12, 13, 14, 15, 16, 17, 18);
   var b = SIMD.int8x16.splat(1);
   var c = SIMD.int8x16.splat(-1);
-  var d = SIMD.int8x16.subSaturating(a, b);
-  var e = SIMD.int8x16.subSaturating(a, c);
+  var d = SIMD.int8x16.subSaturate(a, b);
+  var e = SIMD.int8x16.subSaturate(a, c);
   equal(-1, SIMD.int8x16.extractLane(d, 0));
   equal(0, SIMD.int8x16.extractLane(d, 1));
   equal(0x7e, SIMD.int8x16.extractLane(d, 2));

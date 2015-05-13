@@ -3485,14 +3485,14 @@ if (typeof SIMD.int16x8.addSaturate === "undefined") {
   }
 }
 
-if (typeof SIMD.int16x8.subSaturating === "undefined") {
+if (typeof SIMD.int16x8.subSaturate === "undefined") {
   /**
     * @param {int16x8} a An instance of int16x8.
     * @param {int16x8} b An instance of int16x8.
     * @return {int16x8} New instance of int16x8 with values of a - b with
     * signed saturating behavior on overflow.
     */
-  SIMD.int16x8.subSaturating = function(a, b) {
+  SIMD.int16x8.subSaturate = function(a, b) {
     a = SIMD.int16x8.check(a);
     b = SIMD.int16x8.check(b);
     var c = SIMD.int16x8.sub(a, b);
@@ -4286,14 +4286,14 @@ if (typeof SIMD.int8x16.addSaturate === "undefined") {
   }
 }
 
-if (typeof SIMD.int8x16.subSaturating === "undefined") {
+if (typeof SIMD.int8x16.subSaturate === "undefined") {
   /**
     * @param {int8x16} a An instance of int8x16.
     * @param {int8x16} b An instance of int8x16.
     * @return {int8x16} New instance of int8x16 with values of a - b with
     * signed saturating behavior on overflow.
     */
-  SIMD.int8x16.subSaturating = function(a, b) {
+  SIMD.int8x16.subSaturate = function(a, b) {
     a = SIMD.int8x16.check(a);
     b = SIMD.int8x16.check(b);
     var c = SIMD.int8x16.sub(a, b);
