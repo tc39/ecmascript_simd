@@ -1704,7 +1704,7 @@ if (typeof SIMD.float32x4.select === "undefined") {
   }
 }
 
-if (typeof SIMD.float32x4.bitselect === "undefined") {
+if (typeof SIMD.float32x4.selectBits === "undefined") {
   /**
     * @param {int32x4} t Selector mask. An instance of int32x4
     * @param {float32x4} trueValue Pick bit from here if corresponding
@@ -1714,7 +1714,7 @@ if (typeof SIMD.float32x4.bitselect === "undefined") {
     * @return {float32x4} Mix of bits from trueValue or falseValue as
     * indicated
     */
-  SIMD.float32x4.bitselect = function(t, trueValue, falseValue) {
+  SIMD.float32x4.selectBits = function(t, trueValue, falseValue) {
     t = SIMD.int32x4.check(t);
     trueValue = SIMD.float32x4.check(trueValue);
     falseValue = SIMD.float32x4.check(falseValue);
@@ -2417,7 +2417,7 @@ if (typeof SIMD.float64x2.select === "undefined") {
   }
 }
 
-if (typeof SIMD.float64x2.bitselect === "undefined") {
+if (typeof SIMD.float64x2.selectBits === "undefined") {
   /**
     * @param {int32x4} t Selector mask. An instance of int32x4
     * @param {float64x2} trueValue Pick bit from here if corresponding
@@ -2427,7 +2427,7 @@ if (typeof SIMD.float64x2.bitselect === "undefined") {
     * @return {float64x2} Mix of bits from trueValue or falseValue as
     * indicated
     */
-  SIMD.float64x2.bitselect = function(t, trueValue, falseValue) {
+  SIMD.float64x2.selectBits = function(t, trueValue, falseValue) {
     t = SIMD.int32x4.check(t);
     trueValue = SIMD.float64x2.check(trueValue);
     falseValue = SIMD.float64x2.check(falseValue);
@@ -2769,7 +2769,7 @@ if (typeof SIMD.int32x4.select === "undefined") {
   }
 }
 
-if (typeof SIMD.int32x4.bitselect === "undefined") {
+if (typeof SIMD.int32x4.selectBits === "undefined") {
   /**
     * @param {int32x4} t Selector mask. An instance of int32x4
     * @param {int32x4} trueValue Pick bit from here if corresponding
@@ -2779,7 +2779,7 @@ if (typeof SIMD.int32x4.bitselect === "undefined") {
     * @return {int32x4} Mix of bits from trueValue or falseValue as
     * indicated
     */
-  SIMD.int32x4.bitselect = function(t, trueValue, falseValue) {
+  SIMD.int32x4.selectBits = function(t, trueValue, falseValue) {
     t = SIMD.int32x4.check(t);
     trueValue = SIMD.int32x4.check(trueValue);
     falseValue = SIMD.int32x4.check(falseValue);
@@ -3547,7 +3547,7 @@ if (typeof SIMD.int16x8.select === "undefined") {
   }
 }
 
-if (typeof SIMD.int16x8.bitselect === "undefined") {
+if (typeof SIMD.int16x8.selectBits === "undefined") {
   /**
     * @param {int16x8} t Selector mask. An instance of int16x8
     * @param {int16x8} trueValue Pick lane from here if corresponding
@@ -3557,7 +3557,7 @@ if (typeof SIMD.int16x8.bitselect === "undefined") {
     * @return {int16x8} Mix of lanes from trueValue or falseValue as
     * indicated
     */
-  SIMD.int16x8.bitselect = function(t, trueValue, falseValue) {
+  SIMD.int16x8.selectBits = function(t, trueValue, falseValue) {
     t = SIMD.int16x8.check(t);
     trueValue = SIMD.int16x8.check(trueValue);
     falseValue = SIMD.int16x8.check(falseValue);
@@ -4417,7 +4417,7 @@ if (typeof SIMD.int8x16.select === "undefined") {
   }
 }
 
-if (typeof SIMD.int8x16.bitselect === "undefined") {
+if (typeof SIMD.int8x16.selectBits === "undefined") {
   /**
     * @param {int8x16} t Selector mask. An instance of int8x16
     * @param {int8x16} trueValue Pick lane from here if corresponding
@@ -4427,7 +4427,7 @@ if (typeof SIMD.int8x16.bitselect === "undefined") {
     * @return {int8x16} Mix of lanes from trueValue or falseValue as
     * indicated
     */
-  SIMD.int8x16.bitselect = function(t, trueValue, falseValue) {
+  SIMD.int8x16.selectBits = function(t, trueValue, falseValue) {
     t = SIMD.int8x16.check(t);
     trueValue = SIMD.int8x16.check(trueValue);
     falseValue = SIMD.int8x16.check(falseValue);
