@@ -536,22 +536,6 @@ if (typeof SIMD.int32x4 === "undefined") {
     this.z_ = z|0;
     this.w_ = w|0;
   }
-
-  Object.defineProperty(SIMD.int32x4.prototype, 'flagX', {
-    get: function() { return toBool(this.x_); }
-  });
-
-  Object.defineProperty(SIMD.int32x4.prototype, 'flagY', {
-    get: function() { return toBool(this.y_); }
-  });
-
-  Object.defineProperty(SIMD.int32x4.prototype, 'flagZ', {
-    get: function() { return toBool(this.z_); }
-  });
-
-  Object.defineProperty(SIMD.int32x4.prototype, 'flagW', {
-    get: function() { return toBool(this.w_); }
-  });
 }
 
 if (typeof SIMD.int32x4.extractLane === "undefined") {

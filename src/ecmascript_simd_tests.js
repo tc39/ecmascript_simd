@@ -34,6 +34,10 @@ function isNaN(x) {
   ok(x != x);
 }
 
+function toBool(x) {
+  return x < 0;
+}
+
 test('float32x4 constructor', function() {
   notEqual(undefined, SIMD.float32x4);  // Type.
   notEqual(undefined, SIMD.float32x4(1.0, 2.0, 3.0, 4.0));  // New object.
@@ -2268,23 +2272,23 @@ test('int32x4 and', function() {
   equal(0x55555555, SIMD.int32x4.extractLane(n, 1));
   equal(0x55555555, SIMD.int32x4.extractLane(n, 2));
   equal(0x55555555, SIMD.int32x4.extractLane(n, 3));
-  equal(true, m.flagX);
-  equal(true, m.flagY);
-  equal(true, m.flagZ);
-  equal(true, m.flagW);
-  equal(false, n.flagX);
-  equal(false, n.flagY);
-  equal(false, n.flagZ);
-  equal(false, n.flagW);
+  equal(true, toBool(SIMD.int32x4.extractLane(m, 0)));
+  equal(true, toBool(SIMD.int32x4.extractLane(m, 1)));
+  equal(true, toBool(SIMD.int32x4.extractLane(m, 2)));
+  equal(true, toBool(SIMD.int32x4.extractLane(m, 3)));
+  equal(false, toBool(SIMD.int32x4.extractLane(n, 0)));
+  equal(false, toBool(SIMD.int32x4.extractLane(n, 1)));
+  equal(false, toBool(SIMD.int32x4.extractLane(n, 2)));
+  equal(false, toBool(SIMD.int32x4.extractLane(n, 3)));
   var o = SIMD.int32x4.and(m,n);  // and
   equal(0x0, SIMD.int32x4.extractLane(o, 0));
   equal(0x0, SIMD.int32x4.extractLane(o, 1));
   equal(0x0, SIMD.int32x4.extractLane(o, 2));
   equal(0x0, SIMD.int32x4.extractLane(o, 3));
-  equal(false, o.flagX);
-  equal(false, o.flagY);
-  equal(false, o.flagZ);
-  equal(false, o.flagW);
+  equal(false, toBool(SIMD.int32x4.extractLane(o, 0)));
+  equal(false, toBool(SIMD.int32x4.extractLane(o, 1)));
+  equal(false, toBool(SIMD.int32x4.extractLane(o, 2)));
+  equal(false, toBool(SIMD.int32x4.extractLane(o, 3)));
 });
 
 test('int32x4 or', function() {
@@ -2295,10 +2299,10 @@ test('int32x4 or', function() {
   equal(-1, SIMD.int32x4.extractLane(o, 1));
   equal(-1, SIMD.int32x4.extractLane(o, 2));
   equal(-1, SIMD.int32x4.extractLane(o, 3));
-  equal(true, o.flagX);
-  equal(true, o.flagY);
-  equal(true, o.flagZ);
-  equal(true, o.flagW);
+  equal(true, toBool(SIMD.int32x4.extractLane(o, 0)));
+  equal(true, toBool(SIMD.int32x4.extractLane(o, 1)));
+  equal(true, toBool(SIMD.int32x4.extractLane(o, 2)));
+  equal(true, toBool(SIMD.int32x4.extractLane(o, 3)));
 });
 
 test('int32x4 xor', function() {
@@ -2317,10 +2321,10 @@ test('int32x4 xor', function() {
   equal(0x0, SIMD.int32x4.extractLane(o, 1));
   equal(0x0, SIMD.int32x4.extractLane(o, 2));
   equal(0x0, SIMD.int32x4.extractLane(o, 3));
-  equal(false, o.flagX);
-  equal(false, o.flagY);
-  equal(false, o.flagZ);
-  equal(false, o.flagW);
+  equal(false, toBool(SIMD.int32x4.extractLane(o, 0)));
+  equal(false, toBool(SIMD.int32x4.extractLane(o, 1)));
+  equal(false, toBool(SIMD.int32x4.extractLane(o, 2)));
+  equal(false, toBool(SIMD.int32x4.extractLane(o, 3)));
 });
 
 test('int32x4 neg', function() {
