@@ -131,6 +131,12 @@ function checkLaneIndex(numLanes) {
   }
 }
 
+var check2 = checkLaneIndex(2);
+var check4 = checkLaneIndex(4);
+var check8 = checkLaneIndex(8);
+var check16 = checkLaneIndex(16);
+var check32 = checkLaneIndex(32);
+
 // Save/Restore utilities for implementing bitwise conversions.
 
 function saveFloat64x2(x) {
@@ -245,8 +251,7 @@ if (typeof SIMD.float32x4.extractLane === "undefined") {
     */
   SIMD.float32x4.extractLane = function(t, i) {
     t = SIMD.float32x4.check(t);
-    var check = checkLaneIndex(4);
-    check(i);
+    check4(i);
     switch(i) {
       case 0: return t.x_;
       case 1: return t.y_;
@@ -266,8 +271,7 @@ if (typeof SIMD.float32x4.replaceLane === "undefined") {
     */
   SIMD.float32x4.replaceLane = function(t, i, v) {
     t = SIMD.float32x4.check(t);
-    var check = checkLaneIndex(4);
-    check(i);
+    check4(i);
     saveFloat32x4(t);
     _f32x4[i] = v;
     return restoreFloat32x4();
@@ -396,8 +400,7 @@ if (typeof SIMD.float64x2.extractLane === "undefined") {
     */
   SIMD.float64x2.extractLane = function(t, i) {
     t = SIMD.float64x2.check(t);
-    var check = checkLaneIndex(2);
-    check(i);
+    check2(i);
     switch(i) {
       case 0: return t.x_;
       case 1: return t.y_;
@@ -415,8 +418,7 @@ if (typeof SIMD.float64x2.replaceLane === "undefined") {
     */
   SIMD.float64x2.replaceLane = function(t, i, v) {
     t = SIMD.float64x2.check(t);
-    var check = checkLaneIndex(2);
-    check(i);
+    check2(i);
     saveFloat64x2(t);
     _f64x2[i] = v;
     return restoreFloat64x2();
@@ -562,8 +564,7 @@ if (typeof SIMD.int32x4.extractLane === "undefined") {
     */
   SIMD.int32x4.extractLane = function(t, i) {
     t = SIMD.int32x4.check(t);
-    var check = checkLaneIndex(4);
-    check(i);
+    check4(i);
     switch(i) {
       case 0: return t.x_;
       case 1: return t.y_;
@@ -583,8 +584,7 @@ if (typeof SIMD.int32x4.replaceLane === "undefined") {
     */
   SIMD.int32x4.replaceLane = function(t, i, v) {
     t = SIMD.int32x4.check(t);
-    var check = checkLaneIndex(4);
-    check(i);
+    check4(i);
     saveInt32x4(t);
     _i32x4[i] = v;
     return restoreInt32x4();
@@ -778,8 +778,7 @@ if (typeof SIMD.int16x8.extractLane === "undefined") {
     */
   SIMD.int16x8.extractLane = function(t, i) {
     t = SIMD.int16x8.check(t);
-    var check = checkLaneIndex(8);
-    check(i);
+    check8(i);
     switch(i) {
       case 0: return t.s0_;
       case 1: return t.s1_;
@@ -803,8 +802,7 @@ if (typeof SIMD.int16x8.replaceLane === "undefined") {
     */
   SIMD.int16x8.replaceLane = function(t, i, v) {
     t = SIMD.int16x8.check(t);
-    var check = checkLaneIndex(8);
-    check(i);
+    check8(i);
     saveInt16x8(t);
     _i16x8[i] = v;
     return restoreInt16x8();
@@ -1004,8 +1002,7 @@ if (typeof SIMD.int8x16.extractLane === "undefined") {
     */
   SIMD.int8x16.extractLane = function(t, i) {
     t = SIMD.int8x16.check(t);
-    var check = checkLaneIndex(16);
-    check(i);
+    check16(i);
     switch(i) {
       case 0: return t.s0_;
       case 1: return t.s1_;
@@ -1037,8 +1034,7 @@ if (typeof SIMD.int8x16.replaceLane === "undefined") {
     */
   SIMD.int8x16.replaceLane = function(t, i, v) {
     t = SIMD.int8x16.check(t);
-    var check = checkLaneIndex(16);
-    check(i);
+    check16(i);
     saveInt8x16(t);
     _i8x16[i] = v;
     return restoreInt8x16();
@@ -1494,11 +1490,10 @@ if (typeof SIMD.float32x4.swizzle === "undefined") {
     */
   SIMD.float32x4.swizzle = function(t, x, y, z, w) {
     t = SIMD.float32x4.check(t);
-    var check = checkLaneIndex(4);
-    check(x);
-    check(y);
-    check(z);
-    check(w);
+    check4(x);
+    check4(y);
+    check4(z);
+    check4(w);
     _f32x4[0] = SIMD.float32x4.extractLane(t, 0);
     _f32x4[1] = SIMD.float32x4.extractLane(t, 1);
     _f32x4[2] = SIMD.float32x4.extractLane(t, 2);
@@ -1524,11 +1519,10 @@ if (typeof SIMD.float32x4.shuffle === "undefined") {
   SIMD.float32x4.shuffle = function(t1, t2, x, y, z, w) {
     t1 = SIMD.float32x4.check(t1);
     t2 = SIMD.float32x4.check(t2);
-    var check = checkLaneIndex(8);
-    check(x);
-    check(y);
-    check(z);
-    check(w);
+    check8(x);
+    check8(y);
+    check8(z);
+    check8(w);
     var storage = _f32x8;
     storage[0] = SIMD.float32x4.extractLane(t1, 0);
     storage[1] = SIMD.float32x4.extractLane(t1, 1);
@@ -2247,9 +2241,8 @@ if (typeof SIMD.float64x2.swizzle === "undefined") {
     */
   SIMD.float64x2.swizzle = function(t, x, y) {
     t = SIMD.float64x2.check(t);
-    var check = checkLaneIndex(2);
-    check(x);
-    check(y);
+    check2(x);
+    check2(y);
     var storage = _f64x2;
     storage[0] = SIMD.float64x2.extractLane(t, 0);
     storage[1] = SIMD.float64x2.extractLane(t, 1);
@@ -2271,9 +2264,8 @@ if (typeof SIMD.float64x2.shuffle === "undefined") {
   SIMD.float64x2.shuffle = function(t1, t2, x, y) {
     t1 = SIMD.float64x2.check(t1);
     t2 = SIMD.float64x2.check(t2);
-    var check = checkLaneIndex(4);
-    check(x);
-    check(y);
+    check4(x);
+    check4(y);
     var storage = _f64x4;
     storage[0] = SIMD.float64x2.extractLane(t1, 0);
     storage[1] = SIMD.float64x2.extractLane(t1, 1);
@@ -2691,11 +2683,10 @@ if (typeof SIMD.int32x4.swizzle === "undefined") {
     */
   SIMD.int32x4.swizzle = function(t, x, y, z, w) {
     t = SIMD.int32x4.check(t);
-    var check = checkLaneIndex(4);
-    check(x);
-    check(y);
-    check(z);
-    check(w);
+    check4(x);
+    check4(y);
+    check4(z);
+    check4(w);
     var storage = _i32x4;
     storage[0] = SIMD.int32x4.extractLane(t, 0);
     storage[1] = SIMD.int32x4.extractLane(t, 1);
@@ -2721,11 +2712,10 @@ if (typeof SIMD.int32x4.shuffle === "undefined") {
   SIMD.int32x4.shuffle = function(t1, t2, x, y, z, w) {
     t1 = SIMD.int32x4.check(t1);
     t2 = SIMD.int32x4.check(t2);
-    var check = checkLaneIndex(8);
-    check(x);
-    check(y);
-    check(z);
-    check(w);
+    check8(x);
+    check8(y);
+    check8(z);
+    check8(w);
     var storage = _i32x8;
     storage[0] = SIMD.int32x4.extractLane(t1, 0);
     storage[1] = SIMD.int32x4.extractLane(t1, 1);
@@ -3391,15 +3381,14 @@ if (typeof SIMD.int16x8.swizzle === "undefined") {
     */
   SIMD.int16x8.swizzle = function(t, s0, s1, s2, s3, s4, s5, s6, s7) {
     t = SIMD.int16x8.check(t);
-    var check = checkLaneIndex(8);
-    check(s0);
-    check(s1);
-    check(s2);
-    check(s3);
-    check(s4);
-    check(s5);
-    check(s6);
-    check(s7);
+    check8(s0);
+    check8(s1);
+    check8(s2);
+    check8(s3);
+    check8(s4);
+    check8(s5);
+    check8(s6);
+    check8(s7);
     var storage = _i16x8;
     storage[0] = SIMD.int16x8.extractLane(t, 0);
     storage[1] = SIMD.int16x8.extractLane(t, 1);
@@ -3434,15 +3423,14 @@ if (typeof SIMD.int16x8.shuffle === "undefined") {
   SIMD.int16x8.shuffle = function(t0, t1, s0, s1, s2, s3, s4, s5, s6, s7) {
     t0 = SIMD.int16x8.check(t0);
     t1 = SIMD.int16x8.check(t1);
-    var check = checkLaneIndex(16);
-    check(s0);
-    check(s1);
-    check(s2);
-    check(s3);
-    check(s4);
-    check(s5);
-    check(s6);
-    check(s7);
+    check16(s0);
+    check16(s1);
+    check16(s2);
+    check16(s3);
+    check16(s4);
+    check16(s5);
+    check16(s6);
+    check16(s7);
     var storage = _i16x16;
     storage[0] = SIMD.int16x8.extractLane(t0, 0);
     storage[1] = SIMD.int16x8.extractLane(t0, 1);
@@ -4139,23 +4127,22 @@ if (typeof SIMD.int8x16.swizzle === "undefined") {
   SIMD.int8x16.swizzle = function(t, s0, s1, s2, s3, s4, s5, s6, s7,
                                      s8, s9, s10, s11, s12, s13, s14, s15) {
     t = SIMD.int8x16.check(t);
-    var check = checkLaneIndex(16);
-    check(s0);
-    check(s1);
-    check(s2);
-    check(s3);
-    check(s4);
-    check(s5);
-    check(s6);
-    check(s7);
-    check(s8);
-    check(s9);
-    check(s10);
-    check(s11);
-    check(s12);
-    check(s13);
-    check(s14);
-    check(s15);
+    check16(s0);
+    check16(s1);
+    check16(s2);
+    check16(s3);
+    check16(s4);
+    check16(s5);
+    check16(s6);
+    check16(s7);
+    check16(s8);
+    check16(s9);
+    check16(s10);
+    check16(s11);
+    check16(s12);
+    check16(s13);
+    check16(s14);
+    check16(s15);
     var storage = _i8x16;
     storage[0] = SIMD.int8x16.extractLane(t, 0);
     storage[1] = SIMD.int8x16.extractLane(t, 1);
@@ -4209,23 +4196,22 @@ if (typeof SIMD.int8x16.shuffle === "undefined") {
                                           s8, s9, s10, s11, s12, s13, s14, s15) {
     t0 = SIMD.int8x16.check(t0);
     t1 = SIMD.int8x16.check(t1);
-    var check = checkLaneIndex(32);
-    check(s0);
-    check(s1);
-    check(s2);
-    check(s3);
-    check(s4);
-    check(s5);
-    check(s6);
-    check(s7);
-    check(s8);
-    check(s9);
-    check(s10);
-    check(s11);
-    check(s12);
-    check(s13);
-    check(s14);
-    check(s15);
+    check32(s0);
+    check32(s1);
+    check32(s2);
+    check32(s3);
+    check32(s4);
+    check32(s5);
+    check32(s6);
+    check32(s7);
+    check32(s8);
+    check32(s9);
+    check32(s10);
+    check32(s11);
+    check32(s12);
+    check32(s13);
+    check32(s14);
+    check32(s15);
     var storage = _i8x32;
     storage[0] = SIMD.int8x16.extractLane(t0, 0);
     storage[1] = SIMD.int8x16.extractLane(t0, 1);
