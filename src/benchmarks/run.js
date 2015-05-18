@@ -7,7 +7,6 @@ load ('base.js');
 
 load ('kernel-template.js');
 load ('averageFloat32x4.js');
-load ('averageFloat32x4Load.js');
 load ('averageFloat32x4LoadFromInt8Array.js');
 load ('averageFloat32x4LoadX.js');
 load ('averageFloat32x4LoadXY.js');
@@ -16,7 +15,6 @@ load ('averageFloat64x2.js');
 load ('averageFloat64x2Load.js');
 load ('mandelbrot.js');
 load ('matrix-multiplication.js');
-load ('matrix-multiplication-load.js');
 load ('transform.js');
 load ('shiftrows.js');
 load ('aobench.js');
