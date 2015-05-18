@@ -316,17 +316,6 @@ test('float32x4 div', function() {
   equal(SIMD.float32x4.extractLane(i, 3), Infinity);
 });
 
-test('float32x4 clamp', function() {
-  var a = SIMD.float32x4(-20.0, 10.0, 30.0, 0.5);
-  var lower = SIMD.float32x4(2.0, 1.0, 50.0, 0.0);
-  var upper = SIMD.float32x4(2.5, 5.0, 55.0, 1.0);
-  var c = SIMD.float32x4.clamp(a, lower, upper);
-  equal(2.0, SIMD.float32x4.extractLane(c, 0));
-  equal(5.0, SIMD.float32x4.extractLane(c, 1));
-  equal(50.0, SIMD.float32x4.extractLane(c, 2));
-  equal(0.5, SIMD.float32x4.extractLane(c, 3));
-});
-
 test('float32x4 min', function() {
   var a = SIMD.float32x4(-20.0, 10.0, 30.0, 0.5);
   var lower = SIMD.float32x4(2.0, 1.0, 50.0, 0.0);
@@ -1419,29 +1408,6 @@ test('float64x2 div', function() {
   equal(SIMD.float64x2.extractLane(i0, 1), -Infinity);
   equal(SIMD.float64x2.extractLane(i1, 0), -Infinity);
   equal(SIMD.float64x2.extractLane(i1, 1), Infinity);
-});
-
-test('float64x2 clamp', function() {
-  var a = SIMD.float64x2(-20.0, 10.0);
-  var b = SIMD.float64x2(2.125, 3.0);
-  var lower = SIMD.float64x2(2.0, 1.0);
-  var upper = SIMD.float64x2(2.5, 5.0);
-  var c = SIMD.float64x2.clamp(a, lower, upper);
-  equal(2.0, SIMD.float64x2.extractLane(c, 0));
-  equal(5.0, SIMD.float64x2.extractLane(c, 1));
-  c = SIMD.float64x2.clamp(b, lower, upper);
-  equal(2.125, SIMD.float64x2.extractLane(c, 0));
-  equal(3.0, SIMD.float64x2.extractLane(c, 1));
-  a = SIMD.float64x2(-3.4e200, 3.4e250);
-  b = SIMD.float64x2(3.4e100, 3.4e200);
-  lower = SIMD.float64x2(3.4e50, 3.4e100);
-  upper = SIMD.float64x2(3.4e150, 3.4e300);
-  c = SIMD.float64x2.clamp(a, lower, upper);
-  equal(3.4e50, SIMD.float64x2.extractLane(c, 0));
-  equal(3.4e250, SIMD.float64x2.extractLane(c, 1));
-  c = SIMD.float64x2.clamp(b, lower, upper);
-  equal(3.4e100, SIMD.float64x2.extractLane(c, 0));
-  equal(3.4e200, SIMD.float64x2.extractLane(c, 1));
 });
 
 test('float64x2 min', function() {

@@ -1296,46 +1296,6 @@ if (typeof SIMD.float32x4.div === "undefined") {
   }
 }
 
-if (typeof SIMD.float32x4.clamp === "undefined") {
-  /**
-    * @param {float32x4} t An instance of float32x4.
-    * @param {float32x4} lowerLimit An instance of float32x4.
-    * @param {float32x4} upperLimit An instance of float32x4.
-    * @return {float32x4} New instance of float32x4 with t's values clamped
-    * between lowerLimit and upperLimit.
-    */
-  SIMD.float32x4.clamp = function(t, lowerLimit, upperLimit) {
-    t = SIMD.float32x4.check(t);
-    lowerLimit = SIMD.float32x4.check(lowerLimit);
-    upperLimit = SIMD.float32x4.check(upperLimit);
-    var cx = SIMD.float32x4.extractLane(t, 0) <
-        SIMD.float32x4.extractLane(lowerLimit, 0) ?
-            SIMD.float32x4.extractLane(lowerLimit, 0) :
-                SIMD.float32x4.extractLane(t, 0);
-    var cy = SIMD.float32x4.extractLane(t, 1) <
-        SIMD.float32x4.extractLane(lowerLimit, 1) ?
-            SIMD.float32x4.extractLane(lowerLimit, 1) :
-                SIMD.float32x4.extractLane(t, 1);
-    var cz = SIMD.float32x4.extractLane(t, 2) <
-        SIMD.float32x4.extractLane(lowerLimit, 2) ?
-            SIMD.float32x4.extractLane(lowerLimit, 2) :
-                SIMD.float32x4.extractLane(t, 2);
-    var cw = SIMD.float32x4.extractLane(t, 3) <
-        SIMD.float32x4.extractLane(lowerLimit, 3) ?
-            SIMD.float32x4.extractLane(lowerLimit, 3) :
-                SIMD.float32x4.extractLane(t, 3);
-    cx = cx > SIMD.float32x4.extractLane(upperLimit, 0) ?
-        SIMD.float32x4.extractLane(upperLimit, 0) : cx;
-    cy = cy > SIMD.float32x4.extractLane(upperLimit, 1) ?
-        SIMD.float32x4.extractLane(upperLimit, 1) : cy;
-    cz = cz > SIMD.float32x4.extractLane(upperLimit, 2) ?
-        SIMD.float32x4.extractLane(upperLimit, 2) : cz;
-    cw = cw > SIMD.float32x4.extractLane(upperLimit, 3) ?
-        SIMD.float32x4.extractLane(upperLimit, 3) : cw;
-    return SIMD.float32x4(cx, cy, cz, cw);
-  }
-}
-
 if (typeof SIMD.float32x4.min === "undefined") {
   /**
     * @param {float32x4} t An instance of float32x4.
@@ -2076,34 +2036,6 @@ if (typeof SIMD.float64x2.div === "undefined") {
     return SIMD.float64x2(
         SIMD.float64x2.extractLane(a, 0) / SIMD.float64x2.extractLane(b, 0),
         SIMD.float64x2.extractLane(a, 1) / SIMD.float64x2.extractLane(b, 1));
-  }
-}
-
-if (typeof SIMD.float64x2.clamp === "undefined") {
-  /**
-    * @param {float64x2} t An instance of float64x2.
-    * @param {float64x2} lowerLimit An instance of float64x2.
-    * @param {float64x2} upperLimit An instance of float64x2.
-    * @return {float64x2} New instance of float64x2 with t's values clamped
-    * between lowerLimit and upperLimit.
-    */
-  SIMD.float64x2.clamp = function(t, lowerLimit, upperLimit) {
-    t = SIMD.float64x2.check(t);
-    lowerLimit = SIMD.float64x2.check(lowerLimit);
-    upperLimit = SIMD.float64x2.check(upperLimit);
-    var cx = SIMD.float64x2.extractLane(t, 0) <
-        SIMD.float64x2.extractLane(lowerLimit, 0) ?
-            SIMD.float64x2.extractLane(lowerLimit, 0) :
-                SIMD.float64x2.extractLane(t, 0);
-    var cy = SIMD.float64x2.extractLane(t, 1) <
-        SIMD.float64x2.extractLane(lowerLimit, 1) ?
-            SIMD.float64x2.extractLane(lowerLimit, 1) :
-                SIMD.float64x2.extractLane(t, 1);
-    cx = cx > SIMD.float64x2.extractLane(upperLimit, 0) ?
-        SIMD.float64x2.extractLane(upperLimit, 0) : cx;
-    cy = cy > SIMD.float64x2.extractLane(upperLimit, 1) ?
-        SIMD.float64x2.extractLane(upperLimit, 1) : cy;
-    return SIMD.float64x2(cx, cy);
   }
 }
 
