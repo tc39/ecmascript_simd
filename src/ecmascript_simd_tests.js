@@ -38,6 +38,34 @@ function toBool(x) {
   return x < 0;
 }
 
+test('odds and ends', function() {
+    // Not yet specified:
+    //   ==, ===, !=, !==, <=, >=
+    //   conversion to bool via !, ?, etc.:
+    isNaN(Number(SIMD.float32x4(0, 1, 2, 3)));
+    isNaN(+SIMD.float32x4(0, 1, 2, 3));
+    isNaN(-SIMD.float32x4(0, 1, 2, 3));
+    equal(~SIMD.float32x4(0, 1, 2, 3), -1);
+    isNaN(Math.fround(SIMD.float32x4(0, 1, 2, 3)));
+    equal(SIMD.float32x4(0, 1, 2, 3)|0, 0);
+    equal(SIMD.float32x4(0, 1, 2, 3)&0, 0);
+    equal(SIMD.float32x4(0, 1, 2, 3)^0, 0);
+    equal(SIMD.float32x4(0, 1, 2, 3)>>>0, 0);
+    equal(SIMD.float32x4(0, 1, 2, 3)>>0, 0);
+    equal(SIMD.float32x4(0, 1, 2, 3)<<0, 0);
+    equal(typeof (SIMD.float32x4(0, 1, 2, 3) + SIMD.float32x4(4, 5, 6, 7)), "string");
+    isNaN(SIMD.float32x4(0, 1, 2, 3) - SIMD.float32x4(4, 5, 6, 7));
+    isNaN(SIMD.float32x4(0, 1, 2, 3) * SIMD.float32x4(4, 5, 6, 7));
+    isNaN(SIMD.float32x4(0, 1, 2, 3) / SIMD.float32x4(4, 5, 6, 7));
+    isNaN(SIMD.float32x4(0, 1, 2, 3) % SIMD.float32x4(4, 5, 6, 7));
+    equal(SIMD.float32x4(0, 1, 2, 3) < SIMD.float32x4(4, 5, 6, 7), false);
+    equal(SIMD.float32x4(0, 1, 2, 3) > SIMD.float32x4(4, 5, 6, 7), false);
+    equal(typeof (SIMD.float32x4(0, 1, 2, 3).toString()), "string");
+    throws(function() { SIMD.float32x4(0, 1, 2, 3)(); });
+    equal(SIMD.float32x4(0, 1, 2, 3)[0], undefined);
+    equal(SIMD.float32x4(0, 1, 2, 3).a, undefined);
+});
+
 test('float32x4 constructor', function() {
   notEqual(undefined, SIMD.float32x4);  // Type.
   notEqual(undefined, SIMD.float32x4(1.0, 2.0, 3.0, 4.0));  // New object.
