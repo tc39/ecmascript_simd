@@ -483,6 +483,16 @@ if (typeof SIMD.float64x2.fromFloat32x4Bits === "undefined") {
   }
 }
 
+if (typeof SIMD.float64x2.fromInt64x2Bits === "undefined") {
+  /**
+   * @param {int64x2} t An instance of int64x2.
+   * @return {float64x2} a bit-wise copy of t as a float64x2.
+   */
+  SIMD.float64x2.fromInt64x2Bits = function(t) {
+    return SIMD.float64x2.fromInt32x4Bits(t.int32x4_);
+  }
+}
+
 if (typeof SIMD.float64x2.fromInt32x4Bits === "undefined") {
   /**
    * @param {int32x4} t An instance of int32x4.
@@ -697,6 +707,16 @@ if (typeof SIMD.int32x4.fromFloat32x4Bits === "undefined") {
   SIMD.int32x4.fromFloat32x4Bits = function(t) {
     saveFloat32x4(t);
     return restoreInt32x4();
+  }
+}
+
+if (typeof SIMD.int32x4.fromInt64x2Bits === "undefined") {
+  /**
+   * @param {int64x2} t An instance of int64x2.
+   * @return {int32x4} a bit-wise copy of t as an int32x4.
+   */
+  SIMD.int32x4.fromInt64x2Bits = function(t) {
+    return t.int32x4_;
   }
 }
 
@@ -1225,6 +1245,125 @@ if (typeof SIMD.int8x16.fromInt16x8Bits === "undefined") {
   SIMD.int8x16.fromInt16x8Bits = function(t) {
     saveInt16x8(t);
     return restoreInt8x16();
+  }
+}
+
+if (typeof SIMD.int64x2 === "undefined") {
+  /**
+    * Construct a new instance of int64x2 number.
+    * This function conceptually requires 64-bit integer arguments. Until JS
+    * has support for that, this function cannot be passed any arguments. To
+    * produce an int64x2 value, use int64x2.load, int64x2.bool, or a
+    * float64x2 comparison.
+    * @constructor
+    */
+  SIMD.int64x2 = function() {
+    if (!(this instanceof SIMD.int64x2)) {
+      return new SIMD.int64x2();
+    }
+    if (arguments.length != 0) {
+      throw new Error("int64x2 cannot currently be directly constructed");
+    }
+
+    this.int32x4_ = SIMD.int32x4.splat(0);
+  }
+}
+
+if (typeof SIMD.int64x2.extractLaneAsBool === "undefined") {
+  /**
+    * @param {int64x2} t An instance of int64x2.
+    * @param {integer} i Index in concatenation of t for lane i
+    * @return {Boolean} The value in lane i of t as a boolean.
+    */
+  SIMD.int64x2.extractLaneAsBool = function(t, i) {
+    t = SIMD.int64x2.check(t);
+    return SIMD.int32x4.extractLaneAsBool(t.int32x4_, i << 1)
+  }
+}
+
+
+if (typeof SIMD.int64x2.allTrue === "undefined") {
+  /**
+    * Check if all 2 lanes hold a true value (bit 63 == 1)
+    * @param {int64x2} v An instance of int64x2.
+    * @return {Boolean} All 2 lanes hold a true value
+    */
+  SIMD.int64x2.allTrue = function(v) {
+    if (!(v instanceof SIMD.int64x2)) {
+      throw new TypeError("argument is not a int64x2.");
+    }
+    return SIMD.int64x2.extractLaneAsBool(v, 0) &&
+        SIMD.int64x2.extractLaneAsBool(v, 1);
+  }
+}
+
+if (typeof SIMD.int64x2.anyTrue === "undefined") {
+  /**
+    * Check if any of the 2 lanes hold a true value (bit 63 == 1)
+    * @param {int64x2} v An instance of int64x2.
+    * @return {Boolean} Any of the 2 lanes holds a true value
+    */
+  SIMD.int64x2.anyTrue = function(v) {
+    if (!(v instanceof SIMD.int64x2)) {
+      throw new TypeError("argument is not a int64x2.");
+    }
+    return SIMD.int64x2.extractLaneAsBool(v, 0) ||
+        SIMD.int64x2.extractLaneAsBool(v, 1);
+  }
+}
+
+if (typeof SIMD.int64x2.check === "undefined") {
+  /**
+    * Check whether the argument is a int64x2.
+    * @param {int64x2} v An instance of int64x2.
+    * @return {int64x2} The int64x2 instance.
+    */
+  SIMD.int64x2.check = function(v) {
+    if (!(v instanceof SIMD.int64x2)) {
+      throw new TypeError("argument is not a int64x2.");
+    }
+    return v;
+  }
+}
+
+if (typeof SIMD.int64x2.bool === "undefined") {
+  /**
+    * Construct a new instance of int64x2 number with either true or false in
+    * each lane, depending on the truth values in x and y.
+    * @param {boolean} flag used for x lane.
+    * @param {boolean} flag used for y lane.
+    * @constructor
+    */
+  SIMD.int64x2.bool = function(x, y) {
+    var v = SIMD.int64x2();
+    v.int32x4_ = SIMD.int32x4.bool(x, 0, y, 0);
+    return v;
+  }
+}
+
+if (typeof SIMD.int64x2.fromFloat64x2Bits === "undefined") {
+  /**
+   * @param {float64x2} t An instance of float64x2.
+   * @return {int64x2} a bit-wise copy of t as an int64x2.
+   */
+  SIMD.int64x2.fromFloat64x2Bits = function(t) {
+    saveFloat64x2(t);
+    var v = SIMD.int64x2();
+    v.int32x4_ = restoreInt32x4();
+    return v;
+  }
+}
+
+if (typeof SIMD.int64x2.fromInt32x4Bits === "undefined") {
+  /**
+   * @param {int32x4} t An instance of int32x4.
+   * @return {int64x2} a bit-wise copy of t as an int64x2.
+   */
+  SIMD.int64x2.fromInt32x4Bits = function(t) {
+    t = SIMD.int32x4.check(t);
+    var v = SIMD.int64x2();
+    v.int32x4_ = t;
+    return v;
   }
 }
 
@@ -2481,6 +2620,148 @@ if (typeof SIMD.float64x2.store1 === "undefined") {
     var n = 8 / bpe;
     for (var i = 0; i < n; ++i)
       tarray[index + i] = array[i];
+  }
+}
+
+if (typeof SIMD.int64x2.and === "undefined") {
+  /**
+    * @param {int64x2} a An instance of int64x2.
+    * @param {int64x2} b An instance of int64x2.
+    * @return {int64x2} New instance of int64x2 with values of a & b.
+    */
+  SIMD.int64x2.and = function(a, b) {
+    a = SIMD.int64x2.check(a);
+    b = SIMD.int64x2.check(b);
+    var v = SIMD.int64x2();
+    v.int32x4_ = SIMD.int32x4.and(a.int32x4_, b.int32x4_);
+    return v;
+  }
+}
+
+if (typeof SIMD.int64x2.or === "undefined") {
+  /**
+    * @param {int64x2} a An instance of int64x2.
+    * @param {int64x2} b An instance of int64x2.
+    * @return {int64x2} New instance of int64x2 with values of a | b.
+    */
+  SIMD.int64x2.or = function(a, b) {
+    a = SIMD.int64x2.check(a);
+    b = SIMD.int64x2.check(b);
+    var v = SIMD.int64x2();
+    v.int32x4_ = SIMD.int32x4.or(a.int32x4_, b.int32x4_);
+    return v;
+  }
+}
+
+if (typeof SIMD.int64x2.xor === "undefined") {
+  /**
+    * @param {int64x2} a An instance of int64x2.
+    * @param {int64x2} b An instance of int64x2.
+    * @return {int64x2} New instance of int64x2 with values of a ^ b.
+    */
+  SIMD.int64x2.xor = function(a, b) {
+    a = SIMD.int64x2.check(a);
+    b = SIMD.int64x2.check(b);
+    var v = SIMD.int64x2();
+    v.int32x4_ = SIMD.int32x4.xor(a.int32x4_, b.int32x4_);
+    return v;
+  }
+}
+
+if (typeof SIMD.int64x2.not === "undefined") {
+  /**
+    * @param {int64x2} t An instance of int64x2.
+    * @return {int64x2} New instance of int64x2 with values of ~t
+    */
+  SIMD.int64x2.not = function(t) {
+    t = SIMD.int64x2.check(t);
+    var v = SIMD.int64x2();
+    v.int32x4_ = SIMD.int32x4.not(t.int32x4_);
+    return v;
+  }
+}
+
+if (typeof SIMD.int64x2.equal === "undefined") {
+  /**
+    * @param {int64x2} t An instance of int64x2.
+    * @param {int64x2} other An instance of int64x2.
+    * @return {int64x2} true or false in each lane depending on
+    * the result of t == other.
+    */
+  SIMD.int64x2.equal = function(t, other) {
+    t = SIMD.int64x2.check(t);
+    other = SIMD.int64x2.check(other);
+    var v = SIMD.int64x2();
+    v.int32x4_ = SIMD.int32x4.equal(t.int32x4_, other.int32x4_);
+    return v;
+  }
+}
+
+if (typeof SIMD.int64x2.notEqual === "undefined") {
+  /**
+    * @param {int64x2} t An instance of int64x2.
+    * @param {int64x2} other An instance of int64x2.
+    * @return {int64x2} true or false in each lane depending on
+    * the result of t != other.
+    */
+  SIMD.int64x2.notEqual = function(t, other) {
+    t = SIMD.int64x2.check(t);
+    other = SIMD.int64x2.check(other);
+    var v = SIMD.int64x2();
+    v.int32x4_ = SIMD.int32x4.notEqual(t.int32x4_, other.int32x4_);
+    return v;
+  }
+}
+
+if (typeof SIMD.int64x2.load === "undefined") {
+  /**
+    * @param {Typed array} tarray An instance of a typed array.
+    * @param {Number} index An instance of Number.
+    * @return {int64x2} New instance of int64x2.
+    */
+  SIMD.int64x2.load = function(tarray, index) {
+    var v = SIMD.int64x2();
+    v.int32x4_ = SIMD.int32x4.load(tarray, index);
+    return v;
+  }
+}
+
+if (typeof SIMD.int64x2.load1 === "undefined") {
+  /**
+    * @param {Typed array} tarray An instance of a typed array.
+    * @param {Number} index An instance of Number.
+    * @return {int64x2} New instance of int64x2.
+    */
+  SIMD.int64x2.load1 = function(tarray, index) {
+    var v = SIMD.int64x2();
+    v.int32x4_ = SIMD.int32x4.load2(tarray, index);
+    return v;
+  }
+}
+
+if (typeof SIMD.int64x2.store === "undefined") {
+  /**
+    * @param {Typed array} tarray An instance of a typed array.
+    * @param {Number} index An instance of Number.
+    * @param {int64x2} value An instance of int64x2.
+    * @return {void}
+    */
+  SIMD.int64x2.store = function(tarray, index, value) {
+    value = SIMD.int64x2.check(value);
+    return SIMD.int32x4.store(tarray, index, value.int32x4_);
+  }
+}
+
+if (typeof SIMD.int64x2.store1 === "undefined") {
+  /**
+    * @param {Typed array} tarray An instance of a typed array.
+    * @param {Number} index An instance of Number.
+    * @param {int64x2} value An instance of int64x2.
+    * @return {void}
+    */
+  SIMD.int64x2.store1 = function(tarray, index, value) {
+    value = SIMD.int64x2.check(value);
+    return SIMD.int32x4.store2(tarray, index, value.int32x4_);
   }
 }
 
