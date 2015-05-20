@@ -2364,7 +2364,7 @@ if (typeof SIMD.float64x2.lessThan === "undefined") {
   /**
     * @param {float64x2} t An instance of float64x2.
     * @param {float64x2} other An instance of float64x2.
-    * @return {int32x4} true or false in each lane depending on
+    * @return {int64x2} true or false in each lane depending on
     * the result of t < other.
     */
   SIMD.float64x2.lessThan = function(t, other) {
@@ -2374,7 +2374,7 @@ if (typeof SIMD.float64x2.lessThan === "undefined") {
         SIMD.float64x2.extractLane(t, 0) < SIMD.float64x2.extractLane(other, 0);
     var cy =
         SIMD.float64x2.extractLane(t, 1) < SIMD.float64x2.extractLane(other, 1);
-    return SIMD.int32x4.bool(cx, cx, cy, cy);
+    return SIMD.int64x2.bool(cx, cy);
   }
 }
 
@@ -2382,7 +2382,7 @@ if (typeof SIMD.float64x2.lessThanOrEqual === "undefined") {
   /**
     * @param {float64x2} t An instance of float64x2.
     * @param {float64x2} other An instance of float64x2.
-    * @return {int32x4} true or false in each lane depending on
+    * @return {int64x2} true or false in each lane depending on
     * the result of t <= other.
     */
   SIMD.float64x2.lessThanOrEqual = function(t, other) {
@@ -2392,7 +2392,7 @@ if (typeof SIMD.float64x2.lessThanOrEqual === "undefined") {
         SIMD.float64x2.extractLane(other, 0);
     var cy = SIMD.float64x2.extractLane(t, 1) <=
         SIMD.float64x2.extractLane(other, 1);
-    return SIMD.int32x4.bool(cx, cx, cy, cy);
+    return SIMD.int64x2.bool(cx, cy);
   }
 }
 
@@ -2400,7 +2400,7 @@ if (typeof SIMD.float64x2.equal === "undefined") {
   /**
     * @param {float64x2} t An instance of float64x2.
     * @param {float64x2} other An instance of float64x2.
-    * @return {int32x4} true or false in each lane depending on
+    * @return {int64x2} true or false in each lane depending on
     * the result of t == other.
     */
   SIMD.float64x2.equal = function(t, other) {
@@ -2410,7 +2410,7 @@ if (typeof SIMD.float64x2.equal === "undefined") {
         SIMD.float64x2.extractLane(other, 0);
     var cy = SIMD.float64x2.extractLane(t, 1) ==
         SIMD.float64x2.extractLane(other, 1);
-    return SIMD.int32x4.bool(cx, cx, cy, cy);
+    return SIMD.int64x2.bool(cx, cy);
   }
 }
 
@@ -2418,7 +2418,7 @@ if (typeof SIMD.float64x2.notEqual === "undefined") {
   /**
     * @param {float64x2} t An instance of float64x2.
     * @param {float64x2} other An instance of float64x2.
-    * @return {int32x4} true or false in each lane depending on
+    * @return {int64x2} true or false in each lane depending on
     * the result of t != other.
     */
   SIMD.float64x2.notEqual = function(t, other) {
@@ -2428,7 +2428,7 @@ if (typeof SIMD.float64x2.notEqual === "undefined") {
         SIMD.float64x2.extractLane(other, 0);
     var cy = SIMD.float64x2.extractLane(t, 1) !=
         SIMD.float64x2.extractLane(other, 1);
-    return SIMD.int32x4.bool(cx, cx, cy, cy);
+    return SIMD.int64x2.bool(cx, cy);
   }
 }
 
@@ -2436,7 +2436,7 @@ if (typeof SIMD.float64x2.greaterThanOrEqual === "undefined") {
   /**
     * @param {float64x2} t An instance of float64x2.
     * @param {float64x2} other An instance of float64x2.
-    * @return {int32x4} true or false in each lane depending on
+    * @return {int64x2} true or false in each lane depending on
     * the result of t >= other.
     */
   SIMD.float64x2.greaterThanOrEqual = function(t, other) {
@@ -2446,7 +2446,7 @@ if (typeof SIMD.float64x2.greaterThanOrEqual === "undefined") {
         SIMD.float64x2.extractLane(other, 0);
     var cy = SIMD.float64x2.extractLane(t, 1) >=
         SIMD.float64x2.extractLane(other, 1);
-    return SIMD.int32x4.bool(cx, cx, cy, cy);
+    return SIMD.int64x2.bool(cx, cy);
   }
 }
 
@@ -2454,7 +2454,7 @@ if (typeof SIMD.float64x2.greaterThan === "undefined") {
   /**
     * @param {float64x2} t An instance of float64x2.
     * @param {float64x2} other An instance of float64x2.
-    * @return {int32x4} true or false in each lane depending on
+    * @return {int64x2} true or false in each lane depending on
     * the result of t > other.
     */
   SIMD.float64x2.greaterThan = function(t, other) {
@@ -2464,13 +2464,13 @@ if (typeof SIMD.float64x2.greaterThan === "undefined") {
         SIMD.float64x2.extractLane(t, 0) > SIMD.float64x2.extractLane(other, 0);
     var cy =
         SIMD.float64x2.extractLane(t, 1) > SIMD.float64x2.extractLane(other, 1);
-    return SIMD.int32x4.bool(cx, cx, cy, cy);
+    return SIMD.int64x2.bool(cx, cy);
   }
 }
 
 if (typeof SIMD.float64x2.select === "undefined") {
   /**
-    * @param {int32x4} t Selector mask. An instance of int32x4
+    * @param {int64x2} t Selector mask. An instance of int64x2
     * @param {float64x2} trueValue Pick lane from here if corresponding
     * selector lane is true
     * @param {float64x2} falseValue Pick lane from here if corresponding
@@ -2479,16 +2479,14 @@ if (typeof SIMD.float64x2.select === "undefined") {
     * indicated
     */
   SIMD.float64x2.select = function(t, trueValue, falseValue) {
-    t = SIMD.int32x4.check(t);
+    t = SIMD.int64x2.check(t);
     trueValue = SIMD.float64x2.check(trueValue);
     falseValue = SIMD.float64x2.check(falseValue);
-    // We use t.z_ for the second element because t is an int32x4, because
-    // int64x2 isn't available.
     return SIMD.float64x2(
-        SIMD.int32x4.extractLaneAsBool(t, 0) ?
+        SIMD.int64x2.extractLaneAsBool(t, 0) ?
             SIMD.float64x2.extractLane(trueValue, 0) :
                 SIMD.float64x2.extractLane(falseValue, 0),
-        SIMD.int32x4.extractLaneAsBool(t, 2) ?
+        SIMD.int64x2.extractLaneAsBool(t, 1) ?
             SIMD.float64x2.extractLane(trueValue, 1) :
                 SIMD.float64x2.extractLane(falseValue, 1));
   }
@@ -2496,7 +2494,7 @@ if (typeof SIMD.float64x2.select === "undefined") {
 
 if (typeof SIMD.float64x2.selectBits === "undefined") {
   /**
-    * @param {int32x4} t Selector mask. An instance of int32x4
+    * @param {int64x2} t Selector mask. An instance of int64x2
     * @param {float64x2} trueValue Pick bit from here if corresponding
     * selector bit is 1
     * @param {float64x2} falseValue Pick bit from here if corresponding
@@ -2505,14 +2503,14 @@ if (typeof SIMD.float64x2.selectBits === "undefined") {
     * indicated
     */
   SIMD.float64x2.selectBits = function(t, trueValue, falseValue) {
-    t = SIMD.int32x4.check(t);
+    t = SIMD.int64x2.check(t);
     trueValue = SIMD.float64x2.check(trueValue);
     falseValue = SIMD.float64x2.check(falseValue);
-    var tv = SIMD.int32x4.fromFloat64x2Bits(trueValue);
-    var fv = SIMD.int32x4.fromFloat64x2Bits(falseValue);
-    var tr = SIMD.int32x4.and(t, tv);
-    var fr = SIMD.int32x4.and(SIMD.int32x4.not(t), fv);
-    return SIMD.float64x2.fromInt32x4Bits(SIMD.int32x4.or(tr, fr));
+    var tv = SIMD.int64x2.fromFloat64x2Bits(trueValue);
+    var fv = SIMD.int64x2.fromFloat64x2Bits(falseValue);
+    var tr = SIMD.int64x2.and(t, tv);
+    var fr = SIMD.int64x2.and(SIMD.int64x2.not(t), fv);
+    return SIMD.float64x2.fromInt64x2Bits(SIMD.int64x2.or(tr, fr));
   }
 }
 
