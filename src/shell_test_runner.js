@@ -22,7 +22,9 @@ function test(name, func) {
   try {
     func();
   } catch (e) {
-    fail('exception thrown from ' + currentName);
+    console.log('exception thrown from ' + currentName + ': ' + e.toString());
+    printIndented(e.stack);
+    numFails++;
   }
 }
 
