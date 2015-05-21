@@ -952,6 +952,9 @@ test('float32x4 store', function() {
   for (var i = 0; i < a.length; i++) {
     equal(i, a[i]);
   }
+
+  var v = SIMD.float32x4(0, 1, 2, 3);
+  equal(true, SIMD.int32x4.allTrue(SIMD.float32x4.equal(SIMD.float32x4.store(a, 0, v), v)));
 });
 
 test('float32x4 overaligned store', function() {
@@ -993,6 +996,9 @@ test('float32x4 store1', function() {
   for (var i = 0; i < a.length; i++) {
     equal(i, a[i]);
   }
+
+  var v = SIMD.float32x4(0, 1, 2, 3);
+  equal(true, SIMD.int32x4.allTrue(SIMD.float32x4.equal(SIMD.float32x4.store1(a, 0, v), v)));
 });
 
 test('float32x4 overaligned store1', function() {
@@ -1040,6 +1046,9 @@ test('float32x4 store2', function() {
   for (var i = 0; i < a.length; i++) {
     equal(i, a[i]);
   }
+
+  var v = SIMD.float32x4(0, 1, 2, 3);
+  equal(true, SIMD.int32x4.allTrue(SIMD.float32x4.equal(SIMD.float32x4.store2(a, 0, v), v)));
 });
 
 test('float32x4 overaligned store2', function() {
@@ -1082,6 +1091,9 @@ test('float32x4 store3', function() {
   for (var i = 0; i < a.length; i++) {
     equal(i, a[i]);
   }
+
+  var v = SIMD.float32x4(0, 1, 2, 3);
+  equal(true, SIMD.int32x4.allTrue(SIMD.float32x4.equal(SIMD.float32x4.store3(a, 0, v), v)));
 });
 
 test('float32x4 overaligned store3', function() {
@@ -1894,6 +1906,9 @@ test('float64x2 store', function() {
   for (var i = 0; i < a.length; i++) {
     equal(i, a[i]);
   }
+
+  var v = SIMD.float64x2(0, 1);
+  equal(true, SIMD.int64x2.allTrue(SIMD.float64x2.equal(SIMD.float64x2.store(a, 0, v), v)));
 });
 
 test('float64x2 unaligned store', function() {
@@ -1923,6 +1938,9 @@ test('float64x2 store1', function() {
   for (var i = 0; i < a.length; i++) {
     equal(i, a[i]);
   }
+
+  var v = SIMD.float64x2(0, 1);
+  equal(true, SIMD.int64x2.allTrue(SIMD.float64x2.equal(SIMD.float64x2.store1(a, 0, v), v)));
 });
 
 test('float64x2 unaligned store1', function() {
@@ -3122,6 +3140,9 @@ test('int32x4 store', function() {
   for (var i = 0; i < a.length; i++) {
     equal(i, a[i]);
   }
+
+  var v = SIMD.int32x4(0, 1, 2, 3);
+  equal(true, SIMD.int32x4.allTrue(SIMD.int32x4.equal(SIMD.int32x4.store(a, 0, v), v)));
 });
 
 test('int32x4 overaligned store', function() {
@@ -3163,6 +3184,9 @@ test('int32x4 store1', function() {
   for (var i = 0; i < a.length; i++) {
     equal(i, a[i]);
   }
+
+  var v = SIMD.int32x4(0, 1, 2, 3);
+  equal(true, SIMD.int32x4.allTrue(SIMD.int32x4.equal(SIMD.int32x4.store1(a, 0, v), v)));
 });
 
 test('int32x4 overaligned store1', function() {
@@ -3199,6 +3223,9 @@ test('int32x4 unaligned store1', function() {
   for (var i = 0; i < a.length; i++) {
     equal(i, a[i]);
   }
+
+  var v = SIMD.int32x4(0, 1, 2, 3);
+  equal(true, SIMD.int32x4.allTrue(SIMD.int32x4.equal(SIMD.int32x4.store2(a, 0, v), v)));
 });
 
 test('int32x4 store2', function() {
@@ -3251,6 +3278,9 @@ test('int32x4 store3', function() {
   for (var i = 0; i < a.length; i++) {
     equal(i, a[i]);
   }
+
+  var v = SIMD.int32x4(0, 1, 2, 3);
+  equal(true, SIMD.int32x4.allTrue(SIMD.int32x4.equal(SIMD.int32x4.store3(a, 0, v), v)));
 });
 
 test('int32x4 overaligned store3', function() {

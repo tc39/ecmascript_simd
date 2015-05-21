@@ -1999,7 +1999,7 @@ if (typeof SIMD.float32x4.store === "undefined") {
     * @param {Typed array} tarray An instance of a typed array.
     * @param {Number} index An instance of Number.
     * @param {float32x4} value An instance of float32x4.
-    * @return {void}
+    * @return {float32x4} value
     */
   SIMD.float32x4.store = function(tarray, index, value) {
     if (!isTypedArray(tarray))
@@ -2021,6 +2021,7 @@ if (typeof SIMD.float32x4.store === "undefined") {
     var n = 16 / bpe;
     for (var i = 0; i < n; ++i)
       tarray[index + i] = array[i];
+    return value;
   }
 }
 
@@ -2029,7 +2030,7 @@ if (typeof SIMD.float32x4.store1 === "undefined") {
     * @param {Typed array} tarray An instance of a typed array.
     * @param {Number} index An instance of Number.
     * @param {float32x4} value An instance of float32x4.
-    * @return {void}
+    * @return {float32x4} value
     */
   SIMD.float32x4.store1 = function(tarray, index, value) {
     if (!isTypedArray(tarray))
@@ -2053,6 +2054,7 @@ if (typeof SIMD.float32x4.store1 === "undefined") {
       var n = 4 / bpe;
       for (var i = 0; i < n; ++i)
         tarray[index + i] = array[i];
+      return value;
     }
   }
 }
@@ -2062,7 +2064,7 @@ if (typeof SIMD.float32x4.store2 === "undefined") {
     * @param {Typed array} tarray An instance of a typed array.
     * @param {Number} index An instance of Number.
     * @param {float32x4} value An instance of float32x4.
-    * @return {void}
+    * @return {float32x4} value
     */
   SIMD.float32x4.store2 = function(tarray, index, value) {
     if (!isTypedArray(tarray))
@@ -2082,6 +2084,7 @@ if (typeof SIMD.float32x4.store2 === "undefined") {
     var n = 8 / bpe;
     for (var i = 0; i < n; ++i)
       tarray[index + i] = array[i];
+    return value;
   }
 }
 
@@ -2090,7 +2093,7 @@ if (typeof SIMD.float32x4.store3 === "undefined") {
     * @param {Typed array} tarray An instance of a typed array.
     * @param {Number} index An instance of Number.
     * @param {float32x4} value An instance of float32x4.
-    * @return {void}
+    * @return {float32x4} value
     */
   SIMD.float32x4.store3 = function(tarray, index, value) {
     if (!isTypedArray(tarray))
@@ -2118,6 +2121,7 @@ if (typeof SIMD.float32x4.store3 === "undefined") {
       var n = 12 / bpe;
       for (var i = 0; i < n; ++i)
         tarray[index + i] = array[i];
+      return value;
     }
   }
 }
@@ -2571,7 +2575,7 @@ if (typeof SIMD.float64x2.store === "undefined") {
     * @param {Typed array} tarray An instance of a typed array.
     * @param {Number} index An instance of Number.
     * @param {float64x2} value An instance of float64x2.
-    * @return {void}
+    * @return {float64x2} value
     */
   SIMD.float64x2.store = function(tarray, index, value) {
     if (!isTypedArray(tarray))
@@ -2591,6 +2595,7 @@ if (typeof SIMD.float64x2.store === "undefined") {
     var n = 16 / bpe;
     for (var i = 0; i < n; ++i)
       tarray[index + i] = array[i];
+    return value;
   }
 }
 
@@ -2599,7 +2604,7 @@ if (typeof SIMD.float64x2.store1 === "undefined") {
     * @param {Typed array} tarray An instance of a typed array.
     * @param {Number} index An instance of Number.
     * @param {float64x2} value An instance of float64x2.
-    * @return {void}
+    * @return {float64x2} value
     */
   SIMD.float64x2.store1 = function(tarray, index, value) {
     if (!isTypedArray(tarray))
@@ -2618,6 +2623,7 @@ if (typeof SIMD.float64x2.store1 === "undefined") {
     var n = 8 / bpe;
     for (var i = 0; i < n; ++i)
       tarray[index + i] = array[i];
+    return value;
   }
 }
 
@@ -3299,7 +3305,7 @@ if (typeof SIMD.int32x4.store === "undefined") {
     * @param {Typed array} tarray An instance of a typed array.
     * @param {Number} index An instance of Number.
     * @param {int32x4} value An instance of int32x4.
-    * @return {void}
+    * @return {int32x4} value
     */
   SIMD.int32x4.store = function(tarray, index, value) {
     if (!isTypedArray(tarray))
@@ -3321,6 +3327,7 @@ if (typeof SIMD.int32x4.store === "undefined") {
     var n = 16 / bpe;
     for (var i = 0; i < n; ++i)
       tarray[index + i] = array[i];
+    return value;
   }
 }
 
@@ -3329,7 +3336,7 @@ if (typeof SIMD.int32x4.store1 === "undefined") {
     * @param {Typed array} tarray An instance of a typed array.
     * @param {Number} index An instance of Number.
     * @param {int32x4} value An instance of int32x4.
-    * @return {void}
+    * @return {int32x4} value
     */
   SIMD.int32x4.store1 = function(tarray, index, value) {
     if (!isTypedArray(tarray))
@@ -3353,6 +3360,7 @@ if (typeof SIMD.int32x4.store1 === "undefined") {
       var n = 4 / bpe;
       for (var i = 0; i < n; ++i)
         tarray[index + i] = array[i];
+      return value;
     }
   }
 }
@@ -3362,7 +3370,7 @@ if (typeof SIMD.int32x4.store2 === "undefined") {
     * @param {Typed array} tarray An instance of a typed array.
     * @param {Number} index An instance of Number.
     * @param {int32x4} value An instance of int32x4.
-    * @return {void}
+    * @return {int32x4} value
     */
   SIMD.int32x4.store2 = function(tarray, index, value) {
     if (!isTypedArray(tarray))
@@ -3382,6 +3390,7 @@ if (typeof SIMD.int32x4.store2 === "undefined") {
     var n = 8 / bpe;
     for (var i = 0; i < n; ++i)
       tarray[index + i] = array[i];
+    return value;
   }
 }
 
@@ -3390,7 +3399,7 @@ if (typeof SIMD.int32x4.store3 === "undefined") {
     * @param {Typed array} tarray An instance of a typed array.
     * @param {Number} index An instance of Number.
     * @param {int32x4} value An instance of int32x4.
-    * @return {void}
+    * @return {int32x4} value
     */
   SIMD.int32x4.store3 = function(tarray, index, value) {
     if (!isTypedArray(tarray))
@@ -3418,6 +3427,7 @@ if (typeof SIMD.int32x4.store3 === "undefined") {
       var n = 12 / bpe;
       for (var i = 0; i < n; ++i)
         tarray[index + i] = array[i];
+      return value;
     }
   }
 }
@@ -4058,7 +4068,7 @@ if (typeof SIMD.int16x8.store === "undefined") {
     * @param {Typed array} tarray An instance of a typed array.
     * @param {Number} index An instance of Number.
     * @param {int16x8} value An instance of int16x8.
-    * @return {void}
+    * @return {int16x8} value
     */
   SIMD.int16x8.store = function(tarray, index, value) {
     if (!isTypedArray(tarray))
@@ -4084,6 +4094,7 @@ if (typeof SIMD.int16x8.store === "undefined") {
     var n = 16 / bpe;
     for (var i = 0; i < n; ++i)
       tarray[index + i] = array[i];
+    return value;
   }
 }
 
@@ -5057,7 +5068,7 @@ if (typeof SIMD.int8x16.store === "undefined") {
     * @param {Typed array} tarray An instance of a typed array.
     * @param {Number} index An instance of Number.
     * @param {int8x16} value An instance of int8x16.
-    * @return {void}
+    * @return {int8x16} value
     */
   SIMD.int8x16.store = function(tarray, index, value) {
     if (!isTypedArray(tarray))
@@ -5091,6 +5102,7 @@ if (typeof SIMD.int8x16.store === "undefined") {
     var n = 16 / bpe;
     for (var i = 0; i < n; ++i)
       tarray[index + i] = array[i];
+    return value;
   }
 }
 
