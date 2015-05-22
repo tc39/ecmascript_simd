@@ -483,6 +483,16 @@ if (typeof SIMD.float64x2.fromFloat32x4Bits === "undefined") {
   }
 }
 
+if (typeof SIMD.float64x2.fromInt64x2Bits === "undefined") {
+  /**
+   * @param {int64x2} t An instance of int64x2.
+   * @return {float64x2} a bit-wise copy of t as a float64x2.
+   */
+  SIMD.float64x2.fromInt64x2Bits = function(t) {
+    return SIMD.float64x2.fromInt32x4Bits(t.int32x4_);
+  }
+}
+
 if (typeof SIMD.float64x2.fromInt32x4Bits === "undefined") {
   /**
    * @param {int32x4} t An instance of int32x4.
@@ -555,6 +565,17 @@ if (typeof SIMD.int32x4.extractLane === "undefined") {
   }
 }
 
+if (typeof SIMD.int32x4.extractLaneAsBool === "undefined") {
+  /**
+    * @param {int32x4} t An instance of int32x4.
+    * @param {integer} i Index in concatenation of t for lane i
+    * @return {Boolean} The value in lane i of t as a boolean.
+    */
+  SIMD.int32x4.extractLaneAsBool = function(t, i) {
+    return toBool(SIMD.int32x4.extractLane(t, i));
+  }
+}
+
 if (typeof SIMD.int32x4.replaceLane === "undefined") {
   /**
     * @param {int32x4} t An instance of int32x4.
@@ -582,10 +603,10 @@ if (typeof SIMD.int32x4.allTrue === "undefined") {
     if (!(v instanceof SIMD.int32x4)) {
       throw new TypeError("argument is not a int32x4.");
     }
-    return toBool(SIMD.int32x4.extractLane(v, 0)) &&
-        toBool(SIMD.int32x4.extractLane(v, 1)) &&
-        toBool(SIMD.int32x4.extractLane(v, 2)) &&
-        toBool(SIMD.int32x4.extractLane(v, 3));
+    return SIMD.int32x4.extractLaneAsBool(v, 0) &&
+        SIMD.int32x4.extractLaneAsBool(v, 1) &&
+        SIMD.int32x4.extractLaneAsBool(v, 2) &&
+        SIMD.int32x4.extractLaneAsBool(v, 3);
   }
 }
 
@@ -599,10 +620,10 @@ if (typeof SIMD.int32x4.anyTrue === "undefined") {
     if (!(v instanceof SIMD.int32x4)) {
       throw new TypeError("argument is not a int32x4.");
     }
-    return toBool(SIMD.int32x4.extractLane(v, 0)) ||
-        toBool(SIMD.int32x4.extractLane(v, 1)) ||
-        toBool(SIMD.int32x4.extractLane(v, 2)) ||
-        toBool(SIMD.int32x4.extractLane(v, 3));
+    return SIMD.int32x4.extractLaneAsBool(v, 0) ||
+        SIMD.int32x4.extractLaneAsBool(v, 1) ||
+        SIMD.int32x4.extractLaneAsBool(v, 2) ||
+        SIMD.int32x4.extractLaneAsBool(v, 3);
   }
 }
 
@@ -686,6 +707,16 @@ if (typeof SIMD.int32x4.fromFloat32x4Bits === "undefined") {
   SIMD.int32x4.fromFloat32x4Bits = function(t) {
     saveFloat32x4(t);
     return restoreInt32x4();
+  }
+}
+
+if (typeof SIMD.int32x4.fromInt64x2Bits === "undefined") {
+  /**
+   * @param {int64x2} t An instance of int64x2.
+   * @return {int32x4} a bit-wise copy of t as an int32x4.
+   */
+  SIMD.int32x4.fromInt64x2Bits = function(t) {
+    return t.int32x4_;
   }
 }
 
@@ -773,6 +804,17 @@ if (typeof SIMD.int16x8.extractLane === "undefined") {
   }
 }
 
+if (typeof SIMD.int16x8.extractLaneAsBool === "undefined") {
+  /**
+    * @param {int16x8} t An instance of int16x8.
+    * @param {integer} i Index in concatenation of t for lane i
+    * @return {Boolean} The value in lane i of t as a boolean.
+    */
+  SIMD.int16x8.extractLaneAsBool = function(t, i) {
+    return toBool(SIMD.int16x8.extractLane(t, i));
+  }
+}
+
 if (typeof SIMD.int16x8.replaceLane === "undefined") {
   /**
     * @param {int16x8} t An instance of int16x8.
@@ -800,14 +842,14 @@ if (typeof SIMD.int16x8.allTrue === "undefined") {
     if (!(v instanceof SIMD.int16x8)) {
       throw new TypeError("argument is not a int16x8.");
     }
-    return toBool(SIMD.int16x8.extractLane(v, 0)) &&
-           toBool(SIMD.int16x8.extractLane(v, 1)) &&
-           toBool(SIMD.int16x8.extractLane(v, 2)) &&
-           toBool(SIMD.int16x8.extractLane(v, 3)) &&
-           toBool(SIMD.int16x8.extractLane(v, 4)) &&
-           toBool(SIMD.int16x8.extractLane(v, 5)) &&
-           toBool(SIMD.int16x8.extractLane(v, 6)) &&
-           toBool(SIMD.int16x8.extractLane(v, 7));
+    return SIMD.int16x8.extractLaneAsBool(v, 0) &&
+           SIMD.int16x8.extractLaneAsBool(v, 1) &&
+           SIMD.int16x8.extractLaneAsBool(v, 2) &&
+           SIMD.int16x8.extractLaneAsBool(v, 3) &&
+           SIMD.int16x8.extractLaneAsBool(v, 4) &&
+           SIMD.int16x8.extractLaneAsBool(v, 5) &&
+           SIMD.int16x8.extractLaneAsBool(v, 6) &&
+           SIMD.int16x8.extractLaneAsBool(v, 7);
   }
 }
 
@@ -821,14 +863,14 @@ if (typeof SIMD.int16x8.anyTrue === "undefined") {
     if (!(v instanceof SIMD.int16x8)) {
       throw new TypeError("argument is not a int16x8.");
     }
-    return toBool(SIMD.int16x8.extractLane(v, 0)) ||
-           toBool(SIMD.int16x8.extractLane(v, 1)) ||
-           toBool(SIMD.int16x8.extractLane(v, 2)) ||
-           toBool(SIMD.int16x8.extractLane(v, 3)) ||
-           toBool(SIMD.int16x8.extractLane(v, 4)) ||
-           toBool(SIMD.int16x8.extractLane(v, 5)) ||
-           toBool(SIMD.int16x8.extractLane(v, 6)) ||
-           toBool(SIMD.int16x8.extractLane(v, 7));
+    return SIMD.int16x8.extractLaneAsBool(v, 0) ||
+           SIMD.int16x8.extractLaneAsBool(v, 1) ||
+           SIMD.int16x8.extractLaneAsBool(v, 2) ||
+           SIMD.int16x8.extractLaneAsBool(v, 3) ||
+           SIMD.int16x8.extractLaneAsBool(v, 4) ||
+           SIMD.int16x8.extractLaneAsBool(v, 5) ||
+           SIMD.int16x8.extractLaneAsBool(v, 6) ||
+           SIMD.int16x8.extractLaneAsBool(v, 7);
   }
 }
 
@@ -861,14 +903,14 @@ if (typeof SIMD.int16x8.bool === "undefined") {
     * @constructor
     */
   SIMD.int16x8.bool = function(s0, s1, s2, s3, s4, s5, s6, s7) {
-    return SIMD.int16x8(s0 ? -1 : 0x0,
-                        s1 ? -1 : 0x0,
-                        s2 ? -1 : 0x0,
-                        s3 ? -1 : 0x0,
-                        s4 ? -1 : 0x0,
-                        s5 ? -1 : 0x0,
-                        s6 ? -1 : 0x0,
-                        s7 ? -1 : 0x0);
+    return SIMD.int16x8(fromBool(s0),
+                        fromBool(s1),
+                        fromBool(s2),
+                        fromBool(s3),
+                        fromBool(s4),
+                        fromBool(s5),
+                        fromBool(s6),
+                        fromBool(s7));
   }
 }
 
@@ -1005,6 +1047,17 @@ if (typeof SIMD.int8x16.extractLane === "undefined") {
   }
 }
 
+if (typeof SIMD.int8x16.extractLaneAsBool === "undefined") {
+  /**
+    * @param {int8x16} t An instance of int8x16.
+    * @param {integer} i Index in concatenation of t for lane i
+    * @return {Boolean} The value in lane i of t as a boolean.
+    */
+  SIMD.int8x16.extractLaneAsBool = function(t, i) {
+    return toBool(SIMD.int8x16.extractLane(t, i));
+  }
+}
+
 if (typeof SIMD.int8x16.replaceLane === "undefined") {
   /**
     * @param {int8x16} t An instance of int8x16.
@@ -1032,22 +1085,22 @@ if (typeof SIMD.int8x16.allTrue === "undefined") {
     if (!(v instanceof SIMD.int8x16)) {
       throw new TypeError("argument is not a int8x16.");
     }
-    return toBool(SIMD.int8x16.extractLane(v, 0)) &&
-           toBool(SIMD.int8x16.extractLane(v, 1)) &&
-           toBool(SIMD.int8x16.extractLane(v, 2)) &&
-           toBool(SIMD.int8x16.extractLane(v, 3)) &&
-           toBool(SIMD.int8x16.extractLane(v, 4)) &&
-           toBool(SIMD.int8x16.extractLane(v, 5)) &&
-           toBool(SIMD.int8x16.extractLane(v, 6)) &&
-           toBool(SIMD.int8x16.extractLane(v, 7)) &&
-           toBool(SIMD.int8x16.extractLane(v, 8)) &&
-           toBool(SIMD.int8x16.extractLane(v, 9)) &&
-           toBool(SIMD.int8x16.extractLane(v, 10)) &&
-           toBool(SIMD.int8x16.extractLane(v, 11)) &&
-           toBool(SIMD.int8x16.extractLane(v, 12)) &&
-           toBool(SIMD.int8x16.extractLane(v, 13)) &&
-           toBool(SIMD.int8x16.extractLane(v, 14)) &&
-           toBool(SIMD.int8x16.extractLane(v, 15));
+    return SIMD.int8x16.extractLaneAsBool(v, 0) &&
+           SIMD.int8x16.extractLaneAsBool(v, 1) &&
+           SIMD.int8x16.extractLaneAsBool(v, 2) &&
+           SIMD.int8x16.extractLaneAsBool(v, 3) &&
+           SIMD.int8x16.extractLaneAsBool(v, 4) &&
+           SIMD.int8x16.extractLaneAsBool(v, 5) &&
+           SIMD.int8x16.extractLaneAsBool(v, 6) &&
+           SIMD.int8x16.extractLaneAsBool(v, 7) &&
+           SIMD.int8x16.extractLaneAsBool(v, 8) &&
+           SIMD.int8x16.extractLaneAsBool(v, 9) &&
+           SIMD.int8x16.extractLaneAsBool(v, 10) &&
+           SIMD.int8x16.extractLaneAsBool(v, 11) &&
+           SIMD.int8x16.extractLaneAsBool(v, 12) &&
+           SIMD.int8x16.extractLaneAsBool(v, 13) &&
+           SIMD.int8x16.extractLaneAsBool(v, 14) &&
+           SIMD.int8x16.extractLaneAsBool(v, 15);
   }
 }
 
@@ -1061,22 +1114,22 @@ if (typeof SIMD.int8x16.anyTrue === "undefined") {
     if (!(v instanceof SIMD.int8x16)) {
       throw new TypeError("argument is not a int8x16.");
     }
-    return toBool(SIMD.int8x16.extractLane(v, 0)) ||
-           toBool(SIMD.int8x16.extractLane(v, 1)) ||
-           toBool(SIMD.int8x16.extractLane(v, 2)) ||
-           toBool(SIMD.int8x16.extractLane(v, 3)) ||
-           toBool(SIMD.int8x16.extractLane(v, 4)) ||
-           toBool(SIMD.int8x16.extractLane(v, 5)) ||
-           toBool(SIMD.int8x16.extractLane(v, 6)) ||
-           toBool(SIMD.int8x16.extractLane(v, 7)) ||
-           toBool(SIMD.int8x16.extractLane(v, 8)) ||
-           toBool(SIMD.int8x16.extractLane(v, 9)) ||
-           toBool(SIMD.int8x16.extractLane(v, 10)) ||
-           toBool(SIMD.int8x16.extractLane(v, 11)) ||
-           toBool(SIMD.int8x16.extractLane(v, 12)) ||
-           toBool(SIMD.int8x16.extractLane(v, 13)) ||
-           toBool(SIMD.int8x16.extractLane(v, 14)) ||
-           toBool(SIMD.int8x16.extractLane(v, 15));
+    return SIMD.int8x16.extractLaneAsBool(v, 0) ||
+           SIMD.int8x16.extractLaneAsBool(v, 1) ||
+           SIMD.int8x16.extractLaneAsBool(v, 2) ||
+           SIMD.int8x16.extractLaneAsBool(v, 3) ||
+           SIMD.int8x16.extractLaneAsBool(v, 4) ||
+           SIMD.int8x16.extractLaneAsBool(v, 5) ||
+           SIMD.int8x16.extractLaneAsBool(v, 6) ||
+           SIMD.int8x16.extractLaneAsBool(v, 7) ||
+           SIMD.int8x16.extractLaneAsBool(v, 8) ||
+           SIMD.int8x16.extractLaneAsBool(v, 9) ||
+           SIMD.int8x16.extractLaneAsBool(v, 10) ||
+           SIMD.int8x16.extractLaneAsBool(v, 11) ||
+           SIMD.int8x16.extractLaneAsBool(v, 12) ||
+           SIMD.int8x16.extractLaneAsBool(v, 13) ||
+           SIMD.int8x16.extractLaneAsBool(v, 14) ||
+           SIMD.int8x16.extractLaneAsBool(v, 15);
   }
 }
 
@@ -1119,22 +1172,22 @@ if (typeof SIMD.int8x16.bool === "undefined") {
     */
   SIMD.int8x16.bool = function(s0, s1, s2, s3, s4, s5, s6, s7,
                                s8, s9, s10, s11, s12, s13, s14, s15) {
-    return SIMD.int8x16(s0 ? -1 : 0x0,
-                        s1 ? -1 : 0x0,
-                        s2 ? -1 : 0x0,
-                        s3 ? -1 : 0x0,
-                        s4 ? -1 : 0x0,
-                        s5 ? -1 : 0x0,
-                        s6 ? -1 : 0x0,
-                        s7 ? -1 : 0x0,
-                        s8 ? -1 : 0x0,
-                        s9 ? -1 : 0x0,
-                        s10 ? -1 : 0x0,
-                        s11 ? -1 : 0x0,
-                        s12 ? -1 : 0x0,
-                        s13 ? -1 : 0x0,
-                        s14 ? -1 : 0x0,
-                        s15 ? -1 : 0x0);
+    return SIMD.int8x16(fromBool(s0),
+                        fromBool(s1),
+                        fromBool(s2),
+                        fromBool(s3),
+                        fromBool(s4),
+                        fromBool(s5),
+                        fromBool(s6),
+                        fromBool(s7),
+                        fromBool(s8),
+                        fromBool(s9),
+                        fromBool(s10),
+                        fromBool(s11),
+                        fromBool(s12),
+                        fromBool(s13),
+                        fromBool(s14),
+                        fromBool(s15));
   }
 }
 
@@ -1192,6 +1245,125 @@ if (typeof SIMD.int8x16.fromInt16x8Bits === "undefined") {
   SIMD.int8x16.fromInt16x8Bits = function(t) {
     saveInt16x8(t);
     return restoreInt8x16();
+  }
+}
+
+if (typeof SIMD.int64x2 === "undefined") {
+  /**
+    * Construct a new instance of int64x2 number.
+    * This function conceptually requires 64-bit integer arguments. Until JS
+    * has support for that, this function cannot be passed any arguments. To
+    * produce an int64x2 value, use int64x2.load, int64x2.bool, or a
+    * float64x2 comparison.
+    * @constructor
+    */
+  SIMD.int64x2 = function() {
+    if (!(this instanceof SIMD.int64x2)) {
+      return new SIMD.int64x2();
+    }
+    if (arguments.length != 0) {
+      throw new Error("int64x2 cannot currently be directly constructed");
+    }
+
+    this.int32x4_ = SIMD.int32x4.splat(0);
+  }
+}
+
+if (typeof SIMD.int64x2.extractLaneAsBool === "undefined") {
+  /**
+    * @param {int64x2} t An instance of int64x2.
+    * @param {integer} i Index in concatenation of t for lane i
+    * @return {Boolean} The value in lane i of t as a boolean.
+    */
+  SIMD.int64x2.extractLaneAsBool = function(t, i) {
+    t = SIMD.int64x2.check(t);
+    return SIMD.int32x4.extractLaneAsBool(t.int32x4_, i << 1)
+  }
+}
+
+
+if (typeof SIMD.int64x2.allTrue === "undefined") {
+  /**
+    * Check if all 2 lanes hold a true value (bit 63 == 1)
+    * @param {int64x2} v An instance of int64x2.
+    * @return {Boolean} All 2 lanes hold a true value
+    */
+  SIMD.int64x2.allTrue = function(v) {
+    if (!(v instanceof SIMD.int64x2)) {
+      throw new TypeError("argument is not a int64x2.");
+    }
+    return SIMD.int64x2.extractLaneAsBool(v, 0) &&
+        SIMD.int64x2.extractLaneAsBool(v, 1);
+  }
+}
+
+if (typeof SIMD.int64x2.anyTrue === "undefined") {
+  /**
+    * Check if any of the 2 lanes hold a true value (bit 63 == 1)
+    * @param {int64x2} v An instance of int64x2.
+    * @return {Boolean} Any of the 2 lanes holds a true value
+    */
+  SIMD.int64x2.anyTrue = function(v) {
+    if (!(v instanceof SIMD.int64x2)) {
+      throw new TypeError("argument is not a int64x2.");
+    }
+    return SIMD.int64x2.extractLaneAsBool(v, 0) ||
+        SIMD.int64x2.extractLaneAsBool(v, 1);
+  }
+}
+
+if (typeof SIMD.int64x2.check === "undefined") {
+  /**
+    * Check whether the argument is a int64x2.
+    * @param {int64x2} v An instance of int64x2.
+    * @return {int64x2} The int64x2 instance.
+    */
+  SIMD.int64x2.check = function(v) {
+    if (!(v instanceof SIMD.int64x2)) {
+      throw new TypeError("argument is not a int64x2.");
+    }
+    return v;
+  }
+}
+
+if (typeof SIMD.int64x2.bool === "undefined") {
+  /**
+    * Construct a new instance of int64x2 number with either true or false in
+    * each lane, depending on the truth values in x and y.
+    * @param {boolean} flag used for x lane.
+    * @param {boolean} flag used for y lane.
+    * @constructor
+    */
+  SIMD.int64x2.bool = function(x, y) {
+    var v = SIMD.int64x2();
+    v.int32x4_ = SIMD.int32x4.bool(x, 0, y, 0);
+    return v;
+  }
+}
+
+if (typeof SIMD.int64x2.fromFloat64x2Bits === "undefined") {
+  /**
+   * @param {float64x2} t An instance of float64x2.
+   * @return {int64x2} a bit-wise copy of t as an int64x2.
+   */
+  SIMD.int64x2.fromFloat64x2Bits = function(t) {
+    saveFloat64x2(t);
+    var v = SIMD.int64x2();
+    v.int32x4_ = restoreInt32x4();
+    return v;
+  }
+}
+
+if (typeof SIMD.int64x2.fromInt32x4Bits === "undefined") {
+  /**
+   * @param {int32x4} t An instance of int32x4.
+   * @return {int64x2} a bit-wise copy of t as an int64x2.
+   */
+  SIMD.int64x2.fromInt32x4Bits = function(t) {
+    t = SIMD.int32x4.check(t);
+    var v = SIMD.int64x2();
+    v.int32x4_ = t;
+    return v;
   }
 }
 
@@ -1624,16 +1796,16 @@ if (typeof SIMD.float32x4.select === "undefined") {
     trueValue = SIMD.float32x4.check(trueValue);
     falseValue = SIMD.float32x4.check(falseValue);
     return SIMD.float32x4(
-        toBool(SIMD.int32x4.extractLane(t, 0)) ?
+        SIMD.int32x4.extractLaneAsBool(t, 0) ?
             SIMD.float32x4.extractLane(trueValue, 0) :
                 SIMD.float32x4.extractLane(falseValue, 0),
-        toBool(SIMD.int32x4.extractLane(t, 1)) ?
+        SIMD.int32x4.extractLaneAsBool(t, 1) ?
             SIMD.float32x4.extractLane(trueValue, 1) :
                 SIMD.float32x4.extractLane(falseValue, 1),
-        toBool(SIMD.int32x4.extractLane(t, 2)) ?
+        SIMD.int32x4.extractLaneAsBool(t, 2) ?
             SIMD.float32x4.extractLane(trueValue, 2) :
                 SIMD.float32x4.extractLane(falseValue, 2),
-        toBool(SIMD.int32x4.extractLane(t, 3)) ?
+        SIMD.int32x4.extractLaneAsBool(t, 3) ?
             SIMD.float32x4.extractLane(trueValue, 3) :
                 SIMD.float32x4.extractLane(falseValue, 3));
   }
@@ -2192,7 +2364,7 @@ if (typeof SIMD.float64x2.lessThan === "undefined") {
   /**
     * @param {float64x2} t An instance of float64x2.
     * @param {float64x2} other An instance of float64x2.
-    * @return {int32x4} true or false in each lane depending on
+    * @return {int64x2} true or false in each lane depending on
     * the result of t < other.
     */
   SIMD.float64x2.lessThan = function(t, other) {
@@ -2202,7 +2374,7 @@ if (typeof SIMD.float64x2.lessThan === "undefined") {
         SIMD.float64x2.extractLane(t, 0) < SIMD.float64x2.extractLane(other, 0);
     var cy =
         SIMD.float64x2.extractLane(t, 1) < SIMD.float64x2.extractLane(other, 1);
-    return SIMD.int32x4.bool(cx, cx, cy, cy);
+    return SIMD.int64x2.bool(cx, cy);
   }
 }
 
@@ -2210,7 +2382,7 @@ if (typeof SIMD.float64x2.lessThanOrEqual === "undefined") {
   /**
     * @param {float64x2} t An instance of float64x2.
     * @param {float64x2} other An instance of float64x2.
-    * @return {int32x4} true or false in each lane depending on
+    * @return {int64x2} true or false in each lane depending on
     * the result of t <= other.
     */
   SIMD.float64x2.lessThanOrEqual = function(t, other) {
@@ -2220,7 +2392,7 @@ if (typeof SIMD.float64x2.lessThanOrEqual === "undefined") {
         SIMD.float64x2.extractLane(other, 0);
     var cy = SIMD.float64x2.extractLane(t, 1) <=
         SIMD.float64x2.extractLane(other, 1);
-    return SIMD.int32x4.bool(cx, cx, cy, cy);
+    return SIMD.int64x2.bool(cx, cy);
   }
 }
 
@@ -2228,7 +2400,7 @@ if (typeof SIMD.float64x2.equal === "undefined") {
   /**
     * @param {float64x2} t An instance of float64x2.
     * @param {float64x2} other An instance of float64x2.
-    * @return {int32x4} true or false in each lane depending on
+    * @return {int64x2} true or false in each lane depending on
     * the result of t == other.
     */
   SIMD.float64x2.equal = function(t, other) {
@@ -2238,7 +2410,7 @@ if (typeof SIMD.float64x2.equal === "undefined") {
         SIMD.float64x2.extractLane(other, 0);
     var cy = SIMD.float64x2.extractLane(t, 1) ==
         SIMD.float64x2.extractLane(other, 1);
-    return SIMD.int32x4.bool(cx, cx, cy, cy);
+    return SIMD.int64x2.bool(cx, cy);
   }
 }
 
@@ -2246,7 +2418,7 @@ if (typeof SIMD.float64x2.notEqual === "undefined") {
   /**
     * @param {float64x2} t An instance of float64x2.
     * @param {float64x2} other An instance of float64x2.
-    * @return {int32x4} true or false in each lane depending on
+    * @return {int64x2} true or false in each lane depending on
     * the result of t != other.
     */
   SIMD.float64x2.notEqual = function(t, other) {
@@ -2256,7 +2428,7 @@ if (typeof SIMD.float64x2.notEqual === "undefined") {
         SIMD.float64x2.extractLane(other, 0);
     var cy = SIMD.float64x2.extractLane(t, 1) !=
         SIMD.float64x2.extractLane(other, 1);
-    return SIMD.int32x4.bool(cx, cx, cy, cy);
+    return SIMD.int64x2.bool(cx, cy);
   }
 }
 
@@ -2264,7 +2436,7 @@ if (typeof SIMD.float64x2.greaterThanOrEqual === "undefined") {
   /**
     * @param {float64x2} t An instance of float64x2.
     * @param {float64x2} other An instance of float64x2.
-    * @return {int32x4} true or false in each lane depending on
+    * @return {int64x2} true or false in each lane depending on
     * the result of t >= other.
     */
   SIMD.float64x2.greaterThanOrEqual = function(t, other) {
@@ -2274,7 +2446,7 @@ if (typeof SIMD.float64x2.greaterThanOrEqual === "undefined") {
         SIMD.float64x2.extractLane(other, 0);
     var cy = SIMD.float64x2.extractLane(t, 1) >=
         SIMD.float64x2.extractLane(other, 1);
-    return SIMD.int32x4.bool(cx, cx, cy, cy);
+    return SIMD.int64x2.bool(cx, cy);
   }
 }
 
@@ -2282,7 +2454,7 @@ if (typeof SIMD.float64x2.greaterThan === "undefined") {
   /**
     * @param {float64x2} t An instance of float64x2.
     * @param {float64x2} other An instance of float64x2.
-    * @return {int32x4} true or false in each lane depending on
+    * @return {int64x2} true or false in each lane depending on
     * the result of t > other.
     */
   SIMD.float64x2.greaterThan = function(t, other) {
@@ -2292,13 +2464,13 @@ if (typeof SIMD.float64x2.greaterThan === "undefined") {
         SIMD.float64x2.extractLane(t, 0) > SIMD.float64x2.extractLane(other, 0);
     var cy =
         SIMD.float64x2.extractLane(t, 1) > SIMD.float64x2.extractLane(other, 1);
-    return SIMD.int32x4.bool(cx, cx, cy, cy);
+    return SIMD.int64x2.bool(cx, cy);
   }
 }
 
 if (typeof SIMD.float64x2.select === "undefined") {
   /**
-    * @param {int32x4} t Selector mask. An instance of int32x4
+    * @param {int64x2} t Selector mask. An instance of int64x2
     * @param {float64x2} trueValue Pick lane from here if corresponding
     * selector lane is true
     * @param {float64x2} falseValue Pick lane from here if corresponding
@@ -2307,16 +2479,14 @@ if (typeof SIMD.float64x2.select === "undefined") {
     * indicated
     */
   SIMD.float64x2.select = function(t, trueValue, falseValue) {
-    t = SIMD.int32x4.check(t);
+    t = SIMD.int64x2.check(t);
     trueValue = SIMD.float64x2.check(trueValue);
     falseValue = SIMD.float64x2.check(falseValue);
-    // We use t.z_ for the second element because t is an int32x4, because
-    // int64x2 isn't available.
     return SIMD.float64x2(
-        toBool(SIMD.int32x4.extractLane(t, 0)) ?
+        SIMD.int64x2.extractLaneAsBool(t, 0) ?
             SIMD.float64x2.extractLane(trueValue, 0) :
                 SIMD.float64x2.extractLane(falseValue, 0),
-        toBool(SIMD.int32x4.extractLane(t, 2)) ?
+        SIMD.int64x2.extractLaneAsBool(t, 1) ?
             SIMD.float64x2.extractLane(trueValue, 1) :
                 SIMD.float64x2.extractLane(falseValue, 1));
   }
@@ -2324,7 +2494,7 @@ if (typeof SIMD.float64x2.select === "undefined") {
 
 if (typeof SIMD.float64x2.selectBits === "undefined") {
   /**
-    * @param {int32x4} t Selector mask. An instance of int32x4
+    * @param {int64x2} t Selector mask. An instance of int64x2
     * @param {float64x2} trueValue Pick bit from here if corresponding
     * selector bit is 1
     * @param {float64x2} falseValue Pick bit from here if corresponding
@@ -2333,14 +2503,14 @@ if (typeof SIMD.float64x2.selectBits === "undefined") {
     * indicated
     */
   SIMD.float64x2.selectBits = function(t, trueValue, falseValue) {
-    t = SIMD.int32x4.check(t);
+    t = SIMD.int64x2.check(t);
     trueValue = SIMD.float64x2.check(trueValue);
     falseValue = SIMD.float64x2.check(falseValue);
-    var tv = SIMD.int32x4.fromFloat64x2Bits(trueValue);
-    var fv = SIMD.int32x4.fromFloat64x2Bits(falseValue);
-    var tr = SIMD.int32x4.and(t, tv);
-    var fr = SIMD.int32x4.and(SIMD.int32x4.not(t), fv);
-    return SIMD.float64x2.fromInt32x4Bits(SIMD.int32x4.or(tr, fr));
+    var tv = SIMD.int64x2.fromFloat64x2Bits(trueValue);
+    var fv = SIMD.int64x2.fromFloat64x2Bits(falseValue);
+    var tr = SIMD.int64x2.and(t, tv);
+    var fr = SIMD.int64x2.and(SIMD.int64x2.not(t), fv);
+    return SIMD.float64x2.fromInt64x2Bits(SIMD.int64x2.or(tr, fr));
   }
 }
 
@@ -2448,6 +2618,148 @@ if (typeof SIMD.float64x2.store1 === "undefined") {
     var n = 8 / bpe;
     for (var i = 0; i < n; ++i)
       tarray[index + i] = array[i];
+  }
+}
+
+if (typeof SIMD.int64x2.and === "undefined") {
+  /**
+    * @param {int64x2} a An instance of int64x2.
+    * @param {int64x2} b An instance of int64x2.
+    * @return {int64x2} New instance of int64x2 with values of a & b.
+    */
+  SIMD.int64x2.and = function(a, b) {
+    a = SIMD.int64x2.check(a);
+    b = SIMD.int64x2.check(b);
+    var v = SIMD.int64x2();
+    v.int32x4_ = SIMD.int32x4.and(a.int32x4_, b.int32x4_);
+    return v;
+  }
+}
+
+if (typeof SIMD.int64x2.or === "undefined") {
+  /**
+    * @param {int64x2} a An instance of int64x2.
+    * @param {int64x2} b An instance of int64x2.
+    * @return {int64x2} New instance of int64x2 with values of a | b.
+    */
+  SIMD.int64x2.or = function(a, b) {
+    a = SIMD.int64x2.check(a);
+    b = SIMD.int64x2.check(b);
+    var v = SIMD.int64x2();
+    v.int32x4_ = SIMD.int32x4.or(a.int32x4_, b.int32x4_);
+    return v;
+  }
+}
+
+if (typeof SIMD.int64x2.xor === "undefined") {
+  /**
+    * @param {int64x2} a An instance of int64x2.
+    * @param {int64x2} b An instance of int64x2.
+    * @return {int64x2} New instance of int64x2 with values of a ^ b.
+    */
+  SIMD.int64x2.xor = function(a, b) {
+    a = SIMD.int64x2.check(a);
+    b = SIMD.int64x2.check(b);
+    var v = SIMD.int64x2();
+    v.int32x4_ = SIMD.int32x4.xor(a.int32x4_, b.int32x4_);
+    return v;
+  }
+}
+
+if (typeof SIMD.int64x2.not === "undefined") {
+  /**
+    * @param {int64x2} t An instance of int64x2.
+    * @return {int64x2} New instance of int64x2 with values of ~t
+    */
+  SIMD.int64x2.not = function(t) {
+    t = SIMD.int64x2.check(t);
+    var v = SIMD.int64x2();
+    v.int32x4_ = SIMD.int32x4.not(t.int32x4_);
+    return v;
+  }
+}
+
+if (typeof SIMD.int64x2.equal === "undefined") {
+  /**
+    * @param {int64x2} t An instance of int64x2.
+    * @param {int64x2} other An instance of int64x2.
+    * @return {int64x2} true or false in each lane depending on
+    * the result of t == other.
+    */
+  SIMD.int64x2.equal = function(t, other) {
+    t = SIMD.int64x2.check(t);
+    other = SIMD.int64x2.check(other);
+    var v = SIMD.int64x2();
+    v.int32x4_ = SIMD.int32x4.equal(t.int32x4_, other.int32x4_);
+    return v;
+  }
+}
+
+if (typeof SIMD.int64x2.notEqual === "undefined") {
+  /**
+    * @param {int64x2} t An instance of int64x2.
+    * @param {int64x2} other An instance of int64x2.
+    * @return {int64x2} true or false in each lane depending on
+    * the result of t != other.
+    */
+  SIMD.int64x2.notEqual = function(t, other) {
+    t = SIMD.int64x2.check(t);
+    other = SIMD.int64x2.check(other);
+    var v = SIMD.int64x2();
+    v.int32x4_ = SIMD.int32x4.notEqual(t.int32x4_, other.int32x4_);
+    return v;
+  }
+}
+
+if (typeof SIMD.int64x2.load === "undefined") {
+  /**
+    * @param {Typed array} tarray An instance of a typed array.
+    * @param {Number} index An instance of Number.
+    * @return {int64x2} New instance of int64x2.
+    */
+  SIMD.int64x2.load = function(tarray, index) {
+    var v = SIMD.int64x2();
+    v.int32x4_ = SIMD.int32x4.load(tarray, index);
+    return v;
+  }
+}
+
+if (typeof SIMD.int64x2.load1 === "undefined") {
+  /**
+    * @param {Typed array} tarray An instance of a typed array.
+    * @param {Number} index An instance of Number.
+    * @return {int64x2} New instance of int64x2.
+    */
+  SIMD.int64x2.load1 = function(tarray, index) {
+    var v = SIMD.int64x2();
+    v.int32x4_ = SIMD.int32x4.load2(tarray, index);
+    return v;
+  }
+}
+
+if (typeof SIMD.int64x2.store === "undefined") {
+  /**
+    * @param {Typed array} tarray An instance of a typed array.
+    * @param {Number} index An instance of Number.
+    * @param {int64x2} value An instance of int64x2.
+    * @return {void}
+    */
+  SIMD.int64x2.store = function(tarray, index, value) {
+    value = SIMD.int64x2.check(value);
+    return SIMD.int32x4.store(tarray, index, value.int32x4_);
+  }
+}
+
+if (typeof SIMD.int64x2.store1 === "undefined") {
+  /**
+    * @param {Typed array} tarray An instance of a typed array.
+    * @param {Number} index An instance of Number.
+    * @param {int64x2} value An instance of int64x2.
+    * @return {void}
+    */
+  SIMD.int64x2.store1 = function(tarray, index, value) {
+    value = SIMD.int64x2.check(value);
+    return SIMD.int32x4.store2(tarray, index, value.int32x4_);
   }
 }
 
@@ -2657,16 +2969,16 @@ if (typeof SIMD.int32x4.select === "undefined") {
     trueValue = SIMD.int32x4.check(trueValue);
     falseValue = SIMD.int32x4.check(falseValue);
     return SIMD.int32x4(
-        toBool(SIMD.int32x4.extractLane(t, 0)) ?
+        SIMD.int32x4.extractLaneAsBool(t, 0) ?
             SIMD.int32x4.extractLane(trueValue, 0) :
                 SIMD.int32x4.extractLane(falseValue, 0),
-        toBool(SIMD.int32x4.extractLane(t, 1)) ?
+        SIMD.int32x4.extractLaneAsBool(t, 1) ?
             SIMD.int32x4.extractLane(trueValue, 1) :
                 SIMD.int32x4.extractLane(falseValue, 1),
-        toBool(SIMD.int32x4.extractLane(t, 2)) ?
+        SIMD.int32x4.extractLaneAsBool(t, 2) ?
             SIMD.int32x4.extractLane(trueValue, 2) :
                 SIMD.int32x4.extractLane(falseValue, 2),
-        toBool(SIMD.int32x4.extractLane(t, 3)) ?
+        SIMD.int32x4.extractLaneAsBool(t, 3) ?
             SIMD.int32x4.extractLane(trueValue, 3) :
                 SIMD.int32x4.extractLane(falseValue, 3));
   }
@@ -3421,28 +3733,28 @@ if (typeof SIMD.int16x8.select === "undefined") {
     trueValue = SIMD.int16x8.check(trueValue);
     falseValue = SIMD.int16x8.check(falseValue);
     return SIMD.int16x8(
-        toBool(SIMD.int16x8.extractLane(t, 0)) ?
+        SIMD.int16x8.extractLaneAsBool(t, 0) ?
             SIMD.int16x8.extractLane(trueValue, 0) :
                 SIMD.int16x8.extractLane(falseValue, 0),
-        toBool(SIMD.int16x8.extractLane(t, 1)) ?
+        SIMD.int16x8.extractLaneAsBool(t, 1) ?
             SIMD.int16x8.extractLane(trueValue, 1) :
                 SIMD.int16x8.extractLane(falseValue, 1),
-        toBool(SIMD.int16x8.extractLane(t, 2)) ?
+        SIMD.int16x8.extractLaneAsBool(t, 2) ?
             SIMD.int16x8.extractLane(trueValue, 2) :
                 SIMD.int16x8.extractLane(falseValue, 2),
-        toBool(SIMD.int16x8.extractLane(t, 3)) ?
+        SIMD.int16x8.extractLaneAsBool(t, 3) ?
             SIMD.int16x8.extractLane(trueValue, 3) :
                 SIMD.int16x8.extractLane(falseValue, 3),
-        toBool(SIMD.int16x8.extractLane(t, 4)) ?
+        SIMD.int16x8.extractLaneAsBool(t, 4) ?
             SIMD.int16x8.extractLane(trueValue, 4) :
                 SIMD.int16x8.extractLane(falseValue, 4),
-        toBool(SIMD.int16x8.extractLane(t, 5)) ?
+        SIMD.int16x8.extractLaneAsBool(t, 5) ?
             SIMD.int16x8.extractLane(trueValue, 5) :
                 SIMD.int16x8.extractLane(falseValue, 5),
-        toBool(SIMD.int16x8.extractLane(t, 6)) ?
+        SIMD.int16x8.extractLaneAsBool(t, 6) ?
             SIMD.int16x8.extractLane(trueValue, 6) :
                 SIMD.int16x8.extractLane(falseValue, 6),
-        toBool(SIMD.int16x8.extractLane(t, 7)) ?
+        SIMD.int16x8.extractLaneAsBool(t, 7) ?
             SIMD.int16x8.extractLane(trueValue, 7) :
                 SIMD.int16x8.extractLane(falseValue, 7));
   }
@@ -4265,52 +4577,52 @@ if (typeof SIMD.int8x16.select === "undefined") {
     trueValue = SIMD.int8x16.check(trueValue);
     falseValue = SIMD.int8x16.check(falseValue);
     return SIMD.int8x16(
-        toBool(SIMD.int8x16.extractLane(t, 0)) ?
+        SIMD.int8x16.extractLaneAsBool(t, 0) ?
             SIMD.int8x16.extractLane(trueValue, 0) :
                 SIMD.int8x16.extractLane(falseValue, 0),
-        toBool(SIMD.int8x16.extractLane(t, 1)) ?
+        SIMD.int8x16.extractLaneAsBool(t, 1) ?
             SIMD.int8x16.extractLane(trueValue, 1) :
                 SIMD.int8x16.extractLane(falseValue, 1),
-        toBool(SIMD.int8x16.extractLane(t, 2)) ?
+        SIMD.int8x16.extractLaneAsBool(t, 2) ?
             SIMD.int8x16.extractLane(trueValue, 2) :
                 SIMD.int8x16.extractLane(falseValue, 2),
-        toBool(SIMD.int8x16.extractLane(t, 3)) ?
+        SIMD.int8x16.extractLaneAsBool(t, 3) ?
             SIMD.int8x16.extractLane(trueValue, 3) :
                 SIMD.int8x16.extractLane(falseValue, 3),
-        toBool(SIMD.int8x16.extractLane(t, 4)) ?
+        SIMD.int8x16.extractLaneAsBool(t, 4) ?
             SIMD.int8x16.extractLane(trueValue, 4) :
                 SIMD.int8x16.extractLane(falseValue, 4),
-        toBool(SIMD.int8x16.extractLane(t, 5)) ?
+        SIMD.int8x16.extractLaneAsBool(t, 5) ?
             SIMD.int8x16.extractLane(trueValue, 5) :
                 SIMD.int8x16.extractLane(falseValue, 5),
-        toBool(SIMD.int8x16.extractLane(t, 6)) ?
+        SIMD.int8x16.extractLaneAsBool(t, 6) ?
             SIMD.int8x16.extractLane(trueValue, 6) :
                 SIMD.int8x16.extractLane(falseValue, 6),
-        toBool(SIMD.int8x16.extractLane(t, 7)) ?
+        SIMD.int8x16.extractLaneAsBool(t, 7) ?
             SIMD.int8x16.extractLane(trueValue, 7) :
                 SIMD.int8x16.extractLane(falseValue, 7),
-        toBool(SIMD.int8x16.extractLane(t, 8)) ?
+        SIMD.int8x16.extractLaneAsBool(t, 8) ?
             SIMD.int8x16.extractLane(trueValue, 8) :
                 SIMD.int8x16.extractLane(falseValue, 8),
-        toBool(SIMD.int8x16.extractLane(t, 9)) ?
+        SIMD.int8x16.extractLaneAsBool(t, 9) ?
             SIMD.int8x16.extractLane(trueValue, 9) :
                 SIMD.int8x16.extractLane(falseValue, 9),
-        toBool(SIMD.int8x16.extractLane(t, 10)) ?
+        SIMD.int8x16.extractLaneAsBool(t, 10) ?
             SIMD.int8x16.extractLane(trueValue, 10) :
                 SIMD.int8x16.extractLane(falseValue, 10),
-        toBool(SIMD.int8x16.extractLane(t, 11)) ?
+        SIMD.int8x16.extractLaneAsBool(t, 11) ?
             SIMD.int8x16.extractLane(trueValue, 11) :
                 SIMD.int8x16.extractLane(falseValue, 11),
-        toBool(SIMD.int8x16.extractLane(t, 12)) ?
+        SIMD.int8x16.extractLaneAsBool(t, 12) ?
             SIMD.int8x16.extractLane(trueValue, 12) :
                 SIMD.int8x16.extractLane(falseValue, 12),
-        toBool(SIMD.int8x16.extractLane(t, 13)) ?
+        SIMD.int8x16.extractLaneAsBool(t, 13) ?
             SIMD.int8x16.extractLane(trueValue, 13) :
                 SIMD.int8x16.extractLane(falseValue, 13),
-        toBool(SIMD.int8x16.extractLane(t, 14)) ?
+        SIMD.int8x16.extractLaneAsBool(t, 14) ?
             SIMD.int8x16.extractLane(trueValue, 14) :
                 SIMD.int8x16.extractLane(falseValue, 14),
-        toBool(SIMD.int8x16.extractLane(t, 15)) ?
+        SIMD.int8x16.extractLaneAsBool(t, 15) ?
             SIMD.int8x16.extractLane(trueValue, 15) :
                 SIMD.int8x16.extractLane(falseValue, 15));
   }

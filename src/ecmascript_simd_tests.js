@@ -1308,6 +1308,13 @@ test('float64x2 fromFloat32x4Bits constructor', function() {
   equal(2.0, SIMD.float64x2.extractLane(n, 1));
 });
 
+test('float64x2 fromInt64x2Bits constructor', function() {
+  var m = SIMD.int64x2.fromInt32x4Bits(SIMD.int32x4(0x00000000, 0x3ff00000, 0x00000000, 0x40000000));
+  var n = SIMD.float64x2.fromInt64x2Bits(m);
+  equal(1.0, SIMD.float64x2.extractLane(n, 0));
+  equal(2.0, SIMD.float64x2.extractLane(n, 1));
+});
+
 test('float64x2 fromInt32x4Bits constructor', function() {
   var m = SIMD.int32x4(0x00000000, 0x3ff00000, 0x00000000, 0x40000000);
   var n = SIMD.float64x2.fromInt32x4Bits(m);
@@ -1705,120 +1712,97 @@ test('float64x2 comparisons', function() {
 
   var cmp;
   cmp = SIMD.float64x2.lessThan(m, n);
-  equal(-1, SIMD.int32x4.extractLane(cmp, 0));
-  equal(-1, SIMD.int32x4.extractLane(cmp, 1));
-  equal(0x0, SIMD.int32x4.extractLane(cmp, 2));
-  equal(0x0, SIMD.int32x4.extractLane(cmp, 3));
+  equal(true, SIMD.int64x2.extractLaneAsBool(cmp, 0));
+  equal(false, SIMD.int64x2.extractLaneAsBool(cmp, 1));
   cmp = SIMD.float64x2.lessThan(o, p);
-  equal(0x0, SIMD.int32x4.extractLane(cmp, 0));
-  equal(0x0, SIMD.int32x4.extractLane(cmp, 1));
-  equal(-1, SIMD.int32x4.extractLane(cmp, 2));
-  equal(-1, SIMD.int32x4.extractLane(cmp, 3));
+  equal(false, SIMD.int64x2.extractLaneAsBool(cmp, 0));
+  equal(true, SIMD.int64x2.extractLaneAsBool(cmp, 1));
 
   cmp = SIMD.float64x2.lessThanOrEqual(m, n);
-  equal(-1, SIMD.int32x4.extractLane(cmp, 0));
-  equal(-1, SIMD.int32x4.extractLane(cmp, 1));
-  equal(-1, SIMD.int32x4.extractLane(cmp, 2));
-  equal(-1, SIMD.int32x4.extractLane(cmp, 3));
+  equal(true, SIMD.int64x2.extractLaneAsBool(cmp, 0));
+  equal(true, SIMD.int64x2.extractLaneAsBool(cmp, 1));
   cmp = SIMD.float64x2.lessThanOrEqual(o, p);
-  equal(0x0, SIMD.int32x4.extractLane(cmp, 0));
-  equal(0x0, SIMD.int32x4.extractLane(cmp, 1));
-  equal(-1, SIMD.int32x4.extractLane(cmp, 2));
-  equal(-1, SIMD.int32x4.extractLane(cmp, 3));
+  equal(false, SIMD.int64x2.extractLaneAsBool(cmp, 0));
+  equal(true, SIMD.int64x2.extractLaneAsBool(cmp, 1));
 
   cmp = SIMD.float64x2.equal(m, n);
-  equal(0x0, SIMD.int32x4.extractLane(cmp, 0));
-  equal(0x0, SIMD.int32x4.extractLane(cmp, 1));
-  equal(-1, SIMD.int32x4.extractLane(cmp, 2));
-  equal(-1, SIMD.int32x4.extractLane(cmp, 3));
+  equal(false, SIMD.int64x2.extractLaneAsBool(cmp, 0));
+  equal(true, SIMD.int64x2.extractLaneAsBool(cmp, 1));
   cmp = SIMD.float64x2.equal(o, p);
-  equal(0x0, SIMD.int32x4.extractLane(cmp, 0));
-  equal(0x0, SIMD.int32x4.extractLane(cmp, 1));
-  equal(0x0, SIMD.int32x4.extractLane(cmp, 2));
-  equal(0x0, SIMD.int32x4.extractLane(cmp, 3));
+  equal(false, SIMD.int64x2.extractLaneAsBool(cmp, 0));
+  equal(false, SIMD.int64x2.extractLaneAsBool(cmp, 1));
 
   cmp = SIMD.float64x2.notEqual(m, n);
-  equal(-1, SIMD.int32x4.extractLane(cmp, 0));
-  equal(-1, SIMD.int32x4.extractLane(cmp, 1));
-  equal(0x0, SIMD.int32x4.extractLane(cmp, 2));
-  equal(0x0, SIMD.int32x4.extractLane(cmp, 3));
+  equal(true, SIMD.int64x2.extractLaneAsBool(cmp, 0));
+  equal(false, SIMD.int64x2.extractLaneAsBool(cmp, 1));
   cmp = SIMD.float64x2.notEqual(o, p);
-  equal(-1, SIMD.int32x4.extractLane(cmp, 0));
-  equal(-1, SIMD.int32x4.extractLane(cmp, 1));
-  equal(-1, SIMD.int32x4.extractLane(cmp, 2));
-  equal(-1, SIMD.int32x4.extractLane(cmp, 3));
+  equal(true, SIMD.int64x2.extractLaneAsBool(cmp, 0));
+  equal(true, SIMD.int64x2.extractLaneAsBool(cmp, 1));
 
   cmp = SIMD.float64x2.greaterThanOrEqual(m, n);
-  equal(0x0, SIMD.int32x4.extractLane(cmp, 0));
-  equal(0x0, SIMD.int32x4.extractLane(cmp, 1));
-  equal(-1, SIMD.int32x4.extractLane(cmp, 2));
-  equal(-1, SIMD.int32x4.extractLane(cmp, 3));
+  equal(false, SIMD.int64x2.extractLaneAsBool(cmp, 0));
+  equal(true, SIMD.int64x2.extractLaneAsBool(cmp, 1));
   cmp = SIMD.float64x2.greaterThanOrEqual(o, p);
-  equal(-1, SIMD.int32x4.extractLane(cmp, 0));
-  equal(-1, SIMD.int32x4.extractLane(cmp, 1));
-  equal(0x0, SIMD.int32x4.extractLane(cmp, 2));
-  equal(0x0, SIMD.int32x4.extractLane(cmp, 3));
+  equal(true, SIMD.int64x2.extractLaneAsBool(cmp, 0));
+  equal(false, SIMD.int64x2.extractLaneAsBool(cmp, 1));
 
   cmp = SIMD.float64x2.greaterThan(m, n);
-  equal(0x0, SIMD.int32x4.extractLane(cmp, 0));
-  equal(0x0, SIMD.int32x4.extractLane(cmp, 1));
-  equal(0x0, SIMD.int32x4.extractLane(cmp, 2));
-  equal(0x0, SIMD.int32x4.extractLane(cmp, 3));
+  equal(false, SIMD.int64x2.extractLaneAsBool(cmp, 0));
+  equal(false, SIMD.int64x2.extractLaneAsBool(cmp, 1));
   cmp = SIMD.float64x2.greaterThan(o, p);
-  equal(-1, SIMD.int32x4.extractLane(cmp, 0));
-  equal(-1, SIMD.int32x4.extractLane(cmp, 1));
-  equal(0x0, SIMD.int32x4.extractLane(cmp, 2));
-  equal(0x0, SIMD.int32x4.extractLane(cmp, 3));
+  equal(true, SIMD.int64x2.extractLaneAsBool(cmp, 0));
+  equal(false, SIMD.int64x2.extractLaneAsBool(cmp, 1));
 
   var o = SIMD.float64x2(0.0, -0.0);
   var p = SIMD.float64x2(-0.0, 0.0);
   var q = SIMD.float64x2(0.0, NaN);
   var r = SIMD.float64x2(NaN, 0.0);
   cmp = SIMD.float64x2.lessThan(o, p);
-  equal(0x0, SIMD.int32x4.extractLane(cmp, 0));
-  equal(0x0, SIMD.int32x4.extractLane(cmp, 1));
+  equal(false, SIMD.int64x2.extractLaneAsBool(cmp, 0));
+  equal(false, SIMD.int64x2.extractLaneAsBool(cmp, 1));
   cmp = SIMD.float64x2.lessThan(q, r);
-  equal(0x0, SIMD.int32x4.extractLane(cmp, 0));
-  equal(0x0, SIMD.int32x4.extractLane(cmp, 1));
+  equal(false, SIMD.int64x2.extractLaneAsBool(cmp, 0));
+  equal(false, SIMD.int64x2.extractLaneAsBool(cmp, 1));
 
   cmp = SIMD.float64x2.lessThanOrEqual(o, p);
-  equal(-1, SIMD.int32x4.extractLane(cmp, 0));
-  equal(-1, SIMD.int32x4.extractLane(cmp, 1));
+  equal(true, SIMD.int64x2.extractLaneAsBool(cmp, 0));
+  equal(true, SIMD.int64x2.extractLaneAsBool(cmp, 1));
   cmp = SIMD.float64x2.lessThanOrEqual(q, r);
-  equal(0x0, SIMD.int32x4.extractLane(cmp, 0));
-  equal(0x0, SIMD.int32x4.extractLane(cmp, 1));
+  equal(false, SIMD.int64x2.extractLaneAsBool(cmp, 0));
+  equal(false, SIMD.int64x2.extractLaneAsBool(cmp, 1));
 
   cmp = SIMD.float64x2.equal(o, p);
-  equal(-1, SIMD.int32x4.extractLane(cmp, 0));
-  equal(-1, SIMD.int32x4.extractLane(cmp, 1));
+  equal(true, SIMD.int64x2.extractLaneAsBool(cmp, 0));
+  equal(true, SIMD.int64x2.extractLaneAsBool(cmp, 1));
   cmp = SIMD.float64x2.equal(q, r);
-  equal(0x0, SIMD.int32x4.extractLane(cmp, 0));
-  equal(0x0, SIMD.int32x4.extractLane(cmp, 1));
+  equal(false, SIMD.int64x2.extractLaneAsBool(cmp, 0));
+  equal(false, SIMD.int64x2.extractLaneAsBool(cmp, 1));
 
   cmp = SIMD.float64x2.notEqual(o, p);
-  equal(0x0, SIMD.int32x4.extractLane(cmp, 0));
-  equal(0x0, SIMD.int32x4.extractLane(cmp, 1));
+  equal(false, SIMD.int64x2.extractLaneAsBool(cmp, 0));
+  equal(false, SIMD.int64x2.extractLaneAsBool(cmp, 1));
   cmp = SIMD.float64x2.notEqual(q, r);
-  equal(-1, SIMD.int32x4.extractLane(cmp, 0));
-  equal(-1, SIMD.int32x4.extractLane(cmp, 1));
+  equal(true, SIMD.int64x2.extractLaneAsBool(cmp, 0));
+  equal(true, SIMD.int64x2.extractLaneAsBool(cmp, 1));
 
   cmp = SIMD.float64x2.greaterThanOrEqual(o, p);
-  equal(-1, SIMD.int32x4.extractLane(cmp, 0));
-  equal(-1, SIMD.int32x4.extractLane(cmp, 1));
+  equal(true, SIMD.int64x2.extractLaneAsBool(cmp, 0));
+  equal(true, SIMD.int64x2.extractLaneAsBool(cmp, 1));
   cmp = SIMD.float64x2.greaterThanOrEqual(q, r);
-  equal(0x0, SIMD.int32x4.extractLane(cmp, 0));
-  equal(0x0, SIMD.int32x4.extractLane(cmp, 1));
+  equal(false, SIMD.int64x2.extractLaneAsBool(cmp, 0));
+  equal(false, SIMD.int64x2.extractLaneAsBool(cmp, 1));
 
   cmp = SIMD.float64x2.greaterThan(o, p);
-  equal(0x0, SIMD.int32x4.extractLane(cmp, 0));
-  equal(0x0, SIMD.int32x4.extractLane(cmp, 1));
+  equal(false, SIMD.int64x2.extractLaneAsBool(cmp, 0));
+  equal(false, SIMD.int64x2.extractLaneAsBool(cmp, 1));
   cmp = SIMD.float64x2.greaterThan(q, r);
-  equal(0x0, SIMD.int32x4.extractLane(cmp, 0));
-  equal(0x0, SIMD.int32x4.extractLane(cmp, 1));
+  equal(false, SIMD.int64x2.extractLaneAsBool(cmp, 0));
+  equal(false, SIMD.int64x2.extractLaneAsBool(cmp, 1));
 });
 
 test('float64x2 select', function() {
-  var m = SIMD.int32x4(0xaaaaaaaa, 0, 0x55555555, 0);
+  var m = SIMD.int64x2.fromInt32x4Bits(SIMD.int32x4(0xaaaaaaaa, 0xaaaaaaaa,
+                                                    0x55555555, 0x55555555));
   var t = SIMD.float64x2(1.0, 2.0);
   var f = SIMD.float64x2(3.0, 4.0);
   var s = SIMD.float64x2.select(m, t, f);
@@ -1827,12 +1811,13 @@ test('float64x2 select', function() {
 });
 
 test('float64x2 selectBits', function() {
-  var m = SIMD.int32x4(0xaaaaaaaa, 0x55555555);
+  var m = SIMD.int64x2.fromInt32x4Bits(SIMD.int32x4(0xaaaaaaaa, 0xaaaaaaaa,
+                                                    0x55555555, 0x55555555));
   var t = SIMD.float64x2(1.0, 2.0);
   var f = SIMD.float64x2(3.0, 4.0);
   var s = SIMD.float64x2.selectBits(m, t, f);
-  equal(7.475396213323176e-206, SIMD.float64x2.extractLane(s, 0));
-  equal(4.0, SIMD.float64x2.extractLane(s, 1));
+  equal(4.013165208090495e+205, SIMD.float64x2.extractLane(s, 0));
+  equal(2.0, SIMD.float64x2.extractLane(s, 1));
 });
 
 test('float64x2 load', function() {
@@ -2033,6 +2018,309 @@ test('float64x2 store1 exceptions', function () {
   });
 });
 
+test('int64x2 allTrue', function () {
+  var v0000 = SIMD.int64x2.fromInt32x4Bits(SIMD.int32x4(0x00000000, 0x7FFFFFFF, 0x00000001, 0x5A5A5A5A));
+  var v0001 = SIMD.int64x2.fromInt32x4Bits(SIMD.int32x4(0x00000000, 0x7FFFFFFF, 0x00000001, 0xA5A5A5A5));
+  var v0010 = SIMD.int64x2.fromInt32x4Bits(SIMD.int32x4(0x00000000, 0x7FFFFFFF, 0x80000001, 0x5A5A5A5A));
+  var v0100 = SIMD.int64x2.fromInt32x4Bits(SIMD.int32x4(0x00000000, 0xFFFFFFFF, 0x00000001, 0x5A5A5A5A));
+  var v1000 = SIMD.int64x2.fromInt32x4Bits(SIMD.int32x4(0x80000000, 0x7FFFFFFF, 0x00000001, 0x5A5A5A5A));
+  var v0011 = SIMD.int64x2.fromInt32x4Bits(SIMD.int32x4(0x00000000, 0x7FFFFFFF, 0x80000001, 0xA5A5A5A5));
+  var v0111 = SIMD.int64x2.fromInt32x4Bits(SIMD.int32x4(0x00000000, 0xFFFFFFFF, 0x80000001, 0xA5A5A5A5));
+  var v1111 = SIMD.int64x2.fromInt32x4Bits(SIMD.int32x4(0x80000000, 0xFFFFFFFF, 0x80000001, 0xA5A5A5A5));
+  equal(SIMD.int64x2.allTrue(v0000), false);
+  equal(SIMD.int64x2.allTrue(v0001), false);
+  equal(SIMD.int64x2.allTrue(v0010), false);
+  equal(SIMD.int64x2.allTrue(v0100), false);
+  equal(SIMD.int64x2.allTrue(v1000), false);
+  equal(SIMD.int64x2.allTrue(v0011), false);
+  equal(SIMD.int64x2.allTrue(v0111), false);
+  equal(SIMD.int64x2.allTrue(v1111), true);
+});
+
+test('int64x2 fromFloat64x2Bits constructor', function() {
+  var m = SIMD.float64x2(1.0, 2.0);
+  var n = SIMD.int64x2.fromFloat64x2Bits(m);
+  var v = SIMD.int32x4.fromInt64x2Bits(n);
+  equal(0x00000000, SIMD.int32x4.extractLane(v, 0));
+  equal(0x3FF00000, SIMD.int32x4.extractLane(v, 1));
+  equal(0x00000000, SIMD.int32x4.extractLane(v, 2));
+  equal(0x40000000, SIMD.int32x4.extractLane(v, 3));
+});
+
+test('int64x2 anyTrue', function () {
+  var v00 = SIMD.int64x2.fromInt32x4Bits(SIMD.int32x4(0x00000000, 0x7FFFFFFF, 0x00000001, 0x5A5A5A5A));
+  var v01 = SIMD.int64x2.fromInt32x4Bits(SIMD.int32x4(0x00000000, 0x7FFFFFFF, 0x80000001, 0x5A5A5A5A));
+  var v10 = SIMD.int64x2.fromInt32x4Bits(SIMD.int32x4(0x80000000, 0x7FFFFFFF, 0x00000001, 0x5A5A5A5A));
+  var v11 = SIMD.int64x2.fromInt32x4Bits(SIMD.int32x4(0x80000000, 0x7FFFFFFF, 0x80000001, 0x5A5A5A5A));
+  equal(SIMD.int64x2.anyTrue(v00), false);
+  equal(SIMD.int64x2.anyTrue(v01), true);
+  equal(SIMD.int64x2.anyTrue(v10), true);
+  equal(SIMD.int64x2.anyTrue(v11), true);
+});
+
+test('int64x2 and', function() {
+  var m = SIMD.int64x2.fromInt32x4Bits(SIMD.int32x4(0xAAAAAAAA, 0xAAAAAAAA, -1431655766, 0xAAAAAAAA));
+  var n = SIMD.int64x2.fromInt32x4Bits(SIMD.int32x4(0x55555555, 0x55555555, 0x55555555, 0x55555555));
+  var o = SIMD.int64x2.and(m,n);  // and
+  var p = SIMD.int32x4.fromInt64x2Bits(o);
+  equal(0x0, SIMD.int32x4.extractLane(p, 0));
+  equal(0x0, SIMD.int32x4.extractLane(p, 1));
+  equal(0x0, SIMD.int32x4.extractLane(p, 2));
+  equal(0x0, SIMD.int32x4.extractLane(p, 3));
+  equal(false, SIMD.int64x2.extractLaneAsBool(o, 0));
+  equal(false, SIMD.int64x2.extractLaneAsBool(o, 1));
+});
+
+test('int64x2 or', function() {
+  var m = SIMD.int64x2.fromInt32x4Bits(SIMD.int32x4(0xAAAAAAAA, 0xAAAAAAAA, 0xAAAAAAAA, 0xAAAAAAAA));
+  var n = SIMD.int64x2.fromInt32x4Bits(SIMD.int32x4(0x55555555, 0x55555555, 0x55555555, 0x55555555));
+  var o = SIMD.int64x2.or(m,n);  // or
+  var p = SIMD.int32x4.fromInt64x2Bits(o);
+  equal(-1, SIMD.int32x4.extractLane(p, 0));
+  equal(-1, SIMD.int32x4.extractLane(p, 1));
+  equal(-1, SIMD.int32x4.extractLane(p, 2));
+  equal(-1, SIMD.int32x4.extractLane(p, 3));
+  equal(true, SIMD.int64x2.extractLaneAsBool(o, 0));
+  equal(true, SIMD.int64x2.extractLaneAsBool(o, 1));
+});
+
+test('int64x2 xor', function() {
+  var m = SIMD.int64x2.fromInt32x4Bits(SIMD.int32x4(0xAAAAAAAA, 0xAAAAAAAA, 0xAAAAAAAA, 0xAAAAAAAA));
+  var n = SIMD.int64x2.fromInt32x4Bits(SIMD.int32x4(0x55555555, 0x55555555, 0x55555555, 0x55555555));
+  var o = SIMD.int64x2.xor(m,n);  // xor
+  var p = SIMD.int32x4.fromInt64x2Bits(o);
+  equal(-1, SIMD.int32x4.extractLane(p, 0));
+  equal(-1, SIMD.int32x4.extractLane(p, 1));
+  equal(-1, SIMD.int32x4.extractLane(p, 2));
+  equal(-1, SIMD.int32x4.extractLane(p, 3));
+  equal(true, SIMD.int64x2.extractLaneAsBool(o, 0));
+  equal(true, SIMD.int64x2.extractLaneAsBool(o, 1));
+});
+
+test('int64x2 comparisons', function() {
+  var m = SIMD.int64x2.fromInt32x4Bits(SIMD.int32x4(1000, 2000, 100, 100));
+  var n = SIMD.int64x2.fromInt32x4Bits(SIMD.int32x4(-2000, 2000, 100, 100));
+  var cmp;
+
+  cmp = SIMD.int64x2.equal(m, n);
+  equal(false, SIMD.int64x2.extractLaneAsBool(cmp, 0));
+  equal(true, SIMD.int64x2.extractLaneAsBool(cmp, 1));
+
+  cmp = SIMD.int64x2.notEqual(m, n);
+  equal(true, SIMD.int64x2.extractLaneAsBool(cmp, 0));
+  equal(false, SIMD.int64x2.extractLaneAsBool(cmp, 1));
+});
+
+test('int64x2 load', function() {
+  var a = new Int32Array(16);
+  for (var i = 0; i < a.length; i++) {
+    a[i] = i;
+  }
+  for (var i = 0; i < a.length - 3; i++) {
+    var v = SIMD.int64x2.load(a, i);
+    var w = SIMD.int32x4.fromInt64x2Bits(v);
+    equal(i, SIMD.int32x4.extractLane(w, 0));
+    equal(i+1, SIMD.int32x4.extractLane(w, 1));
+    equal(i+2, SIMD.int32x4.extractLane(w, 2));
+    equal(i+3, SIMD.int32x4.extractLane(w, 3));
+  }
+});
+
+test('int64x2 unaligned load', function() {
+  var a = new Int32Array(16);
+  var ai = new Int8Array(a.buffer);
+  for (var i = 0; i < a.length; i++) {
+    a[i] = i;
+  }
+
+  // Copy the bytes, offset by 1.
+  var b = new Int8Array(ai.length + 1);
+  for (var i = 0; i < ai.length; i++) {
+    b[i + 1] = ai[i];
+  }
+
+  // Load the values unaligned.
+  for (var i = 0; i < a.length - 3; i++) {
+    var v = SIMD.int64x2.load(b, i * 4 + 1);
+    var w = SIMD.int32x4.fromInt64x2Bits(v);
+    equal(i, SIMD.int32x4.extractLane(w, 0));
+    equal(i+1, SIMD.int32x4.extractLane(w, 1));
+    equal(i+2, SIMD.int32x4.extractLane(w, 2));
+    equal(i+3, SIMD.int32x4.extractLane(w, 3));
+  }
+});
+
+test('int64x2 load1', function() {
+  var a = new Int32Array(16);
+  for (var i = 0; i < a.length; i++) {
+    a[i] = i;
+  }
+  for (var i = 0; i < a.length - 1; i++) {
+    var v = SIMD.int64x2.load1(a, i);
+    var w = SIMD.int32x4.fromInt64x2Bits(v);
+    equal(i, SIMD.int32x4.extractLane(w, 0));
+    equal(i+1, SIMD.int32x4.extractLane(w, 1));
+    isPositiveZero(SIMD.int32x4.extractLane(w, 2));
+    isPositiveZero(SIMD.int32x4.extractLane(w, 3));
+  }
+});
+
+test('int64x2 unaligned load1', function() {
+  var a = new Int32Array(16);
+  var ai = new Int8Array(a.buffer);
+  for (var i = 0; i < a.length; i++) {
+    a[i] = i;
+  }
+
+  // Copy the bytes, offset by 1.
+  var b = new Int8Array(ai.length + 1);
+  for (var i = 0; i < ai.length; i++) {
+    b[i + 1] = ai[i];
+  }
+
+  // Copy the values unaligned.
+  for (var i = 0; i < a.length - 1; i++) {
+    var v = SIMD.int64x2.load1(b, i * 4 + 1);
+    var w = SIMD.int32x4.fromInt64x2Bits(v);
+    equal(i, SIMD.int32x4.extractLane(w, 0));
+    equal(i+1, SIMD.int32x4.extractLane(w, 1));
+    isPositiveZero(SIMD.int32x4.extractLane(w, 2));
+    isPositiveZero(SIMD.int32x4.extractLane(w, 3));
+  }
+});
+
+test('int64x2 store', function() {
+  var a = new Int32Array(12);
+  SIMD.int64x2.store(a, 0, SIMD.int64x2.fromInt32x4Bits(SIMD.int32x4(0, 1, 2, 3)));
+  SIMD.int64x2.store(a, 4, SIMD.int64x2.fromInt32x4Bits(SIMD.int32x4(4, 5, 6, 7)));
+  SIMD.int64x2.store(a, 8, SIMD.int64x2.fromInt32x4Bits(SIMD.int32x4(8, 9, 10, 11)));
+  for (var i = 0; i < a.length; i++) {
+    equal(i, a[i]);
+  }
+});
+
+test('int64x2 unaligned store', function() {
+  var c = new Int8Array(48 + 1);
+  SIMD.int64x2.store(c, 0 + 1, SIMD.int64x2.fromInt32x4Bits(SIMD.int32x4(0, 1, 2, 3)));
+  SIMD.int64x2.store(c, 16 + 1, SIMD.int64x2.fromInt32x4Bits(SIMD.int32x4(4, 5, 6, 7)));
+  SIMD.int64x2.store(c, 32 + 1, SIMD.int64x2.fromInt32x4Bits(SIMD.int32x4(8, 9, 10, 11)));
+
+  // Copy the bytes, offset by 1.
+  var b = new Int8Array(c.length - 1);
+  for (var i = 1; i < c.length; i++) {
+      b[i - 1] = c[i];
+  }
+
+  var a = new Int32Array(b.buffer);
+  for (var i = 0; i < a.length; i++) {
+    equal(i, a[i]);
+  }
+});
+
+test('int64x2 store1', function() {
+  var a = new Int32Array(8);
+  SIMD.int64x2.store1(a, 0, SIMD.int64x2.fromInt32x4Bits(SIMD.int32x4(0, 1, -1, -1)));
+  SIMD.int64x2.store1(a, 2, SIMD.int64x2.fromInt32x4Bits(SIMD.int32x4(2, 3, -1, -1)));
+  SIMD.int64x2.store1(a, 4, SIMD.int64x2.fromInt32x4Bits(SIMD.int32x4(4, 5, -1, -1)));
+  SIMD.int64x2.store1(a, 6, SIMD.int64x2.fromInt32x4Bits(SIMD.int32x4(6, 7, -1, -1)));
+  for (var i = 0; i < a.length; i++) {
+    equal(i, a[i]);
+  }
+});
+
+test('int64x2 unaligned store1', function() {
+  var c = new Int8Array(32 + 1);
+  SIMD.int64x2.store1(c, 0 + 1, SIMD.int64x2.fromInt32x4Bits(SIMD.int32x4(0, 1, -1, -1)));
+  SIMD.int64x2.store1(c, 8 + 1, SIMD.int64x2.fromInt32x4Bits(SIMD.int32x4(2, 3, -1, -1)));
+  SIMD.int64x2.store1(c, 16 + 1, SIMD.int64x2.fromInt32x4Bits(SIMD.int32x4(4, 5, -1, -1)));
+  SIMD.int64x2.store1(c, 24 + 1, SIMD.int64x2.fromInt32x4Bits(SIMD.int32x4(6, 7, -1, -1)));
+
+  // Copy the bytes, offset by 1.
+  var b = new Int8Array(c.length - 1);
+  for (var i = 1; i < c.length; i++) {
+      b[i - 1] = c[i];
+  }
+
+  var a = new Int32Array(b.buffer);
+  for (var i = 0; i < a.length; i++) {
+    equal(i, a[i]);
+  }
+});
+
+test('int64x2 load exceptions', function () {
+  var a = new Float64Array(8);
+  throws(function () {
+    var f = SIMD.int64x2.load(a, -1);
+  });
+  throws(function () {
+    var f = SIMD.int64x2.load(a, 7);
+  });
+  throws(function () {
+    var f = SIMD.int64x2.load(a.buffer, 1);
+  });
+  throws(function () {
+    var f = SIMD.int64x2.load(a, "a");
+  });
+});
+
+test('int64x2 load1 exceptions', function () {
+  var a = new Float64Array(8);
+  throws(function () {
+    var f = SIMD.int64x2.load1(a, -1);
+  });
+  throws(function () {
+    var f = SIMD.int64x2.load1(a, 8);
+  });
+  throws(function () {
+    var f = SIMD.int64x2.load1(a.buffer, 1);
+  });
+  throws(function () {
+    var f = SIMD.int64x2.load1(a, "a");
+  });
+});
+
+test('int64x2 store exceptions', function () {
+  var a = new Float64Array(8);
+  var f = SIMD.int64x2(1, 2);
+  var i = SIMD.int32x4(1, 2, 3, 4);
+  throws(function () {
+    SIMD.int64x2.store(a, -1, f);
+  });
+  throws(function () {
+    SIMD.int64x2.store(a, 7, f);
+  });
+  throws(function () {
+    SIMD.int64x2.store(a.buffer, 1, f);
+  });
+  throws(function () {
+    SIMD.int64x2.store(a, "a", f);
+  });
+  throws(function () {
+    SIMD.int64x2.store(a, 1, i);
+  });
+});
+
+test('int64x2 store1 exceptions', function () {
+  var a = new Float64Array(8);
+  var f = SIMD.int64x2(1, 2);
+  var i = SIMD.int32x4(1, 2, 3, 4);
+  throws(function () {
+    SIMD.int64x2.store1(a, -1, f);
+  });
+  throws(function () {
+    SIMD.int64x2.store1(a, 8, f);
+  });
+  throws(function () {
+    SIMD.int64x2.store1(a.buffer, 1, f);
+  });
+  throws(function () {
+    SIMD.int64x2.store1(a, "a", f);
+  });
+  throws(function () {
+    SIMD.int64x2.store1(a, 1, i);
+  });
+});
+
 test('int32x4 fromFloat32x4 constructor', function() {
   var m = SIMD.float32x4(1.0, 2.2, 3.6, 4.8);
   var n = SIMD.int32x4.fromFloat32x4(m);
@@ -2120,6 +2408,15 @@ test('int32x4 fromFloat64x2 constructor', function() {
   throws(function() {
     SIMD.int32x4.fromFloat64x2(SIMD.float64x2(NaN, 0));
   });
+});
+
+test('int32x4 fromInt64x2Bits constructor', function() {
+  var m = SIMD.int64x2.fromInt32x4Bits(SIMD.int32x4(0, 1, 2, 3));
+  var n = SIMD.int32x4.fromInt64x2Bits(m);
+  equal(0, SIMD.int32x4.extractLane(n, 0));
+  equal(1, SIMD.int32x4.extractLane(n, 1));
+  equal(2, SIMD.int32x4.extractLane(n, 2));
+  equal(3, SIMD.int32x4.extractLane(n, 3));
 });
 
 test('int32x4 fromFloat32x4Bits constructor', function() {
