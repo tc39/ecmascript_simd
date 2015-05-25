@@ -2,15 +2,19 @@
 
 load("ecmascript_simd.js");
 
-var currentName = '';
-var anyFailures = false;
+// clearer marking
+var currentName = '<global>';
+var numFails = 0;
 
-function fail(str)
-{
+function printIndented(str) {
+  console.log(str.split('\n').map(function (s) { return '  ' + s }).join('\n'));
+}
+
+function fail(str) {
   var e = Error(str);
   console.log(e.toString());
-  console.log(e.stack);
-  anyFailures = true;
+  printIndented(e.stack);
+  numFails++;
 }
 
 function test(name, func) {
@@ -18,20 +22,20 @@ function test(name, func) {
   try {
     func();
   } catch (e) {
-    fail('exception thrown from ' + currentName);
+    console.log('exception thrown from ' + currentName + ': ' + e.toString());
+    printIndented(e.stack);
+    numFails++;
   }
 }
 
 function equal(a, b) {
-  if (a == b)
-    return;
-  fail('equal(' + a + ', ' + b + ') failed in ' + currentName);
+  if (a != b)
+    fail('equal(' + a + ', ' + b + ') failed in ' + currentName);
 }
 
 function notEqual(a, b) {
-  if (a != b)
-    return;
-  fail('notEqual(' + a + ', ' + b + ') failed in ' + currentName);
+  if (a == b)
+    fail('notEqual(' + a + ', ' + b + ') failed in ' + currentName);
 }
 
 function throws(func) {
@@ -52,5 +56,7 @@ function ok(x) {
 
 load("ecmascript_simd_tests.js");
 
-if (anyFailures)
-    quit(1);
+if (numFails > 0) {
+  print('total number of fails and exceptions: ' + numFails);
+  quit(1);
+}

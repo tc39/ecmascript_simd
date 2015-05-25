@@ -57,7 +57,8 @@
         sum2 = SIMD.float64x2.add(sum2, SIMD.float64x2.load(a, j << 1));
       }
     }
-    return (sum2.x + sum2.y)/a.length;
+    return (SIMD.float64x2.extractLane(sum2, 0) +
+        SIMD.float64x2.extractLane(sum2, 1)) / a.length;
   }
 
 } ());

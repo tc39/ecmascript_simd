@@ -57,7 +57,10 @@
         sum4 = SIMD.float32x4.add(sum4, SIMD.float32x4.load(a, j));
       }
     }
-    return (sum4.x + sum4.y + sum4.z + sum4.w)/a.length;
+    return (SIMD.float32x4.extractLane(sum4, 0) +
+        SIMD.float32x4.extractLane(sum4, 1) +
+        SIMD.float32x4.extractLane(sum4, 2) +
+        SIMD.float32x4.extractLane(sum4, 3)) / a.length;
   }
 
 } ());

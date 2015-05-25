@@ -58,18 +58,30 @@
   }
 
   function printFloat32x4(msg, v) {
-    print (msg, v.x.toFixed(6), v.y.toFixed(6), v.z.toFixed(6), v.w.toFixed(6));
+    print (msg, SIMD.float32x4.extractLane(v, 0).toFixed(6),
+                SIMD.float32x4.extractLane(v, 1).toFixed(6),
+                SIMD.float32x4.extractLane(v, 2).toFixed(6),
+                SIMD.float32x4.extractLane(v, 3).toFixed(6));
   }
 
   function printInt32x4(msg, v) {
-    print (msg, v.x, v.y, v.z, v.w);
+    print (msg, SIMD.float32x4.extractLane(v, 0),
+                SIMD.float32x4.extractLane(v, 1),
+                SIMD.float32x4.extractLane(v, 2),
+                SIMD.float32x4.extractLane(v, 3));
   }
 
   function sinx4Test() {
     var x = SIMD.float32x4(1.0, 2.0, 3.0, 4.0);
     var sinx4 = simdSin(x);
-    print (sinx4.x, sinx4.y, sinx4.z, sinx4.w);
-    print (Math.sin(x.x), Math.sin(x.y), Math.sin(x.z), Math.sin(x.w));
+    print (SIMD.float32x4.extractLane(sinx4, 0),
+           SIMD.float32x4.extractLane(sinx4, 1),
+           SIMD.float32x4.extractLane(sinx4, 2),
+           SIMD.float32x4.extractLane(sinx4, 3));
+    print (Math.sin(SIMD.float32x4.extractLane(x, 0)),
+           Math.sin(SIMD.float32x4.extractLane(x, 1)),
+           Math.sin(SIMD.float32x4.extractLane(x, 2)),
+           Math.sin(SIMD.float32x4.extractLane(x, 3)));
   }
 
   var _ps_sign_mask        = SIMD.int32x4.splat(0x80000000);
@@ -183,7 +195,10 @@
     for (var i = 0; i < n; ++i) {
       result = sinx4 (simdInput);
     }
-    return [result.x, result.y, result.z, result.w];
+    return [SIMD.float32x4.extractLane(result, 0),
+        SIMD.float32x4.extractLane(result, 1),
+        SIMD.float32x4.extractLane(result, 2),
+        SIMD.float32x4.extractLane(result, 3)];
   }
 
   // Non SIMD version of the kernel

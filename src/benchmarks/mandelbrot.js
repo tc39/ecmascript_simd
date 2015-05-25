@@ -16,11 +16,17 @@
   benchmarks.add (new Benchmark (kernelConfig));
 
   function float32x4ToString (f4) {
-    return "[" + f4.x + "," + f4.y + "," + f4.z + "," + f4.w + "]";
+    return "[" + SIMD.float32x4.extractLane(f4, 0) + "," +
+        SIMD.float32x4.extractLane(f4, 1) + "," +
+        SIMD.float32x4.extractLane(f4, 2) + "," +
+        SIMD.float32x4.extractLane(f4, 3) + "]";
   }
 
   function int32x4ToString (i4) {
-    return "[" + i4.x + "," + i4.y + "," + i4.z + "," + i4.w + "]";
+    return "[" + SIMD.int32x4.extractLane(i4, 0) + "," +
+        SIMD.int32x4.extractLane(i4, 1) + "," +
+        SIMD.int32x4.extractLane(i4, 2) + "," +
+        SIMD.int32x4.extractLane(i4, 3) + "]";
   }
 
   function mandelx1(c_re, c_im, max_iterations) {
@@ -108,10 +114,10 @@
     var vec0  = SIMD.float32x4.splat (0.01);
     for (var i = 0; i < n; ++i) {
       var r = mandelx4 (vec0, vec0, 100);
-      result [0] = r.x;
-      result [1] = r.y;
-      result [2] = r.z;
-      result [3] = r.w;
+      result [0] = SIMD.int32x4.extractLane(r, 0);
+      result [1] = SIMD.int32x4.extractLane(r, 1);
+      result [2] = SIMD.int32x4.extractLane(r, 2);
+      result [3] = SIMD.int32x4.extractLane(r, 3);
     }
     return result;
   }

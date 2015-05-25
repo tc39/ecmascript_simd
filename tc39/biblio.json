@@ -1,0 +1,8 @@
+{
+  "http://people.mozilla.org/~jorendorff/es6-draft.html": {
+    "abstract operations": {
+      "ReturnIfAbrupt": "#sec-returnifabrupt",
+      "Get": "#sec-get-o-p"
+    }
+  }
+}

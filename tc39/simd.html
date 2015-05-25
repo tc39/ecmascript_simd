@@ -1,0 +1,1152 @@
+<!doctype html>
+<head><meta charset="utf8">
+<title>SIMD.js specification v0.2</title>
+<link rel="stylesheet" href="./elements.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/github.min.css">
+</head><body><emu-biblio href="./biblio.json"></emu-biblio>
+<h1>SIMD.js value semantics proposal</h1>
+<div><h2>Table of Contents</h2><ol class="toc"><li><a href="#intro"><span class="secnum"></span> Introduction</a></li><li><a href="#types"><span class="secnum">1</span> ECMAScript Data Types and Values 6</a><ol class="toc"><li><a href="#all-types"><span class="secnum">1.1</span> ECMAScript language types (6.1)</a><ol class="toc"><li><a href="#intrinsics"><span class="secnum">1.1.1</span> Well-Known Intrinsic Objects (6.1.7.4)</a></li></ol></li><li><a href="#simd-types"><span class="secnum">1.2</span> SIMD types</a><ol class="toc"><li><a href="#float32x4"><span class="secnum">1.2.1</span> Float32x4</a></li><li><a href="#float64x2"><span class="secnum">1.2.2</span> Float64x2</a></li><li><a href="#int32x4"><span class="secnum">1.2.3</span> Int32x4</a></li><li><a href="#int16x8"><span class="secnum">1.2.4</span> Int16x8</a></li><li><a href="#int8x16"><span class="secnum">1.2.5</span> Int8x16</a></li></ol></li></ol></li><li><a href="#abstract-operations"><span class="secnum">2</span> Abstract Operations (7)</a><ol class="toc"><li><a href="#type-conversion"><span class="secnum">2.1</span> Type Conversion (7.1)</a><ol class="toc"><li><a href="#to-primitive"><span class="secnum">2.1.1</span> ToPrimitive ( input [, PreferredType] ) (7.1.1)</a></li><li><a href="#to-boolean"><span class="secnum">2.1.2</span> ToBoolean ( argument ) (7.1.2)</a></li><li><a href="#to-number"><span class="secnum">2.1.3</span> ToNumber ( argument ) (7.1.3)</a></li><li><a href="#to-string"><span class="secnum">2.1.4</span> ToString ( argument ) (7.1.12)</a></li><li><a href="#to-object"><span class="secnum">2.1.5</span> ToObject ( argument ) (7.1.13)</a></li></ol></li><li><a href="#require-object-coercible"><span class="secnum">2.2</span> RequireObjectCoercible ( argument ) (7.2.1)</a></li><li><a href="#same-value"><span class="secnum">2.3</span> SameValue(x, y) (7.2.9)</a></li><li><a href="#same-value-zero"><span class="secnum">2.4</span> SameValueZero(x, y) (7.2.10)</a></li><li><a href="#abstract-relational-comparison"><span class="secnum">2.5</span> Abstract relational comparison (7.2.11)</a></li><li><a href="#abstract-equality"><span class="secnum">2.6</span> Abstract Equality Comparison (7.2.12)</a></li><li><a href="#strict-equality-comparison"><span class="secnum">2.7</span> Strict Equality Comparison (7.2.13)</a></li></ol></li><li><a href="#typeof"><span class="secnum">3</span> The typeof Operator (12.5.6)</a><ol class="toc"><li><a href="#typeof-evaluation"><span class="secnum">3.1</span> Runtime Semantics: Evaluation (12.5.6.1)</a></li></ol></li><li><a href="#dataview"><span class="secnum">4</span> DataView objects (24.2)</a><ol class="toc"><li><a href="#dataview-proto"><span class="secnum">4.1</span> Properties of the DataView Prototype Object (24.2.4)</a><ol class="toc"><li><a href="#dataview-getsimd"><span class="secnum">4.1.1</span> DataView.prototype.get_SIMD_ ( byteOffset [ , littleEndian ] )</a></li><li><a href="#dataview-setsimd"><span class="secnum">4.1.2</span> DataView.prototype.set_SIMD_ ( byteOffset, value [ , littleEndian ] )</a></li></ol></li></ol></li><li><a href="#simd"><span class="secnum">5</span> SIMD objects (top-level section)</a><ol class="toc"><li><a href="#simd-algorithms"><span class="secnum">5.1</span> Internal algorithms on SIMD types</a><ol class="toc"><li><a href="#simd-create"><span class="secnum">5.1.1</span> SIMDCreate( descriptor, fields...)</a></li><li><a href="#simd-extract-lane"><span class="secnum">5.1.2</span> SIMDExtractLane( value, field )</a></li><li><a href="#simd-replace-lane"><span class="secnum">5.1.3</span> SIMDReplaceLane( value, field, replacement )</a></li><li><a href="#simd-binary"><span class="secnum">5.1.4</span> SIMDBinaryOp( a, b, op )</a></li><li><a href="#simd-unary"><span class="secnum">5.1.5</span> SIMDUnaryOp( a, op )</a></li><li><a href="#simd-load"><span class="secnum">5.1.6</span> SIMDLoad( dataBlock, descriptor, byteOffset [, length] )</a></li><li><a href="#simd-store"><span class="secnum">5.1.7</span> SIMDStore( dataBlock, descriptor, byteOffset, n [, length] )</a></li><li><a href="#simd-reinterpret-cast"><span class="secnum">5.1.8</span> SIMDReinterpretCast( value, newDescriptor )</a></li></ol></li><li><a href="#simd-constructor"><span class="secnum">5.2</span> _SIMD_Constructor</a><ol class="toc"><li><a href="#simd-wrap"><span class="secnum">5.2.1</span> _SIMD_Constructor( value )</a></li><li><a href="#simd-wrapper"><span class="secnum">5.2.2</span> _SIMD_Constructor( fields... )</a></li><li><a href="#simd-check"><span class="secnum">5.2.3</span> _SIMD_Constructor.check(a)</a></li><li><a href="#simd-splat"><span class="secnum">5.2.4</span> _SIMD_Constructor.splat(n)</a></li><li><a href="#simd-add"><span class="secnum">5.2.5</span> _SIMD_Constructor.add(a, b)</a></li><li><a href="#simd-sub"><span class="secnum">5.2.6</span> _SIMD_Constructor.sub(a, b)</a></li><li><a href="#simd-mul"><span class="secnum">5.2.7</span> _SIMD_Constructor.mul(a, b)</a></li><li><a href="#simd-div"><span class="secnum">5.2.8</span> _SIMD_Constructor.div(a, b)</a></li><li><a href="#simd-max"><span class="secnum">5.2.9</span> _SIMD_Constructor.max(a, b)</a></li><li><a href="#simd-min"><span class="secnum">5.2.10</span> _SIMD_Constructor.min(a, b)</a></li><li><a href="#max-num"><span class="secnum">5.2.11</span> MaxNum(n, m)</a></li><li><a href="#simd-max-num"><span class="secnum">5.2.12</span> _SIMD_Constructor.maxNum(a, b)</a></li><li><a href="#min-num"><span class="secnum">5.2.13</span> MinNum(n, m)</a></li><li><a href="#simd-min-num"><span class="secnum">5.2.14</span> _SIMD_Constructor.minNum(a, b)</a></li><li><a href="#simd-neg"><span class="secnum">5.2.15</span> _SIMD_Constructor.neg(a, b)</a></li><li><a href="#simd-sqrt"><span class="secnum">5.2.16</span> _SIMD_Constructor.sqrt(a)</a></li><li><a href="#reciprocal"><span class="secnum">5.2.17</span> ReciprocalApproximation(n)</a></li><li><a href="#simd-reciprocal-approximation"><span class="secnum">5.2.18</span> _SIMD_Constructor.reciprocalApproximation(a, b)</a></li><li><a href="#reciprocal"><span class="secnum">5.2.19</span> ReciprocalApproximation(n)</a></li><li><a href="#simd-reciprocal-sqrt-approximation"><span class="secnum">5.2.20</span> _SIMD_Constructor.reciprocalSqrtApproximation(a)</a></li><li><a href="#simd-abs"><span class="secnum">5.2.21</span> _SIMD_Constructor.abs(a)</a></li><li><a href="#simd-extract-lane"><span class="secnum">5.2.22</span> _SIMD_Constructor.extractLane(simd, field)</a></li><li><a href="#simd-replace-lane"><span class="secnum">5.2.23</span> _SIMD_Constructor.replaceLane(simd, field)</a></li><li><a href="#simd-store-function"><span class="secnum">5.2.24</span> _SIMD_Constructor.store(tarray, index, simd)</a></li><li><a href="#simd-store1"><span class="secnum">5.2.25</span> _SIMD_Constructor.store1(tarray, index, simd)</a></li><li><a href="#simd-store2"><span class="secnum">5.2.26</span> _SIMD_Constructor.store2(tarray, index, simd)</a></li><li><a href="#simd-store3"><span class="secnum">5.2.27</span> _SIMD_Constructor.store3(tarray, index)</a></li><li><a href="#simd-load-function"><span class="secnum">5.2.28</span> _SIMD_Constructor.load(tarray, index)</a></li><li><a href="#simd-load1"><span class="secnum">5.2.29</span> _SIMD_Constructor.load1(tarray, index)</a></li><li><a href="#simd-load2"><span class="secnum">5.2.30</span> _SIMD_Constructor.load2(tarray, index)</a></li><li><a href="#simd-load3"><span class="secnum">5.2.31</span> _SIMD_Constructor.load3(tarray, index)</a></li><li><a href="#simd-to-timd"><span class="secnum">5.2.32</span> SIMDConstructor.fromTIMDBits( value )</a></li><li><a href="#swizzle"><span class="secnum">5.2.33</span> _SIMD_.swizzle( a, lanes... )</a></li><li><a href="#shuffle"><span class="secnum">5.2.34</span> _SIMD_.shuffle( a, b, lanes... )</a></li></ol></li><li><a href="#simd-proto"><span class="secnum">5.3</span> The _SIMD_Constructor.prototype</a><ol class="toc"><li><a href="#simd-proto-constructor"><span class="secnum">5.3.1</span> _SIMD_Constructor.prototype.constructor</a></li></ol></li><li><a href="#simd-descriptors"><span class="secnum">5.4</span> SIMD type descriptors</a><ol class="toc"><li><a href="#simd-float32x4"><span class="secnum">5.4.1</span> Float32x4Descriptor type descriptor</a><ol class="toc"><li><a href="#serialize-float32"><span class="secnum">5.4.1.1</span> SerializeFloat32( block, offset, n, isLittleEndian )</a></li><li><a href="#deserialize-float32"><span class="secnum">5.4.1.2</span> DeserializeFloat32( block, offset, isLittleEndian )</a></li></ol></li><li><a href="#simd-float64x2"><span class="secnum">5.4.2</span> Float64x2Descriptor type descriptor</a><ol class="toc"><li><a href="#serialize-float64"><span class="secnum">5.4.2.1</span> SerializeFloat64( block, offset, n, isLittleEndian )</a></li><li><a href="#deserialize-float64"><span class="secnum">5.4.2.2</span> DeserializeFloat64( block, offset, isLittleEndian )</a></li></ol></li><li><a href="#simd-int32x4"><span class="secnum">5.4.3</span> Int32x4Descriptor type descriptor</a><ol class="toc"><li><a href="#serialize-int32"><span class="secnum">5.4.3.1</span> SerializeInt32( block, offset, n, isLittleEndian )</a></li><li><a href="#deserialize-int32"><span class="secnum">5.4.3.2</span> DeserializeInt32( block, offset, isLittleEndian )</a></li></ol></li><li><a href="#simd-int16x8"><span class="secnum">5.4.4</span> Int16x8Descriptor type descriptor</a><ol class="toc"><li><a href="#serialize-int16"><span class="secnum">5.4.4.1</span> SerializeInt16( block, offset, n, isLittleEndian )</a></li><li><a href="#deserialize-int16"><span class="secnum">5.4.4.2</span> DeserializeInt16( block, offset, isLittleEndian )</a></li></ol></li><li><a href="#simd-int8x16"><span class="secnum">5.4.5</span> Int8x16Descriptor type descriptor</a><ol class="toc"><li><a href="#serialize-int8"><span class="secnum">5.4.5.1</span> SerializeInt8( block, offset, n, isLittleEndian )</a></li><li><a href="#deserialize-int8"><span class="secnum">5.4.5.2</span> DeserializeInt8( block, offset, isLittleEndian )</a></li></ol></li></ol></li></ol></li></ol></div><emu-intro id="intro">
+<h1><span class="secnum"></span>Introduction</h1>
+<p>
+This proposal adds SIMD types and operations to Javascript, focusing on the value semantics. The proposal adds new primitive types Float32x4, etc, together with wrappers and a definition of their behavior in the language. The current proposal does not include all SIMD functions, but it defines almost all types and some core operations on them. More definitions for more functions that operate on them can be found at <a href="https://github.com/johnmccutchan/ecmascript_simd/blob/master/tc39/simd-spec262.md">the SIMD.js reference documentation</a>.
+</p>
+
+<p>
+One problem that this spec aims to solve is to define equality for SIMD values. Existing implementations use object identity-based equality. However, maintaining object identity puts a big burden on compilers to maintain this identity through operations, where they would rather be able to duplicate and de-duplicate SIMD values arbitrarily based on algebraic identities. By making SIMD values into primitive types with structural equality, compilers are given more freedom.
+</p>
+
+<p>
+Ideally, SIMD values will fit into a larger value types proposal. Such a proposal would be a bit more involved, but good work has already been done in that direction. This document describes SIMD without a larger value type system, but it aims to be consistent with how value types might work, and once someone steps forward to describe value types in more detail, it will be great to simplify this text by just explaining SIMD in terms of value types. On the other hand, this proposal gives a vehicle to work out some of the issues in value types and can be used as a guide for future value type designs.
+</p>
+
+<p>
+This document is organized in terms of where changes would be made to the ES6 spec. Although ecmarkup generates numbering at the beginning of headers, these won't correspond to the numbering within the existing ECMA spec, so I've included a matching numbering in parentheses afterwards, referring to the ES6 spec.
+</p>
+
+<p>
+In this text, <var>SIMD</var> is used to refer to the various SIMD types: Float32x4, Float64x2, Int32x4, Int16x8, and Int8x16. Similarly to Number, <var>SIMD</var> is used to refer to both the type <em>and</em> the wrapper constructor object. This looks a bit confusing, but it provides the most regularity, as an aim of this specification is to make SIMD types primitives that operate analogously to the existing primitives, rather than a new, exotic sort of thing. To reduce ambiguity, the wrapper constructor is usually referred to as <var>SIMD</var>Constructor, and the type is referred to as <var>SIMD</var>Type. SIMD types are associated with a descriptor spec object, called <var>SIMD</var>Descriptor.</p>
+
+<p><strong>Please file any issues <a href="https://github.com/johnmccutchan/ecmascript_simd/issues">here</a>!</strong></p>
+
+<p>Because this document is in spec order, rather than written for direct readability, the logical starting point is actually <a href="#simd-constructor">halfway down</a>.</p>
+
+<p>
+Related links:
+</p>
+<ul>
+<li><a href="https://github.com/nikomatsakis/typed-objects-explainer/blob/master/valuetypes.md">Value types proposal</a></li>
+<li><a href="https://github.com/johnmccutchan/ecmascript_simd/blob/master/src/ecmascript_simd.js">SIMD polyfill</a></li>
+<li><a href="https://github.com/johnmccutchan/ecmascript_simd/issues/157">Bug about SIMD.js value semantics</a></li>
+</ul>
+
+<p>Changelog:</p>
+<ul>
+<li>v0.1: Initial proposal based on SIMD values held in Data Blocks</li>
+<li>v0.2:
+<ul>
+<li>SIMD values are explained as Lists of Numbers, and serialized/deserialized only on loads and stores to TypedArrays, and casts.</li>
+<li>SIMD values point to a type descriptor, not to the wrapper constructor, which makes cross-realm access more straightforward.</li>
+<li>Add all SIMD types, more SIMD operations and all DataView operations.</li>
+</ul>
+</li>
+<li>v0.3: Add more operations, fix some errors and clarify wording. Missing operations:
+</li><li>Logical and bitwise operations, like lessThan, bool, xor</li>
+<li>Logical casts between types, like SIMD.float32x4.fromInt32x4</li>
+</ul>
+</emu-intro>
+
+<emu-clause id="types">
+<h1><span class="secnum">1</span>ECMAScript Data Types and Values <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-ecmascript-data-types-and-values">6</a></h1>
+<emu-clause id="all-types">
+<h1><span class="secnum">1.1</span>ECMAScript language types (<a href="http://people.mozilla.org/~jorendorff/es6-draft.html#sec-ecmascript-language-types">6.1</a>)</h1>
+<emu-clause id="intrinsics">
+<h1><span class="secnum">1.1.1</span>Well-Known Intrinsic Objects (<a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-well-known-intrinsic-objects">6.1.7.4</a>)</h1>
+<p>
+<strong>Intrinsic name</strong>: %SIMD%
+<br>
+<strong>Global name</strong>: <code>SIMD</code>
+<br>
+<strong>ECMAScript Language Association</strong>: The <code>SIMD</code> object (<a href="#simd">27</a>)
+</p>
+
+<p>
+<strong>Intrinsic name</strong>: %<var>SIMD</var>Constructor%
+<br>
+<strong>Global name</strong>: <code>SIMD.</code><var>SIMD</var> (e.g., <code>SIMD.Float32x4</code>)
+<br>
+<strong>ECMAScript Language Association</strong>: The <a href="#simd-constructor"><var>SIMD</var>Constructor</a> constructor
+</p>
+
+<p>
+<strong>Intrinsic name</strong>: %<var>SIMD</var>Prototype%
+<br>
+<strong>Global name</strong>: <code>SIMD.</code><var>SIMD</var><code>.prototype</code> (e.g., <code>SIMD.Float32x4.prototype</code>)
+<br>
+<strong>ECMAScript Language Association</strong>: The initial value of the prototype data property of %<var>SIMD</var>Constructor% (27.1.2)
+</p>
+</emu-clause>
+</emu-clause>
+
+<emu-clause id="simd-types">
+<h1><span class="secnum">1.2</span>SIMD types</h1>
+<emu-clause id="float32x4">
+<h1><span class="secnum">1.2.1</span>Float32x4</h1>
+
+<p>
+<code>Float32x4</code> is a SIMD type representing four 32-bit floating point values. Float32x4 values can be created using the [[Call]] operation on the <a href="#simd-wrap">SIMD.Float32x4</a> object. Its behavior as a SIMD type is defined by the <a href="#simd-float32x4">Float32x4 SIMD type descriptor</a>.
+</p>
+</emu-clause>
+
+<emu-clause id="float64x2">
+<h1><span class="secnum">1.2.2</span>Float64x2</h1>
+
+<p>
+<code>Float64x2</code> is a SIMD type representing two 64-bit floating point values. Float64x2 values can be created using the [[Call]] operation on the <a href="#simd-wrap">SIMD.Float64x2</a> object. Its behavior as a SIMD type is defined by the <a href="#simd-float64x2">Float64x2 SIMD type descriptor</a>
+</p>
+</emu-clause>
+
+<emu-clause id="int32x4">
+<h1><span class="secnum">1.2.3</span>Int32x4</h1>
+
+<p>
+<code>Int32x4</code> is a SIMD type representing four 32-bit integer values. Int32x4 values can be created using the [[Call]] operation on the <a href="#simd-wrap">SIMD.Int32x4</a> object. Its behavior as a SIMD type is defined by the <a href="#simd-int32x4">Int32x4 SIMD type descriptor</a>
+</p>
+</emu-clause>
+
+<emu-clause id="int16x8">
+<h1><span class="secnum">1.2.4</span>Int16x8</h1>
+
+<p>
+<code>Int16x8</code> is a SIMD type representing eight 16-bit integer values. Int16x8 values can be created using the [[Call]] operation on the <a href="#simd-wrap">SIMD.Int16x8</a> object. Its behavior as a SIMD type is defined by the <a href="#simd-int16x8">Int16x8 SIMD type descriptor</a>
+</p>
+</emu-clause>
+
+<emu-clause id="int8x16">
+<h1><span class="secnum">1.2.5</span>Int8x16</h1>
+
+<p>
+<code>Int8x16</code> is a SIMD type representing sixteen 8-bit integer values. Int8x16 values can be created using the [[Call]] operation on the <a href="#simd-wrap">SIMD.Int8x16</a> object. Its behavior as a SIMD type is defined by the <a href="#simd-int8x16">Int8x16 SIMD type descriptor</a>
+</p>
+</emu-clause>
+</emu-clause>
+</emu-clause>
+
+<emu-clause id="abstract-operations">
+<h1><span class="secnum">2</span>Abstract Operations (<a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-abstract-operations">7</a>)</h1>
+
+<emu-clause id="type-conversion">
+<h1><span class="secnum">2.1</span>Type Conversion (<a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-type-conversion">7.1</a>)</h1>
+
+<emu-clause id="to-primitive">
+<h1><span class="secnum">2.1.1</span>ToPrimitive ( input [, PreferredType] ) (<a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-toprimitive">7.1.1</a>)</h1>
+
+<strong>Argument type</strong>: <var>SIMD</var>Type
+<br>
+<strong>Result</strong>: return <var>input</var>
+
+<emu-note><span class="note">Note</span>
+An additional option considered is to define this as calling ToObject on it, and then ToPrimitive on the resulting wrapper object. This would have the advantage of allowing toString and valueOf be defined on the wrapper prototype, which seems more realistic to me as a path for value types.
+</emu-note>
+</emu-clause>
+
+<emu-clause id="to-boolean">
+<h1><span class="secnum">2.1.2</span>ToBoolean ( argument ) (<a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-toboolean">7.1.2</a>)</h1>
+
+<strong>Argument type</strong>: <var>SIMD</var>Type
+<br>
+<strong>Result</strong>: return <emu-const>true</emu-const>
+
+<emu-note><span class="note">Note</span>
+Even if it would be consistent to return false if it is all zero, there probably isn't much gain from adding more falsy values.
+</emu-note>
+</emu-clause>
+
+<emu-clause id="to-number">
+<h1><span class="secnum">2.1.3</span>ToNumber ( argument ) (<a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-tonumber">7.1.3</a>)</h1>
+
+<strong>Argument type</strong>: <var>SIMD</var>Type
+<br>
+<strong>Result</strong>: throw a <emu-const>TypeError</emu-const> exception
+</emu-clause>
+
+<emu-clause id="to-string">
+<h1><span class="secnum">2.1.4</span>ToString ( argument ) (<a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-tostring">7.1.12</a>)</h1>
+
+<strong>Argument type</strong>: <var>SIMD</var>Type
+<br>
+<strong>Result</strong>: Return <code>typeof</code> <var>argument</var> + "(" + <code>Array.prototype.join.call</code>(an Array containing the contents of <var>argument</var>.[[SIMDElements]]) + ")", for the initial value of <code>Array.prototype.join</code> and <code>Function.prototype.call</code>
+
+<emu-note><span class="note">Note</span>The definition is extended similarly for other SIMD types. An alternative would be to call ToObject and let the wrapper handle ToString the way it works for objects.</emu-note>
+<emu-note><span class="note">Note</span>The behavior here is consistent with existing implementations, producing values like "float32x4(1, 2, 3, 4)". An alternative would be to return homoiconic syntax like "SIMD.Float32x4(1, 2, 3, 4)".</emu-note>
+</emu-clause>
+
+<emu-clause id="to-object">
+<h1><span class="secnum">2.1.5</span>ToObject ( argument ) (<a href="http://people.mozilla.org/~jorendorff/es6-draft.html#sec-toobject">7.1.13</a>)</h1>
+
+<strong>Argument type</strong>: <var>SIMD</var>Type
+<br>
+<strong>Result</strong>: Return a new %<var>SIMD</var>Constructor% wrapper object whose [[SIMDWrapperData]] internal slot is set to <var>argument</var>.
+</emu-clause>
+</emu-clause>
+
+<emu-clause id="require-object-coercible">
+<h1><span class="secnum">2.2</span>RequireObjectCoercible ( argument ) (<a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-requireobjectcoercible">7.2.1</a>)</h1>
+
+<strong>Argument type</strong>: <var>SIMD</var>Type
+<br>
+<strong>Result</strong>: return <var>argument</var>
+</emu-clause>
+
+<emu-clause id="same-value">
+<h1><span class="secnum">2.3</span>SameValue(x, y) (<a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-samevalue">7.2.9</a>)</h1>
+Add an extra step at the bottom of the definition of SameValue for the new case involving the new type:
+<emu-alg><ol start="11">
+  <li>For each SIMD type <var>SIMD</var>Type:
+    <ol>
+      <li>If <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-ecmascript-data-types-and-values">Type</a>(x) is <var>SIMD</var>Type:
+        <ol>
+          <li>Assert <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-ecmascript-data-types-and-values">Type</a>(y) is <var>SIMD</var>Type.</li>
+          <li>For <var>i</var> from 0 to <var>SIMD</var>Descriptor.[[SIMDLength]] - 1:
+            <ol>
+              <li>If <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-samevalue">SameValue</a>(<a href="#simd-extract-lane">SIMDExtractLane</a>(<var>x</var>, <var>i</var>), <a href="#simd-extract-lane">SIMDExtractLane</a>(<var>y</var>, <var>i</var>)) is <emu-const>false</emu-const>, return <emu-const>false</emu-const>.</li>
+            </ol>
+          </li>
+          <li>return <emu-const>true</emu-const></li>
+        </ol>
+      </li>
+    </ol>
+  </li>
+</ol></emu-alg>
+</emu-clause>
+
+<emu-clause id="same-value-zero">
+<h1><span class="secnum">2.4</span>SameValueZero(x, y) (<a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-samevaluezero">7.2.10</a>)</h1>
+Add an extra step at the bottom of the definition of SameValueZero for the new case involving the new type:
+<emu-alg><ol start="11">
+  <li>For each SIMD type <var>SIMD</var>Type:
+    <ol>
+      <li>If <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-ecmascript-data-types-and-values">Type</a>(x) is <var>SIMD</var>Type:
+        <ol>
+          <li>Assert <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-ecmascript-data-types-and-values">Type</a>(y) is <var>SIMD</var>Type.</li>
+          <li>For <var>i</var> from 0 to <var>SIMD</var>Descriptor.[[SIMDLength]] - 1:
+            <ol>
+              <li>If <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-samevaluezero">SameValueZero</a>(<a href="#simd-extract-lane">SIMDExtractLane</a>(<var>x</var>, <var>i</var>), <a href="#simd-extract-lane">SIMDExtractLane</a>(<var>y</var>, <var>i</var>)) is <emu-const>false</emu-const>, return <emu-const>false</emu-const>.</li>
+            </ol>
+          </li>
+          <li>return <emu-const>true</emu-const></li>
+        </ol>
+      </li>
+    </ol>
+  </li>
+</ol></emu-alg>
+</emu-clause>
+
+<emu-clause id="abstract-relational-comparison">
+<h1><span class="secnum">2.5</span>Abstract relational comparison (<a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-abstract-relational-comparison">7.2.11</a>)</h1>
+<emu-note><span class="note">Note</span>No changes needed for SIMD; it will just compare them as strings with the current defintion.</emu-note>
+</emu-clause>
+
+<emu-clause id="abstract-equality">
+<h1><span class="secnum">2.6</span>Abstract Equality Comparison (<a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-abstract-equality-comparison">7.2.12</a>)</h1>
+Replace step 10 with the following:
+<emu-alg><ol start="10">
+  <li>If <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-ecmascript-data-types-and-values">Type</a>(x) is either String, Number, Symbol, or any <var>SIMD</var>Type, and <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-ecmascript-data-types-and-values">Type</a>(y) is Object, then return the result of the comparison x == <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-toprimitive">ToPrimitive</a>(y).</li>
+</ol></emu-alg>
+</emu-clause>
+
+<emu-clause id="strict-equality-comparison">
+<h1><span class="secnum">2.7</span>Strict Equality Comparison (<a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-strict-equality-comparison">7.2.13</a>)</h1>
+Add a new step 9, before the existing step 9:
+<emu-alg><ol start="9">
+  <li>For each SIMD type <var>SIMD</var>Type:
+    <ol>
+      <li>If <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-ecmascript-data-types-and-values">Type</a>(x) is <var>SIMD</var>Type:
+        <ol>
+          <li>Assert <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-ecmascript-data-types-and-values">Type</a>(y) is <var>SIMD</var>Type.</li>
+          <li>For <var>i</var> from 0 to <var>SIMD</var>Type.[[SIMDLength]] - 1:
+            <ol>
+              <li>If <a href="#simd-extract-lane">SIMDExtractLane</a>(<var>x</var>, <var>i</var>) === <a href="#simd-extract-lane">SIMDExtractLane</a>(<var>y</var>, <var>i</var>) is <emu-const>false</emu-const>, return <emu-const>false</emu-const>.</li>
+            </ol>
+          </li>
+          <li>return <emu-const>true</emu-const></li>
+        </ol>
+      </li>
+    </ol>
+  </li>
+</ol></emu-alg>
+</emu-clause>
+</emu-clause>
+
+<emu-clause id="typeof">
+<h1><span class="secnum">3</span>The typeof Operator (<a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-typeof-operator">12.5.6</a>)</h1>
+<emu-clause id="typeof-evaluation">
+<h1><span class="secnum">3.1</span>Runtime Semantics: Evaluation (<a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-typeof-operator-runtime-semantics-evaluation">12.5.6.1</a>)</h1>
+
+<strong>Type of val</strong>: Float32x4
+<br>
+<strong>Result</strong>: "float32x4"
+<br>
+<strong>Type of val</strong>: Float64x2
+<br>
+<strong>Result</strong>: "float64x2"
+<br>
+<strong>Type of val</strong>: Int32x4
+<br>
+<strong>Result</strong>: "int32x4"
+<br>
+<strong>Type of val</strong>: Int16x8
+<br>
+<strong>Result</strong>: "int16x8"
+<br>
+<strong>Type of val</strong>: Int8x16
+<br>
+<strong>Result</strong>: "int8x16"
+<emu-note><span class="note">Note</span>This follows the pattern for Number ("number"), Boolean ("boolean"), etc.</emu-note>
+</emu-clause>
+</emu-clause>
+
+<emu-clause id="dataview">
+<h1><span class="secnum">4</span>DataView objects (<a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-dataview-objects">24.2</a>)</h1>
+<emu-clause id="dataview-proto">
+<h1><span class="secnum">4.1</span>Properties of the DataView Prototype Object (<a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-properties-of-the-dataview-prototype-object">24.2.4</a>)</h1>
+For each SIMD type descriptor <var>SIMD</var>Descriptor, called by names like <code>Float32x4Descriptor</code>, define the following properties on <code>DataView.prototype</code>:
+<emu-clause id="dataview-getsimd">
+<h1><span class="secnum">4.1.1</span>DataView.prototype.get<var>SIMD</var> ( byteOffset [ , littleEndian ] )</h1>
+<emu-alg><ol>
+  <li>Let <var>v</var> be the <emu-const>this</emu-const> value.</li>
+  <li>If <var>littleEndian</var> is not present, let <var>littleEndian</var> be false.</li>
+  <li>Let <var>list</var> be a new List of length <var>SIMD</var>Descriptor.[[SIMDLength]].</li>
+  <li>Let <var>typeName</var> be the string <code>"_SIMD_"</code> up until the <code>"x"</code> character, e.g., <code>"Float32"</code> for <code>Float32x4</code>.</li>
+  <li>For <var>i</var> from 0 to <var>SIMD</var>Descriptor.[[SIMDLength]] - 1,
+    <ol>
+      <li>Set <var>list</var>[<var>i</var>] to <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-getviewvalue">GetViewValue</a>(<var>v</var>, <var>byteOffset</var> + <var>i</var> * <var>SIMD</var>Descriptor.[[SIMDElementSize]], <var>littleEndian</var>, <var>typeName</var>)</li>
+    </ol>
+  </li>
+  <li>Return <a href="#simd-create">SIMDCreate</a>(<var>SIMD</var>Descriptor, ...<var>list</var>).</li>
+</ol></emu-alg>
+<emu-note><span class="note">Note</span>GetViewValue does the range checking for us.</emu-note>
+<emu-note><span class="note">Note</span>This algorithm uses the GetValueFromBuffer machinery rather than the [[SIMDDeserialize]] machinery; these have matching definitions, and ideally the spec would be refactored in terms of one of the two.</emu-note>
+</emu-clause>
+
+<emu-clause id="dataview-setsimd">
+<h1><span class="secnum">4.1.2</span>DataView.prototype.set<var>SIMD</var> ( byteOffset, value [ , littleEndian ] )</h1>
+<emu-alg><ol>
+  <li>If <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-ecmascript-data-types-and-values">Type</a>(<var>value</var>) is not <var>SIMD</var>Type, throw a <emu-const>TypeError</emu-const>.</li>
+  <li>Let <var>v</var> be the <emu-const>this</emu-const> value.</li>
+  <li>If <var>littleEndian</var> is not present, let <var>littleEndian</var> be false.</li>
+  <li>Let <var>typeName</var> be the string <code>"_SIMD_"</code> up until the <code>"x"</code> character, e.g., <code>"Float32"</code> for <code>Float32x4</code>.</li>
+  <li>For <var>i</var> from 0 to <var>SIMD</var>Descriptor.[[SIMDLength]] - 1,
+    <ol>
+      <li><a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-setviewvalue">SetViewValue</a>(<var>v</var>, <var>byteOffset</var> + <var>i</var> * <var>SIMD</var>Descriptor.[[SIMDElementSize]], <var>littleEndian</var>, <var>typeName</var>, <var>value</var>.[[SIMDElements]][<var>i</var>])</li>
+    </ol>
+  </li>
+</ol></emu-alg>
+</emu-clause>
+
+</emu-clause>
+</emu-clause>
+
+<emu-clause id="simd">
+<h1><span class="secnum">5</span>SIMD objects (top-level section)</h1>
+
+<p>
+The SIMD global object has several constructor properties, one for each SIMD type.
+</p>
+
+<p>
+Each SIMD value is specified as a record with the following internal attributes:
+</p>
+<ul>
+<li>[[SIMDTypeDescriptor]], which refers to the wrapper constructor for the type.</li>
+<li>[[SIMDElements]], which is a List of Numbers representing the SIMD contents. The [[SIMDElements]] List is modified in internal algorithms when building a SIMD value, but never modified after that. As a rule, the elements list may be modified before putting it in the record, but may not be modified once it is in a record for a SIMD value.</li>
+</ul>
+
+SIMD type descriptors have the following internal slots:
+<ul>
+<li>[[SIMDLength]]: The number of elements present in a SIMD value of the type</li>
+<li>[[SIMDElementSize]]: Size in bytes of each element</li>
+<li>[[SIMDCastNumber]]: An internal algorithm for down-casting a Number to the precision representable in the SIMD type</li>
+<li>[[SIMDSerializeElement]]: An internal algorithm for writing a Number as [[SIMDElementSize]] bytes</li>
+<li>[[SIMDDeserializeElement]]: An internal algorithm for converting [[SIMDElementSize]] bytes into a Number</li>
+</ul>
+<emu-note><span class="note">Note</span>Rather than constructors having internal slots, this could be specified by a table analogous to Table 49 in the ES6 description for TypedArrays. However, the author finds it easier to express this purely in terms of records. TypedArrays could be specified like this too, and share some infrastructure with SIMD, but in their current form, it seems difficult to generalize them to SIMD directly.</emu-note>
+<emu-note><span class="note">Note</span>SIMDCastNumber converts elements to Numbers; however, for most SIMD types, it will convert them to a restricted range of Number. In a real implementation, the numbers would likely be represented in a more compact form. However, the internal representation is not observable.</emu-note>
+
+<emu-clause id="simd-algorithms">
+<h1><span class="secnum">5.1</span>Internal algorithms on SIMD types</h1>
+
+<emu-clause id="simd-create" aoid="SIMDCreate">
+<h1><span class="secnum">5.1.1</span>SIMDCreate( descriptor, fields...)</h1>
+This internal algorithm creates a new value of the type corresponding to the specified wrapper with the following procedure:
+
+<emu-note><span class="note">Note</span>The following algorithm uses splat arguments in the spec and indexes them as an array, but there isn't proper machinery in the spec to describe this behavior</emu-note>
+
+<emu-alg><ol>
+  <li>If Length(fields) == <var>descriptor</var>.[[SIMDLength]], then throw a TypeError.</li>
+  <li>Let <var>list</var> be a new List of length <var>descriptor</var>.[[SIMDLength]].</li>
+  <li>For <var>i</var> from 0 to <var>descriptor</var>.[[SIMDLength]],
+    <ol>
+      <li>Let <var>n</var> be <var>descriptor</var>.[[SIMDCastNumber]](fields[<var>i</var>]).</li>
+      <li><a href="http://people.mozilla.org/~jorendorff/es6-draft.html#sec-returnifabrupt">ReturnIfAbrupt</a>(<var>n</var>).</li>
+      <li>Set <var>list</var>[<var>i</var>] to <var>n</var>.</li>
+    </ol>
+  </li>
+  <li>Return the record { [[SIMDTypeDescriptor]]: <var>descriptor</var>, [[SIMDElements]]: <var>list</var> }.</li>
+</ol></emu-alg>
+</emu-clause>
+
+<emu-clause id="simd-extract-lane" aoid="SIMDExtractLane">
+<h1><span class="secnum">5.1.2</span>SIMDExtractLane( value, field )</h1>
+<emu-alg><ol>
+  <li>Assert: <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-ecmascript-data-types-and-values">Type</a>(<var>value</var>) is a <var>SIMD</var>Type.</li>
+  <li>Return <var>value</var>.[[SIMDElements]][<var>field</var>]</li>
+</ol></emu-alg>
+<emu-note><span class="note">Note</span>While this single definition doesn't explicitly refer to the SIMD type in indexing the list, an implementation may use different representations for the Number elements on different types and generate different code for the accesses.</emu-note>
+</emu-clause>
+
+<emu-clause id="simd-replace-lane" aoid="SIMDReplaceLane">
+<h1><span class="secnum">5.1.3</span>SIMDReplaceLane( value, field, replacement )</h1>
+<emu-alg><ol>
+  <li>Assert: <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-ecmascript-data-types-and-values">Type</a>(<var>value</var>) is a <var>SIMD</var>Type.</li>
+  <li>Let <var>descriptor</var> be <var>a</var>.[[SIMDTypeDescriptor]].</li>
+  <li>If <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-ecmascript-data-types-and-values">Type</a>(<var>field</var>) is not Number, throw a TypeError</li>
+  <li>If <var>field</var> != <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-toint32">ToInt32</a>(<var>field</var>) or <var>field</var> &lt; 0 or <var>field</var> &gt;= <var>descriptor</var>.[[SIMDLength]], throw a RangeError.</li>
+  <li>Let <var>list</var> be a copy of <var>value</var>.[[SIMDElements]].</li>
+  <li>Set <var>list</var>[<var>field</var>] to <var>replacement</var>.</li>
+  <li>Return <a href="#simd-create">SIMDCreate</a>(<var>descriptor</var>, ...<var>list</var>).</li>
+</ol></emu-alg>
+<emu-note><span class="note">Note</span>While this single definition doesn't explicitly refer to the SIMD type in indexing the list, an implementation may use different representations for the Number elements on different types and generate different code for the accesses.</emu-note>
+</emu-clause>
+
+<emu-clause id="simd-binary" aoid="SIMDBinaryOp">
+<h1><span class="secnum">5.1.4</span>SIMDBinaryOp( a, b, op )</h1>
+<emu-alg><ol>
+  <li>Assert: <var>a</var>.[[SIMDTypeDescriptor]] is <var>b</var>.[[SIMDTypeDescriptor]]</li>
+  <li>Let <var>descriptor</var> be <var>a</var>.[[SIMDTypeDescriptor]].</li>
+  <li>Let <var>list</var> be a new List of length <var>descriptor</var>.[[SIMDLength]].</li>
+  <li>For <var>i</var> from 0 to <var>descriptor</var>.[[SIMDLength]],
+    <ol>
+      <li>Let <var>ax</var> = <a href="#simd-extract-lane">SIMDExtractLane</a>(<var>a</var>, <var>i</var>).</li>
+      <li>Let <var>bx</var> = <a href="#simd-extract-lane">SIMDExtractLane</a>(<var>b</var>, <var>i</var>).</li>
+      <li>Let <var>res</var> = op(<var>ax</var>, <var>bx</var>).</li>
+      <li><a href="http://people.mozilla.org/~jorendorff/es6-draft.html#sec-returnifabrupt">ReturnIfAbrupt</a>(<var>res</var>).</li>
+      <li>Set <var>list</var>[<var>i</var>] to <var>res</var>.</li>
+    </ol>
+  </li>
+  <li>Return <a href="#simd-create">SIMDCreate</a>(<var>descriptor</var>, ...<var>list</var>).</li>
+</ol></emu-alg>
+</emu-clause>
+
+<emu-clause id="simd-unary" aoid="SIMDUnaryOp">
+<h1><span class="secnum">5.1.5</span>SIMDUnaryOp( a, op )</h1>
+<emu-alg><ol>
+  <li>Let <var>descriptor</var> be <var>a</var>.[[SIMDTypeDescriptor]].</li>
+  <li>Let <var>list</var> be a new List of length <var>descriptor</var>.[[SIMDLength]].</li>
+  <li><a href="http://people.mozilla.org/~jorendorff/es6-draft.html#sec-returnifabrupt">ReturnIfAbrupt</a>(<var>block</var>).</li>
+  <li>For <var>i</var> from 0 to <var>descriptor</var>.[[SIMDLength]],
+    <ol>
+      <li>Let <var>ax</var> = <a href="#simd-extract-lane">SIMDExtractLane</a>(<var>a</var>, <var>i</var>).</li>
+      <li>Let <var>res</var> = op(<var>ax</var>).</li>
+      <li><a href="http://people.mozilla.org/~jorendorff/es6-draft.html#sec-returnifabrupt">ReturnIfAbrupt</a>(<var>res</var>).</li>
+      <li>Set <var>list</var>[<var>i</var>] to <var>res</var>.</li>
+    </ol>
+  </li>
+  <li>Return <a href="#simd-create">SIMDCreate</a>(<var>descriptor</var>, ...<var>list</var>).</li>
+</ol></emu-alg>
+</emu-clause>
+
+<emu-clause id="simd-load" aoid="SIMDLoad">
+<h1><span class="secnum">5.1.6</span>SIMDLoad( dataBlock, descriptor, byteOffset [, length] )</h1>
+<emu-alg><ol>
+  <li>Assert: <var>dataBlock</var> is a Data Block, <var>descriptor</var> is a SIMD type descriptor</li>
+  <li>If <var>length</var> is not provided, let <var>length</var> be <var>descriptor</var>.[[SIMDLength]]. Otherwise, assert <var>length</var> &lt;= <var>descriptor</var>.[[SIMDLength]].</li>
+  <li>Assert: <var>byteOffset</var> is an integer greater than or equal to zero, and less than or equal to the size of <var>dataBlock</var> - <var>descriptor</var>.[[SIMDElementSize]] * <var>length</var>.</li>
+  <li>Let <var>list</var> be a List of length <var>descriptor</var>.[[SIMDLength]], initialized to all 0.</li>
+  <li>For <var>i</var> from 0 to <var>length</var> - 1,
+    <ol>
+      <li>Set <var>list</var>[<var>i</var>] to <var>descriptor</var>.[[SIMDDeserializeElement]](<var>dataBlock</var>, <var>byteOffset</var>).</li>
+    </ol>
+  </li>
+  <li>Return the record { [[SIMDTypeDescriptor]]: <var>descriptor</var>, [[SIMDElements]]: <var>list</var> }.</li>
+</ol></emu-alg>
+</emu-clause>
+
+<emu-clause id="simd-store" aoid="SIMDStore">
+<h1><span class="secnum">5.1.7</span>SIMDStore( dataBlock, descriptor, byteOffset, n [, length] )</h1>
+<emu-alg><ol>
+  <li>Assert: <var>dataBlock</var> is a Data Block, <var>descriptor</var> is a SIMD type descriptor</li>
+  <li>If <var>length</var> is not provided, let <var>length</var> be <var>descriptor</var>.[[SIMDLength]]. Otherwise, assert <var>length</var> &lt;= <var>descriptor</var>.[[SIMDLength]].</li>
+  <li>Assert: <var>byteOffset</var> is an integer greater than or equal to zero, and less than or equal to the size of <var>dataBlock</var> - <var>descriptor</var>.[[SIMDElementSize]] * <var>length</var>.</li>
+  <li>For <var>i</var> from 0 to <var>length</var> - 1,
+    <ol>
+      <li><var>descriptor</var>.[[SIMDSerializeElement]](<var>dataBlock</var>, <var>byteOffset</var> + <var>i</var> * <var>descriptor</var>.[[SIMDElementSize]], <var>n</var>.[[SIMDElements]][<var>i</var>]).</li>
+    </ol>
+  </li>
+</ol></emu-alg>
+</emu-clause>
+
+<emu-clause id="simd-reinterpret-cast" aoid="SIMDReinterpretCast">
+<h1><span class="secnum">5.1.8</span>SIMDReinterpretCast( value, newDescriptor )</h1>
+<emu-note><span class="note">Note</span>This is used to define operations like SIMD.Float32x4.fromInt8x16Bits.</emu-note>
+<emu-alg><ol>
+  <li>Assert: <var>value</var>.[[SIMDTypeDescriptor]].[[SIMDLength]] * <var>value</var>.[[SIMDTypeDescriptor]].[[SIMDElementSize]] == <var>newDescriptor</var>.[[SIMDLength]] * <var>newDescriptor</var>.[[SIMDElementSize]].</li>
+  <li>Let <var>bytes</var> be <var>newDescriptor</var>.[[SIMDLength]] * <var>newDescriptor</var>.[[SIMDElementSize]].</li>
+  <li>Let <var>block</var> be the result of <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-createbytedatablock">CreateByteDataBlock</a>(<var>bytes</var>).</li>
+  <li><a href="http://people.mozilla.org/~jorendorff/es6-draft.html#sec-returnifabrupt">ReturnIfAbrupt</a>(<var>block</var>).</li>
+  <li><a href="#simd-store">SIMDStore</a>(<var>block</var>, <var>value</var>, 0).</li>
+  <li>Return <a href="#simd-load">SIMDLoad</a>(<var>block</var>, <var>newDescriptor</var>, 0).</li>
+</ol></emu-alg>
+</emu-clause>
+</emu-clause>
+
+<emu-clause id="simd-constructor">
+<h1><span class="secnum">5.2</span><var>SIMD</var>Constructor</h1>
+<p>
+Each <var>SIMD</var>Constructor, namely Float32x4, Float64x2, Int32x4, Int16x8, and Int8x16, is associated with a <var>SIMD</var>Type and <var>SIMD</var>Descriptor. This section describes the constructors and properties on them. Most properties are identical, existing separately defined on each constructor, with most differences being in the <var>SIMD</var>Descriptor. Certain functions are defined only on a subset of <var>SIMD</var>Constructors, however, and this is noted above their algorithm definition.
+</p>
+
+<p>
+The definitions of the constructor and properties of the constructor to follow constitute different identities of functions and objects for each of the copies; in a real implementation, they may call out to completely different pieces of code, even if their implementation in the spec is the same.
+</p>
+
+<emu-note><span class="note">Note</span>
+As with Boolean, String, etc, <var>SIMD</var>Constructor is a constructor for the wrapper when invoked with new, and returns a primitive when called as a function. 
+</emu-note>
+
+<emu-clause id="simd-wrap">
+<h1><span class="secnum">5.2.1</span><var>SIMD</var>Constructor( value )</h1>
+
+This description applies if the constructor is called with exactly one argument.
+
+<emu-alg><ol>
+  <li>If <emu-const>NewTarget</emu-const> is undefined, throw a <emu-const>ReferenceError</emu-const> (NB: <emu-const>TypeError</emu-const>?).</li>
+  <li>If <var>value</var> is not of the type <var>SIMD</var>Type, throw a <emu-const>TypeError</emu-const>.</li>
+  <li>Let <var>O</var> be <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-ordinarycreatefromconstructor">OrdinaryCreateFromConstructor</a>(<emu-const>NewTarget</emu-const>, <code>"%_SIMD_Prototype%"</code>, «[[SIMDWrapperData]]» ).</li>
+  <li><a href="http://people.mozilla.org/~jorendorff/es6-draft.html#sec-returnifabrupt">ReturnIfAbrupt</a>(<var>O</var>).</li>
+  <li>Set the value of <var>O</var>’s [[SIMDWrapperData]] internal slot to <var>value</var>.</li>
+  <li>Return <var>O</var>.</li>
+</ol></emu-alg>
+</emu-clause>
+
+<emu-clause id="simd-wrapper">
+<h1><span class="secnum">5.2.2</span><var>SIMD</var>Constructor( fields... )</h1>
+
+This description applies if the constructor is called with more than one argument.
+
+<emu-alg><ol>
+  <li>If <var>SIMD</var>Descriptor.[[SIMDElementsLength]] does not equal Length(fields), throw a TypeError.</li>
+  <li>Return <a href="#simd-create">SIMDCreate</a>(<var>SIMD</var>Descriptor, fields...).</li>
+</ol></emu-alg>
+</emu-clause>
+
+<emu-clause id="simd-check">
+<h1><span class="secnum">5.2.3</span><var>SIMD</var>Constructor.check(a)</h1>
+<emu-alg><ol>
+  <li>If <var>a</var>.[[SIMDTypeDescriptor]] is not <var>SIMD</var>Descriptor or <var>b</var>.[[SIMDTypeDescriptor]] is not <var>SIMD</var>Descriptor, throw a TypeError.</li>
+  <li>Return <var>a</var>.</li>
+</ol></emu-alg>
+</emu-clause>
+
+<emu-clause id="simd-splat">
+<h1><span class="secnum">5.2.4</span><var>SIMD</var>Constructor.splat(n)</h1>
+<emu-alg><ol>
+  <li>Let <var>list</var> be a new List of length <var>SIMD</var>Descriptor.[[SIMDLength]], with all entries filled with <var>n</var>.</li>
+  <li>Return <a href="#simd-create">SIMDCreate</a>(<var>SIMD</var>Descriptor, ...<var>list</var>).</li>
+</ol></emu-alg>
+</emu-clause>
+
+<emu-clause id="simd-add">
+<h1><span class="secnum">5.2.5</span><var>SIMD</var>Constructor.add(a, b)</h1>
+<emu-note><span class="note">Note</span>This definition uses the normal definition of + on Javascript numbers. Is this appropriate for all SIMD types?</emu-note>
+<emu-alg><ol>
+  <li>If <var>a</var>.[[SIMDTypeDescriptor]] is not <var>SIMD</var>Descriptor or <var>b</var>.[[SIMDTypeDescriptor]] is not <var>SIMD</var>Descriptor, throw a TypeError.</li>
+  <li>Return <a href="#simd-binary">SIMDBinaryOp</a>(<var>a</var>, <var>b</var>, <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-applying-the-additive-operators-to-numbers">+</a>).</li>
+</ol></emu-alg>
+</emu-clause>
+
+<emu-clause id="simd-sub">
+<h1><span class="secnum">5.2.6</span><var>SIMD</var>Constructor.sub(a, b)</h1>
+<emu-note><span class="note">Note</span>This definition uses the normal definition of - on Javascript numbers. Is this appropriate for all SIMD types?</emu-note>
+<emu-alg><ol>
+  <li>If <var>a</var>.[[SIMDTypeDescriptor]] is not <var>SIMD</var>Descriptor or <var>b</var>.[[SIMDTypeDescriptor]] is not <var>SIMD</var>Descriptor, throw a TypeError.</li>
+  <li>Return <a href="#simd-binary">SIMDBinaryOp</a>(<var>a</var>, <var>b</var>, <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-applying-the-additive-operators-to-numbers">-</a>).</li>
+</ol></emu-alg>
+</emu-clause>
+
+<emu-clause id="simd-mul">
+<h1><span class="secnum">5.2.7</span><var>SIMD</var>Constructor.mul(a, b)</h1>
+<emu-note><span class="note">Note</span>This definition uses the normal definition of * on Javascript numbers. Is this appropriate for all SIMD types?</emu-note>
+<emu-alg><ol>
+  <li>If <var>a</var>.[[SIMDTypeDescriptor]] is not <var>SIMD</var>Descriptor or <var>b</var>.[[SIMDTypeDescriptor]] is not <var>SIMD</var>Descriptor, throw a TypeError.</li>
+  <li>Return <a href="#simd-binary">SIMDBinaryOp</a>(<var>a</var>, <var>b</var>, <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-applying-the-mul-operator">*</a>).</li>
+</ol></emu-alg>
+</emu-clause>
+
+<emu-clause id="simd-div">
+<h1><span class="secnum">5.2.8</span><var>SIMD</var>Constructor.div(a, b)</h1>
+<emu-note><span class="note">Note</span>This definition uses the normal definition of / on Javascript numbers. Is this appropriate for all SIMD types?</emu-note>
+<emu-alg><ol>
+  <li>If <var>a</var>.[[SIMDTypeDescriptor]] is not <var>SIMD</var>Descriptor or <var>b</var>.[[SIMDTypeDescriptor]] is not <var>SIMD</var>Descriptor, throw a TypeError.</li>
+  <li>Return <a href="#simd-binary">SIMDBinaryOp</a>(<var>a</var>, <var>b</var>, <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-applying-the-div-operator">/</a>).</li>
+</ol></emu-alg>
+</emu-clause>
+
+<emu-clause id="simd-max">
+This property is defined only on SIMD types with floating point values.
+<emu-note><span class="note">Note</span>In this specification, that includes only Float32x4 and Float64x2</emu-note>
+<h1><span class="secnum">5.2.9</span><var>SIMD</var>Constructor.max(a, b)</h1>
+<emu-alg><ol>
+  <li>If <var>a</var>.[[SIMDTypeDescriptor]] is not <var>SIMD</var>Descriptor or <var>b</var>.[[SIMDTypeDescriptor]] is not <var>SIMD</var>Descriptor, throw a TypeError.</li>
+  <li>Return <a href="#simd-binary">SIMDBinaryOp</a>(<var>a</var>, <var>b</var>, <code>Math.max</code>), for the initial value of <code>Math.max</code>.</li>
+</ol></emu-alg>
+</emu-clause>
+
+<emu-clause id="simd-min">
+This property is defined only on SIMD types with floating point values.
+<emu-note><span class="note">Note</span>In this specification, that includes only Float32x4 and Float64x2</emu-note>
+<h1><span class="secnum">5.2.10</span><var>SIMD</var>Constructor.min(a, b)</h1>
+<emu-alg><ol>
+  <li>If <var>a</var>.[[SIMDTypeDescriptor]] is not <var>SIMD</var>Descriptor or <var>b</var>.[[SIMDTypeDescriptor]] is not <var>SIMD</var>Descriptor, throw a TypeError.</li>
+  <li>Return <a href="#simd-binary">SIMDBinaryOp</a>(<var>a</var>, <var>b</var>, <code>Math.min</code>), for the initial value of <code>Math.min</code>.</li>
+</ol></emu-alg>
+</emu-clause>
+
+<emu-clause id="max-num" aoid="MaxNum">
+<h1><span class="secnum">5.2.11</span>MaxNum(n, m)</h1>
+<emu-alg><ol>
+  <li>Assert <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-ecmascript-data-types-and-values">Type</a>(<var>n</var>) is Number and <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-ecmascript-data-types-and-values">Type</a>(<var>m</var>) is Number.</li>
+  <li>If <var>n</var> is <emu-const>NaN</emu-const>, return <var>m</var>.</li>
+  <li>If <var>m</var> is <emu-const>NaN</emu-const>, return <var>n</var>.</li>
+  <li>Return <code>Math.max</code>(<var>n</var>, <var>m</var>) for the initial value of <code>Math.max</code>.</li>
+</ol></emu-alg>
+</emu-clause>
+
+<emu-clause id="simd-max-num">
+<h1><span class="secnum">5.2.12</span><var>SIMD</var>Constructor.maxNum(a, b)</h1>
+This property is defined only on SIMD types with floating point values.
+<emu-note><span class="note">Note</span>In this specification, that includes only Float32x4 and Float64x2</emu-note>
+<emu-alg><ol>
+  <li>If <var>a</var>.[[SIMDTypeDescriptor]] is not <var>SIMD</var>Descriptor or <var>b</var>.[[SIMDTypeDescriptor]] is not <var>SIMD</var>Descriptor, throw a TypeError.</li>
+  <li>Return <a href="#simd-binary">SIMDBinaryOp</a>(<var>a</var>, <var>b</var>, MaxNum).</li>
+</ol></emu-alg>
+</emu-clause>
+
+<emu-clause id="min-num" aoid="MinNum">
+<h1><span class="secnum">5.2.13</span>MinNum(n, m)</h1>
+<emu-alg><ol>
+  <li>Assert <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-ecmascript-data-types-and-values">Type</a>(<var>n</var>) is Number and <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-ecmascript-data-types-and-values">Type</a>(<var>m</var>) is Number.</li>
+  <li>If <var>n</var> is <emu-const>NaN</emu-const>, return <var>m</var>.</li>
+  <li>If <var>m</var> is <emu-const>NaN</emu-const>, return <var>n</var>.</li>
+  <li>Return <code>Math.min</code>(<var>n</var>, <var>m</var>) for the initial value of <code>Math.min</code>.</li>
+</ol></emu-alg>
+</emu-clause>
+
+<emu-clause id="simd-min-num">
+<h1><span class="secnum">5.2.14</span><var>SIMD</var>Constructor.minNum(a, b)</h1>
+This property is defined only on SIMD types with floating point values.
+<emu-note><span class="note">Note</span>In this specification, that includes only Float32x4 and Float64x2</emu-note>
+<emu-alg><ol>
+  <li>If <var>a</var>.[[SIMDTypeDescriptor]] is not <var>SIMD</var>Descriptor or <var>b</var>.[[SIMDTypeDescriptor]] is not <var>SIMD</var>Descriptor, throw a TypeError.</li>
+  <li>Return <a href="#simd-binary">SIMDBinaryOp</a>(<var>a</var>, <var>b</var>, MinNum).</li>
+</ol></emu-alg>
+</emu-clause>
+
+<emu-clause id="simd-neg">
+<h1><span class="secnum">5.2.15</span><var>SIMD</var>Constructor.neg(a, b)</h1>
+<emu-alg><ol>
+  <li>If <var>a</var>.[[SIMDTypeDescriptor]] is not <var>SIMD</var>Descriptor, throw a TypeError.</li>
+  <li>Return <a href="#simd-unary">SIMDUnaryOp</a>(<var>a</var>, <var>b</var>, <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-unary-minus-operator-runtime-semantics-evaluation">-</a>).</li>
+</ol></emu-alg>
+</emu-clause>
+
+<emu-clause id="simd-sqrt">
+<h1><span class="secnum">5.2.16</span><var>SIMD</var>Constructor.sqrt(a)</h1>
+This property is defined only on SIMD types with floating point values.
+<emu-note><span class="note">Note</span>In this specification, that includes only Float32x4 and Float64x2</emu-note>
+<emu-alg><ol>
+  <li>If <var>a</var>.[[SIMDTypeDescriptor]] is not <var>SIMD</var>Descriptor, throw a TypeError.</li>
+  <li>Return <a href="#simd-unary">SIMDUnaryOp</a>(<var>a</var>, <code>Math.sqrt</code>), for the initial value of <code>Math.sqrt</code>.</li>
+</ol></emu-alg>
+</emu-clause>
+
+<emu-clause id="reciprocal" aoid="ReciprocalApproximation">
+<h1><span class="secnum">5.2.17</span>ReciprocalApproximation(n)</h1>
+<emu-note><span class="note">Note</span>The definition here calculates the actual reciprocal. The definition should be reformulated in terms of the boundary case requirements used for function properties of the math object in <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-function-properties-of-the-math-object">20.2.2</a></emu-note>
+<emu-alg><ol>
+  <li>Assert: <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-ecmascript-data-types-and-values">Type</a>(<var>n</var>) is Number.</li>
+  <li>Return <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-tonumber">ToNumber</a>(1 / <var>n</var>).</li>
+</ol></emu-alg>
+</emu-clause>
+
+<emu-clause id="simd-reciprocal-approximation">
+<h1><span class="secnum">5.2.18</span><var>SIMD</var>Constructor.reciprocalApproximation(a, b)</h1>
+This property is defined only on SIMD types with floating point values.
+<emu-note><span class="note">Note</span>In this specification, that includes only Float32x4 and Float64x2</emu-note>
+<emu-alg><ol>
+  <li>If <var>a</var>.[[SIMDTypeDescriptor]] is not <var>SIMD</var>Descriptor, throw a TypeError.</li>
+  <li>Return <a href="#simd-unary">SIMDUnaryOp</a>(<var>a</var>, <var>b</var>, ReciprocalApproximation).</li>
+</ol></emu-alg>
+</emu-clause>
+
+<emu-clause id="reciprocal" aoid="ReciprocalApproximation">
+<h1><span class="secnum">5.2.19</span>ReciprocalApproximation(n)</h1>
+<emu-note><span class="note">Note</span>The definition here calculates the actual reciprocal. The definition should be reformulated in terms of the boundary case requirements used for function properties of the math object in <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-function-properties-of-the-math-object">20.2.2</a></emu-note>
+<emu-alg><ol>
+  <li>Assert: <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-ecmascript-data-types-and-values">Type</a>(<var>n</var>) is Number.</li>
+  <li>Return <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-tonumber">ToNumber</a>(1 / <code>Math.sqrt</code>(<var>n</var>)), for the initial value of <code>Math.sqrt</code>.</li>
+</ol></emu-alg>
+</emu-clause>
+
+<emu-clause id="simd-reciprocal-sqrt-approximation">
+<h1><span class="secnum">5.2.20</span><var>SIMD</var>Constructor.reciprocalSqrtApproximation(a)</h1>
+This property is defined only on SIMD types with floating point values.
+<emu-note><span class="note">Note</span>In this specification, that includes only Float32x4 and Float64x2</emu-note>
+<emu-alg><ol>
+  <li>If <var>a</var>.[[SIMDTypeDescriptor]] is not <var>SIMD</var>Descriptor, throw a TypeError.</li>
+  <li>Return <a href="#simd-unary">SIMDUnaryOp</a>(<var>a</var>, ReciprocalSqrtApproximation).sqrt`.</li>
+</ol></emu-alg>
+</emu-clause>
+
+<emu-clause id="simd-abs">
+<h1><span class="secnum">5.2.21</span><var>SIMD</var>Constructor.abs(a)</h1>
+<emu-alg><ol>
+  <li>If <var>a</var>.[[SIMDTypeDescriptor]] is not <var>SIMD</var>Descriptor, throw a TypeError.</li>
+  <li>Return <a href="#simd-unary">SIMDUnaryOp</a>(<var>a</var>, <code>Math.abs</code>), for the initial value of <code>Math.abs</code>.</li>
+</ol></emu-alg>
+</emu-clause>
+
+<emu-clause id="simd-extract-lane">
+<h1><span class="secnum">5.2.22</span><var>SIMD</var>Constructor.extractLane(simd, field)</h1>
+<emu-alg><ol>
+  <li>If <var>a</var>.[[SIMDTypeDescriptor]] is not <var>SIMD</var>Descriptor, throw a TypeError.</li>
+  <li>Return <a href="#simd-extract-lane">SIMDExtractLane</a>(<var>simd</var>, <var>field</var>).</li>
+</ol></emu-alg>
+</emu-clause>
+
+<emu-clause id="simd-replace-lane">
+<h1><span class="secnum">5.2.23</span><var>SIMD</var>Constructor.replaceLane(simd, field)</h1>
+<emu-alg><ol>
+  <li>If <var>a</var>.[[SIMDTypeDescriptor]] is not <var>SIMD</var>Descriptor, throw a TypeError.</li>
+  <li>Return <a href="#simd-replace-lane">SIMDReplaceLane</a>(<var>simd</var>, <var>field</var>).</li>
+</ol></emu-alg>
+</emu-clause>
+
+<emu-clause id="simd-store-function">
+<h1><span class="secnum">5.2.24</span><var>SIMD</var>Constructor.store(tarray, index, simd)</h1>
+<emu-note><span class="note">Note</span>The first seven steps of the following <code>store</code>/<code>load</code> functions are very similar. A refactoring could reduce the spec size.</emu-note>
+<emu-alg><ol>
+  <li>If <var>simd</var>.[[SIMDTypeDescriptor]] is not <var>SIMD</var>Descriptor, throw a TypeError.</li>
+  <li>If <var>tarray</var> does not have a [[ViewedArrayBuffer]] internal slot, throw a TypeError.</li>
+  <li>Let <var>block</var> be <var>tarray</var>.[[ViewedArrayBuffer]].[[ArrayBufferData]]</li>
+  <li>If <var>index</var> != <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-toint32">ToInt32</a>(<var>index</var>), throw a TypeError.</li>
+  <li>Let <var>elementLength</var> be <var>tarray</var>.[[ByteLength]] / _tarray.[[ArrayLength]].</li>
+  <li>Let <var>byteIndex</var> be <var>index</var> * <var>elementLength</var>.</li>
+  <li>If <var>byteIndex</var> + <var>SIMD</var>Descriptor.[[SIMDElementSize]] * <var>SIMD</var>Descriptor.[[SIMDLength]] &gt; <var>tarray</var>.[[ByteLength]] or <var>byteIndex</var> &lt; 0, throw a RangeError.</li>
+  <li><a href="#simd-store">SIMDStore</a>(<var>block</var>, <var>SIMD</var>Descriptor, <var>byteIndex</var>, <var>simd</var>).</li>
+</ol></emu-alg>
+</emu-clause>
+
+<emu-clause id="simd-store1">
+<h1><span class="secnum">5.2.25</span><var>SIMD</var>Constructor.store1(tarray, index, simd)</h1>
+This function is defined only on SIMD types where <var>SIMD</var>Descriptor.[[SIMDLength]] &lt;= 4.
+<emu-note><span class="note">Note</span>In this specification, that set consists of Float32x4, Int32x4, and Float64x2.</emu-note>
+<emu-alg><ol>
+  <li>If <var>simd</var>.[[SIMDTypeDescriptor]] is not <var>SIMD</var>Descriptor, throw a TypeError.</li>
+  <li>If <var>tarray</var> does not have a [[ViewedArrayBuffer]] internal slot, throw a TypeError.</li>
+  <li>Let <var>block</var> be <var>tarray</var>.[[ViewedArrayBuffer]].[[ArrayBufferData]]</li>
+  <li>If <var>index</var> != <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-toint32">ToInt32</a>(<var>index</var>), throw a TypeError.</li>
+  <li>Let <var>elementLength</var> be <var>tarray</var>.[[ByteLength]] / _tarray.[[ArrayLength]].</li>
+  <li>Let <var>byteIndex</var> be <var>index</var> * <var>elementLength</var>.</li>
+  <li>If <var>byteIndex</var> + <var>SIMD</var>Descriptor.[[SIMDElementSize]] &gt; <var>tarray</var>.[[ByteLength]] or <var>byteIndex</var> &lt; 0, throw a RangeError.</li>
+  <li><a href="#simd-store">SIMDStore</a>(<var>block</var>, <var>SIMD</var>Descriptor, <var>byteIndex</var>, <var>simd</var>, 1).</li>
+</ol></emu-alg>
+</emu-clause>
+
+<emu-clause id="simd-store2">
+<h1><span class="secnum">5.2.26</span><var>SIMD</var>Constructor.store2(tarray, index, simd)</h1>
+This function is defined only on SIMD types where <var>SIMD</var>Descriptor.[[SIMDLength]] == 4.
+<emu-note><span class="note">Note</span>In this specification, that set consists of Float32x4 and Int32x4.</emu-note>
+<emu-alg><ol>
+  <li>If <var>simd</var>.[[SIMDTypeDescriptor]] is not <var>SIMD</var>Descriptor, throw a TypeError.</li>
+  <li>If <var>tarray</var> does not have a [[ViewedArrayBuffer]] internal slot, throw a TypeError.</li>
+  <li>Let <var>block</var> be <var>tarray</var>.[[ViewedArrayBuffer]].[[ArrayBufferData]]</li>
+  <li>If <var>index</var> != <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-toint32">ToInt32</a>(<var>index</var>), throw a TypeError.</li>
+  <li>Let <var>elementLength</var> be <var>tarray</var>.[[ByteLength]] / _tarray.[[ArrayLength]].</li>
+  <li>Let <var>byteIndex</var> be <var>index</var> * <var>elementLength</var>.</li>
+  <li>If <var>byteIndex</var> + <var>SIMD</var>Descriptor.[[SIMDElementSize]] * 2 &gt; <var>tarray</var>.[[ByteLength]] or <var>byteIndex</var> &lt; 0, throw a RangeError.</li>
+  <li><a href="#simd-store">SIMDStore</a>(<var>block</var>, <var>SIMD</var>Descriptor, <var>byteIndex</var>, <var>simd</var>, 2).</li>
+</ol></emu-alg>
+</emu-clause>
+
+<emu-clause id="simd-store3">
+<h1><span class="secnum">5.2.27</span><var>SIMD</var>Constructor.store3(tarray, index)</h1>
+This function is defined only on SIMD types where <var>SIMD</var>Descriptor.[[SIMDLength]] == 4.
+<emu-note><span class="note">Note</span>In this specification, that set consists of Float32x4 and Int32x4.</emu-note>
+<emu-alg><ol>
+  <li>If <var>simd</var>.[[SIMDTypeDescriptor]] is not <var>SIMD</var>Descriptor, throw a TypeError.</li>
+  <li>If <var>tarray</var> does not have a [[ViewedArrayBuffer]] internal slot, throw a TypeError.</li>
+  <li>Let <var>block</var> be <var>tarray</var>.[[ViewedArrayBuffer]].[[ArrayBufferData]]</li>
+  <li>If <var>index</var> != <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-toint32">ToInt32</a>(<var>index</var>), throw a TypeError.</li>
+  <li>Let <var>elementLength</var> be <var>tarray</var>.[[ByteLength]] / _tarray.[[ArrayLength]].</li>
+  <li>Let <var>byteIndex</var> be <var>index</var> * <var>elementLength</var>.</li>
+  <li>If <var>byteIndex</var> + <var>SIMD</var>Descriptor.[[SIMDElementSize]] * 3 &gt; <var>tarray</var>.[[ByteLength]] or <var>byteIndex</var> &lt; 0, throw a RangeError.</li>
+  <li>Return <a href="#simd-store">SIMDStore</a>(<var>block</var>, <var>SIMD</var>Descriptor, <var>byteIndex</var>, 3).</li>
+</ol></emu-alg>
+</emu-clause>
+
+<emu-clause id="simd-load-function">
+<h1><span class="secnum">5.2.28</span><var>SIMD</var>Constructor.load(tarray, index)</h1>
+<emu-alg><ol>
+  <li>If <var>tarray</var> does not have a [[ViewedArrayBuffer]] internal slot, throw a TypeError.</li>
+  <li>Let <var>block</var> be <var>tarray</var>.[[ViewedArrayBuffer]].[[ArrayBufferData]]</li>
+  <li>If <var>index</var> != <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-toint32">ToInt32</a>(<var>index</var>), throw a TypeError.</li>
+  <li>Let <var>elementLength</var> be <var>tarray</var>.[[ByteLength]] / _tarray.[[ArrayLength]].</li>
+  <li>Let <var>byteIndex</var> be <var>index</var> * <var>elementLength</var>.</li>
+  <li>If <var>byteIndex</var> + <var>SIMD</var>Descriptor.[[SIMDElementSize]] * <var>SIMD</var>Descriptor.[[SIMDLength]] &gt; <var>tarray</var>.[[ByteLength]] or <var>byteIndex</var> &lt; 0, throw a RangeError.</li>
+  <li>Return <a href="#simd-load">SIMDLoad</a>(<var>block</var>, <var>SIMD</var>Descriptor, <var>byteIndex</var>).</li>
+</ol></emu-alg>
+</emu-clause>
+
+<emu-clause id="simd-load1">
+<h1><span class="secnum">5.2.29</span><var>SIMD</var>Constructor.load1(tarray, index)</h1>
+This function is defined only on SIMD types where <var>SIMD</var>Descriptor.[[SIMDLength]] &lt;= 4.
+<emu-note><span class="note">Note</span>In this specification, that set consists of Float32x4, Int32x4, and Float64x2.</emu-note>
+<emu-alg><ol>
+  <li>If <var>tarray</var> does not have a [[ViewedArrayBuffer]] internal slot, throw a TypeError.</li>
+  <li>Let <var>block</var> be <var>tarray</var>.[[ViewedArrayBuffer]].[[ArrayBufferData]]</li>
+  <li>If <var>index</var> != <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-toint32">ToInt32</a>(<var>index</var>), throw a TypeError.</li>
+  <li>Let <var>elementLength</var> be <var>tarray</var>.[[ByteLength]] / _tarray.[[ArrayLength]].</li>
+  <li>Let <var>byteIndex</var> be <var>index</var> * <var>elementLength</var>.</li>
+  <li>If <var>byteIndex</var> + <var>SIMD</var>Descriptor.[[SIMDElementSize]] &gt; <var>tarray</var>.[[ByteLength]] or <var>byteIndex</var> &lt; 0, throw a RangeError.</li>
+  <li>Return <a href="#simd-load">SIMDLoad</a>(<var>block</var>, <var>SIMD</var>Descriptor, <var>byteIndex</var>, 1).</li>
+</ol></emu-alg>
+</emu-clause>
+
+<emu-clause id="simd-load2">
+<h1><span class="secnum">5.2.30</span><var>SIMD</var>Constructor.load2(tarray, index)</h1>
+This function is defined only on SIMD types where <var>SIMD</var>Descriptor.[[SIMDLength]] == 4.
+<emu-note><span class="note">Note</span>In this specification, that set consists of Float32x4 and Int32x4.</emu-note>
+<emu-alg><ol>
+  <li>If <var>tarray</var> does not have a [[ViewedArrayBuffer]] internal slot, throw a TypeError.</li>
+  <li>Let <var>block</var> be <var>tarray</var>.[[ViewedArrayBuffer]].[[ArrayBufferData]]</li>
+  <li>If <var>index</var> != <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-toint32">ToInt32</a>(<var>index</var>), throw a TypeError.</li>
+  <li>Let <var>elementLength</var> be <var>tarray</var>.[[ByteLength]] / _tarray.[[ArrayLength]].</li>
+  <li>Let <var>byteIndex</var> be <var>index</var> * <var>elementLength</var>.</li>
+  <li>If <var>byteIndex</var> + <var>SIMD</var>Descriptor.[[SIMDElementSize]] * 2 &gt; <var>tarray</var>.[[ByteLength]] or <var>byteIndex</var> &lt; 0, throw a RangeError.</li>
+  <li>Return <a href="#simd-load">SIMDLoad</a>(<var>block</var>, <var>SIMD</var>Descriptor, <var>byteIndex</var>, 2).</li>
+</ol></emu-alg>
+</emu-clause>
+
+<emu-clause id="simd-load3">
+<h1><span class="secnum">5.2.31</span><var>SIMD</var>Constructor.load3(tarray, index)</h1>
+This function is defined only on SIMD types where <var>SIMD</var>Descriptor.[[SIMDLength]] == 4.
+<emu-note><span class="note">Note</span>In this specification, that set consists of Float32x4 and Int32x4.</emu-note>
+<emu-alg><ol>
+  <li>If <var>tarray</var> does not have a [[ViewedArrayBuffer]] internal slot, throw a TypeError.</li>
+  <li>Let <var>block</var> be <var>tarray</var>.[[ViewedArrayBuffer]].[[ArrayBufferData]]</li>
+  <li>If <var>index</var> != <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-toint32">ToInt32</a>(<var>index</var>), throw a TypeError.</li>
+  <li>Let <var>elementLength</var> be <var>tarray</var>.[[ByteLength]] / _tarray.[[ArrayLength]].</li>
+  <li>Let <var>byteIndex</var> be <var>index</var> * <var>elementLength</var>.</li>
+  <li>If <var>byteIndex</var> + <var>SIMD</var>Descriptor.[[SIMDElementSize]] * 3 &gt; <var>tarray</var>.[[ByteLength]] or <var>byteIndex</var> &lt; 0, throw a RangeError.</li>
+  <li>Return <a href="#simd-load">SIMDLoad</a>(<var>block</var>, <var>SIMD</var>Descriptor, <var>byteIndex</var>, 3).</li>
+</ol></emu-alg>
+</emu-clause>
+
+<emu-clause id="simd-to-timd">
+<h1><span class="secnum">5.2.32</span><var>SIMD</var>Constructor.from<var>TIMD</var>Bits( value )</h1>
+In this definition, <var>TIMD</var> ranges over all SIMD types for which <var>SIMD</var>Descriptor.[[SIMDElementSize]] * <var>SIMD</var>Descriptor.[[SIMDLength]] == <var>TIMD</var>Descriptor.[[SIMDElementSize]] * <var>TIMD</var>Descriptor.[[SIMDLength]].
+<emu-note><span class="note">Note</span>All of the SIMD types described in this spec are 16 bytes, so all pairs are included.</emu-note>
+<emu-alg><ol>
+  <li>If <var>value</var>.[[SIMDTypeDescriptor]] is not <var>TIMD</var>Descriptor, throw a TypeError.</li>
+  <li>Return <a href="#simd-reinterpret-cast">SIMDReinterpretCast</a>(<var>value</var>, <var>SIMD</var>Descriptor).</li>
+</ol></emu-alg>
+</emu-clause>
+
+<emu-clause id="swizzle">
+<h1><span class="secnum">5.2.33</span><var>SIMD</var>.swizzle( a, lanes... )</h1>
+<emu-alg><ol>
+  <li>If <var>a</var>.[[SIMDTypeDescriptor]] is not <var>SIMD</var>Descriptor, throw a <emu-const>TypeError</emu-const>.</li>
+  <li>If the length of <var>lanes</var> does not equal <var>SIMD</var>Descriptor.[[SIMDLength]], throw a <emu-const>TypeError</emu-const>.</li>
+  <li>For each <var>lane</var> in <var>lanes</var>:
+    <ol>
+      <li>If <var>lane</var> is not a Number, or <var>lane</var> != <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-toint32">ToInt32</a>(<var>lane</var>), throw a <emu-const>TypeError</emu-const>.</li>
+      <li>If <var>lane</var> &lt; 0 or <var>lane</var> &gt;= <var>SIMD</var>Descriptor.[[SIMDLength]], throw a <emu-const>RangeError</emu-const>.</li>
+    </ol>
+  </li>
+  <li>Let <var>list</var> be a new List of length <var>SIMD</var>Descriptor.[[SIMDLength]].</li>
+  <li>For <var>i</var> in from 0 to <var>SIMD</var>Descriptor.[[SIMDLength]] - 1,
+    <ol>
+      <li>Set <var>list</var>[<var>i</var>] to <a href="#simd-extract-lane">SIMDExtractLane</a>(<var>a</var>, <var>lanes</var>[<var>i</var>])</li>
+    </ol>
+  </li>
+  <li>Return <a href="#simd-create">SIMDCreate</a>(<var>SIMD</var>Descriptor, ...<var>list</var>).</li>
+</ol></emu-alg>
+</emu-clause>
+
+<emu-clause id="shuffle">
+<h1><span class="secnum">5.2.34</span><var>SIMD</var>.shuffle( a, b, lanes... )</h1>
+<emu-alg><ol>
+  <li>If <var>a</var>.[[SIMDTypeDescriptor]] is not <var>SIMD</var>Descriptor, or if <var>b</var>.[[SIMDTypeDescriptor]] is not <var>SIMD</var>Descriptor, throw a <emu-const>TypeError</emu-const>.</li>
+  <li>If the length of <var>lanes</var> does not equal <var>SIMD</var>Descriptor.[[SIMDLength]] * 2, throw a <emu-const>TypeError</emu-const>.</li>
+  <li>For each <var>lane</var> in <var>lanes</var>:
+    <ol>
+      <li>If <var>lane</var> is not a Number, or <var>lane</var> != <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-toint32">ToInt32</a>(<var>lane</var>), throw a <emu-const>TypeError</emu-const>.</li>
+      <li>If <var>lane</var> &lt; 0 or <var>lane</var> &gt;= <var>SIMD</var>Descriptor.[[SIMDLength]] * 2, throw a <emu-const>RangeError</emu-const>.</li>
+    </ol>
+  </li>
+  <li>Let <var>list</var> be a new List of length <var>SIMD</var>Descriptor.[[SIMDLength]].</li>
+  <li>For <var>i</var> in from 0 to <var>SIMD</var>Descriptor.[[SIMDLength]] - 1,
+    <ol>
+      <li>Let <var>idx</var> be <var>lanes</var>[<var>i</var>].</li>
+      <li>If <var>idx</var> &gt;= <var>SIMD</var>Descriptor.[[SIMDLength]],
+        <ol>
+          <li>Set <var>list</var>[<var>i</var>] to <a href="#simd-extract-lane">SIMDExtractLane</a>(<var>b</var>, <var>lanes</var>[<var>i</var>] - <var>SIMD</var>Descriptor.[[SIMDLength]])</li>
+        </ol>
+      </li>
+      <li>Otherwise,
+        <ol>
+          <li>Set <var>list</var>[<var>i</var>] to <a href="#simd-extract-lane">SIMDExtractLane</a>(<var>a</var>, <var>lanes</var>[<var>i</var>])</li>
+        </ol>
+      </li>
+    </ol>
+  </li>
+  <li>Return <a href="#simd-create">SIMDCreate</a>(<var>SIMD</var>Descriptor, ...<var>list</var>).</li>
+</ol></emu-alg>
+</emu-clause>
+
+
+</emu-clause>
+
+<emu-clause id="simd-proto">
+<h1><span class="secnum">5.3</span>The <var>SIMD</var>Constructor.prototype</h1>
+
+<emu-note><span class="note">Note</span>
+Previously, if accessors like x were included, these would be spec'd as getters (with null setter) on the <var>SIMD</var>Constructor.prototype . However, they have been removed in favor of <var>SIMD</var>Constructor.extractLane. Are there any non-trivial properties? Users could add methods like .add() here if they want to use SIMD in an object-oriented way. It would also be easy to define properties on the prototype that would make SIMD values and wrapper objects array-like.
+</emu-note>
+
+<emu-clause id="simd-proto-constructor">
+<h1><span class="secnum">5.3.1</span><var>SIMD</var>Constructor.prototype.constructor</h1>
+
+The initial value of <var>SIMD</var>Constructor.prototype.constructor is the intrinsic object %<var>SIMD</var>Constructor%
+</emu-clause>
+</emu-clause>
+
+<emu-clause id="simd-descriptors">
+<h1><span class="secnum">5.4</span>SIMD type descriptors</h1>
+In the internal algorithms in this section, preceding the first step, if <var>isLittleEndian</var> is not present, set <var>isLittleEndian</var> to either <emu-const>true</emu-const> or <emu-const>false</emu-const>. The choice is implementation dependent and should be the alternative that is most efficient for the implementation. An implementation must use the same value each time one of the following algorithms is executed, and it must be consistent across all algorithms.
+<emu-note><span class="note">Note</span>A refactoring might be able to reduce the size of this section somewhat.</emu-note>
+
+<emu-clause id="simd-float32x4">
+<h1><span class="secnum">5.4.1</span>Float32x4Descriptor type descriptor</h1>
+<p>
+The Float32x4Descriptor SIMD type descriptor has the following internal slots:
+</p>
+<ul>
+<li>[[SIMDLength]]: 4</li>
+<li>[[SIMDElementSize]]: 4</li>
+<li>[[SIMDCastNumber]]: the initial value of Math.fround</li>
+<li>[[SIMDSerializeElement]]: SerializeFloat32</li>
+<li>[[SIMDDeserializeElement]]: DeserializeFloat32</li>
+</ul>
+
+<emu-clause id="serialize-float32" aoid="SerializeFloat32">
+<h1><span class="secnum">5.4.1.1</span>SerializeFloat32( block, offset, n, isLittleEndian )</h1>
+<emu-note><span class="note">Note</span>Derived from part of <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-setvalueinbuffer">SetValueInBuffer</a>. Note that this specification does not require a particular bit pattern for <emu-const>NaN</emu-const>, and that it does not need to be the same across calls, but it cannot be signalling because the serialized value should be safe for other code to read, if a number is placed in an external ArrayBuffer which is read by external code.</emu-note>
+<emu-alg><ol>
+  <li>Assert: <var>block</var> is a Data Block.</li>
+  <li>Assert: <var>offset</var> is a number.</li>
+  <li>Assert: <var>n</var> is a number.</li>
+  <li>Assert: <var>offset</var> + 4 is less than or equal to the size of <var>block</var>.</li>
+  <li>Set <var>rawBytes</var> to a List containing the 4 bytes that are the result of converting value to IEEE 754-2008 binary32 format using “Round to nearest, ties to even” rounding mode. If <var>isLittleEndian</var> is <emu-const>false</emu-const>, the bytes are arranged in big endian order. Otherwise, the bytes are arranged in little endian order. If value is <emu-const>NaN</emu-const>, <var>rawValue</var> may be set to any implementation chosen non-signaling <emu-const>NaN</emu-const> encoding. An implementation must always choose the same non-signaling <emu-const>NaN</emu-const> encoding for a distinct Not-a-Number value.</li>
+  <li>Store the individual bytes of <var>rawBytes</var> into <var>block</var>, in order, starting at <var>block</var>[<var>offset</var>].</li>
+</ol></emu-alg>
+</emu-clause>
+
+<emu-clause id="deserialize-float32" aoid="DeserializeFloat32">
+<h1><span class="secnum">5.4.1.2</span>DeserializeFloat32( block, offset, isLittleEndian )</h1>
+<emu-note><span class="note">Note</span>Derived from part of <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-getvaluefrombuffer">GetValueFromBuffer</a>. Note that while this says to return "the <emu-const>NaN</emu-const> value", the binary representation is not observable and canonicalization is not required.</emu-note>
+<emu-alg><ol>
+  <li>Assert: <var>block</var> is a Data Block.</li>
+  <li>Assert: <var>offset</var> is a number.</li>
+  <li>Assert: <var>offset</var> + 4 is less than or equal to the size of <var>block</var>.</li>
+  <li>Let <var>rawValue</var> be a List of 4 containing, in order, the sequence of 4 bytes starting with <var>block</var>[<var>offset</var>].</li>
+  <li>If <var>isLittleEndian</var> is <emu-const>false</emu-const>, reverse the order of the elements of <var>rawValue</var>.</li>
+  <li>Let <var>value</var> be the byte elements of rawValue concatenated and interpreted as a little-endian bit string encoding of an IEEE 754-2008 binary32 value.</li>
+  <li>If <var>value</var> is an IEEE 754-2008 binary32 <emu-const>NaN</emu-const> value, return the <emu-const>NaN</emu-const> Number value.</li>
+  <li>Return the Number value that corresponds to <var>value</var>.</li>
+</ol></emu-alg>
+</emu-clause>
+</emu-clause>
+
+<emu-clause id="simd-float64x2">
+<h1><span class="secnum">5.4.2</span>Float64x2Descriptor type descriptor</h1>
+<p>
+The Float64x2Descriptor SIMD type descriptor has the following internal slots:
+</p>
+<ul>
+<li>[[SIMDLength]]: 2</li>
+<li>[[SIMDElementSize]]: 8</li>
+<li>[[SIMDCastNumber]]: ToNumber</li>
+<li>[[SIMDSerializeElement]]: SerializeFloat64</li>
+<li>[[SIMDDeserializeElement]]: DeserializeFloat64</li>
+</ul>
+
+<emu-clause id="serialize-float64" aoid="SerializeFloat64">
+<h1><span class="secnum">5.4.2.1</span>SerializeFloat64( block, offset, n, isLittleEndian )</h1>
+<emu-note><span class="note">Note</span>Derived from part of <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-setvalueinbuffer">SetValueInBuffer</a>. Note that this specification does not require a particular bit pattern for <emu-const>NaN</emu-const>, and that it does not need to be the same across calls, but it cannot be signalling because the serialized value should be safe for other code to read, if a number is placed in an external ArrayBuffer which is read by external code.</emu-note>
+<emu-alg><ol>
+  <li>Assert: <var>block</var> is a Data Block.</li>
+  <li>Assert: <var>offset</var> is a number.</li>
+  <li>Assert: <var>n</var> is a number.</li>
+  <li>Assert: <var>offset</var> + 8 is less than or equal to the size of <var>block</var>.</li>
+  <li>Set <var>rawBytes</var> to a List containing the 8 bytes that are the result of converting value to IEEE 754-2008 binary64 format using “Round to nearest, ties to even” rounding mode. If <var>isLittleEndian</var> is <emu-const>false</emu-const>, the bytes are arranged in big endian order. Otherwise, the bytes are arranged in little endian order. If value is <emu-const>NaN</emu-const>, <var>rawValue</var> may be set to any implementation chosen non-signaling <emu-const>NaN</emu-const> encoding. An implementation must always choose the same non-signaling <emu-const>NaN</emu-const> encoding for a distinct Not-a-Number value.</li>
+  <li>Store the individual bytes of <var>rawBytes</var> into <var>block</var>, in order, starting at <var>block</var>[<var>offset</var>].</li>
+</ol></emu-alg>
+</emu-clause>
+
+<emu-clause id="deserialize-float64" aoid="DeserializeFloat64">
+<h1><span class="secnum">5.4.2.2</span>DeserializeFloat64( block, offset, isLittleEndian )</h1>
+<emu-note><span class="note">Note</span>Derived from part of <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-getvaluefrombuffer">GetValueFromBuffer</a>. Note that while this says to return "the <emu-const>NaN</emu-const> value", the binary representation is not observable and canonicalization is not required.</emu-note>
+<emu-alg><ol>
+  <li>Assert: <var>block</var> is a Data Block.</li>
+  <li>Assert: <var>offset</var> is a number.</li>
+  <li>Assert: <var>offset</var> + 8 is less than or equal to the size of <var>block</var>.</li>
+  <li>Let <var>rawValue</var> be a List of 8 containing, in order, the sequence of 8 bytes starting with <var>block</var>[<var>offset</var>].</li>
+  <li>If <var>isLittleEndian</var> is <emu-const>false</emu-const>, reverse the order of the elements of <var>rawValue</var>.</li>
+  <li>Let <var>value</var> be the byte elements of rawValue concatenated and interpreted as a little-endian bit string encoding of an IEEE 754-2008 binary64 value.</li>
+  <li>If <var>value</var> is an IEEE 754-2008 binary64 <emu-const>NaN</emu-const> value, return the <emu-const>NaN</emu-const> Number value.</li>
+  <li>Return the Number value that corresponds to <var>value</var>.</li>
+</ol></emu-alg>
+</emu-clause>
+</emu-clause>
+
+<emu-clause id="simd-int32x4">
+<h1><span class="secnum">5.4.3</span>Int32x4Descriptor type descriptor</h1>
+<p>
+The Int32x4Descriptor SIMD type descriptor has the following internal slots:
+</p>
+<ul>
+<li>[[SIMDLength]]: 4</li>
+<li>[[SIMDElementSize]]: 4</li>
+<li>[[SIMDCastNumber]]: ToInt32</li>
+<li>[[SIMDSerializeElement]]: SerializeInt32</li>
+<li>[[SIMDDeserializeElement]]: DeserializeInt32</li>
+</ul>
+
+<emu-clause id="serialize-int32" aoid="SerializeInt32">
+<h1><span class="secnum">5.4.3.1</span>SerializeInt32( block, offset, n, isLittleEndian )</h1>
+<emu-note><span class="note">Note</span>Derived from part of <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-setvalueinbuffer">SetValueInBuffer</a>.</emu-note>
+<emu-alg><ol>
+  <li>Assert: <var>block</var> is a Data Block.</li>
+  <li>Assert: <var>offset</var> is a number.</li>
+  <li>Assert: <var>n</var> is a number.</li>
+  <li>Assert: <var>n</var> == <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-toint32">ToInt32</a>(<var>n</var>).</li>
+  <li>Assert: <var>offset</var> + 4 is less than or equal to the size of <var>block</var>.</li>
+  <li>Let <var>rawBytes</var> be a List containing the 4-byte binary 2’s complement encoding of <var>n</var>. If <var>isLittleEndian</var> is <emu-const>false</emu-const>, the bytes are ordered in big endian order. Otherwise, the bytes are ordered in little endian order.</li>
+  <li>Store the individual bytes of <var>rawBytes</var> into <var>block</var>, in order, starting at <var>block</var>[<var>offset</var>].</li>
+</ol></emu-alg>
+</emu-clause>
+
+<emu-clause id="deserialize-int32" aoid="DeserializeInt32">
+<h1><span class="secnum">5.4.3.2</span>DeserializeInt32( block, offset, isLittleEndian )</h1>
+<emu-note><span class="note">Note</span>Derived from part of <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-getvaluefrombuffer">GetValueFromBuffer</a>.</emu-note>
+<emu-alg><ol>
+  <li>Assert: <var>block</var> is a Data Block.</li>
+  <li>Assert: <var>offset</var> is a number.</li>
+  <li>Assert: <var>offset</var> + 4 is less than or equal to the size of <var>block</var>.</li>
+  <li>Let <var>rawValue</var> be a List of 4 containing, in order, the sequence of 4 bytes starting with <var>block</var>[<var>offset</var>].</li>
+  <li>If <var>isLittleEndian</var> is <emu-const>false</emu-const>, reverse the order of the elements of <var>rawValue</var>.</li>
+  <li>Let <var>intValue</var> be the byte elements of <var>rawValue</var> concatenated and interpreted as a bit string encoding of a binary little-endian 2’s complement number of bit length 32.</li>
+  <li>Return the Number value that corresponds to <var>intValue</var>.</li>
+</ol></emu-alg>
+</emu-clause>
+</emu-clause>
+
+<emu-clause id="simd-int16x8">
+<h1><span class="secnum">5.4.4</span>Int16x8Descriptor type descriptor</h1>
+<p>
+The Int16x8Descriptor SIMD type descriptor has the following internal slots:
+</p>
+<ul>
+<li>[[SIMDLength]]: 8</li>
+<li>[[SIMDElementSize]]: 2</li>
+<li>[[SIMDCastNumber]]: ToInt16</li>
+<li>[[SIMDSerializeElement]]: SerializeInt16</li>
+<li>[[SIMDDeserializeElement]]: DeserializeInt16</li>
+</ul>
+
+<emu-clause id="serialize-int16" aoid="SerializeInt16">
+<h1><span class="secnum">5.4.4.1</span>SerializeInt16( block, offset, n, isLittleEndian )</h1>
+<emu-note><span class="note">Note</span>Derived from part of <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-setvalueinbuffer">SetValueInBuffer</a>.</emu-note>
+<emu-alg><ol>
+  <li>Assert: <var>block</var> is a Data Block.</li>
+  <li>Assert: <var>offset</var> is a number.</li>
+  <li>Assert: <var>n</var> is a number.</li>
+  <li>Assert: <var>n</var> == ToInt16(<var>n</var>).</li>
+  <li>Assert: <var>offset</var> + 2 is less than or equal to the size of <var>block</var>.</li>
+  <li>Let <var>rawBytes</var> be a List containing the 2-byte binary 2’s complement encoding of <var>n</var>. If <var>isLittleEndian</var> is <emu-const>false</emu-const>, the bytes are ordered in big endian order. Otherwise, the bytes are ordered in little endian order.</li>
+  <li>Store the individual bytes of <var>rawBytes</var> into <var>block</var>, in order, starting at <var>block</var>[<var>offset</var>].</li>
+</ol></emu-alg>
+</emu-clause>
+
+<emu-clause id="deserialize-int16" aoid="DeserializeInt16">
+<h1><span class="secnum">5.4.4.2</span>DeserializeInt16( block, offset, isLittleEndian )</h1>
+<emu-note><span class="note">Note</span>Derived from part of <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-getvaluefrombuffer">GetValueFromBuffer</a>.</emu-note>
+<emu-alg><ol>
+  <li>Assert: <var>block</var> is a Data Block.</li>
+  <li>Assert: <var>offset</var> is a number.</li>
+  <li>Assert: <var>offset</var> + 4 is less than or equal to the size of <var>block</var>.</li>
+  <li>Let <var>rawValue</var> be a List of 4 containing, in order, the sequence of 2 bytes starting with <var>block</var>[<var>offset</var>].</li>
+  <li>If <var>isLittleEndian</var> is <emu-const>false</emu-const>, reverse the order of the elements of <var>rawValue</var>.</li>
+  <li>Let <var>intValue</var> be the byte elements of <var>rawValue</var> concatenated and interpreted as a bit string encoding of a binary little-endian 2’s complement number of bit length 16.</li>
+  <li>Return the Number value that corresponds to <var>intValue</var>.</li>
+</ol></emu-alg>
+</emu-clause>
+</emu-clause>
+
+<emu-clause id="simd-int8x16">
+<h1><span class="secnum">5.4.5</span>Int8x16Descriptor type descriptor</h1>
+<p>
+The Int8x16Descriptor SIMD type descriptor has the following internal slots:
+</p>
+<ul>
+<li>[[SIMDLength]]: 16</li>
+<li>[[SIMDElementSize]]: 1</li>
+<li>[[SIMDCastNumber]]: ToInt8</li>
+<li>[[SIMDSerializeElement]]: SerializeInt8</li>
+<li>[[SIMDDeserializeElement]]: DeserializeInt8</li>
+</ul>
+
+<emu-clause id="serialize-int8" aoid="SerializeInt8">
+<h1><span class="secnum">5.4.5.1</span>SerializeInt8( block, offset, n, isLittleEndian )</h1>
+<emu-note><span class="note">Note</span>Derived from part of <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-setvalueinbuffer">SetValueInBuffer</a>.</emu-note>
+<emu-alg><ol>
+  <li>Assert: <var>block</var> is a Data Block.</li>
+  <li>Assert: <var>offset</var> is a number.</li>
+  <li>Assert: <var>n</var> is a number.</li>
+  <li>Assert: <var>n</var> == ToInt8(<var>n</var>).</li>
+  <li>Assert: <var>offset</var> + 1 is less than or equal to the size of <var>block</var>.</li>
+  <li>Let <var>rawBytes</var> be a List containing the 1-byte binary 2’s complement encoding of <var>n</var>.</li>
+  <li>Store the individual bytes of <var>rawBytes</var> into <var>block</var>, in order, starting at <var>block</var>[<var>offset</var>].</li>
+</ol></emu-alg>
+</emu-clause>
+
+<emu-clause id="deserialize-int8" aoid="DeserializeInt8">
+<h1><span class="secnum">5.4.5.2</span>DeserializeInt8( block, offset, isLittleEndian )</h1>
+<emu-note><span class="note">Note</span>Derived from part of <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-getvaluefrombuffer">GetValueFromBuffer</a>.</emu-note>
+<emu-alg><ol>
+  <li>Assert: <var>block</var> is a Data Block.</li>
+  <li>Assert: <var>offset</var> is a number.</li>
+  <li>Assert: <var>offset</var> + 4 is less than or equal to the size of <var>block</var>.</li>
+  <li>Let <var>rawValue</var> be a List of one element containing, the singleton byte at <var>block</var>[<var>offset</var>].</li>
+  <li>Let <var>intValue</var> be the byte elements of <var>rawValue</var> concatenated and interpreted as a bit string encoding of a binary little-endian 2’s complement number of bit length 8.</li>
+  <li>Return the Number value that corresponds to <var>intValue</var>.</li>
+</ol></emu-alg>
+</emu-clause>
+</emu-clause>
+
+
+</emu-clause>
+</emu-clause>
+
+</body>

@@ -60,7 +60,10 @@
         sum4 = SIMD.int32x4.add(sum4, SIMD.int32x4.load(a, j << 2));
       }
     }
-    return (sum4.x + sum4.y + sum4.z + sum4.w)/a.length;
+    return (SIMD.int32x4.extractLane(sum4, 0) +
+        SIMD.int32x4.extractLane(sum4, 1) +
+        SIMD.int32x4.extractLane(sum4, 2) +
+        SIMD.int32x4.extractLane(sum4, 3)) / a.length;
   }
 
 } ());
