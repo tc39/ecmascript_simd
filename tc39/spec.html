@@ -51,6 +51,7 @@ Related links:
 </li>
 <li>v0.3: Add more operations, fix some errors and clarify wording.</li>
 <li>v0.4: Fix various bugs, mostly reported by rwaldron.</li>
+<li>v0.4.1: Refactor definitions for integer types to reduce duplication.</li>
 </ul>
 <p>TODO:</p>
 <ul>
@@ -984,7 +985,6 @@ The initial value of _SIMD_Constructor.prototype.constructor is the intrinsic ob
 <emu-clause id="simd-descriptors">
 <h1>SIMD type descriptors</h1>
 In the internal algorithms in this section, preceding the first step, if _isLittleEndian_ is not present, set _isLittleEndian_ to either ~true~ or ~false~. The choice is implementation dependent and should be the alternative that is most efficient for the implementation. An implementation must use the same value each time one of the following algorithms is executed, and it must be consistent across all algorithms.
-<emu-note>A refactoring might be able to reduce the size of this section somewhat.</emu-note>
 
 <emu-clause id="simd-float32x4">
 <h1>Float32x4Descriptor type descriptor</h1>
@@ -1083,31 +1083,45 @@ The Int32x4Descriptor SIMD type descriptor has the following internal slots:
 <li>[[SIMDDeserializeElement]]: DeserializeInt32</li>
 </ul>
 
-<emu-clause id="serialize-int32" aoid="SerializeInt32">
-<h1>SerializeInt32( block, offset, n, isLittleEndian )</h1>
+<emu-clause id="serialize-int" aoid="SerializeInt">
+<h1>SerializeInt( block, offset, n, isLittleEndian, descriptor )</h1>
 <emu-note>Derived from part of <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-setvalueinbuffer">SetValueInBuffer</a>.</emu-note>
 <emu-alg>
 1. Assert: _block_ is a Data Block.
 1. Assert: _offset_ is a number.
 1. Assert: _n_ is a number.
-1. Assert: _n_ == ToInt32(_n_).
-1. Assert: _offset_ + 4 is less than or equal to the size of _block_.
-1. Let _rawBytes_ be a List containing the 4-byte binary 2’s complement encoding of _n_. If _isLittleEndian_ is ~false~, the bytes are ordered in big endian order. Otherwise, the bytes are ordered in little endian order.
+1. Assert: _n_ == _descriptor_.[[SIMDCastNumber]](_n_).
+1. Assert: _offset_ + _descriptor_.[[SIMDElementSize]] is less than or equal to the size of _block_.
+1. Let _rawBytes_ be a List containing the _descriptor_.[[SIMDElementSize]]-byte binary 2’s complement encoding of _n_. If _isLittleEndian_ is ~false~, the bytes are ordered in big endian order. Otherwise, the bytes are ordered in little endian order.
 1. Store the individual bytes of _rawBytes_ into _block_, in order, starting at <var>block</var>[<var>offset</var>].
+</emu-alg>
+</emu-clause>
+
+<emu-clause id="deserialize-int32" aoid="DeserializeInt">
+<h1>DeserializeInt( block, offset, isLittleEndian, descriptor )</h1>
+<emu-note>Derived from part of <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-getvaluefrombuffer">GetValueFromBuffer</a>.</emu-note>
+<emu-alg>
+1. Assert: _block_ is a Data Block.
+1. Assert: _offset_ is a number.
+1. Assert: _offset_ + _descriptor_.[[SIMDElementSize]] is less than or equal to the size of _block_.
+1. Let _rawValue_ be a List of _descriptor_.[[SIMDElementSize]] containing, in order, the sequence of _descriptor_.[[SIMDElementSize]] bytes starting with <var>block</var>[<var>offset</var>].
+1. If _isLittleEndian_ is ~false~, reverse the order of the elements of _rawValue_.
+1. Let _intValue_ be the byte elements of _rawValue_ concatenated and interpreted as a bit string encoding of a binary little-endian 2’s complement number of bit length _descriptor_.[[SIMDElementSize]] × 8.
+1. Return the Number value that corresponds to _intValue_.
+</emu-alg>
+</emu-clause>
+
+<emu-clause id="serialize-int32" aoid="SerializeInt32">
+<h1>SerializeInt32( block, offset, n, isLittleEndian )</h1>
+<emu-alg>
+1. SerializeInt( block, offset, n, isLittleEndian, Int32x4Descriptor ).
 </emu-alg>
 </emu-clause>
 
 <emu-clause id="deserialize-int32" aoid="DeserializeInt32">
 <h1>DeserializeInt32( block, offset, isLittleEndian )</h1>
-<emu-note>Derived from part of <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-getvaluefrombuffer">GetValueFromBuffer</a>.</emu-note>
 <emu-alg>
-1. Assert: _block_ is a Data Block.
-1. Assert: _offset_ is a number.
-1. Assert: _offset_ + 4 is less than or equal to the size of _block_.
-1. Let _rawValue_ be a List of 4 containing, in order, the sequence of 4 bytes starting with <var>block</var>[<var>offset</var>].
-1. If _isLittleEndian_ is ~false~, reverse the order of the elements of _rawValue_.
-1. Let _intValue_ be the byte elements of _rawValue_ concatenated and interpreted as a bit string encoding of a binary little-endian 2’s complement number of bit length 32.
-1. Return the Number value that corresponds to _intValue_.
+1. Return DeserializeInt( block, offset, isLittleEndian, Int32x4Descriptor).
 </emu-alg>
 </emu-clause>
 </emu-clause>
@@ -1127,31 +1141,18 @@ The Int16x8Descriptor SIMD type descriptor has the following internal slots:
 
 <emu-clause id="serialize-int16" aoid="SerializeInt16">
 <h1>SerializeInt16( block, offset, n, isLittleEndian )</h1>
-<emu-note>Derived from part of <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-setvalueinbuffer">SetValueInBuffer</a>.</emu-note>
 <emu-alg>
-1. Assert: _block_ is a Data Block.
-1. Assert: _offset_ is a number.
-1. Assert: _n_ is a number.
-1. Assert: _n_ == ToInt16(_n_).
-1. Assert: _offset_ + 2 is less than or equal to the size of _block_.
-1. Let _rawBytes_ be a List containing the 2-byte binary 2’s complement encoding of _n_. If _isLittleEndian_ is ~false~, the bytes are ordered in big endian order. Otherwise, the bytes are ordered in little endian order.
-1. Store the individual bytes of _rawBytes_ into _block_, in order, starting at <var>block</var>[<var>offset</var>].
+1. SerializeInt( block, offset, n, isLittleEndian, Int16x8Descriptor ).
 </emu-alg>
 </emu-clause>
 
 <emu-clause id="deserialize-int16" aoid="DeserializeInt16">
 <h1>DeserializeInt16( block, offset, isLittleEndian )</h1>
-<emu-note>Derived from part of <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-getvaluefrombuffer">GetValueFromBuffer</a>.</emu-note>
 <emu-alg>
-1. Assert: _block_ is a Data Block.
-1. Assert: _offset_ is a number.
-1. Assert: _offset_ + 4 is less than or equal to the size of _block_.
-1. Let _rawValue_ be a List of 4 containing, in order, the sequence of 2 bytes starting with <var>block</var>[<var>offset</var>].
-1. If _isLittleEndian_ is ~false~, reverse the order of the elements of _rawValue_.
-1. Let _intValue_ be the byte elements of _rawValue_ concatenated and interpreted as a bit string encoding of a binary little-endian 2’s complement number of bit length 16.
-1. Return the Number value that corresponds to _intValue_.
+1. Return DeserializeInt( block, offset, isLittleEndian, Int16x8Descriptor).
 </emu-alg>
 </emu-clause>
+
 </emu-clause>
 
 <emu-clause id="simd-int8x16">
@@ -1169,30 +1170,18 @@ The Int8x16Descriptor SIMD type descriptor has the following internal slots:
 
 <emu-clause id="serialize-int8" aoid="SerializeInt8">
 <h1>SerializeInt8( block, offset, n, isLittleEndian )</h1>
-<emu-note>Derived from part of <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-setvalueinbuffer">SetValueInBuffer</a>.</emu-note>
 <emu-alg>
-1. Assert: _block_ is a Data Block.
-1. Assert: _offset_ is a number.
-1. Assert: _n_ is a number.
-1. Assert: _n_ == ToInt8(_n_).
-1. Assert: _offset_ + 1 is less than or equal to the size of _block_.
-1. Let _rawBytes_ be a List containing the 1-byte binary 2’s complement encoding of _n_.
-1. Store the individual bytes of _rawBytes_ into _block_, in order, starting at <var>block</var>[<var>offset</var>].
+1. SerializeInt( block, offset, n, isLittleEndian, Int8x16Descriptor ).
 </emu-alg>
 </emu-clause>
 
 <emu-clause id="deserialize-int8" aoid="DeserializeInt8">
 <h1>DeserializeInt8( block, offset, isLittleEndian )</h1>
-<emu-note>Derived from part of <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-getvaluefrombuffer">GetValueFromBuffer</a>.</emu-note>
 <emu-alg>
-1. Assert: _block_ is a Data Block.
-1. Assert: _offset_ is a number.
-1. Assert: _offset_ + 4 is less than or equal to the size of _block_.
-1. Let _rawValue_ be a List of one element containing, the singleton byte at <var>block</var>[<var>offset</var>].
-1. Let _intValue_ be the byte elements of _rawValue_ concatenated and interpreted as a bit string encoding of a binary little-endian 2’s complement number of bit length 8.
-1. Return the Number value that corresponds to _intValue_.
+1. Return DeserializeInt( block, offset, isLittleEndian, Int8x16Descriptor).
 </emu-alg>
 </emu-clause>
+
 </emu-clause>
 
 
