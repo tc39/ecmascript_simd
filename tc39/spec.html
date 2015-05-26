@@ -1,6 +1,6 @@
 <!doctype html>
 <meta charset="utf8">
-<title>SIMD.js specification v0.2</title>
+<title>SIMD.js specification v0.4</title>
 <link rel="stylesheet" href="./elements.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/github.min.css">
 <emu-biblio href="./biblio.json"></emu-biblio>
@@ -8,7 +8,7 @@
 <emu-intro id="intro">
 <h1>Introduction</h1>
 <p>
-This proposal adds SIMD types and operations to Javascript, focusing on the value semantics. The proposal adds new primitive types Float32x4, etc, together with wrappers and a definition of their behavior in the language. The current proposal does not include all SIMD functions, but it defines almost all types and some core operations on them. More definitions for more functions that operate on them can be found at <a href="https://github.com/johnmccutchan/ecmascript_simd/blob/master/tc39/simd-spec262.md">the SIMD.js reference documentation</a>.
+This proposal adds SIMD types and operations to ECMAScript, focusing on the value semantics. The proposal adds new primitive types Float32x4, etc, together with wrappers and a definition of their behavior in the language. The current proposal does not include all SIMD functions, but it defines almost all types and some core operations on them. More definitions for more functions that operate on them can be found at <a href="https://github.com/johnmccutchan/ecmascript_simd/blob/master/tc39/simd-spec262.md">the SIMD.js reference documentation</a>.
 </p>
 
 <p>
@@ -26,7 +26,7 @@ This document is organized in terms of where changes would be made to the ES6 sp
 <p>
 In this text, _SIMD_ is used to refer to the various SIMD types: Float32x4, Float64x2, Int32x4, Int16x8, and Int8x16. Similarly to Number, _SIMD_ is used to refer to both the type <em>and</em> the wrapper constructor object. This looks a bit confusing, but it provides the most regularity, as an aim of this specification is to make SIMD types primitives that operate analogously to the existing primitives, rather than a new, exotic sort of thing. To reduce ambiguity, the wrapper constructor is usually referred to as _SIMD_Constructor, and the type is referred to as _SIMD_Type. SIMD types are associated with a descriptor spec object, called _SIMD_Descriptor.</p>
 
-<p><strong>Please file any issues <a href="https://github.com/johnmccutchan/ecmascript_simd/issues">here</a>!</strong></p>
+<p><strong>Please file any issues <a href="https://github.com/johnmccutchan/ecmascript_simd/issues">here</a>!</strong> The authoritative copy of this file is in <a href="https://github.com/johnmccutchan/ecmascript_simd/blob/master/tc39/spec.html">in the simd.js repo</a>; to propose changes to this spec, please send pull requests against that repository. Daniel Ehrenberg (littledan) is responsible for watching for changes to that file, generating the output with ecmarkup and pushing it to <a href="http://littledan.github.io/simd.html">the current location</a>.</p>
 
 <p>Because this document is in spec order, rather than written for direct readability, the logical starting point is actually <a href="#simd">halfway down</a>.</p>
 
@@ -49,7 +49,8 @@ Related links:
 <li>Add all SIMD types, more SIMD operations and all DataView operations.</li>
 </ul>
 </li>
-<li>v0.3: Add more operations, fix some errors and clarify wording.
+<li>v0.3: Add more operations, fix some errors and clarify wording.</li>
+<li>v0.4: Fix various bugs, mostly reported by rwaldron.</li>
 </ul>
 <p>TODO:</p>
 <ul>
@@ -87,6 +88,54 @@ Related links:
 <strong>Global name</strong>: `SIMD.`_SIMD_`.prototype` (e.g., `SIMD.Float32x4.prototype`)
 <br/>
 <strong>ECMAScript Language Association</strong>: The initial value of the prototype data property of %_SIMD_Constructor% (27.1.2)
+</p>
+
+<p>
+<strong>Intrinsic name</strong>: %ArrayPrototype_join%
+<br/>
+<strong>Global name</strong>: `Array.prototype.join`
+<br/>
+<strong>ECMAScript Language Association</strong>: The initial value of the "join" data property of the intrinsic %ArrayPrototype% object (<a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-array.prototype.join">ES2015 2.1.3.12</a>)
+</p>
+
+<p>
+<strong>Intrinsic name</strong>: %Math_abs%
+<br/>
+<strong>Global name</strong>: `Math.abs`
+<br/>
+<strong>ECMAScript Language Association</strong>: The initial value of the "abs" data property of the intrinsic %Math% object (<a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-math.abs">ES2015 20.2.2.1</a>)
+</p>
+
+<p>
+<strong>Intrinsic name</strong>: %Math_fround%
+<br/>
+<strong>Global name</strong>: `Math.fround`
+<br/>
+<strong>ECMAScript Language Association</strong>: The initial value of the "fround" data property of the intrinsic %Math% object (<a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-math.fround">ES2015 20.2.2.17</a>)
+</p>
+
+<p>
+<strong>Intrinsic name</strong>: %Math_max%
+<br/>
+<strong>Global name</strong>: `Math.max`
+<br/>
+<strong>ECMAScript Language Association</strong>: The initial value of the "max" data property of the intrinsic %Math% object (<a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-math.max">ES2015 20.2.2.24</a>)
+</p>
+
+<p>
+<strong>Intrinsic name</strong>: %Math_min%
+<br/>
+<strong>Global name</strong>: `Math.min`
+<br/>
+<strong>ECMAScript Language Association</strong>: The initial value of the "min" data property of the intrinsic %Math% object (<a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-math.min">ES2015 20.2.2.25</a>)
+</p>
+
+<p>
+<strong>Intrinsic name</strong>: %Math_sqrt%
+<br/>
+<strong>Global name</strong>: `Math.sqrt`
+<br/>
+<strong>ECMAScript Language Association</strong>: The initial value of the "max" data property of the intrinsic %Math% object (<a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-math.sqrt">ES2015 20.2.2.32</a>)
 </p>
 </emu-clause>
 </emu-clause>
@@ -178,9 +227,15 @@ Even if it would be consistent to return false if it is all zero, there probably
 
 <strong>Argument type</strong>: _SIMD_Type
 <br/>
-<strong>Result</strong>: Return `typeof` _argument_ + "(" + `Array.prototype.join.call`(an Array containing the contents of _argument_.[[SIMDElements]]) + ")", for the initial value of `Array.prototype.join` and `Function.prototype.call`
+<strong>Result</strong>:
+<emu-alg>
+1. Let _elements_ be an Array containing the contents of _argument_.[[SIMDElements]]
+1. Let _t_ be the result of evaluating `typeof` _argument_.
+1. Let e be Call(%ArrayPrototype_join%, _elements_, «","»).
+1. Return a new String value computed by concatenating the previous value of _t_, "(", _e_, and ")".
+</emu-alg>
 
-<emu-note>The definition is extended similarly for other SIMD types. An alternative would be to call ToObject and let the wrapper handle ToString the way it works for objects.</emu-note>
+<emu-note>An alternative would be to call ToObject and let the wrapper handle ToString the way it works for objects.</emu-note>
 <emu-note>The behavior here is consistent with existing implementations, producing values like "float32x4(1, 2, 3, 4)". An alternative would be to return homoiconic syntax like "SIMD.Float32x4(1, 2, 3, 4)".</emu-note>
 </emu-clause>
 
@@ -295,7 +350,9 @@ For each SIMD type descriptor _SIMD_Descriptor, called by names like `Float32x4D
 1. Let _list_ be a new List of length _SIMD_Descriptor.[[SIMDLength]].
 1. Let _typeName_ be the string `"_SIMD_"` up until the "x" character, e.g., `"Float32"` for `Float32x4`.
 1. For _i_ from 0 to _SIMD_Descriptor.[[SIMDLength]] - 1,
-  1. Set <var>list</var>[<var>i</var>] to GetViewValue(_v_, _byteOffset_ + _i_ * _SIMD_Descriptor.[[SIMDElementSize]], _littleEndian_, _typeName_)
+  1. Let _value_ be GetViewValue(_v_, _byteOffset_ + _i_ * _SIMD_Descriptor.[[SIMDElementSize]], _littleEndian_, _typeName_).
+  1. ReturnIfAbrupt(_value_).
+  1. Set <var>list</var>[<var>i</var>] to _value_.
 1. Return SIMDCreate(_SIMD_Descriptor, ..._list_).
 </emu-alg>
 <emu-note>GetViewValue does the range checking for us.</emu-note>
@@ -310,7 +367,8 @@ For each SIMD type descriptor _SIMD_Descriptor, called by names like `Float32x4D
 1. If _littleEndian_ is not present, let _littleEndian_ be false.
 1. Let _typeName_ be the string `"_SIMD_"` up until the "x" character, e.g., `"Float32"` for `Float32x4`.
 1. For _i_ from 0 to _SIMD_Descriptor.[[SIMDLength]] - 1,
-  1. SetViewValue(_v_, _byteOffset_ + _i_ * _SIMD_Descriptor.[[SIMDElementSize]], _littleEndian_, _typeName_, <var>value</var>.[[SIMDElements]][<var>i</var>])
+  1. Let _result_ be SetViewValue(_v_, _byteOffset_ + _i_ * _SIMD_Descriptor.[[SIMDElementSize]], _littleEndian_, _typeName_, <var>value</var>.[[SIMDElements]][<var>i</var>]).
+  1. ReturnIfAbrupt(_result_).
 </emu-alg>
 </emu-clause>
 
@@ -318,7 +376,7 @@ For each SIMD type descriptor _SIMD_Descriptor, called by names like `Float32x4D
 </emu-clause>
 
 <emu-clause id="simd">
-<h1>SIMD objects</h1>
+<h1>SIMD</h1>
 
 <p>
 The SIMD global object has several constructor properties, one for each SIMD type.
@@ -513,37 +571,49 @@ This description applies if the constructor is called with more than one argumen
 
 <emu-clause id="simd-add">
 <h1>_SIMD_Constructor.add(a, b)</h1>
-<emu-note>This definition uses the normal definition of + on Javascript numbers. Is this appropriate for all SIMD types?</emu-note>
+This definition uses the refers to + as defined by <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-addition-operator-plus">ES2015 12.7.3 (The Addition operator ( + ))</a>.
+<emu-note>Is this appropriate for all SIMD types?</emu-note>
 <emu-alg>
 1. If _a_.[[SIMDTypeDescriptor]] is not _SIMD_Descriptor or _b_.[[SIMDTypeDescriptor]] is not _SIMD_Descriptor, throw a TypeError.
-1. Return SIMDBinaryOp(_a_, _b_, <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-applying-the-additive-operators-to-numbers">+</a>).
+1. Let _result_ be SIMDBinaryOp(_a_, _b_, <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-addition-operator-plus">+</a>).
+1. ReturnIfAbrupt(_result_).
+1. Return _result_.
 </emu-alg>
 </emu-clause>
 
 <emu-clause id="simd-sub">
 <h1>_SIMD_Constructor.sub(a, b)</h1>
-<emu-note>This definition uses the normal definition of - on Javascript numbers. Is this appropriate for all SIMD types?</emu-note>
+This definition uses the refers to - as defined by <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-subtraction-operator-minus">ES2015 12.7.4 (The Subtraction operator ( - ))</a>.
+<emu-note>Is this appropriate for all SIMD types?</emu-note>
 <emu-alg>
 1. If _a_.[[SIMDTypeDescriptor]] is not _SIMD_Descriptor or _b_.[[SIMDTypeDescriptor]] is not _SIMD_Descriptor, throw a TypeError.
-1. Return SIMDBinaryOp(_a_, _b_, <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-applying-the-additive-operators-to-numbers">-</a>).
+1. Let _result_ be SIMDBinaryOp(_a_, _b_, <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-subtraction-operator-minus">-</a>).
+1. ReturnIfAbrupt(_result_).
+1. Return _result_.
 </emu-alg>
 </emu-clause>
 
 <emu-clause id="simd-mul">
 <h1>_SIMD_Constructor.mul(a, b)</h1>
-<emu-note>This definition uses the normal definition of * on Javascript numbers. Is this appropriate for all SIMD types?</emu-note>
+This definition uses the refers to - as defined by <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-applying-the-mul-operator">ES2015 12.6.3.1 (Applying the * Operator)</a>.
+<emu-note>Is this appropriate for all SIMD types?</emu-note>
 <emu-alg>
 1. If _a_.[[SIMDTypeDescriptor]] is not _SIMD_Descriptor or _b_.[[SIMDTypeDescriptor]] is not _SIMD_Descriptor, throw a TypeError.
-1. Return SIMDBinaryOp(_a_, _b_, <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-applying-the-mul-operator">*</a>).
+1. Let _result_ be SIMDBinaryOp(_a_, _b_, <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-applying-the-mul-operator">*</a>).
+1. ReturnIfAbrupt(_result_).
+1. Return _result_.
 </emu-alg>
 </emu-clause>
 
 <emu-clause id="simd-div">
 <h1>_SIMD_Constructor.div(a, b)</h1>
-<emu-note>This definition uses the normal definition of / on Javascript numbers. Is this appropriate for all SIMD types?</emu-note>
+This definition uses the refers to - as defined by <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-applying-the-div-operator">ES2015 12.6.3.2 (Applying the / Operator)</a>.
+<emu-note>Is this appropriate for all SIMD types?</emu-note>
 <emu-alg>
 1. If _a_.[[SIMDTypeDescriptor]] is not _SIMD_Descriptor or _b_.[[SIMDTypeDescriptor]] is not _SIMD_Descriptor, throw a TypeError.
-1. Return SIMDBinaryOp(_a_, _b_, <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-applying-the-div-operator">/</a>).
+1. Let _result_ be SIMDBinaryOp(_a_, _b_, <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-applying-the-div-operator">/</a>).
+1. ReturnIfAbrupt(_result_).
+1. Return _result_.
 </emu-alg>
 </emu-clause>
 
@@ -553,7 +623,9 @@ This property is defined only on SIMD types with floating point values.
 <h1>_SIMD_Constructor.max(a, b)</h1>
 <emu-alg>
 1. If _a_.[[SIMDTypeDescriptor]] is not _SIMD_Descriptor or _b_.[[SIMDTypeDescriptor]] is not _SIMD_Descriptor, throw a TypeError.
-1. Return SIMDBinaryOp(_a_, _b_, `Math.max`), for the initial value of `Math.max`.
+1. Let _result_ be SIMDBinaryOp(_a_, _b_, %Math_max%).
+1. ReturnIfAbrupt(_result_).
+1. Return _result_.
 </emu-alg>
 </emu-clause>
 
@@ -563,7 +635,9 @@ This property is defined only on SIMD types with floating point values.
 <h1>_SIMD_Constructor.min(a, b)</h1>
 <emu-alg>
 1. If _a_.[[SIMDTypeDescriptor]] is not _SIMD_Descriptor or _b_.[[SIMDTypeDescriptor]] is not _SIMD_Descriptor, throw a TypeError.
-1. Return SIMDBinaryOp(_a_, _b_, `Math.min`), for the initial value of `Math.min`.
+1. Let _result_ be SIMDBinaryOp(_a_, _b_, %Math_min%).
+1. ReturnIfAbrupt(_result_).
+1. Return _result_.
 </emu-alg>
 </emu-clause>
 
@@ -573,7 +647,9 @@ This property is defined only on SIMD types with floating point values.
 1. Assert Type(_n_) is Number and Type(_m_) is Number.
 1. If _n_ is ~NaN~, return _m_.
 1. If _m_ is ~NaN~, return _n_.
-1. Return `Math.max`(_n_, _m_) for the initial value of `Math.max`.
+1. Let _result_ be Call(%Math_max%, %Math%, «_n_, _m_»).
+1. ReturnIfAbrupt(_result_).
+1. Return _result_.
 </emu-alg>
 </emu-clause>
 
@@ -583,7 +659,9 @@ This property is defined only on SIMD types with floating point values.
 <emu-note>In this specification, that includes only Float32x4 and Float64x2</emu-note>
 <emu-alg>
 1. If _a_.[[SIMDTypeDescriptor]] is not _SIMD_Descriptor or _b_.[[SIMDTypeDescriptor]] is not _SIMD_Descriptor, throw a TypeError.
-1. Return SIMDBinaryOp(_a_, _b_, MaxNum).
+1. Let _result_ be SIMDBinaryOp(_a_, _b_, MaxNum).
+1. ReturnIfAbrupt(_result_).
+1. Return _result_.
 </emu-alg>
 </emu-clause>
 
@@ -593,7 +671,9 @@ This property is defined only on SIMD types with floating point values.
 1. Assert Type(_n_) is Number and Type(_m_) is Number.
 1. If _n_ is ~NaN~, return _m_.
 1. If _m_ is ~NaN~, return _n_.
-1. Return `Math.min`(_n_, _m_) for the initial value of `Math.min`.
+1. Let _result_ be Call(%Math_min%, %Math%, «_n_, _m_»).
+1. ReturnIfAbrupt(_result_).
+1. Return _result_.
 </emu-alg>
 </emu-clause>
 
@@ -603,15 +683,21 @@ This property is defined only on SIMD types with floating point values.
 <emu-note>In this specification, that includes only Float32x4 and Float64x2</emu-note>
 <emu-alg>
 1. If _a_.[[SIMDTypeDescriptor]] is not _SIMD_Descriptor or _b_.[[SIMDTypeDescriptor]] is not _SIMD_Descriptor, throw a TypeError.
-1. Return SIMDBinaryOp(_a_, _b_, MinNum).
+1. Let _result_ be SIMDBinaryOp(_a_, _b_, MinNum).
+1. ReturnIfAbrupt(_result_).
+1. Return _result_.
 </emu-alg>
 </emu-clause>
 
 <emu-clause id="simd-neg">
 <h1>_SIMD_Constructor.neg(a, b)</h1>
+This definition uses the refers to unary - as defined by <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-unary-minus-operator">ES2015 12.5.10 (Unary - Operator)</a>.
+<emu-note>Is this appropriate for all SIMD types?</emu-note>
 <emu-alg>
 1. If _a_.[[SIMDTypeDescriptor]] is not _SIMD_Descriptor, throw a TypeError.
-1. Return SIMDUnaryOp(_a_, _b_, <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-unary-minus-operator-runtime-semantics-evaluation">-</a>).
+1. Let _result_ be SIMDUnaryOp(_a_, <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-unary-minus-operator">-</a>).
+1. ReturnIfAbrupt(_result_).
+1. Return _result_.
 </emu-alg>
 </emu-clause>
 
@@ -621,7 +707,9 @@ This property is defined only on SIMD types with floating point values.
 <emu-note>In this specification, that includes only Float32x4 and Float64x2</emu-note>
 <emu-alg>
 1. If _a_.[[SIMDTypeDescriptor]] is not _SIMD_Descriptor, throw a TypeError.
-1. Return SIMDUnaryOp(_a_, `Math.sqrt`), for the initial value of `Math.sqrt`.
+1. Let _result_ be SIMDUnaryOp(_a_, %Math_sqrt%).
+1. ReturnIfAbrupt(_result_).
+1. Return _result_.
 </emu-alg>
 </emu-clause>
 
@@ -640,7 +728,9 @@ This property is defined only on SIMD types with floating point values.
 <emu-note>In this specification, that includes only Float32x4 and Float64x2</emu-note>
 <emu-alg>
 1. If _a_.[[SIMDTypeDescriptor]] is not _SIMD_Descriptor, throw a TypeError.
-1. Return SIMDUnaryOp(_a_, _b_, ReciprocalApproximation).
+1. Let _result_ be SIMDUnaryOp(_a_, ReciprocalApproximation).
+1. ReturnIfAbrupt(_result_).
+1. Return _result_.
 </emu-alg>
 </emu-clause>
 
@@ -649,7 +739,7 @@ This property is defined only on SIMD types with floating point values.
 <emu-note>The definition here calculates the actual reciprocal. The definition should be reformulated in terms of the boundary case requirements used for function properties of the math object in <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-function-properties-of-the-math-object">20.2.2</a></emu-note>
 <emu-alg>
 1. Assert: Type(_n_) is Number.
-1. Return ToNumber(1 / `Math.sqrt`(_n_)), for the initial value of `Math.sqrt`.
+1. Return ToNumber(1 / %Math_sqrt%(_n_)).
 </emu-alg>
 </emu-clause>
 
@@ -659,7 +749,9 @@ This property is defined only on SIMD types with floating point values.
 <emu-note>In this specification, that includes only Float32x4 and Float64x2</emu-note>
 <emu-alg>
 1. If _a_.[[SIMDTypeDescriptor]] is not _SIMD_Descriptor, throw a TypeError.
-1. Return SIMDUnaryOp(_a_, ReciprocalSqrtApproximation).sqrt`.
+1. Let _result_ be SIMDUnaryOp(_a_, ReciprocalSqrtApproximation).
+1. ReturnIfAbrupt(_result_).
+1. Return _result_.
 </emu-alg>
 </emu-clause>
 
@@ -667,7 +759,9 @@ This property is defined only on SIMD types with floating point values.
 <h1>_SIMD_Constructor.abs(a)</h1>
 <emu-alg>
 1. If _a_.[[SIMDTypeDescriptor]] is not _SIMD_Descriptor, throw a TypeError.
-1. Return SIMDUnaryOp(_a_, `Math.abs`), for the initial value of `Math.abs`.
+1. Let _result_ be SIMDUnaryOp(_a_, %Math_abs%).
+1. ReturnIfAbrupt(_result_).
+1. Return _result_.
 </emu-alg>
 </emu-clause>
 
@@ -900,7 +994,7 @@ The Float32x4Descriptor SIMD type descriptor has the following internal slots:
 <ul>
 <li>[[SIMDLength]]: 4</li>
 <li>[[SIMDElementSize]]: 4</li>
-<li>[[SIMDCastNumber]]: the initial value of Math.fround</li>
+<li>[[SIMDCastNumber]]: %Math_fround%</li>
 <li>[[SIMDSerializeElement]]: SerializeFloat32</li>
 <li>[[SIMDDeserializeElement]]: DeserializeFloat32</li>
 </ul>
