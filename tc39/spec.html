@@ -4,7 +4,7 @@
 <link rel="stylesheet" href="./elements.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/github.min.css">
 <emu-biblio href="./biblio.json"></emu-biblio>
-<h1>SIMD.js value semantics proposal</h1>
+<h1>SIMD.js specification</h1>
 <emu-intro id="intro">
 <h1>Introduction</h1>
 <p>
@@ -28,7 +28,7 @@ In this text, _SIMD_ is used to refer to the various SIMD types: Float32x4, Floa
 
 <p><strong>Please file any issues <a href="https://github.com/johnmccutchan/ecmascript_simd/issues">here</a>!</strong></p>
 
-<p>Because this document is in spec order, rather than written for direct readability, the logical starting point is actually <a href="#simd-constructor">halfway down</a>.</p>
+<p>Because this document is in spec order, rather than written for direct readability, the logical starting point is actually <a href="#simd">halfway down</a>.</p>
 
 <p>
 Related links:
@@ -49,14 +49,18 @@ Related links:
 <li>Add all SIMD types, more SIMD operations and all DataView operations.</li>
 </ul>
 </li>
-<li>v0.3: Add more operations, fix some errors and clarify wording. Missing operations:
-<li>Logical and bitwise operations, like lessThan, bool, xor</li>
+<li>v0.3: Add more operations, fix some errors and clarify wording.
+</ul>
+<p>TODO:</p>
+<ul>
+<li>Logical and bitwise operations, like lessThan, bool, xor, a large group of functions.</li>
 <li>Logical casts between types, like SIMD.float32x4.fromInt32x4</li>
+<li>Int64x2 type (requires care because not directly constructable or readable)</li>
 </ul>
 </emu-intro>
 
 <emu-clause id="types">
-<h1>ECMAScript Data Types and Values <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-ecmascript-data-types-and-values">6</a></h1>
+<h1>ECMAScript Data Types and Values (<a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-ecmascript-data-types-and-values">6</a>)</h1>
 <emu-clause id="all-types">
 <h1>ECMAScript language types (<a href="http://people.mozilla.org/~jorendorff/es6-draft.html#sec-ecmascript-language-types">6.1</a>)</h1>
 <emu-clause id="intrinsics">
@@ -314,7 +318,7 @@ For each SIMD type descriptor _SIMD_Descriptor, called by names like `Float32x4D
 </emu-clause>
 
 <emu-clause id="simd">
-<h1>SIMD objects (top-level section)</h1>
+<h1>SIMD objects</h1>
 
 <p>
 The SIMD global object has several constructor properties, one for each SIMD type.
@@ -863,6 +867,24 @@ Previously, if accessors like x were included, these would be spec'd as getters 
 
 The initial value of _SIMD_Constructor.prototype.constructor is the intrinsic object %_SIMD_Constructor%
 </emu-clause>
+
+<emu-clause id="simd-prototype-valueof">
+<h1>_SIMD_Constructor.prototype.valueOf()</h1>
+<emu-alg>
+1. If ~this~ does not have a [[SIMDWrapperData]] internal slot, throw a ~TypeError~.
+1. Return ~this~.[[SIMDWrapperData]].
+</emu-alg>
+</emu-clause>
+
+<emu-clause id="simd-prototype-tostring">
+<h1>_SIMD_Constructor.prototype.toString()</h1>
+<emu-alg>
+1. If ~this~ does not have a [[SIMDWrapperData]] internal slot, throw a ~TypeError~.
+1. Return ToString(~this~.[[SIMDWrapperData]]).
+</emu-alg>
+<emu-note>This definition depends on the primitive _SIMD_Type's behavior under ToString. Alternatively, _SIMD_Type could have ToString defined by calling ToObject and then reaching this method (or whatever the user overrides it with), in which case the current definition in ToString would be brought down here.</emu-note>
+</emu-clause>
+
 </emu-clause>
 
 <emu-clause id="simd-descriptors">
