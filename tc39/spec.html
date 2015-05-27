@@ -1,6 +1,6 @@
 <!doctype html>
 <meta charset="utf8">
-<title>SIMD.js specification v0.5</title>
+<title>SIMD.js specification v0.5.1</title>
 <link rel="stylesheet" href="./elements.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/github.min.css">
 <emu-biblio href="./biblio.json"></emu-biblio>
@@ -8,7 +8,7 @@
 <emu-intro id="intro">
 <h1>Introduction</h1>
 <p>
-This proposal adds SIMD types and operations to ECMAScript, focusing on the value semantics. The proposal adds new primitive types Float32x4, etc, together with wrappers and a definition of their behavior in the language. The current proposal should form a full first draft with all functions and types included.
+This proposal adds SIMD types and operations to ECMAScript. The proposal adds new primitive types Float32x4, etc, together with wrappers and a definition of their behavior in the language. The current proposal should form a full first draft with all functions and types included.
 </p>
 
 <p>
@@ -24,7 +24,7 @@ This document is organized in terms of where changes would be made to the ES6 sp
 </p>
 
 <p>
-In this text, _SIMD_ is used to refer to the various SIMD types: Float32x4, Float64x2, Int32x4, Int16x8, and Int8x16. Similarly to Number, _SIMD_ is used to refer to both the type <em>and</em> the wrapper constructor object. This looks a bit confusing, but it provides the most regularity, as an aim of this specification is to make SIMD types primitives that operate analogously to the existing primitives, rather than a new, exotic sort of thing. To reduce ambiguity, the wrapper constructor is usually referred to as _SIMD_Constructor, and the type is referred to as _SIMD_Type. SIMD types are associated with a descriptor spec object, called _SIMD_Descriptor.</p>
+In this text, _SIMD_ is used to refer to the various SIMD types: Float32x4, Float64x2, Int32x4, Int16x8, Int8x16 and Int64x2. Similarly to Number, _SIMD_ is used to refer to both the type <em>and</em> the wrapper constructor object. This looks a bit confusing, but it provides the most regularity, as an aim of this specification is to make SIMD types primitives that operate analogously to the existing primitives, rather than a new, exotic sort of thing. To reduce ambiguity, the wrapper constructor is usually referred to as _SIMD_Constructor, and the type is referred to as _SIMD_Type. SIMD types are associated with a descriptor spec object, called _SIMD_Descriptor.</p>
 
 <p><strong>Please file any issues <a href="https://github.com/johnmccutchan/ecmascript_simd/issues">here</a>!</strong> The authoritative copy of this file is in <a href="https://github.com/johnmccutchan/ecmascript_simd/blob/master/tc39/spec.html">in the simd.js repo</a>; to propose changes to this spec, please send pull requests against that repository. Daniel Ehrenberg (littledan) is responsible for watching for changes to that file, generating the output with ecmarkup and pushing it to <a href="http://littledan.github.io/simd.html">the current location</a>.</p>
 
