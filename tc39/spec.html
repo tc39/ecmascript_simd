@@ -53,12 +53,12 @@ Related links:
 <li>v0.4: Fix various bugs, mostly reported by rwaldron.</li>
 <li>v0.4.1: Refactor definitions for integer types to reduce duplication.</li>
 <li>v0.5: Logical and bitwise operations; Int64x2.</li>
+<li>v0.5.1: Logical casts between types, like SIMD.float32x4.fromInt32x4; Less exact definition for reciprocalApproximation, reciprocalSqrtApproximation</li>
 </ul>
 <p>TODO:</p>
 <ul>
-<li>Logical casts between types, like SIMD.float32x4.fromInt32x4</li>
-<li>Less exact definition for reciprocalApproximation, reciprocalSqrtApproximation</li>
 <li>Define Int64x2 type better</li>
+<li>Improve cross-referencing for logical operations</li>
 </ul>
 </emu-intro>
 
@@ -774,11 +774,14 @@ This property is defined only on floating point SIMD types.
 
 <emu-clause id="reciprocal" aoid="ReciprocalApproximation">
 <h1>ReciprocalApproximation(n)</h1>
-<emu-note>The definition here calculates the actual reciprocal. The definition should be reformulated in terms of the boundary case requirements used for function properties of the math object in <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-function-properties-of-the-math-object">20.2.2</a></emu-note>
-<emu-alg>
-1. Assert: Type(_n_) is Number.
-1. Return ToNumber(1 / _n_).
-</emu-alg>
+Returns an implementation-dependent approximation to the reciprocal of _n_.
+<ul>
+<li>If _n_ is ~NaN~, the result is ~NaN~.</li>
+<li>If _n_ is +0, the result is +∞.</li>
+<li>If _n_ is -0, the result is -∞.</li>
+<li>If _n_ is +∞, the result is +0.</li>
+<li>If _n_ is -∞, the result is -0.</li>
+</ul>
 </emu-clause>
 
 <emu-clause id="simd-reciprocal-approximation">
@@ -794,11 +797,14 @@ This property is defined only on floating point SIMD types.
 
 <emu-clause id="reciprocal" aoid="ReciprocalSqrtApproximation">
 <h1>ReciprocalSqrtApproximation(n)</h1>
-<emu-note>The definition here calculates the actual reciprocal. The definition should be reformulated in terms of the boundary case requirements used for function properties of the math object in <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-function-properties-of-the-math-object">20.2.2</a></emu-note>
-<emu-alg>
-1. Assert: Type(_n_) is Number.
-1. Return ToNumber(1 / %Math_sqrt%(_n_)).
-</emu-alg>
+Returns an implementation-dependent approximation to the reciprocal of _n_.
+<ul>
+<li>If _n_ is ~NaN~, the result is ~NaN~.</li>
+<li>If _n_ is +0, the result is +∞.</li>
+<li>If _n_ is -0, the result is -∞.</li>
+<li>If _n_ is +∞, the result is +0.</li>
+<li>If _n_ is less than 0, the result is ~NaN~.</li>
+</ul>
 </emu-clause>
 
 <emu-clause id="simd-reciprocal-sqrt-approximation">
@@ -873,7 +879,7 @@ This operation exists only on integer SIMD types.
 <emu-clause id="simd-not">
 <h1>_SIMD_Constructor.not(a)</h1>
 <p>
-This definition uses the refers to ~ as defined by ES2015 <!-- TODO: cross-reference -->.
+This definition uses the refers to ~ as defined by <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-bitwise-not-operator">ES2015 12.5.11</a> (Bitwise NOT Operator ( ~ )).
 </p>
 <p>
 This operation exists only on integer SIMD types.
@@ -1176,6 +1182,16 @@ In this definition, _TIMD_ ranges over all SIMD types for which _SIMD_Descriptor
 <emu-alg>
 1. If _value_.[[SIMDTypeDescriptor]] is not _TIMD_Descriptor, throw a TypeError.
 1. Return SIMDReinterpretCast(_value_, _SIMD_Descriptor).
+</emu-alg>
+</emu-clause>
+
+<emu-clause id="simd-to-timd-logical">
+<h1><var>SIMD</var>Constructor.from<var>TIMD</var>( value )</h1>
+In this definition, _TIMD_ ranges over all SIMD types for which _SIMD_Descriptor.[[SIMDLength]] == _TIMD_Descriptor.[[SIMDLength]].
+<emu-alg>
+1. If _value_.[[SIMDTypeDescriptor]] is not _TIMD_Descriptor, throw a TypeError.
+1. Let _list_ be a copy of _value_.[[SIMDElements]].
+1. Return SIMDCreate(_value_, _SIMD_Descriptor).
 </emu-alg>
 </emu-clause>
 
