@@ -54,10 +54,13 @@ Related links:
 <li>v0.4.1: Refactor definitions for integer types to reduce duplication.</li>
 <li>v0.5: Logical and bitwise operations; Int64x2.</li>
 <li>v0.5.1: Logical casts between types, like SIMD.float32x4.fromInt32x4; Less exact definition for reciprocalApproximation, reciprocalSqrtApproximation</li>
+<li>v0.5.2: Saturating arithmetic; fix mul mis-spec.</li>
 </ul>
 <p>TODO:</p>
 <ul>
 <li>Define Int64x2 type better, including constructor and cast function</li>
+<li>Shifts, sumOfAbsoluteDifferences</li>
+<li>Make sure that things that we might overload later will throw</li>
 </ul>
 </emu-intro>
 
@@ -137,6 +140,14 @@ Related links:
 <strong>Global name</strong>: `Math.sqrt`
 <br/>
 <strong>ECMAScript Language Association</strong>: The initial value of the "max" data property of the intrinsic %Math% object (<a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-math.sqrt">ES2015 20.2.2.32</a>)
+</p>
+
+<p>
+<strong>Intrinsic name</strong>: %Math_imul%
+<br/>
+<strong>Global name</strong>: `Math.imul`
+<br/>
+<strong>ECMAScript Language Association</strong>: The initial value of the "imul" data property of the intrinsic %Math% object (<a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-math.imul">ES2015 20.2.2.19</a>)
 </p>
 </emu-clause>
 </emu-clause>
@@ -662,7 +673,8 @@ This definition uses the refers to - as defined by <a href="https://people.mozil
 <emu-note>Is this appropriate for all SIMD types?</emu-note>
 <emu-alg>
 1. If _a_.[[SIMDTypeDescriptor]] is not _SIMD_Descriptor or _b_.[[SIMDTypeDescriptor]] is not _SIMD_Descriptor, throw a TypeError.
-1. Let _result_ be SIMDBinaryOp(_a_, _b_, <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-applying-the-mul-operator">*</a>).
+1. If _SIMD_Type is an integer SIMD type, let _op_ be %Math_imul%; otherwise, _SIMD_Type is a floating point SIMD type, and let _op_ be <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-applying-the-mul-operator">*</a>.
+1. Let _result_ be SIMDBinaryOp(_a_, _b_, _op_).
 1. ReturnIfAbrupt(_result_).
 1. Return _result_.
 </emu-alg>
@@ -672,6 +684,7 @@ This definition uses the refers to - as defined by <a href="https://people.mozil
 <h1>_SIMD_Constructor.div(a, b)</h1>
 This definition uses the refers to - as defined by <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-applying-the-div-operator">ES2015 12.6.3.2 (Applying the / Operator)</a>.
 <emu-note>Is this appropriate for all SIMD types?</emu-note>
+This function is defined only on floating point SIMD types.
 <emu-alg>
 1. If _a_.[[SIMDTypeDescriptor]] is not _SIMD_Descriptor or _b_.[[SIMDTypeDescriptor]] is not _SIMD_Descriptor, throw a TypeError.
 1. Let _result_ be SIMDBinaryOp(_a_, _b_, <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-applying-the-div-operator">/</a>).
@@ -1025,6 +1038,53 @@ This operation is only defined on integer SIMD types.
 1. For _i_ from 0 to _SIMD_Descriptor.[[SIMDLength]] - 1,
   1. Let <var>list</var>[<var>i</var>] be (<var>a</var>.[[SIMDElements]][<var>i</var>] & <var>selector</var>.[[SIMDElements]][<var>i</var>]) | (<var>b</var>.[[SIMDElements]][<var>i</var>] & ~<var>selector</var>.[[SIMDElements]][<var>i</var>]).
 1. Return SIMDCreate(_SIMD_Descriptor, ..._list_).
+</emu-alg>
+</emu-clause>
+
+<emu-clause id="saturate" aoid="Saturate">
+<h1>Saturate( byteWidth, x )</h1>
+<emu-alg>
+1. Let _max_ be 1 << (_byteWidth_ - 1).
+1. Let _z_ be _x_ + _y_.
+1. If _z_ >= _max_, let _z_ be _max_ - 1.
+1. Otherwise, if _z_ < -_max_, let _z_ be -_max_.
+1. Return _z_.
+</emu-alg>
+</emu-clause>
+
+<emu-clause id="add-saturate" aoid="AddSaturate">
+<h1>AddSaturate( byteWidth )( x, y )</h1>
+<emu-alg>
+1. Return Saturate(_byteWidth_, _x_ + _y_).
+</emu-alg>
+</emu-clause>
+
+<emu-clause id="simd-add-saturate">
+<h1>_SIMD_Constructor.addSaturate( a, b )</h1>
+This operation is only defined on integer SIMD types.
+<emu-alg>
+1. If _a_.[[SIMDTypeDescriptor]] is not _SIMD_Descriptor or _b_.[[SIMDTypeDescriptor]] is not _SIMD_Descriptor, throw a TypeError.
+1. Let _result_ be SIMDBinaryOp(_a_, _b_, AddSaturate(_a_.[[SIMDTypeDescriptor]].[[SIMDElementSize]])).
+1. ReturnIfAbrupt(_result_).
+1. Return _result_.
+</emu-alg>
+</emu-clause>
+
+<emu-clause id="sub-saturate" aoid="SubSaturate">
+<h1>SubSaturate( byteWidth )( x, y )</h1>
+<emu-alg>
+1. Return Saturate(_byteWidth_, _x_ - _y_).
+</emu-alg>
+</emu-clause>
+
+<emu-clause id="simd-sub-saturate">
+<h1>_SIMD_Constructor.subSaturate( a, b )</h1>
+This operation is only defined on integer SIMD types.
+<emu-alg>
+1. If _a_.[[SIMDTypeDescriptor]] is not _SIMD_Descriptor or _b_.[[SIMDTypeDescriptor]] is not _SIMD_Descriptor, throw a TypeError.
+1. Let _result_ be SIMDBinaryOp(_a_, _b_, SubSaturate(_a_.[[SIMDTypeDescriptor]].[[SIMDElementSize]])).
+1. ReturnIfAbrupt(_result_).
+1. Return _result_.
 </emu-alg>
 </emu-clause>
 
