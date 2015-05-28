@@ -305,8 +305,8 @@ Add an extra step at the bottom of the definition of SameValueZero for the new c
 </emu-clause>
 
 <emu-clause id="abstract-relational-comparison">
-<h1>Abstract relational comparison (<a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-abstract-relational-comparison">7.2.11</a>)</h1>
-<emu-note>No changes needed for SIMD; it will just compare them as strings with the current defintion.</emu-note>
+<h1>Abstract Relational Comparison (<a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-abstract-relational-comparison">7.2.11</a>)</h1>
+<emu-note><p>No changes needed for SIMD; it will throw a TypeError if either operand is a SIMD value because the algorithm will call ToNumber in step 6.a or 6.c, which throws on SIMD values.</p><p>It is important for Abstract Relational Comparison to throw on SIMD types because there is no clear scalar boolean interpretation, and allowing it to throw makes it possible overload the operator in the future.</p></emu-note>
 </emu-clause>
 
 <emu-clause id="abstract-equality">
@@ -356,6 +356,14 @@ Add a new step 9, before the existing step 9:
 <br/>
 <strong>Result</strong>: "int8x16"
 <emu-note>This follows the pattern for Number ("number"), Boolean ("boolean"), etc.</emu-note>
+</emu-clause>
+</emu-clause>
+
+<emu-clause id="addition">
+<h1>The Addition operator ( + ) (<a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-addition-operator-plus">12.7.3</a>)</h1>
+<emu-clause id="addition-semantics">
+<h1>Runtime Semantics: Evaluation (<a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-addition-operator-plus">12.7.3.1</a>)</h1>
+<emu-note><p>No changes needed for SIMD. With one SIMD argument and one argument which is a String after ToPrimitive is applied, this will coerce the SIMD value to a string, giving a printed representation like `"float32x4(1, 2, 3, 4)"`. Otherwise, if either argument is a SIMD value, then ToNumber will be run on step 12. or 14., which would throw a TypeError.</p><p>It is important for `+` to throw when applied to SIMD types to allow the future definition of operator overloading on `+` . Is the current SIMD+String behavior acceptable, or should that throw too?</p></emu-note>
 </emu-clause>
 </emu-clause>
 
@@ -588,7 +596,7 @@ The definitions of the constructor and properties of the constructor to follow c
 </p>
 
 <emu-note>
-As with Boolean, String, etc, _SIMD_Constructor is a constructor for the wrapper when invoked with new, and returns a primitive when called as a function. 
+As with Boolean, String, etc, _SIMD_Constructor is a constructor for the wrapper when invoked with new, and returns a primitive when called as a function.
 </emu-note>
 
 <emu-clause id="simd-wrap">
