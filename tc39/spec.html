@@ -55,6 +55,7 @@ Related links:
 <li>v0.5: Logical and bitwise operations; Int64x2.</li>
 <li>v0.5.1: Logical casts between types, like SIMD.float32x4.fromInt32x4; Less exact definition for reciprocalApproximation, reciprocalSqrtApproximation</li>
 <li>v0.5.2: Saturating arithmetic; fix mul mis-spec.</li>
+<li>v0.5.3: Remove mention of signalling NaN.</li>
 </ul>
 <p>TODO:</p>
 <ul>
@@ -1342,13 +1343,13 @@ The Float32x4Descriptor floating point SIMD type descriptor has the following in
 
 <emu-clause id="serialize-float32" aoid="SerializeFloat32">
 <h1>SerializeFloat32( block, offset, n, isLittleEndian )</h1>
-<emu-note>Derived from part of <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-setvalueinbuffer">SetValueInBuffer</a>. Note that this specification does not require a particular bit pattern for ~NaN~, and that it does not need to be the same across calls, but it cannot be signalling because the serialized value should be safe for other code to read, if a number is placed in an external ArrayBuffer which is read by external code.</emu-note>
+<emu-note>Derived from part of <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-setvalueinbuffer">SetValueInBuffer</a>. Note that this specification does not require a particular bit pattern for ~NaN~, and that it does not need to be the same across calls.</emu-note>
 <emu-alg>
 1. Assert: _block_ is a Data Block.
 1. Assert: _offset_ is a number.
 1. Assert: _n_ is a number.
 1. Assert: _offset_ + 4 is less than or equal to the size of _block_.
-1. Set _rawBytes_ to a List containing the 4 bytes that are the result of converting value to IEEE 754-2008 binary32 format using “Round to nearest, ties to even” rounding mode. If _isLittleEndian_ is ~false~, the bytes are arranged in big endian order. Otherwise, the bytes are arranged in little endian order. If value is ~NaN~, _rawValue_ may be set to any implementation chosen non-signaling ~NaN~ encoding. An implementation must always choose the same non-signaling ~NaN~ encoding for a distinct Not-a-Number value.
+1. Set _rawBytes_ to a List containing the 4 bytes that are the result of converting value to IEEE 754-2008 binary32 format using “Round to nearest, ties to even” rounding mode. If _isLittleEndian_ is ~false~, the bytes are arranged in big endian order. Otherwise, the bytes are arranged in little endian order. If value is ~NaN~, _rawValue_ may be set to any implementation chosen ~NaN~ encoding. An implementation must always choose the same ~NaN~ encoding for a distinct Not-a-Number value.
 1. Store the individual bytes of _rawBytes_ into _block_, in order, starting at <var>block</var>[<var>offset</var>].
 </emu-alg>
 </emu-clause>
@@ -1384,13 +1385,13 @@ The Float64x2Descriptor floating point SIMD type descriptor has the following in
 
 <emu-clause id="serialize-float64" aoid="SerializeFloat64">
 <h1>SerializeFloat64( block, offset, n, isLittleEndian )</h1>
-<emu-note>Derived from part of <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-setvalueinbuffer">SetValueInBuffer</a>. Note that this specification does not require a particular bit pattern for ~NaN~, and that it does not need to be the same across calls, but it cannot be signalling because the serialized value should be safe for other code to read, if a number is placed in an external ArrayBuffer which is read by external code.</emu-note>
+<emu-note>Derived from part of <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-setvalueinbuffer">SetValueInBuffer</a>. Note that this specification does not require a particular bit pattern for ~NaN~, and that it does not need to be the same across calls.</emu-note>
 <emu-alg>
 1. Assert: _block_ is a Data Block.
 1. Assert: _offset_ is a number.
 1. Assert: _n_ is a number.
 1. Assert: _offset_ + 8 is less than or equal to the size of _block_.
-1. Set _rawBytes_ to a List containing the 8 bytes that are the result of converting value to IEEE 754-2008 binary64 format using “Round to nearest, ties to even” rounding mode. If _isLittleEndian_ is ~false~, the bytes are arranged in big endian order. Otherwise, the bytes are arranged in little endian order. If value is ~NaN~, _rawValue_ may be set to any implementation chosen non-signaling ~NaN~ encoding. An implementation must always choose the same non-signaling ~NaN~ encoding for a distinct Not-a-Number value.
+1. Set _rawBytes_ to a List containing the 8 bytes that are the result of converting value to IEEE 754-2008 binary64 format using “Round to nearest, ties to even” rounding mode. If _isLittleEndian_ is ~false~, the bytes are arranged in big endian order. Otherwise, the bytes are arranged in little endian order. If value is ~NaN~, _rawValue_ may be set to any implementation chosen ~NaN~ encoding. An implementation must always choose the same ~NaN~ encoding for a distinct Not-a-Number value.
 1. Store the individual bytes of _rawBytes_ into _block_, in order, starting at <var>block</var>[<var>offset</var>].
 </emu-alg>
 </emu-clause>
