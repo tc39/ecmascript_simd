@@ -1,6 +1,6 @@
 <!doctype html>
 <meta charset="utf8">
-<title>SIMD.js specification v0.5.1</title>
+<title>SIMD.js specification v0.5.4</title>
 <link rel="stylesheet" href="./elements.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/github.min.css">
 <emu-biblio href="./biblio.json"></emu-biblio>
@@ -55,7 +55,8 @@ Related links:
 <li>v0.5: Logical and bitwise operations; Int64x2.</li>
 <li>v0.5.1: Logical casts between types, like SIMD.float32x4.fromInt32x4; Less exact definition for reciprocalApproximation, reciprocalSqrtApproximation</li>
 <li>v0.5.2: Saturating arithmetic; fix mul mis-spec.</li>
-<li>v0.5.3: Remove mention of signalling NaN.</li>
+<li>v0.5.3: Remove mention of signalling NaN (matches ES6).</li>
+<li>v0.5.4: Better formatting for modifications of existing algorithms.</li>
 </ul>
 <p>TODO:</p>
 <ul>
@@ -280,14 +281,31 @@ Even if it would be consistent to return false if it is all zero, there probably
 
 <emu-clause id="same-value">
 <h1>SameValue(x, y) (<a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-samevalue">7.2.9</a>)</h1>
-Add an extra step at the bottom of the definition of SameValue for the new case involving the new type:
 <emu-alg>
-11. For each SIMD type _SIMD_Type:
-  1. If Type(x) is _SIMD_Type:
-    1. Assert Type(y) is _SIMD_Type.
-    1. For _i_ from 0 to _SIMD_Descriptor.[[SIMDLength]] - 1:
-      1. If SameValue(SIMDExtractLane(_x_, _i_), SIMDExtractLane(_y_, _i_)) is ~false~, return ~false~.
-    1. return ~true~
+1. ReturnIfAbrupt(_x_).
+1. ReturnIfAbrupt(_y_).
+1. If Type(_x_) is different from Type(_y_), return ~false~.
+1. If Type(_x_) is Undefined, return ~true~.
+1. If Type(_x_) is Null, return ~true~.
+1. If Type(_x_) is Number, then
+  1. If _x_ is ~NaN~ and _y_ is ~NaN~, return ~true~.
+  1. If _x_ is +0 and _y_ is -0, return ~false~.
+  1. If _x_ is -0 and _y_ is +0, return ~false~.
+  1. If _x_ is the same Number value as _y_, return ~true~.
+  1. Return ~false~.
+1. If Type(_x_) is String, then
+  1. If _x_ and _y_ are exactly the same sequence of code units (same length and same code units at corresponding indices) return true; otherwise, return false.
+1. If Type(_x_) is Boolean, then
+  1. If _x_ and _y_ are both true or both false, return true; otherwise, return false.
+1. If Type(_x_) is Symbol, then
+  1. If _x_ and _y_ are both the same Symbol value, return true; otherwise, return false.
+1. <ins>For each SIMD type _SIMD_Type:</ins>
+  1. <ins>If Type(_x_) is _SIMD_Type:</ins>
+    1. <ins>Assert Type(_y_) is _SIMD_Type.</ins>
+    1. <ins>For _i_ from 0 to _SIMD_Descriptor.[[SIMDLength]] - 1:</ins>
+      1. <ins>If SameValue(SIMDExtractLane(_x_, _i_), SIMDExtractLane(_y_, _i_)) is ~false~, return ~false~.</ins>
+    1. <ins>return ~true~</ins>
+1. Return ~true~ if _x_ and _y_ are the same Object value. Otherwise, return ~false~.
 </emu-alg>
 </emu-clause>
 
@@ -295,12 +313,30 @@ Add an extra step at the bottom of the definition of SameValue for the new case 
 <h1>SameValueZero(x, y) (<a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-samevaluezero">7.2.10</a>)</h1>
 Add an extra step at the bottom of the definition of SameValueZero for the new case involving the new type:
 <emu-alg>
-11. For each SIMD type _SIMD_Type:
-  1. If Type(x) is _SIMD_Type:
-    1. Assert Type(y) is _SIMD_Type.
-    1. For _i_ from 0 to _SIMD_Descriptor.[[SIMDLength]] - 1:
-      1. If SameValueZero(SIMDExtractLane(_x_, _i_), SIMDExtractLane(_y_, _i_)) is ~false~, return ~false~.
-    1. return ~true~
+1. ReturnIfAbrupt(_x_).
+1. ReturnIfAbrupt(_y_).
+1. If Type(_x_) is different from Type(_y_), return ~false~.
+1. If Type(_x_) is Undefined, return ~true~.
+1. If Type(_x_) is Null, return ~true~.
+1. If Type(_x_) is Number, then
+  1. If _x_ is ~NaN~ and _y_ is ~NaN~, return ~true~.
+  1. If _x_ is +0 and _y_ is -0, return ~true~.
+  1. If _x_ is -0 and _y_ is +0, return ~true~.
+  1. If _x_ is the same Number value as _y_, return ~true~.
+  1. Return ~false~.
+1. If Type(_x_) is String, then
+  1. If _x_ and _y_ are exactly the same sequence of code units (same length and same code units at corresponding indices) return true; otherwise, return false.
+1. If Type(_x_) is Boolean, then
+  1. If _x_ and _y_ are both true or both false, return true; otherwise, return false.
+1. If Type(_x_) is Symbol, then
+  1. If _x_ and _y_ are both the same Symbol value, return true; otherwise, return false.
+1. <ins>For each SIMD type _SIMD_Type:</ins>
+  1. <ins>If Type(_x_) is _SIMD_Type:</ins>
+    1. <ins>Assert Type(_y_) is _SIMD_Type.</ins>
+    1. <ins>For _i_ from 0 to _SIMD_Descriptor.[[SIMDLength]] - 1:</ins>
+      1. <ins>If SameValueZero(SIMDExtractLane(_x_, _i_), SIMDExtractLane(_y_, _i_)) is ~false~, return ~false~.</ins>
+    1. <ins>return ~true~</ins>
+1. Return ~true~ if _x_ and _y_ are the same Object value. Otherwise, return ~false~.
 </emu-alg>
 </emu-clause>
 
@@ -313,7 +349,19 @@ Add an extra step at the bottom of the definition of SameValueZero for the new c
 <h1>Abstract Equality Comparison (<a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-abstract-equality-comparison">7.2.12</a>)</h1>
 Replace step 10 with the following:
 <emu-alg>
-10. If Type(x) is either String, Number, Symbol, or any _SIMD_Type, and Type(y) is Object, then return the result of the comparison x == ToPrimitive(y).
+1. ReturnIfAbrupt(_x_).
+1. ReturnIfAbrupt(_y_).
+1. If Type(_x_) is the same as Type(_y_), then
+  1. Return the result of performing Strict Equality Comparison x === y.
+1. If x is null and y is undefined, return ~true~.
+1. If x is undefined and y is null, return ~true~.
+1. If Type(_x_) is Number and Type(_y_) is String,<br/> return the result of the comparison x == ToNumber(_y_).
+1. If Type(_x_) is String and Type(_y_) is Number,<br/> return the result of the comparison ToNumber(_x_) == y.
+1. If Type(_x_) is Boolean, return the result of the comparison ToNumber(_x_) == y.
+1. If Type(_y_) is Boolean, return the result of the comparison x == ToNumber(_y_).
+1. If Type(_x_) is either String, Number, <ins>any _SIMD_Type,</ins> or Symbol and Type(_y_) is Object, then<br/>return the result of the comparison x == ToPrimitive(_y_).
+1. If Type(_x_) is Object and Type(_y_) is either String, Number, <ins>any _SIMD_Type,</ins> or Symbol, then<br/>return the result of the comparison ToPrimitive(_x_) == y.
+1. Return ~false~.
 </emu-alg>
 </emu-clause>
 
@@ -321,12 +369,31 @@ Replace step 10 with the following:
 <h1>Strict Equality Comparison (<a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-strict-equality-comparison">7.2.13</a>)</h1>
 Add a new step 9, before the existing step 9:
 <emu-alg>
-9. For each SIMD type _SIMD_Type:
-  1. If Type(x) is _SIMD_Type:
-    1. Assert Type(y) is _SIMD_Type.
-    1. For _i_ from 0 to _SIMD_Type.[[SIMDLength]] - 1:
-      1. If SIMDExtractLane(_x_, _i_) === SIMDExtractLane(_y_, _i_) is ~false~, return ~false~.
-    1. return ~true~
+1. ReturnIfAbrupt(_x_).
+1. ReturnIfAbrupt(_y_).
+1. If Type(_x_) is different from Type(_y_), return ~false~.
+1. If Type(_x_) is Undefined, return ~true~.
+1. If Type(_x_) is Null, return ~true~.
+1. If Type(_x_) is Number, then
+  1. If _x_ is ~NaN~, return ~false~.
+  1. If _y_ is ~NaN~, return ~false~.
+  1. If _x_ is the same Number value as y, return ~true~.
+  1. If _x_ is +0 and y is −0, return ~true~.
+  1. If _x_ is −0 and y is +0, return ~true~.
+  1. Return ~false~.
+1. If Type(_x_) is String, then
+  1. If _x_ and _y_ are exactly the same sequence of code units (same length and same code units at corresponding indices) return true; otherwise, return false.
+1. If Type(_x_) is Boolean, then
+  1. If _x_ and _y_ are both true or both false, return true; otherwise, return false.
+1. If Type(_x_) is Symbol, then
+  1. If _x_ and _y_ are both the same Symbol value, return true; otherwise, return false.
+1. <ins>For each SIMD type _SIMD_Type:</ins>
+  1. <ins>If Type(_x_) is _SIMD_Type:</ins>
+    1. <ins>Assert Type(_y_) is _SIMD_Type.</ins>
+    1. <ins>For _i_ from 0 to _SIMD_Descriptor.[[SIMDLength]] - 1:</ins>
+      1. <ins>If SIMDExtractLane(_x_, _i_) === SIMDExtractLane(_y_, _i_) is ~false~, return ~false~.</ins>
+    1. <ins>return ~true~</ins>
+1. Return ~true~ if _x_ and _y_ are the same Object value. Otherwise, return ~false~.
 </emu-alg>
 </emu-clause>
 </emu-clause>
