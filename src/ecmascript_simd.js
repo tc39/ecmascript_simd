@@ -72,11 +72,6 @@ function isInt32(o) {
   return (o | 0) === o;
 }
 
-function isNumber(o) {
-  return typeof o === "number" ||
-      (typeof o === "object" && o.constructor === Number);
-}
-
 function isTypedArray(o) {
   return (o instanceof Int8Array) ||
          (o instanceof Uint8Array) ||
@@ -87,10 +82,6 @@ function isTypedArray(o) {
          (o instanceof Uint32Array) ||
          (o instanceof Float32Array) ||
          (o instanceof Float64Array);
-}
-
-function isArrayBuffer(o) {
-  return (o instanceof ArrayBuffer);
 }
 
 function minNum(x, y) {
