@@ -38,32 +38,72 @@ function toBool(x) {
   return x < 0;
 }
 
-test('odds and ends', function() {
-    // Not yet specified:
-    //   ==, ===, !=, !==, <=, >=
-    //   conversion to bool via !, ?, etc.:
-    isNaN(Number(SIMD.float32x4(0, 1, 2, 3)));
-    isNaN(+SIMD.float32x4(0, 1, 2, 3));
-    isNaN(-SIMD.float32x4(0, 1, 2, 3));
-    equal(~SIMD.float32x4(0, 1, 2, 3), -1);
-    isNaN(Math.fround(SIMD.float32x4(0, 1, 2, 3)));
-    equal(SIMD.float32x4(0, 1, 2, 3)|0, 0);
-    equal(SIMD.float32x4(0, 1, 2, 3)&0, 0);
-    equal(SIMD.float32x4(0, 1, 2, 3)^0, 0);
-    equal(SIMD.float32x4(0, 1, 2, 3)>>>0, 0);
-    equal(SIMD.float32x4(0, 1, 2, 3)>>0, 0);
-    equal(SIMD.float32x4(0, 1, 2, 3)<<0, 0);
-    equal(typeof (SIMD.float32x4(0, 1, 2, 3) + SIMD.float32x4(4, 5, 6, 7)), "string");
-    isNaN(SIMD.float32x4(0, 1, 2, 3) - SIMD.float32x4(4, 5, 6, 7));
-    isNaN(SIMD.float32x4(0, 1, 2, 3) * SIMD.float32x4(4, 5, 6, 7));
-    isNaN(SIMD.float32x4(0, 1, 2, 3) / SIMD.float32x4(4, 5, 6, 7));
-    isNaN(SIMD.float32x4(0, 1, 2, 3) % SIMD.float32x4(4, 5, 6, 7));
-    equal(SIMD.float32x4(0, 1, 2, 3) < SIMD.float32x4(4, 5, 6, 7), false);
-    equal(SIMD.float32x4(0, 1, 2, 3) > SIMD.float32x4(4, 5, 6, 7), false);
-    equal(typeof (SIMD.float32x4(0, 1, 2, 3).toString()), "string");
+test('float32x4 operators', function() {
+    // Not possible to implement properly in polyfill:
+    //   ==, ===, !=, !==
+    throws(function() {Number(SIMD.float32x4(0, 1, 2, 3))});
+    throws(function() {+SIMD.float32x4(0, 1, 2, 3)});
+    throws(function() {-SIMD.float32x4(0, 1, 2, 3)});
+    throws(function() {~SIMD.float32x4(0, 1, 2, 3), -1});
+    throws(function() {Math.fround(SIMD.float32x4(0, 1, 2, 3))});
+    throws(function() {SIMD.float32x4(0, 1, 2, 3)|0});
+    throws(function() {SIMD.float32x4(0, 1, 2, 3)&0});
+    throws(function() {SIMD.float32x4(0, 1, 2, 3)^0});
+    throws(function() {SIMD.float32x4(0, 1, 2, 3)>>>0});
+    throws(function() {SIMD.float32x4(0, 1, 2, 3)>>0});
+    throws(function() {SIMD.float32x4(0, 1, 2, 3)<<0});
+    throws(function() {(SIMD.float32x4(0, 1, 2, 3) + SIMD.float32x4(4, 5, 6, 7))});
+    throws(function() {SIMD.float32x4(0, 1, 2, 3) - SIMD.float32x4(4, 5, 6, 7)});
+    throws(function() {SIMD.float32x4(0, 1, 2, 3) * SIMD.float32x4(4, 5, 6, 7)});
+    throws(function() {SIMD.float32x4(0, 1, 2, 3) / SIMD.float32x4(4, 5, 6, 7)});
+    throws(function() {SIMD.float32x4(0, 1, 2, 3) % SIMD.float32x4(4, 5, 6, 7)});
+    throws(function() {SIMD.float32x4(0, 1, 2, 3) < SIMD.float32x4(4, 5, 6, 7)});
+    throws(function() {SIMD.float32x4(0, 1, 2, 3) > SIMD.float32x4(4, 5, 6, 7)});
+    throws(function() {SIMD.float32x4(0, 1, 2, 3) <= SIMD.float32x4(4, 5, 6, 7)});
+    throws(function() {SIMD.float32x4(0, 1, 2, 3) >= SIMD.float32x4(4, 5, 6, 7)});
+    equal(SIMD.float32x4(0, 1, 2, 3).toString(), "float32x4(0, 1, 2, 3)");
+    equal(SIMD.float32x4(0, 1, 2, 3).toLocaleString(), "float32x4(0, 1, 2, 3)");
     throws(function() { SIMD.float32x4(0, 1, 2, 3)(); });
     equal(SIMD.float32x4(0, 1, 2, 3)[0], undefined);
     equal(SIMD.float32x4(0, 1, 2, 3).a, undefined);
+    equal(!SIMD.float32x4(0, 1, 2, 3), false);
+    equal(!SIMD.float32x4(0, 0, 0, 0), false);
+    equal(SIMD.float32x4(0, 1, 2, 3) ? 1 : 2, 1);
+    equal(SIMD.float32x4(0, 0, 0, 0) ? 1 : 2, 1);
+});
+
+test('int32x4 operators', function() {
+    // Not possible to implement properly in polyfill:
+    //   ==, ===, !=, !==
+    throws(function() {Number(SIMD.int32x4(0, 1, 2, 3))});
+    throws(function() {+SIMD.int32x4(0, 1, 2, 3)});
+    throws(function() {-SIMD.int32x4(0, 1, 2, 3)});
+    throws(function() {~SIMD.int32x4(0, 1, 2, 3), -1});
+    throws(function() {Math.fround(SIMD.int32x4(0, 1, 2, 3))});
+    throws(function() {SIMD.int32x4(0, 1, 2, 3)|0});
+    throws(function() {SIMD.int32x4(0, 1, 2, 3)&0});
+    throws(function() {SIMD.int32x4(0, 1, 2, 3)^0});
+    throws(function() {SIMD.int32x4(0, 1, 2, 3)>>>0});
+    throws(function() {SIMD.int32x4(0, 1, 2, 3)>>0});
+    throws(function() {SIMD.int32x4(0, 1, 2, 3)<<0});
+    throws(function() {(SIMD.int32x4(0, 1, 2, 3) + SIMD.int32x4(4, 5, 6, 7))});
+    throws(function() {SIMD.int32x4(0, 1, 2, 3) - SIMD.int32x4(4, 5, 6, 7)});
+    throws(function() {SIMD.int32x4(0, 1, 2, 3) * SIMD.int32x4(4, 5, 6, 7)});
+    throws(function() {SIMD.int32x4(0, 1, 2, 3) / SIMD.int32x4(4, 5, 6, 7)});
+    throws(function() {SIMD.int32x4(0, 1, 2, 3) % SIMD.int32x4(4, 5, 6, 7)});
+    throws(function() {SIMD.int32x4(0, 1, 2, 3) < SIMD.int32x4(4, 5, 6, 7)});
+    throws(function() {SIMD.int32x4(0, 1, 2, 3) > SIMD.int32x4(4, 5, 6, 7)});
+    throws(function() {SIMD.int32x4(0, 1, 2, 3) <= SIMD.int32x4(4, 5, 6, 7)});
+    throws(function() {SIMD.int32x4(0, 1, 2, 3) >= SIMD.int32x4(4, 5, 6, 7)});
+    equal(SIMD.int32x4(0, 1, 2, 3).toString(), "int32x4(0, 1, 2, 3)");
+    equal(SIMD.int32x4(0, 1, 2, 3).toLocaleString(), "int32x4(0, 1, 2, 3)");
+    throws(function() { SIMD.int32x4(0, 1, 2, 3)(); });
+    equal(SIMD.int32x4(0, 1, 2, 3)[0], undefined);
+    equal(SIMD.int32x4(0, 1, 2, 3).a, undefined);
+    equal(!SIMD.int32x4(0, 1, 2, 3), false);
+    equal(!SIMD.int32x4(0, 0, 0, 0), false);
+    equal(SIMD.int32x4(0, 1, 2, 3) ? 1 : 2, 1);
+    equal(SIMD.int32x4(0, 0, 0, 0) ? 1 : 2, 1);
 });
 
 test('float32x4 constructor', function() {
