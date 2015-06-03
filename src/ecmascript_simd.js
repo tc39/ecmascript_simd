@@ -549,6 +549,35 @@ if (typeof SIMD.float64x2.fromInt8x16Bits === "undefined") {
   }
 }
 
+if (!Object.hasOwnProperty(SIMD.float64x2.prototype, 'toString')) {
+  /**
+   * @return {String} a string representing the float64x2.
+   */
+  SIMD.float64x2.prototype.toString = function() {
+    return "float64x2(" +
+      this.x_ + ", " +
+      this.y_ + ")";
+  }
+}
+
+if (!Object.hasOwnProperty(SIMD.float64x2.prototype, 'toLocaleString')) {
+  /**
+   * @return {String} a locale-sensitive string representing the float64x2.
+   */
+  SIMD.float64x2.prototype.toLocaleString = function() {
+    return "float64x2(" +
+      this.x_.toLocaleString() + ", " +
+      this.y_.toLocaleString() + ")";
+  }
+}
+
+if (!Object.hasOwnProperty(SIMD.float64x2.prototype, 'valueOf')) {
+  SIMD.float64x2.prototype.valueOf = function() {
+    throw new TypeError("float64x2 cannot be converted to a number");
+  }
+}
+
+
 if (typeof SIMD.int32x4 === "undefined") {
   /**
     * Construct a new instance of int32x4 number.
@@ -778,7 +807,7 @@ if (typeof SIMD.int32x4.fromInt8x16Bits === "undefined") {
 
 if (!Object.hasOwnProperty(SIMD.int32x4.prototype, 'toString')) {
   /**
-   * @return {String} a string representing the float32x4.
+   * @return {String} a string representing the int32x4.
    */
   SIMD.int32x4.prototype.toString = function() {
     return "int32x4(" +
@@ -791,7 +820,7 @@ if (!Object.hasOwnProperty(SIMD.int32x4.prototype, 'toString')) {
 
 if (!Object.hasOwnProperty(SIMD.int32x4.prototype, 'toLocaleString')) {
   /**
-   * @return {String} a locale-sensitive string representing the float32x4.
+   * @return {String} a locale-sensitive string representing the int32x4.
    */
   SIMD.int32x4.prototype.toLocaleString = function() {
     return "int32x4(" +
@@ -1022,6 +1051,46 @@ if (typeof SIMD.int16x8.fromInt8x16Bits === "undefined") {
   SIMD.int16x8.fromInt8x16Bits = function(t) {
     saveInt8x16(t);
     return restoreInt16x8();
+  }
+}
+
+if (!Object.hasOwnProperty(SIMD.int16x8.prototype, 'toString')) {
+  /**
+   * @return {String} a string representing the int16x8.
+   */
+  SIMD.int16x8.prototype.toString = function() {
+    return "int16x8(" +
+      this.s0_ + ", " +
+      this.s1_ + ", " +
+      this.s2_ + ", " +
+      this.s3_ + ", " +
+      this.s4_ + ", " +
+      this.s5_ + ", " +
+      this.s6_ + ", " +
+      this.s7_ + ")";
+  }
+}
+
+if (!Object.hasOwnProperty(SIMD.int16x8.prototype, 'toLocaleString')) {
+  /**
+   * @return {String} a locale-sensitive string representing the int16x8.
+   */
+  SIMD.int16x8.prototype.toLocaleString = function() {
+    return "int16x8(" +
+      this.s0_.toLocaleString() + ", " +
+      this.s1_.toLocaleString() + ", " +
+      this.s2_.toLocaleString() + ", " +
+      this.s3_.toLocaleString() + ", " +
+      this.s4_.toLocaleString() + ", " +
+      this.s5_.toLocaleString() + ", " +
+      this.s6_.toLocaleString() + ", " +
+      this.s7_.toLocaleString() + ")";
+  }
+}
+
+if (!Object.hasOwnProperty(SIMD.int16x8.prototype, 'valueOf')) {
+  SIMD.int16x8.prototype.valueOf = function() {
+    throw new TypeError("int16x8 cannot be converted to a number");
   }
 }
 
@@ -1300,6 +1369,62 @@ if (typeof SIMD.int8x16.fromInt16x8Bits === "undefined") {
   SIMD.int8x16.fromInt16x8Bits = function(t) {
     saveInt16x8(t);
     return restoreInt8x16();
+  }
+}
+
+if (!Object.hasOwnProperty(SIMD.int8x16.prototype, 'toString')) {
+  /**
+   * @return {String} a string representing the int8x16.
+   */
+  SIMD.int8x16.prototype.toString = function() {
+    return "int8x16(" +
+      this.s0_ + ", " +
+      this.s1_ + ", " +
+      this.s2_ + ", " +
+      this.s3_ + ", " +
+      this.s4_ + ", " +
+      this.s5_ + ", " +
+      this.s6_ + ", " +
+      this.s7_ + ", " +
+      this.s8_ + ", " +
+      this.s9_ + ", " +
+      this.s10_ + ", " +
+      this.s11_ + ", " +
+      this.s12_ + ", " +
+      this.s13_ + ", " +
+      this.s14_ + ", " +
+      this.s15_ + ")";
+  }
+}
+
+if (!Object.hasOwnProperty(SIMD.int8x16.prototype, 'toLocaleString')) {
+  /**
+   * @return {String} a locale-sensitive string representing the int8x16.
+   */
+  SIMD.int8x16.prototype.toLocaleString = function() {
+    return "int8x16(" +
+      this.s0_.toLocaleString() + ", " +
+      this.s1_.toLocaleString() + ", " +
+      this.s2_.toLocaleString() + ", " +
+      this.s3_.toLocaleString() + ", " +
+      this.s4_.toLocaleString() + ", " +
+      this.s5_.toLocaleString() + ", " +
+      this.s6_.toLocaleString() + ", " +
+      this.s7_.toLocaleString() + ", " +
+      this.s8_.toLocaleString() + ", " +
+      this.s9_.toLocaleString() + ", " +
+      this.s10_.toLocaleString() + ", " +
+      this.s11_.toLocaleString() + ", " +
+      this.s12_.toLocaleString() + ", " +
+      this.s13_.toLocaleString() + ", " +
+      this.s14_.toLocaleString() + ", " +
+      this.s15_.toLocaleString() + ")";
+  }
+}
+
+if (!Object.hasOwnProperty(SIMD.int8x16.prototype, 'valueOf')) {
+  SIMD.int8x16.prototype.valueOf = function() {
+    throw new TypeError("int8x16 cannot be converted to a number");
   }
 }
 
