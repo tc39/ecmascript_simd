@@ -362,6 +362,38 @@ if (typeof SIMD.float32x4.fromInt8x16Bits === "undefined") {
   }
 }
 
+if (!Object.hasOwnProperty(SIMD.float32x4.prototype, 'toString')) {
+  /**
+   * @return {String} a string representing the float32x4.
+   */
+  SIMD.float32x4.prototype.toString = function() {
+    return "float32x4(" +
+      this.x_ + ", " +
+      this.y_ + ", " +
+      this.z_ + ", " +
+      this.w_ + ")"
+  }
+}
+
+if (!Object.hasOwnProperty(SIMD.float32x4.prototype, 'toLocaleString')) {
+  /**
+   * @return {String} a locale-sensitive string representing the float32x4.
+   */
+  SIMD.float32x4.prototype.toLocaleString = function() {
+    return "float32x4(" +
+      this.x_.toLocaleString() + ", " +
+      this.y_.toLocaleString() + ", " +
+      this.z_.toLocaleString() + ", " +
+      this.w_.toLocaleString() + ")"
+  }
+}
+
+if (!Object.hasOwnProperty(SIMD.float32x4.prototype, 'valueOf')) {
+  SIMD.float32x4.prototype.valueOf = function() {
+    throw new TypeError("float32x4 cannot be converted to a number");
+  }
+}
+
 if (typeof SIMD.float64x2 === "undefined") {
   /**
     * Construct a new instance of float64x2 number.
@@ -741,6 +773,38 @@ if (typeof SIMD.int32x4.fromInt8x16Bits === "undefined") {
   SIMD.int32x4.fromInt8x16Bits = function(t) {
     saveInt8x16(t);
     return restoreInt32x4();
+  }
+}
+
+if (!Object.hasOwnProperty(SIMD.int32x4.prototype, 'toString')) {
+  /**
+   * @return {String} a string representing the float32x4.
+   */
+  SIMD.int32x4.prototype.toString = function() {
+    return "int32x4(" +
+      this.x_ + ", " +
+      this.y_ + ", " +
+      this.z_ + ", " +
+      this.w_ + ")";
+  }
+}
+
+if (!Object.hasOwnProperty(SIMD.int32x4.prototype, 'toLocaleString')) {
+  /**
+   * @return {String} a locale-sensitive string representing the float32x4.
+   */
+  SIMD.int32x4.prototype.toLocaleString = function() {
+    return "int32x4(" +
+      this.x_.toLocaleString() + ", " +
+      this.y_.toLocaleString() + ", " +
+      this.z_.toLocaleString() + ", " +
+      this.w_.toLocaleString() + ")";
+  }
+}
+
+if (!Object.hasOwnProperty(SIMD.int32x4.prototype, 'valueOf')) {
+  SIMD.int32x4.prototype.valueOf = function() {
+    throw new TypeError("int32x4 cannot be converted to a number");
   }
 }
 
