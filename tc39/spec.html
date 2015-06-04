@@ -1,6 +1,6 @@
 <!doctype html>
 <meta charset="utf8">
-<title>SIMD.js specification v0.5.4</title>
+<title>SIMD.js specification v0.5.5</title>
 <link rel="stylesheet" href="./elements.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/github.min.css">
 <emu-biblio href="./biblio.json"></emu-biblio>
@@ -57,12 +57,11 @@ Related links:
 <li>v0.5.2: Saturating arithmetic; fix mul mis-spec.</li>
 <li>v0.5.3: Remove mention of signalling NaN (matches ES6).</li>
 <li>v0.5.4: Better formatting for modifications of existing algorithms.</li>
+<li>v0.5.5: toLocaleString, shifts, saturating functions only on int16 and smaller, sumOfAbsoluteDifferences.</li>
 </ul>
 <p>TODO:</p>
 <ul>
 <li>Define Int64x2 type better, including constructor and cast function</li>
-<li>Shifts, sumOfAbsoluteDifferences</li>
-<li>Make sure that things that we might overload later will throw</li>
 </ul>
 </emu-intro>
 
@@ -568,6 +567,21 @@ This internal algorithm creates a new value of the type corresponding to the spe
 1. For _i_ from 0 to _descriptor_.[[SIMDLength]],
   1. Let _ax_ = SIMDExtractLane(_a_, _i_).
   1. Let _res_ = op(_ax_).
+  1. ReturnIfAbrupt(_res_).
+  1. Set <var>list</var>[<var>i</var>] to _res_.
+1. Return SIMDCreate(_descriptor_, ..._list_).
+</emu-alg>
+</emu-clause>
+
+<emu-clause id="simd-scalar" aoid="SIMDUnaryOp">
+<h1>SIMDScalarOp( a, scalar, op )</h1>
+<emu-alg>
+1. Let _descriptor_ be _a_.[[SIMDTypeDescriptor]].
+1. Let _list_ be a new List of length _descriptor_.[[SIMDLength]].
+1. ReturnIfAbrupt(_block_).
+1. For _i_ from 0 to _descriptor_.[[SIMDLength]],
+  1. Let _ax_ = SIMDExtractLane(_a_, _i_).
+  1. Let _res_ = op(_ax_, _scalar_).
   1. ReturnIfAbrupt(_res_).
   1. Set <var>list</var>[<var>i</var>] to _res_.
 1. Return SIMDCreate(_descriptor_, ..._list_).
@@ -1137,7 +1151,7 @@ This operation is only defined on integer SIMD types.
 
 <emu-clause id="simd-add-saturate">
 <h1>_SIMD_Constructor.addSaturate( a, b )</h1>
-This operation is only defined on integer SIMD types.
+This operation is only defined on integer SIMD types whose _SIMD_Descriptor.[[SIMDElementSize]] <= 2.
 <emu-alg>
 1. If _a_.[[SIMDTypeDescriptor]] is not _SIMD_Descriptor or _b_.[[SIMDTypeDescriptor]] is not _SIMD_Descriptor, throw a TypeError.
 1. Let _result_ be SIMDBinaryOp(_a_, _b_, AddSaturate(_a_.[[SIMDTypeDescriptor]].[[SIMDElementSize]])).
@@ -1155,12 +1169,63 @@ This operation is only defined on integer SIMD types.
 
 <emu-clause id="simd-sub-saturate">
 <h1>_SIMD_Constructor.subSaturate( a, b )</h1>
-This operation is only defined on integer SIMD types.
+This operation is only defined on integer SIMD types whose _SIMD_Descriptor.[[SIMDElementSize]] <= 2.
 <emu-alg>
 1. If _a_.[[SIMDTypeDescriptor]] is not _SIMD_Descriptor or _b_.[[SIMDTypeDescriptor]] is not _SIMD_Descriptor, throw a TypeError.
 1. Let _result_ be SIMDBinaryOp(_a_, _b_, SubSaturate(_a_.[[SIMDTypeDescriptor]].[[SIMDElementSize]])).
 1. ReturnIfAbrupt(_result_).
 1. Return _result_.
+</emu-alg>
+</emu-clause>
+
+<emu-clause id="simd-shift-left-by-scalar">
+<h1>_SIMD_Constructor.shiftLeftByScalar( a, scalar )</h1>
+This operation is only defined on integer SIMD types. This definition uses the refers to << as defined by <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-left-shift-operator">ES2015 12.8.3 (The Left Shift Operator ( << ))</a>.
+<emu-alg>
+1. If _a_.[[SIMDTypeDescriptor]] is not _SIMD_Descriptor, throw a TypeError.
+1. If ToUint32(_scalar_) does not equal _scalar_, throw a TypeError.
+1. Let _result_ be SIMDScalarOp(_a_, _scalar_, <<).
+1. ReturnIfAbrupt(_result_).
+1. Return _result_.
+</emu-alg>
+<emu-note>In this defintion, if _scalar_ is greater than 32, the output of this function will be equal to _SIMD_Constructor.splat(0). There is no "wrap-around" behavior.</emu-note>
+</emu-clause>
+
+<emu-clause id="simd-shift-right-logical-by-scalar">
+<h1>_SIMD_Constructor.shiftRightLogicalByScalar( a, scalar )</h1>
+This operation is only defined on integer SIMD types. This definition uses the refers to >>> as defined by <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-unsigned-right-shift-operator">ES2015 12.8.5 (The Unsigned Right Shift Operator ( >>> ))</a>.
+<emu-alg>
+1. If _a_.[[SIMDTypeDescriptor]] is not _SIMD_Descriptor, throw a TypeError.
+1. If ToUint32(_scalar_) does not equal _scalar_, throw a TypeError.
+1. Let _result_ be SIMDScalarOp(_a_, _scalar_, >>>).
+1. ReturnIfAbrupt(_result_).
+1. Return _result_.
+</emu-alg>
+<emu-note>In this defintion, if _scalar_ is greater than 32, the output of this function will be equal to _SIMD_Constructor.splat(0). There is no "wrap-around" behavior.</emu-note>
+</emu-clause>
+
+<emu-clause id="simd-shift-right-arithmetic-by-scalar">
+<h1>_SIMD_Constructor.shiftRightArithmeticByScalar( a, scalar )</h1>
+This operation is only defined on integer SIMD types. This definition uses the refers to >> as defined by <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-signed-right-shift-operator">ES2015 12.8.4 (The Signed Right Shift Operator ( >> ))</a>.
+<emu-alg>
+1. If _a_.[[SIMDTypeDescriptor]] is not _SIMD_Descriptor, throw a TypeError.
+1. If ToUint32(_scalar_) does not equal _scalar_, throw a TypeError.
+1. Let _result_ be SIMDScalarOp(_a_, _scalar_, >>).
+1. ReturnIfAbrupt(_result_).
+1. Return _result_.
+</emu-alg>
+<emu-note>In this defintion, if _scalar_ is greater than 32, the output of this function will be equal to _SIMD_Constructor.splat(0). There is no "wrap-around" behavior.</emu-note>
+</emu-clause>
+
+<emu-clause id="simd-sum-of-absolute-differences">
+<h1>_SIMD_Constructor.sumOfAbsoluteDifferences( a, b )</h1>
+This operation is only defined on `Uint8x16`Constructor.
+<emu-alg>
+1. If _a_.[[SIMDTypeDescriptor]] is not _SIMD_Descriptor or _b_.[[SIMDTypeDescriptor]] is not _SIMD_Descriptor, throw a TypeError.
+1. Let _sum_ be 0.
+1. For _i_ from 0 to _SIMD_Descriptor.[[SIMDLength]] - 1,
+  1. Let _sum_ be _sum_ + Call(%Math_abs%, %Math%, «_a_.[[SIMDElements]][<var>i</var>], _b_.[[SIMDElements]][<var>i</var>]»).
+1. Return _sum_.
 </emu-alg>
 </emu-clause>
 
@@ -1385,6 +1450,23 @@ The initial value of _SIMD_Constructor.prototype.constructor is the intrinsic ob
 <emu-alg>
 1. If ~this~ does not have a [[SIMDWrapperData]] internal slot, throw a ~TypeError~.
 1. Return ~this~.[[SIMDWrapperData]].
+</emu-alg>
+</emu-clause>
+
+<emu-clause id="simd-prototype-tolocalestring">
+<h1>_SIMD_Constructor.prototype.toLocaleString()</h1>
+<emu-alg>
+1. If ~this~ does not have a [[SIMDWrapperData]] internal slot, throw a ~TypeError~.
+1. Let _separator_ be the String value for the list-separator String appropriate for the host environment’s current locale (this is derived in an implementation-defined way).
+1. Let _list_ be an empty List
+1. For each element _element_ in _argument_.[[SIMDElements]],
+  1. Let _R_ be ToString(Invoke(_element_, "toLocaleString")).
+  1. ReturnIfAbrupt(_R_).
+  1. Append _R_ to _list_.
+1. Let _results_ be an Array containing the contents of _list_.
+1. Let _t_ be the result of evaluating `typeof` _argument_.
+1. Let _e_ be Call(%ArrayPrototype_join%, _results_, «_separator_»).
+1. Return a new String value computed by concatenating the previous value of _t_, "(", _e_, and ")".
 </emu-alg>
 </emu-clause>
 
