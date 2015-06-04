@@ -106,6 +106,108 @@ test('int32x4 operators', function() {
     equal(SIMD.int32x4(0, 0, 0, 0) ? 1 : 2, 1);
 });
 
+test('float64x2 operators', function() {
+    // Not possible to implement properly in polyfill:
+    //   ==, ===, !=, !==
+    throws(function() {Number(SIMD.float64x2(0, 1))});
+    throws(function() {+SIMD.float64x2(0, 1)});
+    throws(function() {-SIMD.float64x2(0, 1)});
+    throws(function() {~SIMD.float64x2(0, 1), -1});
+    throws(function() {Math.fround(SIMD.float64x2(0, 1))});
+    throws(function() {SIMD.float64x2(0, 1)|0});
+    throws(function() {SIMD.float64x2(0, 1)&0});
+    throws(function() {SIMD.float64x2(0, 1)^0});
+    throws(function() {SIMD.float64x2(0, 1)>>>0});
+    throws(function() {SIMD.float64x2(0, 1)>>0});
+    throws(function() {SIMD.float64x2(0, 1)<<0});
+    throws(function() {(SIMD.float64x2(0, 1) + SIMD.float64x2(0, 1))});
+    throws(function() {SIMD.float64x2(0, 1) - SIMD.float64x2(0, 1)});
+    throws(function() {SIMD.float64x2(0, 1) * SIMD.float64x2(0, 1)});
+    throws(function() {SIMD.float64x2(0, 1) / SIMD.float64x2(0, 1)});
+    throws(function() {SIMD.float64x2(0, 1) % SIMD.float64x2(0, 1)});
+    throws(function() {SIMD.float64x2(0, 1) < SIMD.float64x2(0, 1)});
+    throws(function() {SIMD.float64x2(0, 1) > SIMD.float64x2(0, 1)});
+    throws(function() {SIMD.float64x2(0, 1) <= SIMD.float64x2(0, 1)});
+    throws(function() {SIMD.float64x2(0, 1) >= SIMD.float64x2(0, 1)});
+    equal(SIMD.float64x2(0, 1).toString(), "float64x2(0, 1)");
+    equal(SIMD.float64x2(0, 1).toLocaleString(), "float64x2(0, 1)");
+    throws(function() { SIMD.float64x2(0, 1)(); });
+    equal(SIMD.float64x2(0, 1)[0], undefined);
+    equal(SIMD.float64x2(0, 1).a, undefined);
+    equal(!SIMD.float64x2(0, 1), false);
+    equal(!SIMD.float64x2(0, 1), false);
+    equal(SIMD.float64x2(0, 1) ? 1 : 2, 1);
+    equal(SIMD.float64x2(0, 1) ? 1 : 2, 1);
+});
+
+test('int8x16 operators', function() {
+    // Not possible to implement properly in polyfill:
+    //   ==, ===, !=, !==
+    throws(function() {Number(SIMD.int8x16(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15))});
+    throws(function() {+SIMD.int8x16(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15)});
+    throws(function() {-SIMD.int8x16(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15)});
+    throws(function() {~SIMD.int8x16(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15), -1});
+    throws(function() {Math.fround(SIMD.int8x16(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15))});
+    throws(function() {SIMD.int8x16(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15)|0});
+    throws(function() {SIMD.int8x16(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15)&0});
+    throws(function() {SIMD.int8x16(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15)^0});
+    throws(function() {SIMD.int8x16(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15)>>>0});
+    throws(function() {SIMD.int8x16(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15)>>0});
+    throws(function() {SIMD.int8x16(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15)<<0});
+    throws(function() {(SIMD.int8x16(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15) + SIMD.int8x16(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15))});
+    throws(function() {SIMD.int8x16(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15) - SIMD.int8x16(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15)});
+    throws(function() {SIMD.int8x16(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15) * SIMD.int8x16(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15)});
+    throws(function() {SIMD.int8x16(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15) / SIMD.int8x16(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15)});
+    throws(function() {SIMD.int8x16(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15) % SIMD.int8x16(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15)});
+    throws(function() {SIMD.int8x16(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15) < SIMD.int8x16(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15)});
+    throws(function() {SIMD.int8x16(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15) > SIMD.int8x16(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15)});
+    throws(function() {SIMD.int8x16(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15) <= SIMD.int8x16(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15)});
+    throws(function() {SIMD.int8x16(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15) >= SIMD.int8x16(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15)});
+    equal(SIMD.int8x16(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15).toString(), "int8x16(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15)");
+    equal(SIMD.int8x16(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15).toLocaleString(), "int8x16(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15)");
+    throws(function() { SIMD.int8x16(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15)(); });
+    equal(SIMD.int8x16(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15)[0], undefined);
+    equal(SIMD.int8x16(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15).a, undefined);
+    equal(!SIMD.int8x16(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15), false);
+    equal(!SIMD.int8x16(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15), false);
+    equal(SIMD.int8x16(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15) ? 1 : 2, 1);
+    equal(SIMD.int8x16(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15) ? 1 : 2, 1);
+});
+
+test('int16x8 operators', function() {
+    // Not possible to implement properly in polyfill:
+    //   ==, ===, !=, !==
+    throws(function() {Number(SIMD.int16x8(0, 1, 2, 3, 4, 5, 6, 7))});
+    throws(function() {+SIMD.int16x8(0, 1, 2, 3, 4, 5, 6, 7)});
+    throws(function() {-SIMD.int16x8(0, 1, 2, 3, 4, 5, 6, 7)});
+    throws(function() {~SIMD.int16x8(0, 1, 2, 3, 4, 5, 6, 7), -1});
+    throws(function() {Math.fround(SIMD.int16x8(0, 1, 2, 3, 4, 5, 6, 7))});
+    throws(function() {SIMD.int16x8(0, 1, 2, 3, 4, 5, 6, 7)|0});
+    throws(function() {SIMD.int16x8(0, 1, 2, 3, 4, 5, 6, 7)&0});
+    throws(function() {SIMD.int16x8(0, 1, 2, 3, 4, 5, 6, 7)^0});
+    throws(function() {SIMD.int16x8(0, 1, 2, 3, 4, 5, 6, 7)>>>0});
+    throws(function() {SIMD.int16x8(0, 1, 2, 3, 4, 5, 6, 7)>>0});
+    throws(function() {SIMD.int16x8(0, 1, 2, 3, 4, 5, 6, 7)<<0});
+    throws(function() {(SIMD.int16x8(0, 1, 2, 3, 4, 5, 6, 7) + SIMD.int16x8(0, 1, 2, 3, 4, 5, 6, 7))});
+    throws(function() {SIMD.int16x8(0, 1, 2, 3, 4, 5, 6, 7) - SIMD.int16x8(0, 1, 2, 3, 4, 5, 6, 7)});
+    throws(function() {SIMD.int16x8(0, 1, 2, 3, 4, 5, 6, 7) * SIMD.int16x8(0, 1, 2, 3, 4, 5, 6, 7)});
+    throws(function() {SIMD.int16x8(0, 1, 2, 3, 4, 5, 6, 7) / SIMD.int16x8(0, 1, 2, 3, 4, 5, 6, 7)});
+    throws(function() {SIMD.int16x8(0, 1, 2, 3, 4, 5, 6, 7) % SIMD.int16x8(0, 1, 2, 3, 4, 5, 6, 7)});
+    throws(function() {SIMD.int16x8(0, 1, 2, 3, 4, 5, 6, 7) < SIMD.int16x8(0, 1, 2, 3, 4, 5, 6, 7)});
+    throws(function() {SIMD.int16x8(0, 1, 2, 3, 4, 5, 6, 7) > SIMD.int16x8(0, 1, 2, 3, 4, 5, 6, 7)});
+    throws(function() {SIMD.int16x8(0, 1, 2, 3, 4, 5, 6, 7) <= SIMD.int16x8(0, 1, 2, 3, 4, 5, 6, 7)});
+    throws(function() {SIMD.int16x8(0, 1, 2, 3, 4, 5, 6, 7) >= SIMD.int16x8(0, 1, 2, 3, 4, 5, 6, 7)});
+    equal(SIMD.int16x8(0, 1, 2, 3, 4, 5, 6, 7).toString(), "int16x8(0, 1, 2, 3, 4, 5, 6, 7)");
+    equal(SIMD.int16x8(0, 1, 2, 3, 4, 5, 6, 7).toLocaleString(), "int16x8(0, 1, 2, 3, 4, 5, 6, 7)");
+    throws(function() { SIMD.int16x8(0, 1, 2, 3, 4, 5, 6, 7)(); });
+    equal(SIMD.int16x8(0, 1, 2, 3, 4, 5, 6, 7)[0], undefined);
+    equal(SIMD.int16x8(0, 1, 2, 3, 4, 5, 6, 7).a, undefined);
+    equal(!SIMD.int16x8(0, 1, 2, 3, 4, 5, 6, 7), false);
+    equal(!SIMD.int16x8(0, 1, 2, 3, 4, 5, 6, 7), false);
+    equal(SIMD.int16x8(0, 1, 2, 3, 4, 5, 6, 7) ? 1 : 2, 1);
+    equal(SIMD.int16x8(0, 1, 2, 3, 4, 5, 6, 7) ? 1 : 2, 1);
+});
+
 test('float32x4 constructor', function() {
   notEqual(undefined, SIMD.float32x4);  // Type.
   notEqual(undefined, SIMD.float32x4(1.0, 2.0, 3.0, 4.0));  // New object.
