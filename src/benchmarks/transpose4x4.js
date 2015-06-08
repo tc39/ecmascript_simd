@@ -21,7 +21,7 @@
   var dst    = new Float32Array(16);
   var tsrc   = new Float32Array(16);
 
-  var sel_ttff = SIMD.int32x4.bool(true, true, false, false);
+  var sel_ttff = SIMD.Int32x4.bool(true, true, false, false);
 
   function initMatrix(matrix, matrixTransposed) {
     for (var r = 0; r < 4; ++r) {
@@ -76,12 +76,12 @@
     return init();
   }
 
-  // SIMD version of the kernel with SIMD.float32x4.shuffle operation
+  // SIMD version of the kernel with SIMD.Float32x4.shuffle operation
   function simdTransposeMix() {
-    var src0     = SIMD.float32x4.load(src, 0);
-    var src1     = SIMD.float32x4.load(src, 4);
-    var src2     = SIMD.float32x4.load(src, 8);
-    var src3     = SIMD.float32x4.load(src, 12);
+    var src0     = SIMD.Float32x4.load(src, 0);
+    var src1     = SIMD.Float32x4.load(src, 4);
+    var src2     = SIMD.Float32x4.load(src, 8);
+    var src3     = SIMD.Float32x4.load(src, 12);
     var dst0;
     var dst1;
     var dst2;
@@ -89,28 +89,28 @@
     var tmp01;
     var tmp23;
 
-    tmp01 = SIMD.float32x4.shuffle(src0, src1, 0, 1, 4, 5);
-    tmp23 = SIMD.float32x4.shuffle(src2, src3, 0, 1, 4, 5);
-    dst0  = SIMD.float32x4.shuffle(tmp01, tmp23, 0, 2, 4, 6);
-    dst1  = SIMD.float32x4.shuffle(tmp01, tmp23, 1, 3, 5, 7);
+    tmp01 = SIMD.Float32x4.shuffle(src0, src1, 0, 1, 4, 5);
+    tmp23 = SIMD.Float32x4.shuffle(src2, src3, 0, 1, 4, 5);
+    dst0  = SIMD.Float32x4.shuffle(tmp01, tmp23, 0, 2, 4, 6);
+    dst1  = SIMD.Float32x4.shuffle(tmp01, tmp23, 1, 3, 5, 7);
 
-    tmp01 = SIMD.float32x4.shuffle(src0, src1, 2, 3, 6, 7);
-    tmp23 = SIMD.float32x4.shuffle(src2, src3, 2, 3, 6, 7);
-    dst2  = SIMD.float32x4.shuffle(tmp01, tmp23, 0, 2, 4, 6);
-    dst3  = SIMD.float32x4.shuffle(tmp01, tmp23, 1, 3, 5, 7);
+    tmp01 = SIMD.Float32x4.shuffle(src0, src1, 2, 3, 6, 7);
+    tmp23 = SIMD.Float32x4.shuffle(src2, src3, 2, 3, 6, 7);
+    dst2  = SIMD.Float32x4.shuffle(tmp01, tmp23, 0, 2, 4, 6);
+    dst3  = SIMD.Float32x4.shuffle(tmp01, tmp23, 1, 3, 5, 7);
 
-    SIMD.float32x4.store(dst, 0,  dst0);
-    SIMD.float32x4.store(dst, 4,  dst1);
-    SIMD.float32x4.store(dst, 8,  dst2);
-    SIMD.float32x4.store(dst, 12, dst3);
+    SIMD.Float32x4.store(dst, 0,  dst0);
+    SIMD.Float32x4.store(dst, 4,  dst1);
+    SIMD.Float32x4.store(dst, 8,  dst2);
+    SIMD.Float32x4.store(dst, 12, dst3);
   }
 
   // SIMD version of the kernel
   function simdTranspose() {
-    var src0     = SIMD.float32x4.load(src, 0);
-    var src1     = SIMD.float32x4.load(src, 4);
-    var src2     = SIMD.float32x4.load(src, 8);
-    var src3     = SIMD.float32x4.load(src, 12);
+    var src0     = SIMD.Float32x4.load(src, 0);
+    var src1     = SIMD.Float32x4.load(src, 4);
+    var src2     = SIMD.Float32x4.load(src, 8);
+    var src3     = SIMD.Float32x4.load(src, 12);
     var dst0;
     var dst1;
     var dst2;
@@ -118,20 +118,20 @@
     var tmp01;
     var tmp23;
 
-    tmp01 = SIMD.float32x4.select(sel_ttff, src0, SIMD.float32x4.swizzle(src1, 0, 0, 0, 1));
-    tmp23 = SIMD.float32x4.select(sel_ttff, src2, SIMD.float32x4.swizzle(src3, 0, 0, 0, 1));
-    dst0  = SIMD.float32x4.select(sel_ttff, SIMD.float32x4.swizzle(tmp01, 0, 2, 0, 0), SIMD.float32x4.swizzle(tmp23, 0, 0, 0, 2));
-    dst1  = SIMD.float32x4.select(sel_ttff, SIMD.float32x4.swizzle(tmp01, 1, 3, 0, 0), SIMD.float32x4.swizzle(tmp23, 0, 0, 1, 3));
+    tmp01 = SIMD.Float32x4.select(sel_ttff, src0, SIMD.Float32x4.swizzle(src1, 0, 0, 0, 1));
+    tmp23 = SIMD.Float32x4.select(sel_ttff, src2, SIMD.Float32x4.swizzle(src3, 0, 0, 0, 1));
+    dst0  = SIMD.Float32x4.select(sel_ttff, SIMD.Float32x4.swizzle(tmp01, 0, 2, 0, 0), SIMD.Float32x4.swizzle(tmp23, 0, 0, 0, 2));
+    dst1  = SIMD.Float32x4.select(sel_ttff, SIMD.Float32x4.swizzle(tmp01, 1, 3, 0, 0), SIMD.Float32x4.swizzle(tmp23, 0, 0, 1, 3));
 
-    tmp01 = SIMD.float32x4.select(sel_ttff, SIMD.float32x4.swizzle(src0, 2, 3, 0, 0), src1);
-    tmp23 = SIMD.float32x4.select(sel_ttff, SIMD.float32x4.swizzle(src2, 2, 3, 0, 0), src3);
-    dst2  = SIMD.float32x4.select(sel_ttff, SIMD.float32x4.swizzle(tmp01, 0, 2, 0, 0), SIMD.float32x4.swizzle(tmp23, 0, 0, 0, 2));
-    dst3  = SIMD.float32x4.select(sel_ttff, SIMD.float32x4.swizzle(tmp01, 1, 3, 0, 0), SIMD.float32x4.swizzle(tmp23, 0, 0, 1, 3));
+    tmp01 = SIMD.Float32x4.select(sel_ttff, SIMD.Float32x4.swizzle(src0, 2, 3, 0, 0), src1);
+    tmp23 = SIMD.Float32x4.select(sel_ttff, SIMD.Float32x4.swizzle(src2, 2, 3, 0, 0), src3);
+    dst2  = SIMD.Float32x4.select(sel_ttff, SIMD.Float32x4.swizzle(tmp01, 0, 2, 0, 0), SIMD.Float32x4.swizzle(tmp23, 0, 0, 0, 2));
+    dst3  = SIMD.Float32x4.select(sel_ttff, SIMD.Float32x4.swizzle(tmp01, 1, 3, 0, 0), SIMD.Float32x4.swizzle(tmp23, 0, 0, 1, 3));
 
-    SIMD.float32x4.store(dst, 0,  dst0);
-    SIMD.float32x4.store(dst, 4,  dst1);
-    SIMD.float32x4.store(dst, 8,  dst2);
-    SIMD.float32x4.store(dst, 12, dst3);
+    SIMD.Float32x4.store(dst, 0,  dst0);
+    SIMD.Float32x4.store(dst, 4,  dst1);
+    SIMD.Float32x4.store(dst, 8,  dst2);
+    SIMD.Float32x4.store(dst, 12, dst3);
   }
 
   // Non SIMD version of the kernel
@@ -156,10 +156,10 @@
 
   function simdTransposeN(n) {
     for (var i = 0; i < n; ++i) {
-      var src0 = SIMD.float32x4.load(src, 0);
-      var src1 = SIMD.float32x4.load(src, 4);
-      var src2 = SIMD.float32x4.load(src, 8);
-      var src3 = SIMD.float32x4.load(src, 12);
+      var src0 = SIMD.Float32x4.load(src, 0);
+      var src1 = SIMD.Float32x4.load(src, 4);
+      var src2 = SIMD.Float32x4.load(src, 8);
+      var src3 = SIMD.Float32x4.load(src, 12);
       var dst0;
       var dst1;
       var dst2;
@@ -167,20 +167,20 @@
       var tmp01;
       var tmp23;
 
-      tmp01 = SIMD.float32x4.shuffle(src0, src1, 0, 1, 4, 5);
-      tmp23 = SIMD.float32x4.shuffle(src2, src3, 0, 1, 4, 5);
-      dst0 = SIMD.float32x4.shuffle(tmp01, tmp23, 0, 2, 4, 6);
-      dst1 = SIMD.float32x4.shuffle(tmp01, tmp23, 1, 3, 5, 7);
+      tmp01 = SIMD.Float32x4.shuffle(src0, src1, 0, 1, 4, 5);
+      tmp23 = SIMD.Float32x4.shuffle(src2, src3, 0, 1, 4, 5);
+      dst0 = SIMD.Float32x4.shuffle(tmp01, tmp23, 0, 2, 4, 6);
+      dst1 = SIMD.Float32x4.shuffle(tmp01, tmp23, 1, 3, 5, 7);
 
-      tmp01 = SIMD.float32x4.shuffle(src0, src1, 2, 3, 6, 7);
-      tmp23 = SIMD.float32x4.shuffle(src2, src3, 2, 3, 6, 7);
-      dst2 = SIMD.float32x4.shuffle(tmp01, tmp23, 0, 2, 4, 6);
-      dst3 = SIMD.float32x4.shuffle(tmp01, tmp23, 1, 3, 5, 7);
+      tmp01 = SIMD.Float32x4.shuffle(src0, src1, 2, 3, 6, 7);
+      tmp23 = SIMD.Float32x4.shuffle(src2, src3, 2, 3, 6, 7);
+      dst2 = SIMD.Float32x4.shuffle(tmp01, tmp23, 0, 2, 4, 6);
+      dst3 = SIMD.Float32x4.shuffle(tmp01, tmp23, 1, 3, 5, 7);
 
-      SIMD.float32x4.store(dst, 0,  dst0);
-      SIMD.float32x4.store(dst, 4,  dst1);
-      SIMD.float32x4.store(dst, 8,  dst2);
-      SIMD.float32x4.store(dst, 12, dst3);
+      SIMD.Float32x4.store(dst, 0,  dst0);
+      SIMD.Float32x4.store(dst, 4,  dst1);
+      SIMD.Float32x4.store(dst, 8,  dst2);
+      SIMD.Float32x4.store(dst, 12, dst3);
     }
   }
 
