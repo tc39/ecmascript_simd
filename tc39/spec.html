@@ -1,7 +1,7 @@
 <!doctype html>
 <meta charset="utf8">
 <title>SIMD.js specification v0.5.5</title>
-<link rel="stylesheet" href="./elements.css">
+<link rel="stylesheet" href="https://bterlson.github.com/ecmarkup/elements.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/github.min.css">
 <emu-biblio href="./biblio.json"></emu-biblio>
 <h1>SIMD.js specification</h1>
@@ -57,7 +57,8 @@ Related links:
 <li>v0.5.2: Saturating arithmetic; fix mul mis-spec.</li>
 <li>v0.5.3: Remove mention of signalling NaN (matches ES6).</li>
 <li>v0.5.4: Better formatting for modifications of existing algorithms.</li>
-<li>v0.5.5: toLocaleString, shifts, saturating functions only on int16 and smaller, sumOfAbsoluteDifferences.</li>
+<li>v0.5.5: toLocaleString, shifts, saturating functions only on int16 and smaller, sumOfAbsoluteDifferences. This is the first version to include all functions.</li>
+<li>v0.5.6: Fix a few typos, added notes, removed DataView methods, store returns value.</li>
 </ul>
 <p>TODO:</p>
 <ul>
@@ -232,7 +233,7 @@ An additional option considered is to define this as calling ToObject on it, and
 <strong>Result</strong>: return ~true~
 
 <emu-note>
-Even if it would be consistent to return false if it is all zero, there probably isn't much gain from adding more falsy values.
+While it would be possible to make the zero-vector false as a boolean, there are multiple possible interepretations of ToBoolean, and if a programmer is refactoring scalar code, naively keeping in a conditional will lead to a false outcome. Implementation constraints make it expensive to throw on ToBoolean, so returning ~true~ (as Objects do) is a nice, neutral answer.
 </emu-note>
 </emu-clause>
 
@@ -430,44 +431,6 @@ Add a new step 9, before the existing step 9:
 <emu-clause id="addition-semantics">
 <h1>Runtime Semantics: Evaluation (<a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-addition-operator-plus">12.7.3.1</a>)</h1>
 <emu-note><p>No changes needed for SIMD. With one SIMD argument and one argument which is a String after ToPrimitive is applied, this will coerce the SIMD value to a string, giving a printed representation like `"float32x4(1, 2, 3, 4)"`. Otherwise, if either argument is a SIMD value, then ToNumber will be run on step 12. or 14., which would throw a TypeError.</p><p>It is important for `+` to throw when applied to SIMD types to allow the future definition of operator overloading on `+` . Is the current SIMD+String behavior acceptable, or should that throw too?</p></emu-note>
-</emu-clause>
-</emu-clause>
-
-<emu-clause id="dataview">
-<h1>DataView objects (<a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-dataview-objects">24.2</a>)</h1>
-<emu-clause id="dataview-proto">
-<h1>Properties of the DataView Prototype Object (<a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-properties-of-the-dataview-prototype-object">24.2.4</a>)</h1>
-For each SIMD type descriptor _SIMD_Descriptor, called by names like `Float32x4Descriptor`, define the following properties on `DataView.prototype`:
-<emu-clause id="dataview-getsimd">
-<h1>DataView.prototype.get_SIMD_ ( byteOffset [ , littleEndian ] )</h1>
-<emu-alg>
-1. Let _v_ be the ~this~ value.
-1. If _littleEndian_ is not present, let _littleEndian_ be false.
-1. Let _list_ be a new List of length _SIMD_Descriptor.[[SIMDLength]].
-1. Let _typeName_ be the string `"_SIMD_"` up until the "x" character, e.g., `"Float32"` for `Float32x4`.
-1. For _i_ from 0 to _SIMD_Descriptor.[[SIMDLength]] - 1,
-  1. Let _value_ be GetViewValue(_v_, _byteOffset_ + _i_ * _SIMD_Descriptor.[[SIMDElementSize]], _littleEndian_, _typeName_).
-  1. ReturnIfAbrupt(_value_).
-  1. Set <var>list</var>[<var>i</var>] to _value_.
-1. Return SIMDCreate(_SIMD_Descriptor, ..._list_).
-</emu-alg>
-<emu-note>GetViewValue does the range checking for us.</emu-note>
-<emu-note>This algorithm uses the GetValueFromBuffer machinery rather than the [[SIMDDeserialize]] machinery; these have matching definitions, and ideally the spec would be refactored in terms of one of the two.</emu-note>
-</emu-clause>
-
-<emu-clause id="dataview-setsimd">
-<h1>DataView.prototype.set_SIMD_ ( byteOffset, value [ , littleEndian ] )</h1>
-<emu-alg>
-1. If Type(_value_) is not _SIMD_Type, throw a ~TypeError~.
-1. Let _v_ be the ~this~ value.
-1. If _littleEndian_ is not present, let _littleEndian_ be false.
-1. Let _typeName_ be the string `"_SIMD_"` up until the "x" character, e.g., `"Float32"` for `Float32x4`.
-1. For _i_ from 0 to _SIMD_Descriptor.[[SIMDLength]] - 1,
-  1. Let _result_ be SetViewValue(_v_, _byteOffset_ + _i_ * _SIMD_Descriptor.[[SIMDElementSize]], _littleEndian_, _typeName_, <var>value</var>.[[SIMDElements]][<var>i</var>]).
-  1. ReturnIfAbrupt(_result_).
-</emu-alg>
-</emu-clause>
-
 </emu-clause>
 </emu-clause>
 
@@ -852,7 +815,7 @@ This property is defined only on floating point SIMD types.
 </emu-clause>
 
 <emu-clause id="simd-neg">
-<h1>_SIMD_Constructor.neg(a, b)</h1>
+<h1>_SIMD_Constructor.neg(a)</h1>
 This definition uses the refers to unary - as defined by <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-unary-minus-operator">ES2015 12.5.10 (Unary - Operator)</a>.
 <emu-note>Is this appropriate for all SIMD types?</emu-note>
 <emu-alg>
@@ -1247,10 +1210,10 @@ This is only defined on integer SIMD types.
 </emu-clause>
 
 <emu-clause id="simd-replace-lane">
-<h1>_SIMD_Constructor.replaceLane(simd, field)</h1>
+<h1>_SIMD_Constructor.replaceLane(simd, field, value)</h1>
 <emu-alg>
 1. If _a_.[[SIMDTypeDescriptor]] is not _SIMD_Descriptor, throw a TypeError.
-1. Return SIMDReplaceLane(_simd_, _field_).
+1. Return SIMDReplaceLane(_simd_, _field_, _value_).
 </emu-alg>
 </emu-clause>
 
@@ -1266,6 +1229,7 @@ This is only defined on integer SIMD types.
 1. Let _byteIndex_ be _index_ * _elementLength_.
 1. If _byteIndex_ + _SIMD_Descriptor.[[SIMDElementSize]] * _SIMD_Descriptor.[[SIMDLength]] > _tarray_.[[ByteLength]] or _byteIndex_ < 0, throw a RangeError.
 1. SIMDStore(_block_, _SIMD_Descriptor, _byteIndex_, _simd_).
+1. Return _simd_.
 </emu-alg>
 </emu-clause>
 
@@ -1282,6 +1246,7 @@ This function is defined only on SIMD types where _SIMD_Descriptor.[[SIMDLength]
 1. Let _byteIndex_ be _index_ * _elementLength_.
 1. If _byteIndex_ + _SIMD_Descriptor.[[SIMDElementSize]] > _tarray_.[[ByteLength]] or _byteIndex_ < 0, throw a RangeError.
 1. SIMDStore(_block_, _SIMD_Descriptor, _byteIndex_, _simd_, 1).
+1. Return _simd_.
 </emu-alg>
 </emu-clause>
 
@@ -1298,6 +1263,7 @@ This function is defined only on SIMD types where _SIMD_Descriptor.[[SIMDLength]
 1. Let _byteIndex_ be _index_ * _elementLength_.
 1. If _byteIndex_ + _SIMD_Descriptor.[[SIMDElementSize]] * 2 > _tarray_.[[ByteLength]] or _byteIndex_ < 0, throw a RangeError.
 1. SIMDStore(_block_, _SIMD_Descriptor, _byteIndex_, _simd_, 2).
+1. Return _simd_.
 </emu-alg>
 </emu-clause>
 
@@ -1313,17 +1279,19 @@ This function is defined only on SIMD types where _SIMD_Descriptor.[[SIMDLength]
 1. Let _elementLength_ be _tarray_.[[ByteLength]] / _tarray.[[ArrayLength]].
 1. Let _byteIndex_ be _index_ * _elementLength_.
 1. If _byteIndex_ + _SIMD_Descriptor.[[SIMDElementSize]] * 3 > _tarray_.[[ByteLength]] or _byteIndex_ < 0, throw a RangeError.
-1. Return SIMDStore(_block_, _SIMD_Descriptor, _byteIndex_, 3).
+1. SIMDStore(_block_, _SIMD_Descriptor, _byteIndex_, 3).
+1. Return _simd_.
 </emu-alg>
 </emu-clause>
 
 <emu-clause id="simd-load-function">
 <h1>_SIMD_Constructor.load(tarray, index)</h1>
+<emu-note>`load` takes a TypedArray of any element type as an argument. One way to use it is to pass in a `Uint8Array` regardless of SIMD type, which is useful because it allows the compiler to eliminate the shift in going from the index to the pointer offset. Other options considered were to use an ArrayBuffer (but this is not idiomatic, to take an ArrayBuffer directly as an argument to read off of) or a DataView (but DataViews don't tend to expose platform-dependent endianness, which is important here, and they tend to use methods on `DataView.prototype`, which are harder to optimize in an asm.js context).</emu-note>
 <emu-alg>
 1. If _tarray_ does not have a [[ViewedArrayBuffer]] internal slot, throw a TypeError.
 1. Let _block_ be _tarray_.[[ViewedArrayBuffer]].[[ArrayBufferData]]
 1. If _index_ != ToInt32(_index_), throw a TypeError.
-1. Let _elementLength_ be _tarray_.[[ByteLength]] / _tarray.[[ArrayLength]].
+1. Let _elementLength_ be _tarray_.[[ByteLength]] / _tarray_.[[ArrayLength]].
 1. Let _byteIndex_ be _index_ * _elementLength_.
 1. If _byteIndex_ + _SIMD_Descriptor.[[SIMDElementSize]] * _SIMD_Descriptor.[[SIMDLength]] > _tarray_.[[ByteLength]] or _byteIndex_ < 0, throw a RangeError.
 1. Return SIMDLoad(_block_, _SIMD_Descriptor, _byteIndex_).
