@@ -104,7 +104,7 @@
     var HEAP32 = new global.Int32Array(buffer);
     var HEAPU8 = new global.Uint8Array(buffer);
     var _emscripten_memcpy_big = imp._emscripten_memcpy_big;
-    var i4 = global.SIMD.int32x4;
+    var i4 = global.SIMD.Int32x4;
     var i4load  = i4.load;
     var i4store = i4.store;
 

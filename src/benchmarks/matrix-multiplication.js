@@ -25,22 +25,22 @@
   var Outx = new Float32Array(16);
 
   function equals(A, b) {
-    return (A[0] == SIMD.float32x4.extractLane(SIMD.float32x4.load(b, 0), 0)) &&
-           (A[1] == SIMD.float32x4.extractLane(SIMD.float32x4.load(b, 0), 1)) &&
-           (A[2] == SIMD.float32x4.extractLane(SIMD.float32x4.load(b, 0), 2)) &&
-           (A[3] == SIMD.float32x4.extractLane(SIMD.float32x4.load(b, 0), 3)) &&
-           (A[4] == SIMD.float32x4.extractLane(SIMD.float32x4.load(b, 4), 0)) &&
-           (A[5] == SIMD.float32x4.extractLane(SIMD.float32x4.load(b, 4), 1)) &&
-           (A[6] == SIMD.float32x4.extractLane(SIMD.float32x4.load(b, 4), 2)) &&
-           (A[7] == SIMD.float32x4.extractLane(SIMD.float32x4.load(b, 4), 3)) &&
-           (A[8] == SIMD.float32x4.extractLane(SIMD.float32x4.load(b, 8), 0)) &&
-           (A[9] == SIMD.float32x4.extractLane(SIMD.float32x4.load(b, 8), 1)) &&
-           (A[10] == SIMD.float32x4.extractLane(SIMD.float32x4.load(b, 8), 2)) &&
-           (A[11] == SIMD.float32x4.extractLane(SIMD.float32x4.load(b, 8), 3)) &&
-           (A[12] == SIMD.float32x4.extractLane(SIMD.float32x4.load(b, 12), 0)) &&
-           (A[13] == SIMD.float32x4.extractLane(SIMD.float32x4.load(b, 12), 1)) &&
-           (A[14] == SIMD.float32x4.extractLane(SIMD.float32x4.load(b, 12), 2)) &&
-           (A[15] == SIMD.float32x4.extractLane(SIMD.float32x4.load(b, 12), 3));
+    return (A[0] == SIMD.Float32x4.extractLane(SIMD.Float32x4.load(b, 0), 0)) &&
+           (A[1] == SIMD.Float32x4.extractLane(SIMD.Float32x4.load(b, 0), 1)) &&
+           (A[2] == SIMD.Float32x4.extractLane(SIMD.Float32x4.load(b, 0), 2)) &&
+           (A[3] == SIMD.Float32x4.extractLane(SIMD.Float32x4.load(b, 0), 3)) &&
+           (A[4] == SIMD.Float32x4.extractLane(SIMD.Float32x4.load(b, 4), 0)) &&
+           (A[5] == SIMD.Float32x4.extractLane(SIMD.Float32x4.load(b, 4), 1)) &&
+           (A[6] == SIMD.Float32x4.extractLane(SIMD.Float32x4.load(b, 4), 2)) &&
+           (A[7] == SIMD.Float32x4.extractLane(SIMD.Float32x4.load(b, 4), 3)) &&
+           (A[8] == SIMD.Float32x4.extractLane(SIMD.Float32x4.load(b, 8), 0)) &&
+           (A[9] == SIMD.Float32x4.extractLane(SIMD.Float32x4.load(b, 8), 1)) &&
+           (A[10] == SIMD.Float32x4.extractLane(SIMD.Float32x4.load(b, 8), 2)) &&
+           (A[11] == SIMD.Float32x4.extractLane(SIMD.Float32x4.load(b, 8), 3)) &&
+           (A[12] == SIMD.Float32x4.extractLane(SIMD.Float32x4.load(b, 12), 0)) &&
+           (A[13] == SIMD.Float32x4.extractLane(SIMD.Float32x4.load(b, 12), 1)) &&
+           (A[14] == SIMD.Float32x4.extractLane(SIMD.Float32x4.load(b, 12), 2)) &&
+           (A[15] == SIMD.Float32x4.extractLane(SIMD.Float32x4.load(b, 12), 3));
   }
 
   function init() {
@@ -54,15 +54,15 @@
     T2[10] = 2.0;
     T2[15] = 2.0;
 
-    SIMD.float32x4.store(T1x, 0,  SIMD.float32x4(1.0, 0.0, 0.0, 0.0));
-    SIMD.float32x4.store(T1x, 4,  SIMD.float32x4(0.0, 1.0, 0.0, 0.0));
-    SIMD.float32x4.store(T1x, 8,  SIMD.float32x4(0.0, 0.0, 1.0, 0.0));
-    SIMD.float32x4.store(T1x, 12, SIMD.float32x4(0.0, 0.0, 0.0, 1.0));
+    SIMD.Float32x4.store(T1x, 0,  SIMD.Float32x4(1.0, 0.0, 0.0, 0.0));
+    SIMD.Float32x4.store(T1x, 4,  SIMD.Float32x4(0.0, 1.0, 0.0, 0.0));
+    SIMD.Float32x4.store(T1x, 8,  SIMD.Float32x4(0.0, 0.0, 1.0, 0.0));
+    SIMD.Float32x4.store(T1x, 12, SIMD.Float32x4(0.0, 0.0, 0.0, 1.0));
 
-    SIMD.float32x4.store(T2x, 0,  SIMD.float32x4(2.0, 0.0, 0.0, 0.0));
-    SIMD.float32x4.store(T2x, 4,  SIMD.float32x4(0.0, 2.0, 0.0, 0.0));
-    SIMD.float32x4.store(T2x, 8,  SIMD.float32x4(0.0, 0.0, 2.0, 0.0));
-    SIMD.float32x4.store(T2x, 12, SIMD.float32x4(0.0, 0.0, 0.0, 2.0));
+    SIMD.Float32x4.store(T2x, 0,  SIMD.Float32x4(2.0, 0.0, 0.0, 0.0));
+    SIMD.Float32x4.store(T2x, 4,  SIMD.Float32x4(0.0, 2.0, 0.0, 0.0));
+    SIMD.Float32x4.store(T2x, 8,  SIMD.Float32x4(0.0, 0.0, 2.0, 0.0));
+    SIMD.Float32x4.store(T2x, 12, SIMD.Float32x4(0.0, 0.0, 0.0, 2.0));
 
     multiply(1);
     simdMultiply(1);
@@ -132,46 +132,46 @@
 
   function simdMultiply(n) {
     for (var i = 0; i < n; i++) {
-      var a0 = SIMD.float32x4.load(T1x, 0);
-      var a1 = SIMD.float32x4.load(T1x, 4);
-      var a2 = SIMD.float32x4.load(T1x, 8);
-      var a3 = SIMD.float32x4.load(T1x, 12);
-      var b0 = SIMD.float32x4.load(T2x, 0);
-      SIMD.float32x4.store(Outx, 0,
-                  SIMD.float32x4.add(
-                      SIMD.float32x4.mul(SIMD.float32x4.swizzle(b0, 0, 0, 0, 0), a0),
-                    SIMD.float32x4.add(
-                      SIMD.float32x4.mul(SIMD.float32x4.swizzle(b0, 1, 1, 1, 1), a1),
-                    SIMD.float32x4.add(
-                      SIMD.float32x4.mul(SIMD.float32x4.swizzle(b0, 2, 2, 2, 2), a2),
-                      SIMD.float32x4.mul(SIMD.float32x4.swizzle(b0, 3, 3, 3, 3), a3)))));
-      var b1 = SIMD.float32x4.load(T2x, 4);
-      SIMD.float32x4.store(Outx, 4,
-                  SIMD.float32x4.add(
-                      SIMD.float32x4.mul(SIMD.float32x4.swizzle(b1, 0, 0, 0, 0), a0),
-                    SIMD.float32x4.add(
-                      SIMD.float32x4.mul(SIMD.float32x4.swizzle(b1, 1, 1, 1, 1), a1),
-                    SIMD.float32x4.add(
-                      SIMD.float32x4.mul(SIMD.float32x4.swizzle(b1, 2, 2, 2, 2), a2),
-                      SIMD.float32x4.mul(SIMD.float32x4.swizzle(b1, 3, 3, 3, 3), a3)))));
-      var b2 = SIMD.float32x4.load(T2x, 8);
-      SIMD.float32x4.store(Outx, 8,
-                  SIMD.float32x4.add(
-                      SIMD.float32x4.mul(SIMD.float32x4.swizzle(b2, 0, 0, 0, 0), a0),
-                    SIMD.float32x4.add(
-                      SIMD.float32x4.mul(SIMD.float32x4.swizzle(b2, 1, 1, 1, 1), a1),
-                    SIMD.float32x4.add(
-                      SIMD.float32x4.mul(SIMD.float32x4.swizzle(b2, 2, 2, 2, 2), a2),
-                      SIMD.float32x4.mul(SIMD.float32x4.swizzle(b2, 3, 3, 3, 3), a3)))));
-      var b3 = SIMD.float32x4.load(T2x, 12);
-      SIMD.float32x4.store(Outx, 12,
-                  SIMD.float32x4.add(
-                      SIMD.float32x4.mul(SIMD.float32x4.swizzle(b3, 0, 0, 0, 0), a0),
-                    SIMD.float32x4.add(
-                      SIMD.float32x4.mul(SIMD.float32x4.swizzle(b3, 1, 1, 1, 1), a1),
-                    SIMD.float32x4.add(
-                      SIMD.float32x4.mul(SIMD.float32x4.swizzle(b3, 2, 2, 2, 2), a2),
-                      SIMD.float32x4.mul(SIMD.float32x4.swizzle(b3, 3, 3, 3, 3), a3)))));
+      var a0 = SIMD.Float32x4.load(T1x, 0);
+      var a1 = SIMD.Float32x4.load(T1x, 4);
+      var a2 = SIMD.Float32x4.load(T1x, 8);
+      var a3 = SIMD.Float32x4.load(T1x, 12);
+      var b0 = SIMD.Float32x4.load(T2x, 0);
+      SIMD.Float32x4.store(Outx, 0,
+                  SIMD.Float32x4.add(
+                      SIMD.Float32x4.mul(SIMD.Float32x4.swizzle(b0, 0, 0, 0, 0), a0),
+                    SIMD.Float32x4.add(
+                      SIMD.Float32x4.mul(SIMD.Float32x4.swizzle(b0, 1, 1, 1, 1), a1),
+                    SIMD.Float32x4.add(
+                      SIMD.Float32x4.mul(SIMD.Float32x4.swizzle(b0, 2, 2, 2, 2), a2),
+                      SIMD.Float32x4.mul(SIMD.Float32x4.swizzle(b0, 3, 3, 3, 3), a3)))));
+      var b1 = SIMD.Float32x4.load(T2x, 4);
+      SIMD.Float32x4.store(Outx, 4,
+                  SIMD.Float32x4.add(
+                      SIMD.Float32x4.mul(SIMD.Float32x4.swizzle(b1, 0, 0, 0, 0), a0),
+                    SIMD.Float32x4.add(
+                      SIMD.Float32x4.mul(SIMD.Float32x4.swizzle(b1, 1, 1, 1, 1), a1),
+                    SIMD.Float32x4.add(
+                      SIMD.Float32x4.mul(SIMD.Float32x4.swizzle(b1, 2, 2, 2, 2), a2),
+                      SIMD.Float32x4.mul(SIMD.Float32x4.swizzle(b1, 3, 3, 3, 3), a3)))));
+      var b2 = SIMD.Float32x4.load(T2x, 8);
+      SIMD.Float32x4.store(Outx, 8,
+                  SIMD.Float32x4.add(
+                      SIMD.Float32x4.mul(SIMD.Float32x4.swizzle(b2, 0, 0, 0, 0), a0),
+                    SIMD.Float32x4.add(
+                      SIMD.Float32x4.mul(SIMD.Float32x4.swizzle(b2, 1, 1, 1, 1), a1),
+                    SIMD.Float32x4.add(
+                      SIMD.Float32x4.mul(SIMD.Float32x4.swizzle(b2, 2, 2, 2, 2), a2),
+                      SIMD.Float32x4.mul(SIMD.Float32x4.swizzle(b2, 3, 3, 3, 3), a3)))));
+      var b3 = SIMD.Float32x4.load(T2x, 12);
+      SIMD.Float32x4.store(Outx, 12,
+                  SIMD.Float32x4.add(
+                      SIMD.Float32x4.mul(SIMD.Float32x4.swizzle(b3, 0, 0, 0, 0), a0),
+                    SIMD.Float32x4.add(
+                      SIMD.Float32x4.mul(SIMD.Float32x4.swizzle(b3, 1, 1, 1, 1), a1),
+                    SIMD.Float32x4.add(
+                      SIMD.Float32x4.mul(SIMD.Float32x4.swizzle(b3, 2, 2, 2, 2), a2),
+                      SIMD.Float32x4.mul(SIMD.Float32x4.swizzle(b3, 3, 3, 3, 3), a3)))));
     }
   }
 

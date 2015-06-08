@@ -53,13 +53,13 @@
   function simdAverage(n) {
     var a_length = a.length;
     for (var i = 0; i < n; ++i) {
-      var sum2 = SIMD.float64x2.splat(0.0);
+      var sum2 = SIMD.Float64x2.splat(0.0);
       for (var j = 0; j < a_length; j += 2) {
-        sum2 = SIMD.float64x2.add(sum2, SIMD.float64x2.load(a, j));
+        sum2 = SIMD.Float64x2.add(sum2, SIMD.Float64x2.load(a, j));
       }
     }
-    return (SIMD.float64x2.extractLane(sum2, 0) +
-        SIMD.float64x2.extractLane(sum2, 1)) / a.length;
+    return (SIMD.Float64x2.extractLane(sum2, 0) +
+        SIMD.Float64x2.extractLane(sum2, 1)) / a.length;
   }
 
 } ());
