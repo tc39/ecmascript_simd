@@ -55,16 +55,16 @@
   function simdAverageLoad(n) {
     var a_length = a.length;
     for (var i = 0; i < n; ++i) {
-      var sum4 = SIMD.float32x4.splat(0.0);
+      var sum4 = SIMD.Float32x4.splat(0.0);
       for (var j = 0; j < a_length / 3 ; ++j) {
-        sum4 = SIMD.float32x4.add(sum4, SIMD.float32x4.load3(a, j * 3));
-        //SIMD.float32x4.store(a1, j << 2, sum4);
+        sum4 = SIMD.Float32x4.add(sum4, SIMD.Float32x4.load3(a, j * 3));
+        //SIMD.Float32x4.store(a1, j << 2, sum4);
       }
     }
-    return (SIMD.float32x4.extractLane(sum4, 0) +
-        SIMD.float32x4.extractLane(sum4, 1) +
-        SIMD.float32x4.extractLane(sum4, 2) +
-        SIMD.float32x4.extractLane(sum4, 3)) / a.length;
+    return (SIMD.Float32x4.extractLane(sum4, 0) +
+        SIMD.Float32x4.extractLane(sum4, 1) +
+        SIMD.Float32x4.extractLane(sum4, 2) +
+        SIMD.Float32x4.extractLane(sum4, 3)) / a.length;
   }
 
 } ());

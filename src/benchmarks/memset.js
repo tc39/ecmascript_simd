@@ -92,7 +92,7 @@
     var HEAP8 = new global.Int8Array(buffer);
     var HEAP32 = new global.Int32Array(buffer);
     var HEAPU8 = new global.Uint8Array(buffer);
-    var i4 = global.SIMD.int32x4;
+    var i4 = global.SIMD.Int32x4;
     var i4splat = i4.splat;
     var i4store = i4.store;
 
