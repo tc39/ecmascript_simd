@@ -21,7 +21,7 @@
   var dst    = new Float32Array(16);
   var tsrc   = new Float32Array(16);
 
-  var sel_ttff = SIMD.Int32x4.bool(true, true, false, false);
+  var sel_ttff = SIMD.Bool32x4(true, true, false, false);
 
   function initMatrix(matrix, matrixTransposed) {
     for (var r = 0; r < 4; ++r) {
