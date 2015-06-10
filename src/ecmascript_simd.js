@@ -2688,63 +2688,6 @@ if (typeof SIMD.Float32x4.select === "undefined") {
   }
 }
 
-if (typeof SIMD.Float32x4.and === "undefined") {
-  /**
-    * @param {Float32x4} a An instance of Float32x4.
-    * @param {Float32x4} b An instance of Float32x4.
-    * @return {Float32x4} New instance of Float32x4 with values of a & b.
-    */
-  SIMD.Float32x4.and = function(a, b) {
-    a = SIMD.Float32x4.check(a);
-    b = SIMD.Float32x4.check(b);
-    var aInt = SIMD.Int32x4.fromFloat32x4Bits(a);
-    var bInt = SIMD.Int32x4.fromFloat32x4Bits(b);
-    return SIMD.Float32x4.fromInt32x4Bits(SIMD.Int32x4.and(aInt, bInt));
-  }
-}
-
-if (typeof SIMD.Float32x4.or === "undefined") {
-  /**
-    * @param {Float32x4} a An instance of Float32x4.
-    * @param {Float32x4} b An instance of Float32x4.
-    * @return {Float32x4} New instance of Float32x4 with values of a | b.
-    */
-  SIMD.Float32x4.or = function(a, b) {
-    a = SIMD.Float32x4.check(a);
-    b = SIMD.Float32x4.check(b);
-    var aInt = SIMD.Int32x4.fromFloat32x4Bits(a);
-    var bInt = SIMD.Int32x4.fromFloat32x4Bits(b);
-    return SIMD.Float32x4.fromInt32x4Bits(SIMD.Int32x4.or(aInt, bInt));
-  }
-}
-
-if (typeof SIMD.Float32x4.xor === "undefined") {
-  /**
-    * @param {Float32x4} a An instance of Float32x4.
-    * @param {Float32x4} b An instance of Float32x4.
-    * @return {Float32x4} New instance of Float32x4 with values of a ^ b.
-    */
-  SIMD.Float32x4.xor = function(a, b) {
-    a = SIMD.Float32x4.check(a);
-    b = SIMD.Float32x4.check(b);
-    var aInt = SIMD.Int32x4.fromFloat32x4Bits(a);
-    var bInt = SIMD.Int32x4.fromFloat32x4Bits(b);
-    return SIMD.Float32x4.fromInt32x4Bits(SIMD.Int32x4.xor(aInt, bInt));
-  }
-}
-
-if (typeof SIMD.Float32x4.not === "undefined") {
-  /**
-    * @param {Float32x4} a An instance of Float32x4.
-    * @return {Float32x4} New instance of Float32x4 with values of ~a.
-    */
-  SIMD.Float32x4.not = function(a) {
-    a = SIMD.Float32x4.check(a);
-    var aInt = SIMD.Int32x4.fromFloat32x4Bits(a);
-    return SIMD.Float32x4.fromInt32x4Bits(SIMD.Int32x4.not(aInt));
-  }
-}
-
 if (typeof SIMD.Float32x4.load === "undefined") {
   /**
     * @param {Typed array} tarray An instance of a typed array.
