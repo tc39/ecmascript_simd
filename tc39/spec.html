@@ -1214,15 +1214,6 @@ This operation is only defined on `Uint8x16`Constructor.
 </emu-alg>
 </emu-clause>
 
-<emu-clause id="simd-extract-lane-as-bool">
-<h1>_SIMD_Constructor.extractLaneAsBool(simd, field)</h1>
-This is only defined on integer SIMD types.
-<emu-alg>
-1. If _a_.[[SIMDTypeDescriptor]] is not _SIMD_Descriptor, throw a TypeError.
-1. Return SIMDToBoolean(SIMDExtractLane(_simd_, _field_)).
-</emu-alg>
-</emu-clause>
-
 <emu-clause id="simd-replace-lane">
 <h1>_SIMD_Constructor.replaceLane(simd, field, value)</h1>
 <emu-alg>
