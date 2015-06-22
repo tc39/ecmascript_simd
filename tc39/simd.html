@@ -60,6 +60,7 @@ Related links:
 <li>v0.5.5: toLocaleString, shifts, saturating functions only on int16 and smaller, sumOfAbsoluteDifferences. This is the first version to include all functions.</li>
 <li>v0.5.6: Fix a few typos, added notes, removed DataView methods, store returns value.</li>
 <li>v0.6: Remove Int64x2 and add boolean vectors.</li>
+<li>v0.6.1: Relax behavior on subnormals, float to int conversion throws on out of bounds, shift does not mask.</li>
 </ul>
 </emu-intro>
 
@@ -827,11 +828,11 @@ This description applies if the constructor is called with more than one argumen
 
 <emu-clause id="simd-add">
 <h1><span class="secnum">5.2.5</span><var>SIMD</var>Constructor.add(a, b)</h1>
-This definition uses the refers to + as defined by <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-addition-operator-plus">ES2015 12.7.3 (The Addition operator ( + ))</a>.
-<emu-note><span class="note">Note</span>Is this appropriate for all SIMD types?</emu-note>
+This definition uses the refers to + as defined by <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-addition-operator-plus">ES2015 12.7.3 (The Addition operator ( + ))</a>, with the following change in behavior: If either argument to + is a sub-normal floating point number, then the result may be defined as either gradual underflow or flushing the result to 0.
+<emu-note><span class="note">Note</span>The definition is weaker for SIMD than for scalar + to allow for implementation on some SIMD architectures which flush to 0 on subnormals.</emu-note>
 <emu-alg><ol>
   <li>If <var>a</var>.[[SIMDTypeDescriptor]] is not <var>SIMD</var>Descriptor or <var>b</var>.[[SIMDTypeDescriptor]] is not <var>SIMD</var>Descriptor, throw a TypeError.</li>
-  <li>Let <var>result</var> be <a href="#simd-binary">SIMDBinaryOp</a>(<var>a</var>, <var>b</var>, <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-addition-operator-plus">+</a>).</li>
+  <li>Let <var>result</var> be <a href="#simd-binary">SIMDBinaryOp</a>(<var>a</var>, <var>b</var>, +).</li>
   <li><a href="http://people.mozilla.org/~jorendorff/es6-draft.html#sec-returnifabrupt">ReturnIfAbrupt</a>(<var>result</var>).</li>
   <li>Return <var>result</var>.</li>
 </ol></emu-alg>
@@ -839,11 +840,11 @@ This definition uses the refers to + as defined by <a href="https://people.mozil
 
 <emu-clause id="simd-sub">
 <h1><span class="secnum">5.2.6</span><var>SIMD</var>Constructor.sub(a, b)</h1>
-This definition uses the refers to - as defined by <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-subtraction-operator-minus">ES2015 12.7.4 (The Subtraction operator ( - ))</a>.
-<emu-note><span class="note">Note</span>Is this appropriate for all SIMD types?</emu-note>
+This definition uses the refers to - as defined by <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-subtraction-operator-minus">ES2015 12.7.4 (The Subtraction operator ( - ))</a>, with the following change in behavior: If either argument to + is a sub-normal floating point number, then the result may be defined as either gradual underflow or flushing the result to 0.
+<emu-note><span class="note">Note</span>The definition is weaker for SIMD than for scalar + to allow for implementation on some SIMD architectures which flush to 0 on subnormals.</emu-note>
 <emu-alg><ol>
   <li>If <var>a</var>.[[SIMDTypeDescriptor]] is not <var>SIMD</var>Descriptor or <var>b</var>.[[SIMDTypeDescriptor]] is not <var>SIMD</var>Descriptor, throw a TypeError.</li>
-  <li>Let <var>result</var> be <a href="#simd-binary">SIMDBinaryOp</a>(<var>a</var>, <var>b</var>, <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-subtraction-operator-minus">-</a>).</li>
+  <li>Let <var>result</var> be <a href="#simd-binary">SIMDBinaryOp</a>(<var>a</var>, <var>b</var>, -).</li>
   <li><a href="http://people.mozilla.org/~jorendorff/es6-draft.html#sec-returnifabrupt">ReturnIfAbrupt</a>(<var>result</var>).</li>
   <li>Return <var>result</var>.</li>
 </ol></emu-alg>
@@ -851,8 +852,8 @@ This definition uses the refers to - as defined by <a href="https://people.mozil
 
 <emu-clause id="simd-mul">
 <h1><span class="secnum">5.2.7</span><var>SIMD</var>Constructor.mul(a, b)</h1>
-This definition uses the refers to - as defined by <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-applying-the-mul-operator">ES2015 12.6.3.1 (Applying the * Operator)</a>.
-<emu-note><span class="note">Note</span>Is this appropriate for all SIMD types?</emu-note>
+This definition uses the refers to - as defined by <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-applying-the-mul-operator">ES2015 12.6.3.1 (Applying the * Operator)</a>, with the following change in behavior: If either argument to + is a sub-normal floating point number, then the result may be defined as either gradual underflow or flushing the result to 0.
+<emu-note><span class="note">Note</span>The definition is weaker for SIMD than for scalar + to allow for implementation on some SIMD architectures which flush to 0 on subnormals.</emu-note>
 <emu-alg><ol>
   <li>If <var>a</var>.[[SIMDTypeDescriptor]] is not <var>SIMD</var>Descriptor or <var>b</var>.[[SIMDTypeDescriptor]] is not <var>SIMD</var>Descriptor, throw a TypeError.</li>
   <li>If <var>SIMD</var>Type is an integer SIMD type, let <var>op</var> be %Math_imul%; otherwise, <var>SIMD</var>Type is a floating point SIMD type, and let <var>op</var> be <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-applying-the-mul-operator">*</a>.</li>
@@ -864,9 +865,13 @@ This definition uses the refers to - as defined by <a href="https://people.mozil
 
 <emu-clause id="simd-div">
 <h1><span class="secnum">5.2.8</span><var>SIMD</var>Constructor.div(a, b)</h1>
-This definition uses the refers to - as defined by <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-applying-the-div-operator">ES2015 12.6.3.2 (Applying the / Operator)</a>.
-<emu-note><span class="note">Note</span>Is this appropriate for all SIMD types?</emu-note>
+<p>
+This definition uses the refers to - as defined by <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-applying-the-div-operator">ES2015 12.6.3.2 (Applying the / Operator)</a>, with the following change in behavior: If either argument to + is a sub-normal floating point number, then the result may be defined as either gradual underflow or flushing the result to 0.
+</p>
+<emu-note><span class="note">Note</span>The definition is weaker for SIMD than for scalar + to allow for implementation on some SIMD architectures which flush to 0 on subnormals.</emu-note>
+<p>
 This function is defined only on floating point SIMD types.
+</p>
 <emu-alg><ol>
   <li>If <var>a</var>.[[SIMDTypeDescriptor]] is not <var>SIMD</var>Descriptor or <var>b</var>.[[SIMDTypeDescriptor]] is not <var>SIMD</var>Descriptor, throw a TypeError.</li>
   <li>Let <var>result</var> be <a href="#simd-binary">SIMDBinaryOp</a>(<var>a</var>, <var>b</var>, <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-applying-the-div-operator">/</a>).</li>
@@ -946,7 +951,6 @@ This property is defined only on floating point SIMD types.
 <emu-clause id="simd-neg">
 <h1><span class="secnum">5.2.15</span><var>SIMD</var>Constructor.neg(a)</h1>
 This definition uses the refers to unary - as defined by <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-unary-minus-operator">ES2015 12.5.10 (Unary - Operator)</a>.
-<emu-note><span class="note">Note</span>Is this appropriate for all SIMD types?</emu-note>
 <emu-alg><ol>
   <li>If <var>a</var>.[[SIMDTypeDescriptor]] is not <var>SIMD</var>Descriptor, throw a TypeError.</li>
   <li>Let <var>result</var> be <a href="#simd-scalar">SIMDUnaryOp</a>(<var>a</var>, <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-unary-minus-operator">-</a>).</li>
@@ -1289,6 +1293,12 @@ This operation is only defined on integer SIMD types. This definition uses the r
 <emu-alg><ol>
   <li>If <var>a</var>.[[SIMDTypeDescriptor]] is not <var>SIMD</var>Descriptor, throw a TypeError.</li>
   <li>If <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-touint32">ToUint32</a>(<var>scalar</var>) does not equal <var>scalar</var>, throw a TypeError.</li>
+  <li>If <var>scalar</var> &gt;= 32, then
+    <ol>
+      <li>Let <var>list</var> be a list of length <var>SIMD</var>Descriptor.[[SIMDLength]], filled with 0.</li>
+      <li>return <a href="#simd-create">SIMDCreate</a>(<var>SIMD</var>Descriptor, <var>list</var>).</li>
+    </ol>
+  </li>
   <li>Let <var>result</var> be SIMDScalarOp(<var>a</var>, <var>scalar</var>, &lt;&lt;).</li>
   <li><a href="http://people.mozilla.org/~jorendorff/es6-draft.html#sec-returnifabrupt">ReturnIfAbrupt</a>(<var>result</var>).</li>
   <li>Return <var>result</var>.</li>
@@ -1302,6 +1312,12 @@ This operation is only defined on integer SIMD types. This definition uses the r
 <emu-alg><ol>
   <li>If <var>a</var>.[[SIMDTypeDescriptor]] is not <var>SIMD</var>Descriptor, throw a TypeError.</li>
   <li>If <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-touint32">ToUint32</a>(<var>scalar</var>) does not equal <var>scalar</var>, throw a TypeError.</li>
+  <li>If <var>scalar</var> &gt;= 32, then
+    <ol>
+      <li>Let <var>list</var> be a list of length <var>SIMD</var>Descriptor.[[SIMDLength]], filled with 0.</li>
+      <li>return <a href="#simd-create">SIMDCreate</a>(<var>SIMD</var>Descriptor, <var>list</var>).</li>
+    </ol>
+  </li>
   <li>Let <var>result</var> be SIMDScalarOp(<var>a</var>, <var>scalar</var>, &gt;&gt;&gt;).</li>
   <li><a href="http://people.mozilla.org/~jorendorff/es6-draft.html#sec-returnifabrupt">ReturnIfAbrupt</a>(<var>result</var>).</li>
   <li>Return <var>result</var>.</li>
@@ -1315,6 +1331,12 @@ This operation is only defined on integer SIMD types. This definition uses the r
 <emu-alg><ol>
   <li>If <var>a</var>.[[SIMDTypeDescriptor]] is not <var>SIMD</var>Descriptor, throw a TypeError.</li>
   <li>If <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-touint32">ToUint32</a>(<var>scalar</var>) does not equal <var>scalar</var>, throw a TypeError.</li>
+  <li>If <var>scalar</var> &gt;= 32, then
+    <ol>
+      <li>Let <var>list</var> be a list of length <var>SIMD</var>Descriptor.[[SIMDLength]], filled with 0.</li>
+      <li>return <a href="#simd-create">SIMDCreate</a>(<var>SIMD</var>Descriptor, <var>list</var>).</li>
+    </ol>
+  </li>
   <li>Let <var>result</var> be SIMDScalarOp(<var>a</var>, <var>scalar</var>, &gt;&gt;).</li>
   <li><a href="http://people.mozilla.org/~jorendorff/es6-draft.html#sec-returnifabrupt">ReturnIfAbrupt</a>(<var>result</var>).</li>
   <li>Return <var>result</var>.</li>
@@ -1497,7 +1519,12 @@ In this definition, <var>TIMD</var> ranges over all SIMD types for which <var>SI
 <emu-alg><ol>
   <li>If <var>value</var>.[[SIMDTypeDescriptor]] is not <var>TIMD</var>Descriptor, throw a TypeError.</li>
   <li>Let <var>list</var> be a copy of <var>value</var>.[[SIMDElements]].</li>
-  <li>Return <a href="#simd-create">SIMDCreate</a>(<var>value</var>, <var>SIMD</var>Descriptor).</li>
+  <li>For <var>element</var> in <var>list</var>,
+    <ol>
+      <li>If <var>SIMD</var> is an integer type and <var>TIMD</var> is a floating point type, and <var>element</var> is greater than the maximum value or less than the minimum value of <var>SIMD</var>, throw a <emu-const>RangeError</emu-const>.</li>
+    </ol>
+  </li>
+  <li>Return <a href="#simd-create">SIMDCreate</a>(<var>SIMD</var>Descriptor, ...<var>list</var>).</li>
 </ol></emu-alg>
 </emu-clause>
 
