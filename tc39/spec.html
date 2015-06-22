@@ -725,7 +725,7 @@ This definition uses the refers to + as defined by <a href="https://people.mozil
 <emu-clause id="simd-sub">
 <h1>_SIMD_Constructor.sub(a, b)</h1>
 This definition uses the refers to - as defined by <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-subtraction-operator-minus">ES2015 12.7.4 (The Subtraction operator ( - ))</a>, with the following change in behavior: If either argument to + is a sub-normal floating point number, then the result may be defined as either gradual underflow or flushing the result to 0.
-<emu-note>The definition is weaker for SIMD than for scalar + to allow for implementation on some SIMD architectures which flush to 0 on subnormals.</emu-note>
+<emu-note>The definition is weaker for SIMD than for scalar - to allow for implementation on some SIMD architectures which flush to 0 on subnormals.</emu-note>
 <emu-alg>
 1. If _a_.[[SIMDTypeDescriptor]] is not _SIMD_Descriptor or _b_.[[SIMDTypeDescriptor]] is not _SIMD_Descriptor, throw a TypeError.
 1. Let _result_ be SIMDBinaryOp(_a_, _b_, -).
@@ -737,7 +737,7 @@ This definition uses the refers to - as defined by <a href="https://people.mozil
 <emu-clause id="simd-mul">
 <h1>_SIMD_Constructor.mul(a, b)</h1>
 This definition uses the refers to - as defined by <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-applying-the-mul-operator">ES2015 12.6.3.1 (Applying the * Operator)</a>, with the following change in behavior: If either argument to + is a sub-normal floating point number, then the result may be defined as either gradual underflow or flushing the result to 0.
-<emu-note>The definition is weaker for SIMD than for scalar + to allow for implementation on some SIMD architectures which flush to 0 on subnormals.</emu-note>
+<emu-note>The definition is weaker for SIMD than for scalar * to allow for implementation on some SIMD architectures which flush to 0 on subnormals.</emu-note>
 <emu-alg>
 1. If _a_.[[SIMDTypeDescriptor]] is not _SIMD_Descriptor or _b_.[[SIMDTypeDescriptor]] is not _SIMD_Descriptor, throw a TypeError.
 1. If _SIMD_Type is an integer SIMD type, let _op_ be %Math_imul%; otherwise, _SIMD_Type is a floating point SIMD type, and let _op_ be <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-applying-the-mul-operator">*</a>.
@@ -752,7 +752,7 @@ This definition uses the refers to - as defined by <a href="https://people.mozil
 <p>
 This definition uses the refers to - as defined by <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-applying-the-div-operator">ES2015 12.6.3.2 (Applying the / Operator)</a>, with the following change in behavior: If either argument to + is a sub-normal floating point number, then the result may be defined as either gradual underflow or flushing the result to 0.
 </p>
-<emu-note>The definition is weaker for SIMD than for scalar + to allow for implementation on some SIMD architectures which flush to 0 on subnormals.</emu-note>
+<emu-note>The definition is weaker for SIMD than for scalar / to allow for implementation on some SIMD architectures which flush to 0 on subnormals.</emu-note>
 <p>
 This function is defined only on floating point SIMD types.
 </p>
