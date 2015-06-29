@@ -1896,6 +1896,28 @@ if (typeof SIMD.Int16x8.extractLane === "undefined") {
   }
 }
 
+if (typeof SIMD.Int16x8.unsignedExtractLane === "undefined") {
+  /**
+    * @param {Int16x8} t An instance of Int16x8.
+    * @param {integer} i Index in concatenation of t for lane i
+    * @return {integer} The value in lane i of t extracted as an unsigned value.
+    */
+  SIMD.Int16x8.unsignedExtractLane = function(t, i) {
+    t = SIMD.Int16x8.check(t);
+    check8(i);
+    switch(i) {
+      case 0: return t.s0_ & 0xffff;
+      case 1: return t.s1_ & 0xffff;
+      case 2: return t.s2_ & 0xffff;
+      case 3: return t.s3_ & 0xffff;
+      case 4: return t.s4_ & 0xffff;
+      case 5: return t.s5_ & 0xffff;
+      case 6: return t.s6_ & 0xffff;
+      case 7: return t.s7_ & 0xffff;
+    }
+  }
+}
+
 if (typeof SIMD.Int16x8.replaceLane === "undefined") {
   /**
     * @param {Int16x8} t An instance of Int16x8.
@@ -2096,6 +2118,36 @@ if (typeof SIMD.Int8x16.extractLane === "undefined") {
       case 13: return t.s13_;
       case 14: return t.s14_;
       case 15: return t.s15_;
+    }
+  }
+}
+
+if (typeof SIMD.Int8x16.unsignedExtractLane === "undefined") {
+  /**
+    * @param {Int8x16} t An instance of Int8x16.
+    * @param {integer} i Index in concatenation of t for lane i
+    * @return {integer} The value in lane i of t extracted as an unsigned value.
+    */
+  SIMD.Int8x16.unsignedExtractLane = function(t, i) {
+    t = SIMD.Int8x16.check(t);
+    check16(i);
+    switch(i) {
+      case 0: return t.s0_ & 0xff;
+      case 1: return t.s1_ & 0xff;
+      case 2: return t.s2_ & 0xff;
+      case 3: return t.s3_ & 0xff;
+      case 4: return t.s4_ & 0xff;
+      case 5: return t.s5_ & 0xff;
+      case 6: return t.s6_ & 0xff;
+      case 7: return t.s7_ & 0xff;
+      case 8: return t.s8_ & 0xff;
+      case 9: return t.s9_ & 0xff;
+      case 10: return t.s10_ & 0xff;
+      case 11: return t.s11_ & 0xff;
+      case 12: return t.s12_ & 0xff;
+      case 13: return t.s13_ & 0xff;
+      case 14: return t.s14_ & 0xff;
+      case 15: return t.s15_ & 0xff;
     }
   }
 }
@@ -4343,6 +4395,27 @@ if (typeof SIMD.Int16x8.addSaturate === "undefined") {
   }
 }
 
+if (typeof SIMD.Int16x8.unsignedAddSaturate === "undefined") {
+  /**
+    * @param {Int16x8} a An instance of Int16x8.
+    * @param {Int16x8} b An instance of Int16x8.
+    * @return {Int16x8} New instance of Int16x8 with values of a + b with
+    * unsigned saturating behavior on overflow.
+    */
+  SIMD.Int16x8.unsignedAddSaturate = function(a, b) {
+    a = SIMD.Int16x8.check(a);
+    b = SIMD.Int16x8.check(b);
+    var c = SIMD.Int16x8.add(a, b);
+    var max = SIMD.Int16x8.splat(0xffff);
+    var min = SIMD.Int16x8.splat(0x0000);
+    var mask = SIMD.Int16x8.unsignedLessThan(c, a);
+    var bneg = SIMD.Int16x8.unsignedLessThan(b, SIMD.Int16x8.splat(0));
+    return SIMD.Int16x8.select(SIMD.Bool16x8.and(mask, SIMD.Bool16x8.not(bneg)), max,
+             SIMD.Int16x8.select(SIMD.Bool16x8.and(SIMD.Bool16x8.not(mask), bneg), min,
+               c));
+  }
+}
+
 if (typeof SIMD.Int16x8.subSaturate === "undefined") {
   /**
     * @param {Int16x8} a An instance of Int16x8.
@@ -4358,6 +4431,27 @@ if (typeof SIMD.Int16x8.subSaturate === "undefined") {
     var min = SIMD.Int16x8.splat(0x8000);
     var mask = SIMD.Int16x8.greaterThan(c, a);
     var bneg = SIMD.Int16x8.lessThan(b, SIMD.Int16x8.splat(0));
+    return SIMD.Int16x8.select(SIMD.Bool16x8.and(mask, SIMD.Bool16x8.not(bneg)), min,
+             SIMD.Int16x8.select(SIMD.Bool16x8.and(SIMD.Bool16x8.not(mask), bneg), max,
+               c));
+  }
+}
+
+if (typeof SIMD.Int16x8.unsignedSubSaturate === "undefined") {
+  /**
+    * @param {Int16x8} a An instance of Int16x8.
+    * @param {Int16x8} b An instance of Int16x8.
+    * @return {Int16x8} New instance of Int16x8 with values of a - b with
+    * unsigned saturating behavior on overflow.
+    */
+  SIMD.Int16x8.unsignedSubSaturate = function(a, b) {
+    a = SIMD.Int16x8.check(a);
+    b = SIMD.Int16x8.check(b);
+    var c = SIMD.Int16x8.sub(a, b);
+    var max = SIMD.Int16x8.splat(0xffff);
+    var min = SIMD.Int16x8.splat(0x0000);
+    var mask = SIMD.Int16x8.unsignedGreaterThan(c, a);
+    var bneg = SIMD.Int16x8.unsignedLessThan(b, SIMD.Int16x8.splat(0));
     return SIMD.Int16x8.select(SIMD.Bool16x8.and(mask, SIMD.Bool16x8.not(bneg)), min,
              SIMD.Int16x8.select(SIMD.Bool16x8.and(SIMD.Bool16x8.not(mask), bneg), max,
                c));
@@ -4516,6 +4610,36 @@ if (typeof SIMD.Int16x8.greaterThan === "undefined") {
   }
 }
 
+if (typeof SIMD.Int16x8.unsignedGreaterThan === "undefined") {
+  /**
+    * @param {Int16x8} t An instance of Int16x8.
+    * @param {Int16x8} other An instance of Int16x8.
+    * @return {Bool16x8} true or false in each lane depending on
+    * the result of t > other as unsigned values.
+    */
+  SIMD.Int16x8.unsignedGreaterThan = function(t, other) {
+    t = SIMD.Int16x8.check(t);
+    other = SIMD.Int16x8.check(other);
+    var cs0 =
+        SIMD.Int16x8.unsignedExtractLane(t, 0) > SIMD.Int16x8.unsignedExtractLane(other, 0);
+    var cs1 =
+        SIMD.Int16x8.unsignedExtractLane(t, 1) > SIMD.Int16x8.unsignedExtractLane(other, 1);
+    var cs2 =
+        SIMD.Int16x8.unsignedExtractLane(t, 2) > SIMD.Int16x8.unsignedExtractLane(other, 2);
+    var cs3 =
+        SIMD.Int16x8.unsignedExtractLane(t, 3) > SIMD.Int16x8.unsignedExtractLane(other, 3);
+    var cs4 =
+        SIMD.Int16x8.unsignedExtractLane(t, 4) > SIMD.Int16x8.unsignedExtractLane(other, 4);
+    var cs5 =
+        SIMD.Int16x8.unsignedExtractLane(t, 5) > SIMD.Int16x8.unsignedExtractLane(other, 5);
+    var cs6 =
+        SIMD.Int16x8.unsignedExtractLane(t, 6) > SIMD.Int16x8.unsignedExtractLane(other, 6);
+    var cs7 =
+        SIMD.Int16x8.unsignedExtractLane(t, 7) > SIMD.Int16x8.unsignedExtractLane(other, 7);
+    return SIMD.Bool16x8(cs0, cs1, cs2, cs3, cs4, cs5, cs6, cs7);
+  }
+}
+
 if (typeof SIMD.Int16x8.greaterThanOrEqual === "undefined") {
   /**
     * @param {Int16x8} t An instance of Int16x8.
@@ -4542,6 +4666,36 @@ if (typeof SIMD.Int16x8.greaterThanOrEqual === "undefined") {
         SIMD.Int16x8.extractLane(t, 6) >= SIMD.Int16x8.extractLane(other, 6);
     var cs7 =
         SIMD.Int16x8.extractLane(t, 7) >= SIMD.Int16x8.extractLane(other, 7);
+    return SIMD.Bool16x8(cs0, cs1, cs2, cs3, cs4, cs5, cs6, cs7);
+  }
+}
+
+if (typeof SIMD.Int16x8.unsignedGreaterThanOrEqual === "undefined") {
+  /**
+    * @param {Int16x8} t An instance of Int16x8.
+    * @param {Int16x8} other An instance of Int16x8.
+    * @return {Bool16x8} true or false in each lane depending on
+    * the result of t >= other as unsigned values.
+    */
+  SIMD.Int16x8.unsignedGreaterThanOrEqual = function(t, other) {
+    t = SIMD.Int16x8.check(t);
+    other = SIMD.Int16x8.check(other);
+    var cs0 =
+        SIMD.Int16x8.unsignedExtractLane(t, 0) >= SIMD.Int16x8.unsignedExtractLane(other, 0);
+    var cs1 =
+        SIMD.Int16x8.unsignedExtractLane(t, 1) >= SIMD.Int16x8.unsignedExtractLane(other, 1);
+    var cs2 =
+        SIMD.Int16x8.unsignedExtractLane(t, 2) >= SIMD.Int16x8.unsignedExtractLane(other, 2);
+    var cs3 =
+        SIMD.Int16x8.unsignedExtractLane(t, 3) >= SIMD.Int16x8.unsignedExtractLane(other, 3);
+    var cs4 =
+        SIMD.Int16x8.unsignedExtractLane(t, 4) >= SIMD.Int16x8.unsignedExtractLane(other, 4);
+    var cs5 =
+        SIMD.Int16x8.unsignedExtractLane(t, 5) >= SIMD.Int16x8.unsignedExtractLane(other, 5);
+    var cs6 =
+        SIMD.Int16x8.unsignedExtractLane(t, 6) >= SIMD.Int16x8.unsignedExtractLane(other, 6);
+    var cs7 =
+        SIMD.Int16x8.unsignedExtractLane(t, 7) >= SIMD.Int16x8.unsignedExtractLane(other, 7);
     return SIMD.Bool16x8(cs0, cs1, cs2, cs3, cs4, cs5, cs6, cs7);
   }
 }
@@ -4576,6 +4730,36 @@ if (typeof SIMD.Int16x8.lessThan === "undefined") {
   }
 }
 
+if (typeof SIMD.Int16x8.unsignedLessThan === "undefined") {
+  /**
+    * @param {Int16x8} t An instance of Int16x8.
+    * @param {Int16x8} other An instance of Int16x8.
+    * @return {Bool16x8} true or false in each lane depending on
+    * the result of t < other as unsigned values.
+    */
+  SIMD.Int16x8.unsignedLessThan = function(t, other) {
+    t = SIMD.Int16x8.check(t);
+    other = SIMD.Int16x8.check(other);
+    var cs0 =
+        SIMD.Int16x8.unsignedExtractLane(t, 0) < SIMD.Int16x8.unsignedExtractLane(other, 0);
+    var cs1 =
+        SIMD.Int16x8.unsignedExtractLane(t, 1) < SIMD.Int16x8.unsignedExtractLane(other, 1);
+    var cs2 =
+        SIMD.Int16x8.unsignedExtractLane(t, 2) < SIMD.Int16x8.unsignedExtractLane(other, 2);
+    var cs3 =
+        SIMD.Int16x8.unsignedExtractLane(t, 3) < SIMD.Int16x8.unsignedExtractLane(other, 3);
+    var cs4 =
+        SIMD.Int16x8.unsignedExtractLane(t, 4) < SIMD.Int16x8.unsignedExtractLane(other, 4);
+    var cs5 =
+        SIMD.Int16x8.unsignedExtractLane(t, 5) < SIMD.Int16x8.unsignedExtractLane(other, 5);
+    var cs6 =
+        SIMD.Int16x8.unsignedExtractLane(t, 6) < SIMD.Int16x8.unsignedExtractLane(other, 6);
+    var cs7 =
+        SIMD.Int16x8.unsignedExtractLane(t, 7) < SIMD.Int16x8.unsignedExtractLane(other, 7);
+    return SIMD.Bool16x8(cs0, cs1, cs2, cs3, cs4, cs5, cs6, cs7);
+  }
+}
+
 if (typeof SIMD.Int16x8.lessThanOrEqual === "undefined") {
   /**
     * @param {Int16x8} t An instance of Int16x8.
@@ -4602,6 +4786,36 @@ if (typeof SIMD.Int16x8.lessThanOrEqual === "undefined") {
         SIMD.Int16x8.extractLane(t, 6) <= SIMD.Int16x8.extractLane(other, 6);
     var cs7 =
         SIMD.Int16x8.extractLane(t, 7) <= SIMD.Int16x8.extractLane(other, 7);
+    return SIMD.Bool16x8(cs0, cs1, cs2, cs3, cs4, cs5, cs6, cs7);
+  }
+}
+
+if (typeof SIMD.Int16x8.unsignedLessThanOrEqual === "undefined") {
+  /**
+    * @param {Int16x8} t An instance of Int16x8.
+    * @param {Int16x8} other An instance of Int16x8.
+    * @return {Bool16x8} true or false in each lane depending on
+    * the result of t <= other as unsigned values.
+    */
+  SIMD.Int16x8.unsignedLessThanOrEqual = function(t, other) {
+    t = SIMD.Int16x8.check(t);
+    other = SIMD.Int16x8.check(other);
+    var cs0 =
+        SIMD.Int16x8.unsignedExtractLane(t, 0) <= SIMD.Int16x8.unsignedExtractLane(other, 0);
+    var cs1 =
+        SIMD.Int16x8.unsignedExtractLane(t, 1) <= SIMD.Int16x8.unsignedExtractLane(other, 1);
+    var cs2 =
+        SIMD.Int16x8.unsignedExtractLane(t, 2) <= SIMD.Int16x8.unsignedExtractLane(other, 2);
+    var cs3 =
+        SIMD.Int16x8.unsignedExtractLane(t, 3) <= SIMD.Int16x8.unsignedExtractLane(other, 3);
+    var cs4 =
+        SIMD.Int16x8.unsignedExtractLane(t, 4) <= SIMD.Int16x8.unsignedExtractLane(other, 4);
+    var cs5 =
+        SIMD.Int16x8.unsignedExtractLane(t, 5) <= SIMD.Int16x8.unsignedExtractLane(other, 5);
+    var cs6 =
+        SIMD.Int16x8.unsignedExtractLane(t, 6) <= SIMD.Int16x8.unsignedExtractLane(other, 6);
+    var cs7 =
+        SIMD.Int16x8.unsignedExtractLane(t, 7) <= SIMD.Int16x8.unsignedExtractLane(other, 7);
     return SIMD.Bool16x8(cs0, cs1, cs2, cs3, cs4, cs5, cs6, cs7);
   }
 }
@@ -5145,6 +5359,27 @@ if (typeof SIMD.Int8x16.addSaturate === "undefined") {
   }
 }
 
+if (typeof SIMD.Int8x16.unsignedAddSaturate === "undefined") {
+  /**
+    * @param {Int8x16} a An instance of Int8x16.
+    * @param {Int8x16} b An instance of Int8x16.
+    * @return {Int8x16} New instance of Int8x16 with values of a + b with
+    * unsigned saturating behavior on overflow.
+    */
+  SIMD.Int8x16.unsignedAddSaturate = function(a, b) {
+    a = SIMD.Int8x16.check(a);
+    b = SIMD.Int8x16.check(b);
+    var c = SIMD.Int8x16.add(a, b);
+    var max = SIMD.Int8x16.splat(0xff);
+    var min = SIMD.Int8x16.splat(0x00);
+    var mask = SIMD.Int8x16.unsignedLessThan(c, a);
+    var bneg = SIMD.Int8x16.unsignedLessThan(b, SIMD.Int8x16.splat(0));
+    return SIMD.Int8x16.select(SIMD.Bool8x16.and(mask, SIMD.Bool8x16.not(bneg)), max,
+             SIMD.Int8x16.select(SIMD.Bool8x16.and(SIMD.Bool8x16.not(mask), bneg), min,
+               c));
+  }
+}
+
 if (typeof SIMD.Int8x16.subSaturate === "undefined") {
   /**
     * @param {Int8x16} a An instance of Int8x16.
@@ -5160,6 +5395,27 @@ if (typeof SIMD.Int8x16.subSaturate === "undefined") {
     var min = SIMD.Int8x16.splat(0x80);
     var mask = SIMD.Int8x16.greaterThan(c, a);
     var bneg = SIMD.Int8x16.lessThan(b, SIMD.Int8x16.splat(0));
+    return SIMD.Int8x16.select(SIMD.Bool8x16.and(mask, SIMD.Bool8x16.not(bneg)), min,
+             SIMD.Int8x16.select(SIMD.Bool8x16.and(SIMD.Bool8x16.not(mask), bneg), max,
+               c));
+  }
+}
+
+if (typeof SIMD.Int8x16.unsignedSubSaturate === "undefined") {
+  /**
+    * @param {Int8x16} a An instance of Int8x16.
+    * @param {Int8x16} b An instance of Int8x16.
+    * @return {Int8x16} New instance of Int8x16 with values of a - b with
+    * unsigned saturating behavior on overflow.
+    */
+  SIMD.Int8x16.unsignedSubSaturate = function(a, b) {
+    a = SIMD.Int8x16.check(a);
+    b = SIMD.Int8x16.check(b);
+    var c = SIMD.Int8x16.sub(a, b);
+    var max = SIMD.Int8x16.splat(0xff);
+    var min = SIMD.Int8x16.splat(0x00);
+    var mask = SIMD.Int8x16.unsignedGreaterThan(c, a);
+    var bneg = SIMD.Int8x16.unsignedLessThan(b, SIMD.Int8x16.splat(0));
     return SIMD.Int8x16.select(SIMD.Bool8x16.and(mask, SIMD.Bool8x16.not(bneg)), min,
              SIMD.Int8x16.select(SIMD.Bool8x16.and(SIMD.Bool8x16.not(mask), bneg), max,
                c));
@@ -5438,6 +5694,53 @@ if (typeof SIMD.Int8x16.greaterThan === "undefined") {
   }
 }
 
+if (typeof SIMD.Int8x16.unsignedGreaterThan === "undefined") {
+  /**
+    * @param {Int8x16} t An instance of Int8x16.
+    * @param {Int8x16} other An instance of Int8x16.
+    * @return {Bool8x16} true or false in each lane depending on
+    * the result of t > other as unsigned values.
+    */
+  SIMD.Int8x16.unsignedGreaterThan = function(t, other) {
+    t = SIMD.Int8x16.check(t);
+    other = SIMD.Int8x16.check(other);
+    var cs0 =
+        SIMD.Int8x16.unsignedExtractLane(t, 0) > SIMD.Int8x16.unsignedExtractLane(other, 0);
+    var cs1 =
+        SIMD.Int8x16.unsignedExtractLane(t, 1) > SIMD.Int8x16.unsignedExtractLane(other, 1);
+    var cs2 =
+        SIMD.Int8x16.unsignedExtractLane(t, 2) > SIMD.Int8x16.unsignedExtractLane(other, 2);
+    var cs3 =
+        SIMD.Int8x16.unsignedExtractLane(t, 3) > SIMD.Int8x16.unsignedExtractLane(other, 3);
+    var cs4 =
+        SIMD.Int8x16.unsignedExtractLane(t, 4) > SIMD.Int8x16.unsignedExtractLane(other, 4);
+    var cs5 =
+        SIMD.Int8x16.unsignedExtractLane(t, 5) > SIMD.Int8x16.unsignedExtractLane(other, 5);
+    var cs6 =
+        SIMD.Int8x16.unsignedExtractLane(t, 6) > SIMD.Int8x16.unsignedExtractLane(other, 6);
+    var cs7 =
+        SIMD.Int8x16.unsignedExtractLane(t, 7) > SIMD.Int8x16.unsignedExtractLane(other, 7);
+    var cs8 =
+        SIMD.Int8x16.unsignedExtractLane(t, 8) > SIMD.Int8x16.unsignedExtractLane(other, 8);
+    var cs9 =
+        SIMD.Int8x16.unsignedExtractLane(t, 9) > SIMD.Int8x16.unsignedExtractLane(other, 9);
+    var cs10 =
+        SIMD.Int8x16.unsignedExtractLane(t, 10) > SIMD.Int8x16.unsignedExtractLane(other, 10);
+    var cs11 =
+        SIMD.Int8x16.unsignedExtractLane(t, 11) > SIMD.Int8x16.unsignedExtractLane(other, 11);
+    var cs12 =
+        SIMD.Int8x16.unsignedExtractLane(t, 12) > SIMD.Int8x16.unsignedExtractLane(other, 12);
+    var cs13 =
+        SIMD.Int8x16.unsignedExtractLane(t, 13) > SIMD.Int8x16.unsignedExtractLane(other, 13);
+    var cs14 =
+        SIMD.Int8x16.unsignedExtractLane(t, 14) > SIMD.Int8x16.unsignedExtractLane(other, 14);
+    var cs15 =
+        SIMD.Int8x16.unsignedExtractLane(t, 15) > SIMD.Int8x16.unsignedExtractLane(other, 15);
+    return SIMD.Bool8x16(cs0, cs1, cs2, cs3, cs4, cs5, cs6, cs7,
+                         cs8, cs9, cs10, cs11, cs12, cs13, cs14, cs15);
+  }
+}
+
 if (typeof SIMD.Int8x16.greaterThanOrEqual === "undefined") {
   /**
     * @param {Int8x16} t An instance of Int8x16.
@@ -5480,6 +5783,53 @@ if (typeof SIMD.Int8x16.greaterThanOrEqual === "undefined") {
         SIMD.Int8x16.extractLane(t, 14) >= SIMD.Int8x16.extractLane(other, 14);
     var cs15 =
         SIMD.Int8x16.extractLane(t, 15) >= SIMD.Int8x16.extractLane(other, 15);
+    return SIMD.Bool8x16(cs0, cs1, cs2, cs3, cs4, cs5, cs6, cs7,
+                         cs8, cs9, cs10, cs11, cs12, cs13, cs14, cs15);
+  }
+}
+
+if (typeof SIMD.Int8x16.unsignedGreaterThanOrEqual === "undefined") {
+  /**
+    * @param {Int8x16} t An instance of Int8x16.
+    * @param {Int8x16} other An instance of Int8x16.
+    * @return {Bool8x16} true or false in each lane depending on
+    * the result of t >= other as unsigned values.
+    */
+  SIMD.Int8x16.unsignedGreaterThanOrEqual = function(t, other) {
+    t = SIMD.Int8x16.check(t);
+    other = SIMD.Int8x16.check(other);
+    var cs0 =
+        SIMD.Int8x16.unsignedExtractLane(t, 0) >= SIMD.Int8x16.unsignedExtractLane(other, 0);
+    var cs1 =
+        SIMD.Int8x16.unsignedExtractLane(t, 1) >= SIMD.Int8x16.unsignedExtractLane(other, 1);
+    var cs2 =
+        SIMD.Int8x16.unsignedExtractLane(t, 2) >= SIMD.Int8x16.unsignedExtractLane(other, 2);
+    var cs3 =
+        SIMD.Int8x16.unsignedExtractLane(t, 3) >= SIMD.Int8x16.unsignedExtractLane(other, 3);
+    var cs4 =
+        SIMD.Int8x16.unsignedExtractLane(t, 4) >= SIMD.Int8x16.unsignedExtractLane(other, 4);
+    var cs5 =
+        SIMD.Int8x16.unsignedExtractLane(t, 5) >= SIMD.Int8x16.unsignedExtractLane(other, 5);
+    var cs6 =
+        SIMD.Int8x16.unsignedExtractLane(t, 6) >= SIMD.Int8x16.unsignedExtractLane(other, 6);
+    var cs7 =
+        SIMD.Int8x16.unsignedExtractLane(t, 7) >= SIMD.Int8x16.unsignedExtractLane(other, 7);
+    var cs8 =
+        SIMD.Int8x16.unsignedExtractLane(t, 8) >= SIMD.Int8x16.unsignedExtractLane(other, 8);
+    var cs9 =
+        SIMD.Int8x16.unsignedExtractLane(t, 9) >= SIMD.Int8x16.unsignedExtractLane(other, 9);
+    var cs10 =
+        SIMD.Int8x16.unsignedExtractLane(t, 10) >= SIMD.Int8x16.unsignedExtractLane(other, 10);
+    var cs11 =
+        SIMD.Int8x16.unsignedExtractLane(t, 11) >= SIMD.Int8x16.unsignedExtractLane(other, 11);
+    var cs12 =
+        SIMD.Int8x16.unsignedExtractLane(t, 12) >= SIMD.Int8x16.unsignedExtractLane(other, 12);
+    var cs13 =
+        SIMD.Int8x16.unsignedExtractLane(t, 13) >= SIMD.Int8x16.unsignedExtractLane(other, 13);
+    var cs14 =
+        SIMD.Int8x16.unsignedExtractLane(t, 14) >= SIMD.Int8x16.unsignedExtractLane(other, 14);
+    var cs15 =
+        SIMD.Int8x16.unsignedExtractLane(t, 15) >= SIMD.Int8x16.unsignedExtractLane(other, 15);
     return SIMD.Bool8x16(cs0, cs1, cs2, cs3, cs4, cs5, cs6, cs7,
                          cs8, cs9, cs10, cs11, cs12, cs13, cs14, cs15);
   }
@@ -5532,6 +5882,53 @@ if (typeof SIMD.Int8x16.lessThan === "undefined") {
   }
 }
 
+if (typeof SIMD.Int8x16.unsignedLessThan === "undefined") {
+  /**
+    * @param {Int8x16} t An instance of Int8x16.
+    * @param {Int8x16} other An instance of Int8x16.
+    * @return {Bool8x16} true or false in each lane depending on
+    * the result of t < other as unsigned values.
+    */
+  SIMD.Int8x16.unsignedLessThan = function(t, other) {
+    t = SIMD.Int8x16.check(t);
+    other = SIMD.Int8x16.check(other);
+    var cs0 =
+        SIMD.Int8x16.unsignedExtractLane(t, 0) < SIMD.Int8x16.unsignedExtractLane(other, 0);
+    var cs1 =
+        SIMD.Int8x16.unsignedExtractLane(t, 1) < SIMD.Int8x16.unsignedExtractLane(other, 1);
+    var cs2 =
+        SIMD.Int8x16.unsignedExtractLane(t, 2) < SIMD.Int8x16.unsignedExtractLane(other, 2);
+    var cs3 =
+        SIMD.Int8x16.unsignedExtractLane(t, 3) < SIMD.Int8x16.unsignedExtractLane(other, 3);
+    var cs4 =
+        SIMD.Int8x16.unsignedExtractLane(t, 4) < SIMD.Int8x16.unsignedExtractLane(other, 4);
+    var cs5 =
+        SIMD.Int8x16.unsignedExtractLane(t, 5) < SIMD.Int8x16.unsignedExtractLane(other, 5);
+    var cs6 =
+        SIMD.Int8x16.unsignedExtractLane(t, 6) < SIMD.Int8x16.unsignedExtractLane(other, 6);
+    var cs7 =
+        SIMD.Int8x16.unsignedExtractLane(t, 7) < SIMD.Int8x16.unsignedExtractLane(other, 7);
+    var cs8 =
+        SIMD.Int8x16.unsignedExtractLane(t, 8) < SIMD.Int8x16.unsignedExtractLane(other, 8);
+    var cs9 =
+        SIMD.Int8x16.unsignedExtractLane(t, 9) < SIMD.Int8x16.unsignedExtractLane(other, 9);
+    var cs10 =
+        SIMD.Int8x16.unsignedExtractLane(t, 10) < SIMD.Int8x16.unsignedExtractLane(other, 10);
+    var cs11 =
+        SIMD.Int8x16.unsignedExtractLane(t, 11) < SIMD.Int8x16.unsignedExtractLane(other, 11);
+    var cs12 =
+        SIMD.Int8x16.unsignedExtractLane(t, 12) < SIMD.Int8x16.unsignedExtractLane(other, 12);
+    var cs13 =
+        SIMD.Int8x16.unsignedExtractLane(t, 13) < SIMD.Int8x16.unsignedExtractLane(other, 13);
+    var cs14 =
+        SIMD.Int8x16.unsignedExtractLane(t, 14) < SIMD.Int8x16.unsignedExtractLane(other, 14);
+    var cs15 =
+        SIMD.Int8x16.unsignedExtractLane(t, 15) < SIMD.Int8x16.unsignedExtractLane(other, 15);
+    return SIMD.Bool8x16(cs0, cs1, cs2, cs3, cs4, cs5, cs6, cs7,
+                         cs8, cs9, cs10, cs11, cs12, cs13, cs14, cs15);
+  }
+}
+
 if (typeof SIMD.Int8x16.lessThanOrEqual === "undefined") {
   /**
     * @param {Int8x16} t An instance of Int8x16.
@@ -5574,6 +5971,53 @@ if (typeof SIMD.Int8x16.lessThanOrEqual === "undefined") {
         SIMD.Int8x16.extractLane(t, 14) <= SIMD.Int8x16.extractLane(other, 14);
     var cs15 =
         SIMD.Int8x16.extractLane(t, 15) <= SIMD.Int8x16.extractLane(other, 15);
+    return SIMD.Bool8x16(cs0, cs1, cs2, cs3, cs4, cs5, cs6, cs7,
+                         cs8, cs9, cs10, cs11, cs12, cs13, cs14, cs15);
+  }
+}
+
+if (typeof SIMD.Int8x16.unsignedLessThanOrEqual === "undefined") {
+  /**
+    * @param {Int8x16} t An instance of Int8x16.
+    * @param {Int8x16} other An instance of Int8x16.
+    * @return {Bool8x16} true or false in each lane depending on
+    * the result of t <= other as unsigned values.
+    */
+  SIMD.Int8x16.unsignedLessThanOrEqual = function(t, other) {
+    t = SIMD.Int8x16.check(t);
+    other = SIMD.Int8x16.check(other);
+    var cs0 =
+        SIMD.Int8x16.unsignedExtractLane(t, 0) <= SIMD.Int8x16.unsignedExtractLane(other, 0);
+    var cs1 =
+        SIMD.Int8x16.unsignedExtractLane(t, 1) <= SIMD.Int8x16.unsignedExtractLane(other, 1);
+    var cs2 =
+        SIMD.Int8x16.unsignedExtractLane(t, 2) <= SIMD.Int8x16.unsignedExtractLane(other, 2);
+    var cs3 =
+        SIMD.Int8x16.unsignedExtractLane(t, 3) <= SIMD.Int8x16.unsignedExtractLane(other, 3);
+    var cs4 =
+        SIMD.Int8x16.unsignedExtractLane(t, 4) <= SIMD.Int8x16.unsignedExtractLane(other, 4);
+    var cs5 =
+        SIMD.Int8x16.unsignedExtractLane(t, 5) <= SIMD.Int8x16.unsignedExtractLane(other, 5);
+    var cs6 =
+        SIMD.Int8x16.unsignedExtractLane(t, 6) <= SIMD.Int8x16.unsignedExtractLane(other, 6);
+    var cs7 =
+        SIMD.Int8x16.unsignedExtractLane(t, 7) <= SIMD.Int8x16.unsignedExtractLane(other, 7);
+    var cs8 =
+        SIMD.Int8x16.unsignedExtractLane(t, 8) <= SIMD.Int8x16.unsignedExtractLane(other, 8);
+    var cs9 =
+        SIMD.Int8x16.unsignedExtractLane(t, 9) <= SIMD.Int8x16.unsignedExtractLane(other, 9);
+    var cs10 =
+        SIMD.Int8x16.unsignedExtractLane(t, 10) <= SIMD.Int8x16.unsignedExtractLane(other, 10);
+    var cs11 =
+        SIMD.Int8x16.unsignedExtractLane(t, 11) <= SIMD.Int8x16.unsignedExtractLane(other, 11);
+    var cs12 =
+        SIMD.Int8x16.unsignedExtractLane(t, 12) <= SIMD.Int8x16.unsignedExtractLane(other, 12);
+    var cs13 =
+        SIMD.Int8x16.unsignedExtractLane(t, 13) <= SIMD.Int8x16.unsignedExtractLane(other, 13);
+    var cs14 =
+        SIMD.Int8x16.unsignedExtractLane(t, 14) <= SIMD.Int8x16.unsignedExtractLane(other, 14);
+    var cs15 =
+        SIMD.Int8x16.unsignedExtractLane(t, 15) <= SIMD.Int8x16.unsignedExtractLane(other, 15);
     return SIMD.Bool8x16(cs0, cs1, cs2, cs3, cs4, cs5, cs6, cs7,
                          cs8, cs9, cs10, cs11, cs12, cs13, cs14, cs15);
   }
