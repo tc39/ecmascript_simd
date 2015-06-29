@@ -3646,6 +3646,20 @@ if (typeof SIMD.Int32x4.shuffle === "undefined") {
   }
 }
 
+if (typeof SIMD.Int32x4.unsignedHorizontalSum === "undefined") {
+  /**
+    * @param {Int32x4} a An instance of 32x4.
+    * @return {Number} The sum of all the lanes in a, extracted as unsigned values.
+    */
+  SIMD.Int32x4.unsignedHorizontalSum = function(a) {
+    a = SIMD.Int32x4.check(a);
+    return (SIMD.Int32x4.extractLane(a, 0)>>>0) +
+           (SIMD.Int32x4.extractLane(a, 1)>>>0) +
+           (SIMD.Int32x4.extractLane(a, 2)>>>0) +
+           (SIMD.Int32x4.extractLane(a, 3)>>>0);
+  }
+}
+
 if (typeof SIMD.Int32x4.select === "undefined") {
   /**
     * @param {Bool32x4} t Selector mask. An instance of Bool32x4
@@ -4455,6 +4469,79 @@ if (typeof SIMD.Int16x8.unsignedSubSaturate === "undefined") {
     return SIMD.Int16x8.select(SIMD.Bool16x8.and(mask, SIMD.Bool16x8.not(bneg)), min,
              SIMD.Int16x8.select(SIMD.Bool16x8.and(SIMD.Bool16x8.not(mask), bneg), max,
                c));
+  }
+}
+
+if (typeof SIMD.Int16x8.unsignedAbsoluteDifference === "undefined") {
+  /**
+    * @param {Int16x8} a An instance of Int8x16.
+    * @param {Int16x8} b An instance of Int8x16.
+    * @return {Int16x8} The absolute differences (abs(x - y)) of the
+    * corresponding elements of a and b. x and y are interpreted as unsigned
+    * integers.
+    */
+  SIMD.Int16x8.unsignedAbsoluteDifference = function(a, b) {
+    a = SIMD.Int16x8.check(a);
+    b = SIMD.Int16x8.check(b);
+    var x = SIMD.Int16x8(
+        Math.abs(
+            SIMD.Int16x8.unsignedExtractLane(a, 0) - SIMD.Int16x8.unsignedExtractLane(b, 0)),
+        Math.abs(
+            SIMD.Int16x8.unsignedExtractLane(a, 1) - SIMD.Int16x8.unsignedExtractLane(b, 1)),
+        Math.abs(
+            SIMD.Int16x8.unsignedExtractLane(a, 2) - SIMD.Int16x8.unsignedExtractLane(b, 2)),
+        Math.abs(
+            SIMD.Int16x8.unsignedExtractLane(a, 3) - SIMD.Int16x8.unsignedExtractLane(b, 3)),
+        Math.abs(
+            SIMD.Int16x8.unsignedExtractLane(a, 4) - SIMD.Int16x8.unsignedExtractLane(b, 4)),
+        Math.abs(
+            SIMD.Int16x8.unsignedExtractLane(a, 5) - SIMD.Int16x8.unsignedExtractLane(b, 5)),
+        Math.abs(
+            SIMD.Int16x8.unsignedExtractLane(a, 6) - SIMD.Int16x8.unsignedExtractLane(b, 6)),
+        Math.abs(
+            SIMD.Int16x8.unsignedExtractLane(a, 7) - SIMD.Int16x8.unsignedExtractLane(b, 7)));
+    return x;
+  }
+}
+
+if (typeof SIMD.Int16x8.widenedUnsignedAbsoluteDifference === "undefined") {
+  /**
+    * @param {Int16x8} a An instance of Int16x8.
+    * @param {Int16x8} b An instance of Int16x8.
+    * @return {Int32x4} The absolute differences (abs(x - y)) of the
+    * first 4 corresponding elements of a and b, returning 32-bit results.
+    * x and y are interpreted as unsigned integers.
+    */
+  SIMD.Int16x8.widenedUnsignedAbsoluteDifference = function(a, b) {
+    a = SIMD.Int16x8.check(a);
+    b = SIMD.Int16x8.check(b);
+    return SIMD.Int32x4(
+        Math.abs(
+            SIMD.Int16x8.unsignedExtractLane(a, 0) - SIMD.Int16x8.unsignedExtractLane(b, 0)),
+        Math.abs(
+            SIMD.Int16x8.unsignedExtractLane(a, 1) - SIMD.Int16x8.unsignedExtractLane(b, 1)),
+        Math.abs(
+            SIMD.Int16x8.unsignedExtractLane(a, 2) - SIMD.Int16x8.unsignedExtractLane(b, 2)),
+        Math.abs(
+            SIMD.Int16x8.unsignedExtractLane(a, 3) - SIMD.Int16x8.unsignedExtractLane(b, 3)));
+  }
+}
+
+if (typeof SIMD.Int16x8.unsignedHorizontalSum === "undefined") {
+  /**
+    * @param {Int16x8} a An instance of Int16x8.
+    * @return {Number} The sum of all the lanes in a, extracted as unsigned values.
+    */
+  SIMD.Int16x8.unsignedHorizontalSum = function(a) {
+    a = SIMD.Int16x8.check(a);
+    return SIMD.Int16x8.unsignedExtractLane(a, 0) +
+           SIMD.Int16x8.unsignedExtractLane(a, 1) +
+           SIMD.Int16x8.unsignedExtractLane(a, 2) +
+           SIMD.Int16x8.unsignedExtractLane(a, 3) +
+           SIMD.Int16x8.unsignedExtractLane(a, 4) +
+           SIMD.Int16x8.unsignedExtractLane(a, 5) +
+           SIMD.Int16x8.unsignedExtractLane(a, 6) +
+           SIMD.Int16x8.unsignedExtractLane(a, 7);
   }
 }
 
@@ -5422,48 +5509,108 @@ if (typeof SIMD.Int8x16.unsignedSubSaturate === "undefined") {
   }
 }
 
-if (typeof SIMD.Int8x16.sumOfAbsoluteDifferences === "undefined") {
+if (typeof SIMD.Int8x16.unsignedAbsoluteDifference === "undefined") {
   /**
     * @param {Int8x16} a An instance of Int8x16.
     * @param {Int8x16} b An instance of Int8x16.
-    * @return {Number} The sum of the absolute differences (SAD) of the
-    * corresponding elements of a and b.
+    * @return {Int8x16} The absolute differences (abs(x - y)) of the
+    * corresponding elements of a and b. x and y are interpreted as unsigned
+    * integers.
     */
-  SIMD.Int8x16.sumOfAbsoluteDifferences = function(a, b) {
+  SIMD.Int8x16.unsignedAbsoluteDifference = function(a, b) {
     a = SIMD.Int8x16.check(a);
     b = SIMD.Int8x16.check(b);
-    return Math.abs(
-        SIMD.Int8x16.extractLane(a, 0) - SIMD.Int8x16.extractLane(b, 0)) +
+    var x = SIMD.Int8x16(
         Math.abs(
-            SIMD.Int8x16.extractLane(a, 1) - SIMD.Int8x16.extractLane(b, 1)) +
+            SIMD.Int8x16.unsignedExtractLane(a, 0) - SIMD.Int8x16.unsignedExtractLane(b, 0)),
         Math.abs(
-            SIMD.Int8x16.extractLane(a, 2) - SIMD.Int8x16.extractLane(b, 2)) +
+            SIMD.Int8x16.unsignedExtractLane(a, 1) - SIMD.Int8x16.unsignedExtractLane(b, 1)),
         Math.abs(
-            SIMD.Int8x16.extractLane(a, 3) - SIMD.Int8x16.extractLane(b, 3)) +
+            SIMD.Int8x16.unsignedExtractLane(a, 2) - SIMD.Int8x16.unsignedExtractLane(b, 2)),
         Math.abs(
-            SIMD.Int8x16.extractLane(a, 4) - SIMD.Int8x16.extractLane(b, 4)) +
+            SIMD.Int8x16.unsignedExtractLane(a, 3) - SIMD.Int8x16.unsignedExtractLane(b, 3)),
         Math.abs(
-            SIMD.Int8x16.extractLane(a, 5) - SIMD.Int8x16.extractLane(b, 5)) +
+            SIMD.Int8x16.unsignedExtractLane(a, 4) - SIMD.Int8x16.unsignedExtractLane(b, 4)),
         Math.abs(
-            SIMD.Int8x16.extractLane(a, 6) - SIMD.Int8x16.extractLane(b, 6)) +
+            SIMD.Int8x16.unsignedExtractLane(a, 5) - SIMD.Int8x16.unsignedExtractLane(b, 5)),
         Math.abs(
-            SIMD.Int8x16.extractLane(a, 7) - SIMD.Int8x16.extractLane(b, 7)) +
+            SIMD.Int8x16.unsignedExtractLane(a, 6) - SIMD.Int8x16.unsignedExtractLane(b, 6)),
         Math.abs(
-            SIMD.Int8x16.extractLane(a, 8) - SIMD.Int8x16.extractLane(b, 8)) +
+            SIMD.Int8x16.unsignedExtractLane(a, 7) - SIMD.Int8x16.unsignedExtractLane(b, 7)),
         Math.abs(
-            SIMD.Int8x16.extractLane(a, 9) - SIMD.Int8x16.extractLane(b, 9)) +
+            SIMD.Int8x16.unsignedExtractLane(a, 8) - SIMD.Int8x16.unsignedExtractLane(b, 8)),
         Math.abs(
-            SIMD.Int8x16.extractLane(a, 10) - SIMD.Int8x16.extractLane(b, 10)) +
+            SIMD.Int8x16.unsignedExtractLane(a, 9) - SIMD.Int8x16.unsignedExtractLane(b, 9)),
         Math.abs(
-            SIMD.Int8x16.extractLane(a, 11) - SIMD.Int8x16.extractLane(b, 11)) +
+            SIMD.Int8x16.unsignedExtractLane(a, 10) - SIMD.Int8x16.unsignedExtractLane(b, 10)),
         Math.abs(
-            SIMD.Int8x16.extractLane(a, 12) - SIMD.Int8x16.extractLane(b, 12)) +
+            SIMD.Int8x16.unsignedExtractLane(a, 11) - SIMD.Int8x16.unsignedExtractLane(b, 11)),
         Math.abs(
-            SIMD.Int8x16.extractLane(a, 13) - SIMD.Int8x16.extractLane(b, 13)) +
+            SIMD.Int8x16.unsignedExtractLane(a, 12) - SIMD.Int8x16.unsignedExtractLane(b, 12)),
         Math.abs(
-            SIMD.Int8x16.extractLane(a, 14) - SIMD.Int8x16.extractLane(b, 14)) +
+            SIMD.Int8x16.unsignedExtractLane(a, 13) - SIMD.Int8x16.unsignedExtractLane(b, 13)),
         Math.abs(
-            SIMD.Int8x16.extractLane(a, 15) - SIMD.Int8x16.extractLane(b, 15));
+            SIMD.Int8x16.unsignedExtractLane(a, 14) - SIMD.Int8x16.unsignedExtractLane(b, 14)),
+        Math.abs(
+            SIMD.Int8x16.unsignedExtractLane(a, 15) - SIMD.Int8x16.unsignedExtractLane(b, 15)));
+    return x;
+  }
+}
+
+if (typeof SIMD.Int8x16.widenedUnsignedAbsoluteDifference === "undefined") {
+  /**
+    * @param {Int8x16} a An instance of Int8x16.
+    * @param {Int8x16} b An instance of Int8x16.
+    * @return {Int16x8} The absolute differences (abs(x - y)) of the
+    * first 8 corresponding elements of a and b, returning 16-bit results.
+    * x and y are interpreted as unsigned integers.
+    */
+  SIMD.Int8x16.widenedUnsignedAbsoluteDifference = function(a, b) {
+    a = SIMD.Int8x16.check(a);
+    b = SIMD.Int8x16.check(b);
+    return SIMD.Int16x8(
+        Math.abs(
+            SIMD.Int8x16.unsignedExtractLane(a, 0) - SIMD.Int8x16.unsignedExtractLane(b, 0)),
+        Math.abs(
+            SIMD.Int8x16.unsignedExtractLane(a, 1) - SIMD.Int8x16.unsignedExtractLane(b, 1)),
+        Math.abs(
+            SIMD.Int8x16.unsignedExtractLane(a, 2) - SIMD.Int8x16.unsignedExtractLane(b, 2)),
+        Math.abs(
+            SIMD.Int8x16.unsignedExtractLane(a, 3) - SIMD.Int8x16.unsignedExtractLane(b, 3)),
+        Math.abs(
+            SIMD.Int8x16.unsignedExtractLane(a, 4) - SIMD.Int8x16.unsignedExtractLane(b, 4)),
+        Math.abs(
+            SIMD.Int8x16.unsignedExtractLane(a, 5) - SIMD.Int8x16.unsignedExtractLane(b, 5)),
+        Math.abs(
+            SIMD.Int8x16.unsignedExtractLane(a, 6) - SIMD.Int8x16.unsignedExtractLane(b, 6)),
+        Math.abs(
+            SIMD.Int8x16.unsignedExtractLane(a, 7) - SIMD.Int8x16.unsignedExtractLane(b, 7)));
+  }
+}
+
+if (typeof SIMD.Int8x16.unsignedHorizontalSum === "undefined") {
+  /**
+    * @param {Int8x16} a An instance of Int8x16.
+    * @return {Number} The sum of all the lanes in a, extracted as unsigned values.
+    */
+  SIMD.Int8x16.unsignedHorizontalSum = function(a) {
+    a = SIMD.Int8x16.check(a);
+    return SIMD.Int8x16.unsignedExtractLane(a, 0) +
+           SIMD.Int8x16.unsignedExtractLane(a, 1) +
+           SIMD.Int8x16.unsignedExtractLane(a, 2) +
+           SIMD.Int8x16.unsignedExtractLane(a, 3) +
+           SIMD.Int8x16.unsignedExtractLane(a, 4) +
+           SIMD.Int8x16.unsignedExtractLane(a, 5) +
+           SIMD.Int8x16.unsignedExtractLane(a, 6) +
+           SIMD.Int8x16.unsignedExtractLane(a, 7) +
+           SIMD.Int8x16.unsignedExtractLane(a, 8) +
+           SIMD.Int8x16.unsignedExtractLane(a, 9) +
+           SIMD.Int8x16.unsignedExtractLane(a, 10) +
+           SIMD.Int8x16.unsignedExtractLane(a, 11) +
+           SIMD.Int8x16.unsignedExtractLane(a, 12) +
+           SIMD.Int8x16.unsignedExtractLane(a, 13) +
+           SIMD.Int8x16.unsignedExtractLane(a, 14) +
+           SIMD.Int8x16.unsignedExtractLane(a, 15);
   }
 }
 
