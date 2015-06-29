@@ -204,7 +204,7 @@ test('Int16x8 operators', function() {
     equal(SIMD.Int16x8(0, 1, 2, 3, 4, 5, 6, 7) ? 1 : 2, 1);
 });
 
-test('bool64x2 constructor', function() {
+test('Bool64x2 constructor', function() {
   equal('function', typeof SIMD.Bool64x2);
   var m = SIMD.Bool64x2(false, true);
   equal(false, SIMD.Bool64x2.extractLane(m, 0));
@@ -215,7 +215,7 @@ test('bool64x2 constructor', function() {
   throws(function() { SIMD.Bool8x16.check(m); });
 });
 
-test('bool64x2 splat constructor', function() {
+test('Bool64x2 splat constructor', function() {
   equal('function', typeof SIMD.Bool64x2.splat);
   var m = SIMD.Bool64x2.splat(true);
   equal(true, SIMD.Bool64x2.extractLane(m, 0));
@@ -225,13 +225,13 @@ test('bool64x2 splat constructor', function() {
   equal(false, SIMD.Bool64x2.extractLane(m, 1));
 });
 
-test('bool64x2 scalar getters', function() {
+test('Bool64x2 scalar getters', function() {
   var m = SIMD.Bool64x2(true, false);
   equal(true, SIMD.Bool64x2.extractLane(m, 0));
   equal(false, SIMD.Bool64x2.extractLane(m, 1));
 });
 
-test('bool64x2 replaceLane', function() {
+test('Bool64x2 replaceLane', function() {
   var a = SIMD.Bool64x2(false, false);
   var c = SIMD.Bool64x2.replaceLane(a, 0, true);
   equal(true, SIMD.Bool64x2.extractLane(c, 0));
@@ -256,7 +256,7 @@ test('bool64x2 replaceLane', function() {
   testIndexCheck(2);
 });
 
-test('bool64x2 allTrue', function () {
+test('Bool64x2 allTrue', function () {
   var v00 = SIMD.Bool64x2(false, false);
   var v01 = SIMD.Bool64x2(false, true);
   var v10 = SIMD.Bool64x2(true, false);
@@ -267,7 +267,7 @@ test('bool64x2 allTrue', function () {
   equal(SIMD.Bool64x2.allTrue(v11), true);
 });
 
-test('bool64x2 anyTrue', function () {
+test('Bool64x2 anyTrue', function () {
   var v00 = SIMD.Bool64x2(false, false);
   var v01 = SIMD.Bool64x2(false, true);
   var v10 = SIMD.Bool64x2(true, false);
@@ -278,7 +278,7 @@ test('bool64x2 anyTrue', function () {
   equal(SIMD.Bool64x2.anyTrue(v11), true);
 });
 
-test('bool64x2 and', function() {
+test('Bool64x2 and', function() {
   var m = SIMD.Bool64x2(true, true);
   var n = SIMD.Bool64x2(true, false);
   var o = SIMD.Bool64x2.and(m,n);
@@ -291,7 +291,7 @@ test('bool64x2 and', function() {
   equal(false, SIMD.Bool64x2.extractLane(o, 1));
 });
 
-test('bool64x2 or', function() {
+test('Bool64x2 or', function() {
   var m = SIMD.Bool64x2(true, true);
   var n = SIMD.Bool64x2(true, false);
   var o = SIMD.Bool64x2.or(m,n);
@@ -304,7 +304,7 @@ test('bool64x2 or', function() {
   equal(false, SIMD.Bool64x2.extractLane(o, 1));
 });
 
-test('bool64x2 xor', function() {
+test('Bool64x2 xor', function() {
   var m = SIMD.Bool64x2(true, true);
   var n = SIMD.Bool64x2(true, false);
   var o = SIMD.Bool64x2.xor(m,n);
@@ -317,14 +317,14 @@ test('bool64x2 xor', function() {
   equal(false, SIMD.Bool64x2.extractLane(o, 1));
 });
 
-test('bool64x2 not', function() {
+test('Bool64x2 not', function() {
   var m = SIMD.Bool64x2(true, false);
   var o = SIMD.Bool64x2.not(m);
   equal(false, SIMD.Bool64x2.extractLane(o, 0));
   equal(true, SIMD.Bool64x2.extractLane(o, 1));
 });
 
-test('bool64x2 comparisons', function() {
+test('Bool64x2 comparisons', function() {
   var m = SIMD.Bool64x2(true, true);
   var n = SIMD.Bool64x2(false, true);
   var cmp;
@@ -338,7 +338,7 @@ test('bool64x2 comparisons', function() {
   equal(false, SIMD.Bool64x2.extractLane(cmp, 1));
 });
 
-test('bool64x2 select', function() {
+test('Bool64x2 select', function() {
   var m = SIMD.Bool64x2(true, false);
   var t = SIMD.Bool64x2(true, true);
   var f = SIMD.Bool64x2(false, false);
