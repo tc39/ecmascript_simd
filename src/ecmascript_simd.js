@@ -262,7 +262,7 @@ function restoreInt8x16() {
 
 if (typeof SIMD.Bool64x2 === "undefined") {
   /**
-    * Construct a new instance of bool64x2 number.
+    * Construct a new instance of Bool64x2 number.
     * @constructor
     */
   SIMD.Bool64x2 = function(x, y) {
@@ -277,13 +277,13 @@ if (typeof SIMD.Bool64x2 === "undefined") {
 
 if (typeof SIMD.Bool64x2.check === "undefined") {
   /**
-    * Check whether the argument is a bool64x2.
-    * @param {bool64x2} v An instance of bool64x2.
-    * @return {bool64x2} The bool64x2 instance.
+    * Check whether the argument is a Bool64x2.
+    * @param {Bool64x2} v An instance of Bool64x2.
+    * @return {Bool64x2} The Bool64x2 instance.
     */
   SIMD.Bool64x2.check = function(v) {
     if (!(v instanceof SIMD.Bool64x2)) {
-      throw new TypeError("argument is not a bool64x2.");
+      throw new TypeError("argument is not a Bool64x2.");
     }
     return v;
   }
@@ -291,7 +291,7 @@ if (typeof SIMD.Bool64x2.check === "undefined") {
 
 if (typeof SIMD.Bool64x2.splat === "undefined") {
   /**
-    * Construct a new instance of bool64x2 with the same value
+    * Construct a new instance of Bool64x2 with the same value
     * in all lanes.
     * @param {double} value used for all lanes.
     * @constructor
@@ -303,7 +303,7 @@ if (typeof SIMD.Bool64x2.splat === "undefined") {
 
 if (typeof SIMD.Bool64x2.extractLane === "undefined") {
   /**
-    * @param {bool64x2} v An instance of bool64x2.
+    * @param {Bool64x2} v An instance of Bool64x2.
     * @param {integer} i Index in concatenation of v for lane i
     * @return {Boolean} The value in lane i of v.
     */
@@ -319,17 +319,17 @@ if (typeof SIMD.Bool64x2.extractLane === "undefined") {
 
 if (typeof SIMD.Bool64x2.replaceLane === "undefined") {
   /**
-    * @param {bool64x2} v An instance of bool64x2.
+    * @param {Bool64x2} v An instance of Bool64x2.
     * @param {integer} i Index in concatenation of v for lane i
     * @param {double} value used for lane i.
-    * @return {bool64x2} New instance of bool64x2 with the values in v and
+    * @return {Bool64x2} New instance of Bool64x2 with the values in v and
     * lane i replaced with {s}.
     */
   SIMD.Bool64x2.replaceLane = function(v, i, s) {
     v = SIMD.Bool64x2.check(v);
     check2(i);
     // Other replaceLane implementations do the replacement in memory, but
-    // this is awkward for bool64x2 without something like Int64Array.
+    // this is awkward for Bool64x2 without something like Int64Array.
     return i == 0 ?
            SIMD.Bool64x2(s, SIMD.Bool64x2.extractLane(v, 1)) :
            SIMD.Bool64x2(SIMD.Bool64x2.extractLane(v, 0), s);
@@ -339,7 +339,7 @@ if (typeof SIMD.Bool64x2.replaceLane === "undefined") {
 if (typeof SIMD.Bool64x2.allTrue === "undefined") {
   /**
     * Check if all 2 lanes hold a true value
-    * @param {bool64x2} v An instance of bool64x2.
+    * @param {Bool64x2} v An instance of Bool64x2.
     * @return {Boolean} All 2 lanes hold a true value
     */
   SIMD.Bool64x2.allTrue = function(v) {
@@ -352,7 +352,7 @@ if (typeof SIMD.Bool64x2.allTrue === "undefined") {
 if (typeof SIMD.Bool64x2.anyTrue === "undefined") {
   /**
     * Check if any of the 2 lanes hold a true value
-    * @param {bool64x2} v An instance of bool64x2.
+    * @param {Bool64x2} v An instance of Bool64x2.
     * @return {Boolean} Any of the 2 lanes holds a true value
     */
   SIMD.Bool64x2.anyTrue = function(v) {
@@ -364,9 +364,9 @@ if (typeof SIMD.Bool64x2.anyTrue === "undefined") {
 
 if (typeof SIMD.Bool64x2.and === "undefined") {
   /**
-    * @param {bool64x2} a An instance of bool64x2.
-    * @param {bool64x2} b An instance of bool64x2.
-    * @return {bool64x2} New instance of bool64x2 with values of a & b.
+    * @param {Bool64x2} a An instance of Bool64x2.
+    * @param {Bool64x2} b An instance of Bool64x2.
+    * @return {Bool64x2} New instance of Bool64x2 with values of a & b.
     */
   SIMD.Bool64x2.and = function(a, b) {
     a = SIMD.Bool64x2.check(a);
@@ -378,9 +378,9 @@ if (typeof SIMD.Bool64x2.and === "undefined") {
 
 if (typeof SIMD.Bool64x2.or === "undefined") {
   /**
-    * @param {bool64x2} a An instance of bool64x2.
-    * @param {bool64x2} b An instance of bool64x2.
-    * @return {bool64x2} New instance of bool64x2 with values of a | b.
+    * @param {Bool64x2} a An instance of Bool64x2.
+    * @param {Bool64x2} b An instance of Bool64x2.
+    * @return {Bool64x2} New instance of Bool64x2 with values of a | b.
     */
   SIMD.Bool64x2.or = function(a, b) {
     a = SIMD.Bool64x2.check(a);
@@ -392,9 +392,9 @@ if (typeof SIMD.Bool64x2.or === "undefined") {
 
 if (typeof SIMD.Bool64x2.xor === "undefined") {
   /**
-    * @param {bool64x2} a An instance of bool64x2.
-    * @param {bool64x2} b An instance of bool64x2.
-    * @return {bool64x2} New instance of bool64x2 with values of a ^ b.
+    * @param {Bool64x2} a An instance of Bool64x2.
+    * @param {Bool64x2} b An instance of Bool64x2.
+    * @return {Bool64x2} New instance of Bool64x2 with values of a ^ b.
     */
   SIMD.Bool64x2.xor = function(a, b) {
     a = SIMD.Bool64x2.check(a);
@@ -406,8 +406,8 @@ if (typeof SIMD.Bool64x2.xor === "undefined") {
 
 if (typeof SIMD.Bool64x2.not === "undefined") {
   /**
-    * @param {bool64x2} a An instance of bool64x2.
-    * @return {bool64x2} New instance of bool64x2 with values of !a
+    * @param {Bool64x2} a An instance of Bool64x2.
+    * @return {Bool64x2} New instance of Bool64x2 with values of !a
     */
   SIMD.Bool64x2.not = function(a) {
     a = SIMD.Bool64x2.check(a);
@@ -418,9 +418,9 @@ if (typeof SIMD.Bool64x2.not === "undefined") {
 
 if (typeof SIMD.Bool64x2.equal === "undefined") {
   /**
-    * @param {bool64x2} a An instance of bool64x2.
-    * @param {bool64x2} b An instance of bool64x2.
-    * @return {bool64x2} true or false in each lane depending on
+    * @param {Bool64x2} a An instance of Bool64x2.
+    * @param {Bool64x2} b An instance of Bool64x2.
+    * @return {Bool64x2} true or false in each lane depending on
     * the result of a == b.
     */
   SIMD.Bool64x2.equal = function(a, b) {
@@ -433,9 +433,9 @@ if (typeof SIMD.Bool64x2.equal === "undefined") {
 
 if (typeof SIMD.Bool64x2.notEqual === "undefined") {
   /**
-    * @param {bool64x2} a An instance of bool64x2.
-    * @param {bool64x2} b An instance of bool64x2.
-    * @return {bool64x2} true or false in each lane depending on
+    * @param {Bool64x2} a An instance of Bool64x2.
+    * @param {Bool64x2} b An instance of Bool64x2.
+    * @return {Bool64x2} true or false in each lane depending on
     * the result of a != b.
     */
   SIMD.Bool64x2.notEqual = function(a, b) {
@@ -448,12 +448,12 @@ if (typeof SIMD.Bool64x2.notEqual === "undefined") {
 
 if (typeof SIMD.Bool64x2.select === "undefined") {
   /**
-    * @param {bool64x2} mask Selector mask. An instance of bool64x2
-    * @param {bool64x2} trueValue Pick lane from here if corresponding
+    * @param {Bool64x2} mask Selector mask. An instance of Bool64x2
+    * @param {Bool64x2} trueValue Pick lane from here if corresponding
     * selector lane is 1
-    * @param {bool64x2} falseValue Pick lane from here if corresponding
+    * @param {Bool64x2} falseValue Pick lane from here if corresponding
     * selector lane is 0
-    * @return {bool64x2} Mix of lanes from trueValue or falseValue as
+    * @return {Bool64x2} Mix of lanes from trueValue or falseValue as
     * indicated
     */
   SIMD.Bool64x2.select = function(mask, trueValue, falseValue) {
@@ -3166,7 +3166,7 @@ if (typeof SIMD.Float64x2.lessThan === "undefined") {
   /**
     * @param {Float64x2} t An instance of Float64x2.
     * @param {Float64x2} other An instance of Float64x2.
-    * @return {bool64x2} true or false in each lane depending on
+    * @return {Bool64x2} true or false in each lane depending on
     * the result of t < other.
     */
   SIMD.Float64x2.lessThan = function(t, other) {
@@ -3184,7 +3184,7 @@ if (typeof SIMD.Float64x2.lessThanOrEqual === "undefined") {
   /**
     * @param {Float64x2} t An instance of Float64x2.
     * @param {Float64x2} other An instance of Float64x2.
-    * @return {bool64x2} true or false in each lane depending on
+    * @return {Bool64x2} true or false in each lane depending on
     * the result of t <= other.
     */
   SIMD.Float64x2.lessThanOrEqual = function(t, other) {
@@ -3202,7 +3202,7 @@ if (typeof SIMD.Float64x2.equal === "undefined") {
   /**
     * @param {Float64x2} t An instance of Float64x2.
     * @param {Float64x2} other An instance of Float64x2.
-    * @return {bool64x2} true or false in each lane depending on
+    * @return {Bool64x2} true or false in each lane depending on
     * the result of t == other.
     */
   SIMD.Float64x2.equal = function(t, other) {
@@ -3220,7 +3220,7 @@ if (typeof SIMD.Float64x2.notEqual === "undefined") {
   /**
     * @param {Float64x2} t An instance of Float64x2.
     * @param {Float64x2} other An instance of Float64x2.
-    * @return {bool64x2} true or false in each lane depending on
+    * @return {Bool64x2} true or false in each lane depending on
     * the result of t != other.
     */
   SIMD.Float64x2.notEqual = function(t, other) {
@@ -3238,7 +3238,7 @@ if (typeof SIMD.Float64x2.greaterThanOrEqual === "undefined") {
   /**
     * @param {Float64x2} t An instance of Float64x2.
     * @param {Float64x2} other An instance of Float64x2.
-    * @return {bool64x2} true or false in each lane depending on
+    * @return {Bool64x2} true or false in each lane depending on
     * the result of t >= other.
     */
   SIMD.Float64x2.greaterThanOrEqual = function(t, other) {
@@ -3256,7 +3256,7 @@ if (typeof SIMD.Float64x2.greaterThan === "undefined") {
   /**
     * @param {Float64x2} t An instance of Float64x2.
     * @param {Float64x2} other An instance of Float64x2.
-    * @return {bool64x2} true or false in each lane depending on
+    * @return {Bool64x2} true or false in each lane depending on
     * the result of t > other.
     */
   SIMD.Float64x2.greaterThan = function(t, other) {
@@ -3272,7 +3272,7 @@ if (typeof SIMD.Float64x2.greaterThan === "undefined") {
 
 if (typeof SIMD.Float64x2.select === "undefined") {
   /**
-    * @param {bool64x2} t Selector mask. An instance of bool64x2
+    * @param {Bool64x2} t Selector mask. An instance of Bool64x2
     * @param {Float64x2} trueValue Pick lane from here if corresponding
     * selector lane is true
     * @param {Float64x2} falseValue Pick lane from here if corresponding
