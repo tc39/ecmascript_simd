@@ -204,7 +204,7 @@ test('Int16x8 operators', function() {
     equal(SIMD.Int16x8(0, 1, 2, 3, 4, 5, 6, 7) ? 1 : 2, 1);
 });
 
-test('bool64x2 constructor', function() {
+test('Bool64x2 constructor', function() {
   equal('function', typeof SIMD.Bool64x2);
   var m = SIMD.Bool64x2(false, true);
   equal(false, SIMD.Bool64x2.extractLane(m, 0));
@@ -215,7 +215,7 @@ test('bool64x2 constructor', function() {
   throws(function() { SIMD.Bool8x16.check(m); });
 });
 
-test('bool64x2 splat constructor', function() {
+test('Bool64x2 splat constructor', function() {
   equal('function', typeof SIMD.Bool64x2.splat);
   var m = SIMD.Bool64x2.splat(true);
   equal(true, SIMD.Bool64x2.extractLane(m, 0));
@@ -225,13 +225,13 @@ test('bool64x2 splat constructor', function() {
   equal(false, SIMD.Bool64x2.extractLane(m, 1));
 });
 
-test('bool64x2 scalar getters', function() {
+test('Bool64x2 scalar getters', function() {
   var m = SIMD.Bool64x2(true, false);
   equal(true, SIMD.Bool64x2.extractLane(m, 0));
   equal(false, SIMD.Bool64x2.extractLane(m, 1));
 });
 
-test('bool64x2 replaceLane', function() {
+test('Bool64x2 replaceLane', function() {
   var a = SIMD.Bool64x2(false, false);
   var c = SIMD.Bool64x2.replaceLane(a, 0, true);
   equal(true, SIMD.Bool64x2.extractLane(c, 0));
@@ -256,7 +256,7 @@ test('bool64x2 replaceLane', function() {
   testIndexCheck(2);
 });
 
-test('bool64x2 allTrue', function () {
+test('Bool64x2 allTrue', function () {
   var v00 = SIMD.Bool64x2(false, false);
   var v01 = SIMD.Bool64x2(false, true);
   var v10 = SIMD.Bool64x2(true, false);
@@ -267,7 +267,7 @@ test('bool64x2 allTrue', function () {
   equal(SIMD.Bool64x2.allTrue(v11), true);
 });
 
-test('bool64x2 anyTrue', function () {
+test('Bool64x2 anyTrue', function () {
   var v00 = SIMD.Bool64x2(false, false);
   var v01 = SIMD.Bool64x2(false, true);
   var v10 = SIMD.Bool64x2(true, false);
@@ -278,7 +278,7 @@ test('bool64x2 anyTrue', function () {
   equal(SIMD.Bool64x2.anyTrue(v11), true);
 });
 
-test('bool64x2 and', function() {
+test('Bool64x2 and', function() {
   var m = SIMD.Bool64x2(true, true);
   var n = SIMD.Bool64x2(true, false);
   var o = SIMD.Bool64x2.and(m,n);
@@ -291,7 +291,7 @@ test('bool64x2 and', function() {
   equal(false, SIMD.Bool64x2.extractLane(o, 1));
 });
 
-test('bool64x2 or', function() {
+test('Bool64x2 or', function() {
   var m = SIMD.Bool64x2(true, true);
   var n = SIMD.Bool64x2(true, false);
   var o = SIMD.Bool64x2.or(m,n);
@@ -304,7 +304,7 @@ test('bool64x2 or', function() {
   equal(false, SIMD.Bool64x2.extractLane(o, 1));
 });
 
-test('bool64x2 xor', function() {
+test('Bool64x2 xor', function() {
   var m = SIMD.Bool64x2(true, true);
   var n = SIMD.Bool64x2(true, false);
   var o = SIMD.Bool64x2.xor(m,n);
@@ -317,14 +317,14 @@ test('bool64x2 xor', function() {
   equal(false, SIMD.Bool64x2.extractLane(o, 1));
 });
 
-test('bool64x2 not', function() {
+test('Bool64x2 not', function() {
   var m = SIMD.Bool64x2(true, false);
   var o = SIMD.Bool64x2.not(m);
   equal(false, SIMD.Bool64x2.extractLane(o, 0));
   equal(true, SIMD.Bool64x2.extractLane(o, 1));
 });
 
-test('bool64x2 comparisons', function() {
+test('Bool64x2 comparisons', function() {
   var m = SIMD.Bool64x2(true, true);
   var n = SIMD.Bool64x2(false, true);
   var cmp;
@@ -338,7 +338,7 @@ test('bool64x2 comparisons', function() {
   equal(false, SIMD.Bool64x2.extractLane(cmp, 1));
 });
 
-test('bool64x2 select', function() {
+test('Bool64x2 select', function() {
   var m = SIMD.Bool64x2(true, false);
   var t = SIMD.Bool64x2(true, true);
   var f = SIMD.Bool64x2(false, false);
@@ -3489,6 +3489,20 @@ test('Int32x4 mul', function() {
   equal(0x0, SIMD.Int32x4.extractLane(c, 3));
 });
 
+test('Int32x4 unsignedHorizontalSum', function() {
+  var a = SIMD.Int32x4.splat(0);
+  var b = SIMD.Int32x4.unsignedHorizontalSum(a);
+  equal(0, b);
+
+  var a = SIMD.Int32x4.splat(-1);
+  var b = SIMD.Int32x4.unsignedHorizontalSum(a);
+  equal(17179869180, b);
+
+  a = SIMD.Int32x4(0xFF, 0, 0xFF, 1);
+  b = SIMD.Int32x4.unsignedHorizontalSum(a);
+  equal(511, b);
+});
+
 test('Int32x4 comparisons', function() {
   var m = SIMD.Int32x4(1000, 2000, 100, 1);
   var n = SIMD.Int32x4(-2000, 2000, 1, 100);
@@ -4399,6 +4413,27 @@ test('Int16x8 neg', function() {
   equal(0, SIMD.Int16x8.extractLane(n, 7));
 });
 
+test('Int16x8 scalar getters', function () {
+  var a = SIMD.Int16x8(0, 1, -1, -2, 65535, 255, 65536, -500);
+  equal(0, SIMD.Int16x8.extractLane(a, 0));
+  equal(1, SIMD.Int16x8.extractLane(a, 1));
+  equal(-1, SIMD.Int16x8.extractLane(a, 2));
+  equal(-2, SIMD.Int16x8.extractLane(a, 3));
+  equal(-1, SIMD.Int16x8.extractLane(a, 4));
+  equal(255, SIMD.Int16x8.extractLane(a, 5));
+  equal(0, SIMD.Int16x8.extractLane(a, 6));
+  equal(-500, SIMD.Int16x8.extractLane(a, 7));
+
+  equal(0, SIMD.Int16x8.unsignedExtractLane(a, 0));
+  equal(1, SIMD.Int16x8.unsignedExtractLane(a, 1));
+  equal(65535, SIMD.Int16x8.unsignedExtractLane(a, 2));
+  equal(65534, SIMD.Int16x8.unsignedExtractLane(a, 3));
+  equal(65535, SIMD.Int16x8.unsignedExtractLane(a, 4));
+  equal(255, SIMD.Int16x8.unsignedExtractLane(a, 5));
+  equal(0, SIMD.Int16x8.unsignedExtractLane(a, 6));
+  equal(65036, SIMD.Int16x8.unsignedExtractLane(a, 7));
+});
+
 test('Int16x8 add', function() {
   var a = SIMD.Int16x8(0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0x7fff, 0xffff, 0x0, 0x0);
   var b = SIMD.Int16x8(0x0, 0x1, 0xFFFF, 0xFFFF, 0x0, 0x1, 0xFFFF, 0xFFFF);
@@ -4465,6 +4500,19 @@ test('Int16x8 addSaturate', function() {
   equal(9, SIMD.Int16x8.extractLane(e, 7));
 });
 
+test('Int16x8 unsignedAddSaturate', function() {
+  var a = SIMD.Int16x8(0, 1, 0x7fff, 0x8000, -1, 0x7ffe, 0x8001, 10);
+  var b = SIMD.Int16x8.splat(1);
+  var d = SIMD.Int16x8.unsignedAddSaturate(a, b);
+  equal(1, SIMD.Int16x8.unsignedExtractLane(d, 0));
+  equal(2, SIMD.Int16x8.unsignedExtractLane(d, 1));
+  equal(0x8000, SIMD.Int16x8.unsignedExtractLane(d, 2));
+  equal(0x8001, SIMD.Int16x8.unsignedExtractLane(d, 3));
+  equal(0xffff, SIMD.Int16x8.unsignedExtractLane(d, 4));
+  equal(0x7fff, SIMD.Int16x8.unsignedExtractLane(d, 5));
+  equal(0x8002, SIMD.Int16x8.unsignedExtractLane(d, 6));
+});
+
 test('Int16x8 subSaturate', function() {
   var a = SIMD.Int16x8(0, 1, 0x7fff, 0x8000, -1, 0x7ffe, 0x8001, 10);
   var b = SIMD.Int16x8.splat(1);
@@ -4489,6 +4537,58 @@ test('Int16x8 subSaturate', function() {
   equal(11, SIMD.Int16x8.extractLane(e, 7));
 });
 
+test('Int16x8 unsignedSubSaturate', function() {
+  var a = SIMD.Int16x8(0, 1, 0x7fff, 0x8000, -1, 0x7ffe, 0x8001, 10);
+  var b = SIMD.Int16x8.splat(1);
+  var d = SIMD.Int16x8.unsignedSubSaturate(a, b);
+  equal(0, SIMD.Int16x8.unsignedExtractLane(d, 0));
+  equal(0, SIMD.Int16x8.unsignedExtractLane(d, 1));
+  equal(0x7ffe, SIMD.Int16x8.unsignedExtractLane(d, 2));
+  equal(0x7fff, SIMD.Int16x8.unsignedExtractLane(d, 3));
+  equal(0xfffe, SIMD.Int16x8.unsignedExtractLane(d, 4));
+  equal(0x7ffd, SIMD.Int16x8.unsignedExtractLane(d, 5));
+  equal(0x8000, SIMD.Int16x8.unsignedExtractLane(d, 6));
+  equal(9, SIMD.Int16x8.unsignedExtractLane(d, 7));
+});
+
+test('Int16x8 unsignedAbsoluteDifference', function() {
+  var a = SIMD.Int16x8(0xFF, 0, 0xFF, 1, 2, 1, -1, 3);
+  var b = SIMD.Int16x8(0x0, 0xFF, 1, 0xFF, 1, 2, 3, -1);
+  var c = SIMD.Int16x8.unsignedAbsoluteDifference(a, b);
+  equal(0xff, SIMD.Int16x8.unsignedExtractLane(c, 0));
+  equal(0xff, SIMD.Int16x8.unsignedExtractLane(c, 1));
+  equal(0xfe, SIMD.Int16x8.unsignedExtractLane(c, 2));
+  equal(0xfe, SIMD.Int16x8.unsignedExtractLane(c, 3));
+  equal(1, SIMD.Int16x8.unsignedExtractLane(c, 4));
+  equal(1, SIMD.Int16x8.unsignedExtractLane(c, 5));
+  equal(0xfffc, SIMD.Int16x8.unsignedExtractLane(c, 6));
+  equal(0xfffc, SIMD.Int16x8.unsignedExtractLane(c, 7));
+});
+
+test('Int16x8 widenedUnsignedAbsoluteDifference', function() {
+  var a = SIMD.Int16x8(0xFF, 0, 0xFF, 1, 2, 1, -1, 3);
+  var b = SIMD.Int16x8(0x0, 0xFF, 1, 0xFF, 1, 2, 3, -1);
+  var c = SIMD.Int16x8.widenedUnsignedAbsoluteDifference(a, b);
+  equal(255, SIMD.Int32x4.extractLane(c, 0));
+  equal(255, SIMD.Int32x4.extractLane(c, 1));
+  equal(254, SIMD.Int32x4.extractLane(c, 2));
+  equal(254, SIMD.Int32x4.extractLane(c, 3));
+});
+
+test('Int16x8 unsignedHorizontalSum', function() {
+  var a = SIMD.Int16x8.splat(0);
+  var b = SIMD.Int16x8.unsignedHorizontalSum(a);
+  equal(0, b);
+
+  var a = SIMD.Int16x8.splat(-1);
+  var b = SIMD.Int16x8.unsignedHorizontalSum(a);
+  equal(524280, b);
+
+  a = SIMD.Int16x8(0xFF, 0, 0xFF, 1, 2, 1, -1, 3);
+  b = SIMD.Int16x8.unsignedHorizontalSum(a);
+  equal(66052, b);
+});
+
 test('Int16x8 comparisons', function() {
   var m = SIMD.Int16x8(1000, 2000, 100, 1, -1000, -2000, -100, 1);
   var n = SIMD.Int16x8(-2000, 2000, 1, 100, 2000, -2000, -1, -100);
@@ -4503,6 +4603,16 @@ test('Int16x8 comparisons', function() {
   equal(true, SIMD.Bool16x8.extractLane(cmp, 6));
   equal(false, SIMD.Bool16x8.extractLane(cmp, 7));
 
+  cmp = SIMD.Int16x8.unsignedLessThan(m, n);
+  equal(true, SIMD.Bool16x8.extractLane(cmp, 0));
+  equal(false, SIMD.Bool16x8.extractLane(cmp, 1));
+  equal(false, SIMD.Bool16x8.extractLane(cmp, 2));
+  equal(true, SIMD.Bool16x8.extractLane(cmp, 3));
+  equal(false, SIMD.Bool16x8.extractLane(cmp, 4));
+  equal(false, SIMD.Bool16x8.extractLane(cmp, 5));
+  equal(true, SIMD.Bool16x8.extractLane(cmp, 6));
+  equal(true, SIMD.Bool16x8.extractLane(cmp, 7));
+
   cmp = SIMD.Int16x8.lessThanOrEqual(m, n);
   equal(false, SIMD.Bool16x8.extractLane(cmp, 0));
   equal(true, SIMD.Bool16x8.extractLane(cmp, 1));
@@ -4512,6 +4622,16 @@ test('Int16x8 comparisons', function() {
   equal(true, SIMD.Bool16x8.extractLane(cmp, 5));
   equal(true, SIMD.Bool16x8.extractLane(cmp, 6));
   equal(false, SIMD.Bool16x8.extractLane(cmp, 7));
+
+  cmp = SIMD.Int16x8.unsignedLessThanOrEqual(m, n);
+  equal(true, SIMD.Bool16x8.extractLane(cmp, 0));
+  equal(true, SIMD.Bool16x8.extractLane(cmp, 1));
+  equal(false, SIMD.Bool16x8.extractLane(cmp, 2));
+  equal(true, SIMD.Bool16x8.extractLane(cmp, 3));
+  equal(false, SIMD.Bool16x8.extractLane(cmp, 4));
+  equal(true, SIMD.Bool16x8.extractLane(cmp, 5));
+  equal(true, SIMD.Bool16x8.extractLane(cmp, 6));
+  equal(true, SIMD.Bool16x8.extractLane(cmp, 7));
 
   cmp = SIMD.Int16x8.equal(m, n);
   equal(false, SIMD.Bool16x8.extractLane(cmp, 0));
@@ -4543,6 +4663,16 @@ test('Int16x8 comparisons', function() {
   equal(false, SIMD.Bool16x8.extractLane(cmp, 6));
   equal(true, SIMD.Bool16x8.extractLane(cmp, 7));
 
+  cmp = SIMD.Int16x8.unsignedGreaterThan(m, n);
+  equal(false, SIMD.Bool16x8.extractLane(cmp, 0));
+  equal(false, SIMD.Bool16x8.extractLane(cmp, 1));
+  equal(true, SIMD.Bool16x8.extractLane(cmp, 2));
+  equal(false, SIMD.Bool16x8.extractLane(cmp, 3));
+  equal(true, SIMD.Bool16x8.extractLane(cmp, 4));
+  equal(false, SIMD.Bool16x8.extractLane(cmp, 5));
+  equal(false, SIMD.Bool16x8.extractLane(cmp, 6));
+  equal(false, SIMD.Bool16x8.extractLane(cmp, 7));
+
   cmp = SIMD.Int16x8.greaterThanOrEqual(m, n);
   equal(true, SIMD.Bool16x8.extractLane(cmp, 0));
   equal(true, SIMD.Bool16x8.extractLane(cmp, 1));
@@ -4552,6 +4682,16 @@ test('Int16x8 comparisons', function() {
   equal(true, SIMD.Bool16x8.extractLane(cmp, 5));
   equal(false, SIMD.Bool16x8.extractLane(cmp, 6));
   equal(true, SIMD.Bool16x8.extractLane(cmp, 7));
+
+  cmp = SIMD.Int16x8.unsignedGreaterThanOrEqual(m, n);
+  equal(false, SIMD.Bool16x8.extractLane(cmp, 0));
+  equal(true, SIMD.Bool16x8.extractLane(cmp, 1));
+  equal(true, SIMD.Bool16x8.extractLane(cmp, 2));
+  equal(false, SIMD.Bool16x8.extractLane(cmp, 3));
+  equal(true, SIMD.Bool16x8.extractLane(cmp, 4));
+  equal(true, SIMD.Bool16x8.extractLane(cmp, 5));
+  equal(false, SIMD.Bool16x8.extractLane(cmp, 6));
+  equal(false, SIMD.Bool16x8.extractLane(cmp, 7));
 });
 
 test('Int16x8 shiftLeftByScalar', function() {
@@ -5054,6 +5194,44 @@ test('Int8x16 neg', function() {
   equal(0, SIMD.Int8x16.extractLane(n, 15));
 });
 
+test('Int8x16 scalar getters', function () {
+  var a = SIMD.Int8x16(0, 1, -1, -2, 65535, 255, 65536, -500,
+                       2, -3, 4, -5, 6, -7, 8, -9);
+  equal(0, SIMD.Int8x16.extractLane(a, 0));
+  equal(1, SIMD.Int8x16.extractLane(a, 1));
+  equal(-1, SIMD.Int8x16.extractLane(a, 2));
+  equal(-2, SIMD.Int8x16.extractLane(a, 3));
+  equal(-1, SIMD.Int8x16.extractLane(a, 4));
+  equal(-1, SIMD.Int8x16.extractLane(a, 5));
+  equal(0, SIMD.Int8x16.extractLane(a, 6));
+  equal(12, SIMD.Int8x16.extractLane(a, 7));
+  equal(2, SIMD.Int8x16.extractLane(a, 8));
+  equal(-3, SIMD.Int8x16.extractLane(a, 9));
+  equal(4, SIMD.Int8x16.extractLane(a, 10));
+  equal(-5, SIMD.Int8x16.extractLane(a, 11));
+  equal(6, SIMD.Int8x16.extractLane(a, 12));
+  equal(-7, SIMD.Int8x16.extractLane(a, 13));
+  equal(8, SIMD.Int8x16.extractLane(a, 14));
+  equal(-9, SIMD.Int8x16.extractLane(a, 15));
+
+  equal(0, SIMD.Int8x16.unsignedExtractLane(a, 0));
+  equal(1, SIMD.Int8x16.unsignedExtractLane(a, 1));
+  equal(255, SIMD.Int8x16.unsignedExtractLane(a, 2));
+  equal(254, SIMD.Int8x16.unsignedExtractLane(a, 3));
+  equal(255, SIMD.Int8x16.unsignedExtractLane(a, 4));
+  equal(255, SIMD.Int8x16.unsignedExtractLane(a, 5));
+  equal(0, SIMD.Int8x16.unsignedExtractLane(a, 6));
+  equal(12, SIMD.Int8x16.unsignedExtractLane(a, 7));
+  equal(2, SIMD.Int8x16.unsignedExtractLane(a, 8));
+  equal(253, SIMD.Int8x16.unsignedExtractLane(a, 9));
+  equal(4, SIMD.Int8x16.unsignedExtractLane(a, 10));
+  equal(251, SIMD.Int8x16.unsignedExtractLane(a, 11));
+  equal(6, SIMD.Int8x16.unsignedExtractLane(a, 12));
+  equal(249, SIMD.Int8x16.unsignedExtractLane(a, 13));
+  equal(8, SIMD.Int8x16.unsignedExtractLane(a, 14));
+  equal(247, SIMD.Int8x16.unsignedExtractLane(a, 15));
+});
+
 test('Int8x16 add', function () {
   var a = SIMD.Int8x16(0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x7f, 0xff, 0xff, 0xff, 0x0, 0x0, 0x0, 0x0);
   var b = SIMD.Int8x16(0x0, 0x0, 0x0, 0x1, 0xFF, 0xFF, 0xFF, 0xFF, 0x0, 0x0, 0x0, 0x1, 0xFF, 0xFF, 0xFF, 0xFF);
@@ -5160,6 +5338,28 @@ test('Int8x16 addSaturate', function() {
   equal(17, SIMD.Int8x16.extractLane(e, 15));
 });
 
+test('Int8x16 unsignedAddSaturate', function() {
+  var a = SIMD.Int8x16(0, 1, 0x7f, 0x80, -1, 0x7e, 0x81, 10, 11, 12, 13, 14, 15, 16, 17, 18);
+  var b = SIMD.Int8x16.splat(1);
+  var d = SIMD.Int8x16.unsignedAddSaturate(a, b);
+  equal(1, SIMD.Int8x16.unsignedExtractLane(d, 0));
+  equal(2, SIMD.Int8x16.unsignedExtractLane(d, 1));
+  equal(0x80, SIMD.Int8x16.unsignedExtractLane(d, 2));
+  equal(0x81, SIMD.Int8x16.unsignedExtractLane(d, 3));
+  equal(0xff, SIMD.Int8x16.unsignedExtractLane(d, 4));
+  equal(0x7f, SIMD.Int8x16.unsignedExtractLane(d, 5));
+  equal(0x82, SIMD.Int8x16.unsignedExtractLane(d, 6));
+  equal(11, SIMD.Int8x16.unsignedExtractLane(d, 7));
+  equal(12, SIMD.Int8x16.unsignedExtractLane(d, 8));
+  equal(13, SIMD.Int8x16.unsignedExtractLane(d, 9));
+  equal(14, SIMD.Int8x16.unsignedExtractLane(d, 10));
+  equal(15, SIMD.Int8x16.unsignedExtractLane(d, 11));
+  equal(16, SIMD.Int8x16.unsignedExtractLane(d, 12));
+  equal(17, SIMD.Int8x16.unsignedExtractLane(d, 13));
+  equal(18, SIMD.Int8x16.unsignedExtractLane(d, 14));
+  equal(19, SIMD.Int8x16.unsignedExtractLane(d, 15));
+});
+
 test('Int8x16 subSaturate', function() {
   var a = SIMD.Int8x16(0, 1, 0x7f, 0x80, -1, 0x7e, 0x81, 10, 11, 12, 13, 14, 15, 16, 17, 18);
   var b = SIMD.Int8x16.splat(1);
@@ -5200,11 +5400,76 @@ test('Int8x16 subSaturate', function() {
   equal(19, SIMD.Int8x16.extractLane(e, 15));
 });
 
-test('Int8x16 sumOfAbsoluteDifferences', function() {
-  var a = SIMD.Int8x16(0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x7f, 0xff, 0xff, 0xff, 0x0, 0x0, 0x0, 0x0);
-  var b = SIMD.Int8x16(0x0, 0x0, 0x0, 0x1, 0xFF, 0xFF, 0xFF, 0xFF, 0x0, 0x0, 0x0, 0x1, 0xFF, 0xFF, 0xFF, 0xFF);
-  var c = SIMD.Int8x16.sumOfAbsoluteDifferences(a, b);
-  equal(c, 140);
+test('Int8x16 unsignedSubSaturate', function() {
+  var a = SIMD.Int8x16(0, 1, 0x7f, 0x80, -1, 0x7e, 0x81, 10, 11, 12, 13, 14, 15, 16, 17, 18);
+  var b = SIMD.Int8x16.splat(1);
+  var d = SIMD.Int8x16.unsignedSubSaturate(a, b);
+  equal(0, SIMD.Int8x16.unsignedExtractLane(d, 0));
+  equal(0, SIMD.Int8x16.unsignedExtractLane(d, 1));
+  equal(0x7e, SIMD.Int8x16.unsignedExtractLane(d, 2));
+  equal(0x7f, SIMD.Int8x16.unsignedExtractLane(d, 3));
+  equal(0xfe, SIMD.Int8x16.unsignedExtractLane(d, 4));
+  equal(0x7d, SIMD.Int8x16.unsignedExtractLane(d, 5));
+  equal(0x80, SIMD.Int8x16.unsignedExtractLane(d, 6));
+  equal(9, SIMD.Int8x16.unsignedExtractLane(d, 7));
+  equal(10, SIMD.Int8x16.unsignedExtractLane(d, 8));
+  equal(11, SIMD.Int8x16.unsignedExtractLane(d, 9));
+  equal(12, SIMD.Int8x16.unsignedExtractLane(d, 10));
+  equal(13, SIMD.Int8x16.unsignedExtractLane(d, 11));
+  equal(14, SIMD.Int8x16.unsignedExtractLane(d, 12));
+  equal(15, SIMD.Int8x16.unsignedExtractLane(d, 13));
+  equal(16, SIMD.Int8x16.unsignedExtractLane(d, 14));
+  equal(17, SIMD.Int8x16.unsignedExtractLane(d, 15));
+});
+
+test('Int8x16 unsignedAbsoluteDifference', function() {
+  var a = SIMD.Int8x16(0xFF, 0, 0xFF, 1, 2, 1, -1, 3, 0x7f, 0, 0xf0, 0xe0, 10, 9, -10, 9);
+  var b = SIMD.Int8x16(0x0, 0xFF, 1, 0xFF, 1, 2, 3, -1, 0, 0x7f, 0xe0, 0xf0, 9, 10, 9, -10);
+  var c = SIMD.Int8x16.unsignedAbsoluteDifference(a, b);
+  equal(255, SIMD.Int8x16.unsignedExtractLane(c, 0));
+  equal(255, SIMD.Int8x16.unsignedExtractLane(c, 1));
+  equal(254, SIMD.Int8x16.unsignedExtractLane(c, 2));
+  equal(254, SIMD.Int8x16.unsignedExtractLane(c, 3));
+  equal(1, SIMD.Int8x16.unsignedExtractLane(c, 4));
+  equal(1, SIMD.Int8x16.unsignedExtractLane(c, 5));
+  equal(252, SIMD.Int8x16.unsignedExtractLane(c, 6));
+  equal(252, SIMD.Int8x16.unsignedExtractLane(c, 7));
+  equal(127, SIMD.Int8x16.unsignedExtractLane(c, 8));
+  equal(127, SIMD.Int8x16.unsignedExtractLane(c, 9));
+  equal(16, SIMD.Int8x16.unsignedExtractLane(c, 10));
+  equal(16, SIMD.Int8x16.unsignedExtractLane(c, 11));
+  equal(1, SIMD.Int8x16.unsignedExtractLane(c, 12));
+  equal(1, SIMD.Int8x16.unsignedExtractLane(c, 13));
+  equal(237, SIMD.Int8x16.unsignedExtractLane(c, 14));
+  equal(237, SIMD.Int8x16.unsignedExtractLane(c, 15));
+});
+
+test('Int8x16 widenedUnsignedAbsoluteDifference', function() {
+  var a = SIMD.Int8x16(0xFF, 0, 0xFF, 1, 2, 1, -1, 3, 0x7f, 0, 0xf0, 0xe0, 10, 9, -10, 9);
+  var b = SIMD.Int8x16(0x0, 0xFF, 1, 0xFF, 1, 2, 3, -1, 0, 0x7f, 0xe0, 0xf0, 9, 10, 9, -10);
+  var c = SIMD.Int8x16.widenedUnsignedAbsoluteDifference(a, b);
+  equal(255, SIMD.Int16x8.extractLane(c, 0));
+  equal(255, SIMD.Int16x8.extractLane(c, 1));
+  equal(254, SIMD.Int16x8.extractLane(c, 2));
+  equal(254, SIMD.Int16x8.extractLane(c, 3));
+  equal(1, SIMD.Int16x8.extractLane(c, 4));
+  equal(1, SIMD.Int16x8.extractLane(c, 5));
+  equal(252, SIMD.Int16x8.extractLane(c, 6));
+  equal(252, SIMD.Int16x8.extractLane(c, 7));
+});
+
+test('Int8x16 unsignedHorizontalSum', function() {
+  var a = SIMD.Int8x16.splat(0);
+  var b = SIMD.Int8x16.unsignedHorizontalSum(a);
+  equal(0, b);
+
+  var a = SIMD.Int8x16.splat(-1);
+  var b = SIMD.Int8x16.unsignedHorizontalSum(a);
+  equal(4080, b);
+
+  a = SIMD.Int8x16(0xFF, 0, 0xFF, 1, 2, 1, -1, 3, 0x7f, 0, 0xf0, 0xe0, 10, 9, -10, 9);
+  b = SIMD.Int8x16.unsignedHorizontalSum(a);
+  equal(1637, b);
 });
 
 test('Int8x16 comparisons', function() {
@@ -5229,6 +5494,24 @@ test('Int8x16 comparisons', function() {
   equal(true, SIMD.Bool8x16.extractLane(cmp, 14));
   equal(false, SIMD.Bool8x16.extractLane(cmp, 15));
 
+  cmp = SIMD.Int8x16.unsignedLessThan(m, n);
+  equal(false, SIMD.Bool8x16.extractLane(cmp, 0));
+  equal(false, SIMD.Bool8x16.extractLane(cmp, 1));
+  equal(false, SIMD.Bool8x16.extractLane(cmp, 2));
+  equal(true, SIMD.Bool8x16.extractLane(cmp, 3));
+  equal(true, SIMD.Bool8x16.extractLane(cmp, 4));
+  equal(false, SIMD.Bool8x16.extractLane(cmp, 5));
+  equal(true, SIMD.Bool8x16.extractLane(cmp, 6));
+  equal(true, SIMD.Bool8x16.extractLane(cmp, 7));
+  equal(true, SIMD.Bool8x16.extractLane(cmp, 8));
+  equal(true, SIMD.Bool8x16.extractLane(cmp, 9));
+  equal(true, SIMD.Bool8x16.extractLane(cmp, 10));
+  equal(true, SIMD.Bool8x16.extractLane(cmp, 11));
+  equal(false, SIMD.Bool8x16.extractLane(cmp, 12));
+  equal(false, SIMD.Bool8x16.extractLane(cmp, 13));
+  equal(false, SIMD.Bool8x16.extractLane(cmp, 14));
+  equal(false, SIMD.Bool8x16.extractLane(cmp, 15));
+
   cmp = SIMD.Int8x16.lessThanOrEqual(m, n);
   equal(true, SIMD.Bool8x16.extractLane(cmp, 0));
   equal(true, SIMD.Bool8x16.extractLane(cmp, 1));
@@ -5245,6 +5528,24 @@ test('Int8x16 comparisons', function() {
   equal(true, SIMD.Bool8x16.extractLane(cmp, 12));
   equal(false, SIMD.Bool8x16.extractLane(cmp, 13));
   equal(true, SIMD.Bool8x16.extractLane(cmp, 14));
+  equal(false, SIMD.Bool8x16.extractLane(cmp, 15));
+
+  cmp = SIMD.Int8x16.unsignedLessThanOrEqual(m, n);
+  equal(false, SIMD.Bool8x16.extractLane(cmp, 0));
+  equal(true, SIMD.Bool8x16.extractLane(cmp, 1));
+  equal(false, SIMD.Bool8x16.extractLane(cmp, 2));
+  equal(true, SIMD.Bool8x16.extractLane(cmp, 3));
+  equal(true, SIMD.Bool8x16.extractLane(cmp, 4));
+  equal(true, SIMD.Bool8x16.extractLane(cmp, 5));
+  equal(true, SIMD.Bool8x16.extractLane(cmp, 6));
+  equal(true, SIMD.Bool8x16.extractLane(cmp, 7));
+  equal(true, SIMD.Bool8x16.extractLane(cmp, 8));
+  equal(true, SIMD.Bool8x16.extractLane(cmp, 9));
+  equal(true, SIMD.Bool8x16.extractLane(cmp, 10));
+  equal(true, SIMD.Bool8x16.extractLane(cmp, 11));
+  equal(false, SIMD.Bool8x16.extractLane(cmp, 12));
+  equal(false, SIMD.Bool8x16.extractLane(cmp, 13));
+  equal(false, SIMD.Bool8x16.extractLane(cmp, 14));
   equal(false, SIMD.Bool8x16.extractLane(cmp, 15));
 
   cmp = SIMD.Int8x16.equal(m, n);
@@ -5301,6 +5602,24 @@ test('Int8x16 comparisons', function() {
   equal(false, SIMD.Bool8x16.extractLane(cmp, 14));
   equal(true, SIMD.Bool8x16.extractLane(cmp, 15));
 
+  cmp = SIMD.Int8x16.unsignedGreaterThan(m, n);
+  equal(true, SIMD.Bool8x16.extractLane(cmp, 0));
+  equal(false, SIMD.Bool8x16.extractLane(cmp, 1));
+  equal(true, SIMD.Bool8x16.extractLane(cmp, 2));
+  equal(false, SIMD.Bool8x16.extractLane(cmp, 3));
+  equal(false, SIMD.Bool8x16.extractLane(cmp, 4));
+  equal(false, SIMD.Bool8x16.extractLane(cmp, 5));
+  equal(false, SIMD.Bool8x16.extractLane(cmp, 6));
+  equal(false, SIMD.Bool8x16.extractLane(cmp, 7));
+  equal(false, SIMD.Bool8x16.extractLane(cmp, 8));
+  equal(false, SIMD.Bool8x16.extractLane(cmp, 9));
+  equal(false, SIMD.Bool8x16.extractLane(cmp, 10));
+  equal(false, SIMD.Bool8x16.extractLane(cmp, 11));
+  equal(true, SIMD.Bool8x16.extractLane(cmp, 12));
+  equal(true, SIMD.Bool8x16.extractLane(cmp, 13));
+  equal(true, SIMD.Bool8x16.extractLane(cmp, 14));
+  equal(true, SIMD.Bool8x16.extractLane(cmp, 15));
+
   cmp = SIMD.Int8x16.greaterThanOrEqual(m, n);
   equal(false, SIMD.Bool8x16.extractLane(cmp, 0));
   equal(true, SIMD.Bool8x16.extractLane(cmp, 1));
@@ -5317,6 +5636,24 @@ test('Int8x16 comparisons', function() {
   equal(false, SIMD.Bool8x16.extractLane(cmp, 12));
   equal(true, SIMD.Bool8x16.extractLane(cmp, 13));
   equal(false, SIMD.Bool8x16.extractLane(cmp, 14));
+  equal(true, SIMD.Bool8x16.extractLane(cmp, 15));
+
+  cmp = SIMD.Int8x16.unsignedGreaterThanOrEqual(m, n);
+  equal(true, SIMD.Bool8x16.extractLane(cmp, 0));
+  equal(true, SIMD.Bool8x16.extractLane(cmp, 1));
+  equal(true, SIMD.Bool8x16.extractLane(cmp, 2));
+  equal(false, SIMD.Bool8x16.extractLane(cmp, 3));
+  equal(false, SIMD.Bool8x16.extractLane(cmp, 4));
+  equal(true, SIMD.Bool8x16.extractLane(cmp, 5));
+  equal(false, SIMD.Bool8x16.extractLane(cmp, 6));
+  equal(false, SIMD.Bool8x16.extractLane(cmp, 7));
+  equal(false, SIMD.Bool8x16.extractLane(cmp, 8));
+  equal(false, SIMD.Bool8x16.extractLane(cmp, 9));
+  equal(false, SIMD.Bool8x16.extractLane(cmp, 10));
+  equal(false, SIMD.Bool8x16.extractLane(cmp, 11));
+  equal(true, SIMD.Bool8x16.extractLane(cmp, 12));
+  equal(true, SIMD.Bool8x16.extractLane(cmp, 13));
+  equal(true, SIMD.Bool8x16.extractLane(cmp, 14));
   equal(true, SIMD.Bool8x16.extractLane(cmp, 15));
 });
 
