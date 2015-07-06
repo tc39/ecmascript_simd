@@ -2547,7 +2547,7 @@ if (typeof SIMD.Float32x4.swizzle === "undefined") {
 
 if (typeof SIMD.Float32x4.shuffle === "undefined") {
 
-  _f32x8 = new Float32Array(8);
+  var _f32x8 = new Float32Array(8);
 
   /**
     * @param {Float32x4} t1 An instance of Float32x4 to be shuffled.
