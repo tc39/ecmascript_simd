@@ -1,6 +1,0 @@
-name: ecmascript_simd_dart
-version: 1.0.0
-dependencies:
-  benchmark_harness: any
-  vector_math:
-    git: https://github.com/johnmccutchan/vector_math.git
