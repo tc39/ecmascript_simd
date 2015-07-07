@@ -509,16 +509,18 @@ This internal algorithm creates a new value of the type corresponding to the spe
 </emu-alg>
 </emu-clause>
 
-<emu-clause id="simd-extract-lane" aoid="SIMDExtractLane">
+<emu-clause id="simd-abstract-extract-lane" aoid="SIMDExtractLane">
 <h1>SIMDExtractLane( value, field )</h1>
 <emu-alg>
 1. Assert: Type(_value_) is a _SIMD_Type.
+1. If Type(_field_) is not Number, throw a TypeError
+1. If _field_ != ToInt32(_field_) or _field_ < 0 or _field_ >= _descriptor_.[[SIMDLength]], throw a RangeError.
 1. Return <var>value</var>.[[SIMDElements]][<var>field</var>]
 </emu-alg>
 <emu-note>While this single definition doesn't explicitly refer to the SIMD type in indexing the list, an implementation may use different representations for the Number elements on different types and generate different code for the accesses.</emu-note>
 </emu-clause>
 
-<emu-clause id="simd-replace-lane" aoid="SIMDReplaceLane">
+<emu-clause id="simd-abstract-replace-lane" aoid="SIMDReplaceLane">
 <h1>SIMDReplaceLane( value, field, replacement )</h1>
 <emu-alg>
 1. Assert: Type(_value_) is a _SIMD_Type.
