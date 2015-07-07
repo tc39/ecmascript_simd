@@ -309,6 +309,226 @@ test('Int16x8 value semantics', function() {
     equal(y !== SIMD.Int16x8(0, 0, 0, 0, 0, 0, 0, 1), true);
 });
 
+test('Bool64x2 operators', function() {
+    throws(function() {Number(SIMD.Bool64x2(true, false))});
+    throws(function() {+SIMD.Bool64x2(true, false)});
+    throws(function() {-SIMD.Bool64x2(true, false)});
+    throws(function() {~SIMD.Bool64x2(true, false), -1});
+    throws(function() {Math.fround(SIMD.Bool64x2(true, false))});
+    throws(function() {SIMD.Bool64x2(true, false)|0});
+    throws(function() {SIMD.Bool64x2(true, false)&0});
+    throws(function() {SIMD.Bool64x2(true, false)^0});
+    throws(function() {SIMD.Bool64x2(true, false)>>>0});
+    throws(function() {SIMD.Bool64x2(true, false)>>0});
+    throws(function() {SIMD.Bool64x2(true, false)<<0});
+    throws(function() {(SIMD.Bool64x2(true, false) + SIMD.Bool64x2(false, true))});
+    throws(function() {SIMD.Bool64x2(true, false) - SIMD.Bool64x2(false, true)});
+    throws(function() {SIMD.Bool64x2(true, false) * SIMD.Bool64x2(false, true)});
+    throws(function() {SIMD.Bool64x2(true, false) / SIMD.Bool64x2(false, true)});
+    throws(function() {SIMD.Bool64x2(true, false) % SIMD.Bool64x2(false, true)});
+    throws(function() {SIMD.Bool64x2(true, false) < SIMD.Bool64x2(false, true)});
+    throws(function() {SIMD.Bool64x2(true, false) > SIMD.Bool64x2(false, true)});
+    throws(function() {SIMD.Bool64x2(true, false) <= SIMD.Bool64x2(false, true)});
+    throws(function() {SIMD.Bool64x2(true, false) >= SIMD.Bool64x2(false, true)});
+    equal(SIMD.Bool64x2(true, false).toString(), "Bool64x2(true, false)");
+    equal(SIMD.Bool64x2(true, false).toLocaleString(), "Bool64x2(true, false)");
+    throws(function() { SIMD.Bool64x2(true, false)(); });
+    equal(SIMD.Bool64x2(true, false)[0], undefined);
+    equal(SIMD.Bool64x2(true, false).a, undefined);
+    equal(!SIMD.Bool64x2(true, false), false);
+    equal(!SIMD.Bool64x2(false, false), false);
+    equal(SIMD.Bool64x2(true, false) ? 1 : 2, 1);
+    equal(SIMD.Bool64x2(false, false) ? 1 : 2, 1);
+});
+
+// Note: This fails in the polyfill due to the lack of value semantics.
+test('Bool64x2 value semantics', function() {
+    var y = SIMD.Bool64x2(false, false, false, false);
+    for (var x of [ {}, "", 0, 1, undefined, null, NaN, Infinity]) {
+        equal(y == x, false);
+        equal(x == y, false);
+        equal(y != x, true);
+        equal(x != y, true);
+        equal(y === x, false);
+        equal(x === y, false);
+        equal(y !== x, true);
+        equal(x !== y, true);
+    }
+    equal(y == SIMD.Bool64x2(false, false), true);
+    equal(y == SIMD.Bool64x2(false, true), false);
+    equal(y != SIMD.Bool64x2(false, false), false);
+    equal(y != SIMD.Bool64x2(false, true), true);
+    equal(y === SIMD.Bool64x2(false, false), true);
+    equal(y === SIMD.Bool64x2(false, true), false);
+    equal(y !== SIMD.Bool64x2(false, false), false);
+    equal(y !== SIMD.Bool64x2(false, true), true);
+});
+
+test('Bool32x4 operators', function() {
+    throws(function() {Number(SIMD.Bool32x4(true, false, false, true))});
+    throws(function() {+SIMD.Bool32x4(true, false, false, true)});
+    throws(function() {-SIMD.Bool32x4(true, false, false, true)});
+    throws(function() {~SIMD.Bool32x4(true, false, false, true), -1});
+    throws(function() {Math.fround(SIMD.Bool32x4(true, false, false, true))});
+    throws(function() {SIMD.Bool32x4(true, false, false, true)|0});
+    throws(function() {SIMD.Bool32x4(true, false, false, true)&0});
+    throws(function() {SIMD.Bool32x4(true, false, false, true)^0});
+    throws(function() {SIMD.Bool32x4(true, false, false, true)>>>0});
+    throws(function() {SIMD.Bool32x4(true, false, false, true)>>0});
+    throws(function() {SIMD.Bool32x4(true, false, false, true)<<0});
+    throws(function() {(SIMD.Bool32x4(true, false, false, true) + SIMD.Bool32x4(false, true, false, true))});
+    throws(function() {SIMD.Bool32x4(true, false, false, true) - SIMD.Bool32x4(false, true, false, true)});
+    throws(function() {SIMD.Bool32x4(true, false, false, true) * SIMD.Bool32x4(false, true, false, true)});
+    throws(function() {SIMD.Bool32x4(true, false, false, true) / SIMD.Bool32x4(false, true, false, true)});
+    throws(function() {SIMD.Bool32x4(true, false, false, true) % SIMD.Bool32x4(false, true, false, true)});
+    throws(function() {SIMD.Bool32x4(true, false, false, true) < SIMD.Bool32x4(false, true, false, true)});
+    throws(function() {SIMD.Bool32x4(true, false, false, true) > SIMD.Bool32x4(false, true, false, true)});
+    throws(function() {SIMD.Bool32x4(true, false, false, true) <= SIMD.Bool32x4(false, true, false, true)});
+    throws(function() {SIMD.Bool32x4(true, false, false, true) >= SIMD.Bool32x4(false, true, false, true)});
+    equal(SIMD.Bool32x4(true, false, false, true).toString(), "Bool32x4(true, false, false, true)");
+    equal(SIMD.Bool32x4(true, false, false, true).toLocaleString(), "Bool32x4(true, false, false, true)");
+    throws(function() { SIMD.Bool32x4(true, false, false, true)(); });
+    equal(SIMD.Bool32x4(true, false, false, true)[0], undefined);
+    equal(SIMD.Bool32x4(true, false, false, true).a, undefined);
+    equal(!SIMD.Bool32x4(true, false, false, true), false);
+    equal(!SIMD.Bool32x4(false, false, false, false), false);
+    equal(SIMD.Bool32x4(true, false, false, true) ? 1 : 2, 1);
+    equal(SIMD.Bool32x4(false, false, false, false) ? 1 : 2, 1);
+});
+
+// Note: This fails in the polyfill due to the lack of value semantics.
+test('Bool32x4 value semantics', function() {
+    var y = SIMD.Bool32x4(false, false, false, false);
+    for (var x of [ {}, "", 0, 1, undefined, null, NaN, Infinity]) {
+        equal(y == x, false);
+        equal(x == y, false);
+        equal(y != x, true);
+        equal(x != y, true);
+        equal(y === x, false);
+        equal(x === y, false);
+        equal(y !== x, true);
+        equal(x !== y, true);
+    }
+    equal(y == SIMD.Bool32x4(false, false, false, false), true);
+    equal(y == SIMD.Bool32x4(false, false, false, true), false);
+    equal(y != SIMD.Bool32x4(false, false, false, false), false);
+    equal(y != SIMD.Bool32x4(false, false, false, true), true);
+    equal(y === SIMD.Bool32x4(false, false, false, false), true);
+    equal(y === SIMD.Bool32x4(false, false, false, true), false);
+    equal(y !== SIMD.Bool32x4(false, false, false, false), false);
+    equal(y !== SIMD.Bool32x4(false, false, false, true), true);
+});
+
+test('Bool16x8 operators', function() {
+    throws(function() {Number(SIMD.Bool16x8(true, false, false, true, true, false, true, false))});
+    throws(function() {+SIMD.Bool16x8(true, false, false, true, true, false, true, false)});
+    throws(function() {-SIMD.Bool16x8(true, false, false, true, true, false, true, false)});
+    throws(function() {~SIMD.Bool16x8(true, false, false, true, true, false, true, false), -1});
+    throws(function() {Math.fround(SIMD.Bool16x8(true, false, false, true, true, false, true, false))});
+    throws(function() {SIMD.Bool16x8(true, false, false, true, true, false, true, false)|0});
+    throws(function() {SIMD.Bool16x8(true, false, false, true, true, false, true, false)&0});
+    throws(function() {SIMD.Bool16x8(true, false, false, true, true, false, true, false)^0});
+    throws(function() {SIMD.Bool16x8(true, false, false, true, true, false, true, false)>>>0});
+    throws(function() {SIMD.Bool16x8(true, false, false, true, true, false, true, false)>>0});
+    throws(function() {SIMD.Bool16x8(true, false, false, true, true, false, true, false)<<0});
+    throws(function() {(SIMD.Bool16x8(true, false, false, true, true, false, true, false) + SIMD.Bool16x8(false, true, false, true, false, true, false, true))});
+    throws(function() {SIMD.Bool16x8(true, false, false, true, true, false, true, false) - SIMD.Bool16x8(false, true, false, true, false, true, false, true)});
+    throws(function() {SIMD.Bool16x8(true, false, false, true, true, false, true, false) * SIMD.Bool16x8(false, true, false, true, false, true, false, true)});
+    throws(function() {SIMD.Bool16x8(true, false, false, true, true, false, true, false) / SIMD.Bool16x8(false, true, false, true, false, true, false, true)});
+    throws(function() {SIMD.Bool16x8(true, false, false, true, true, false, true, false) % SIMD.Bool16x8(false, true, false, true, false, true, false, true)});
+    throws(function() {SIMD.Bool16x8(true, false, false, true, true, false, true, false) < SIMD.Bool16x8(false, true, false, true, false, true, false, true)});
+    throws(function() {SIMD.Bool16x8(true, false, false, true, true, false, true, false) > SIMD.Bool16x8(false, true, false, true, false, true, false, true)});
+    throws(function() {SIMD.Bool16x8(true, false, false, true, true, false, true, false) <= SIMD.Bool16x8(false, true, false, true, false, true, false, true)});
+    throws(function() {SIMD.Bool16x8(true, false, false, true, true, false, true, false) >= SIMD.Bool16x8(false, true, false, true, false, true, false, true)});
+    equal(SIMD.Bool16x8(true, false, false, true, true, false, true, false).toString(), "Bool16x8(true, false, false, true, true, false, true, false)");
+    equal(SIMD.Bool16x8(true, false, false, true, true, false, true, false).toLocaleString(), "Bool16x8(true, false, false, true, true, false, true, false)");
+    throws(function() { SIMD.Bool16x8(true, false, false, true, true, false, true, false)(); });
+    equal(SIMD.Bool16x8(true, false, false, true, true, false, true, false)[0], undefined);
+    equal(SIMD.Bool16x8(true, false, false, true, true, false, true, false).a, undefined);
+    equal(!SIMD.Bool16x8(true, false, false, true, true, false, true, false), false);
+    equal(!SIMD.Bool16x8(false, false, false, false, false, false, false, false), false);
+    equal(SIMD.Bool16x8(true, false, false, true, true, false, true, false) ? 1 : 2, 1);
+    equal(SIMD.Bool16x8(false, false, false, false, false, false, false, false) ? 1 : 2, 1);
+});
+
+// Note: This fails in the polyfill due to the lack of value semantics.
+test('Bool16x8 value semantics', function() {
+    var y = SIMD.Bool16x8(false, false, false, false, false, false, false, false);
+    for (var x of [ {}, "", 0, 1, undefined, null, NaN, Infinity]) {
+        equal(y == x, false);
+        equal(x == y, false);
+        equal(y != x, true);
+        equal(x != y, true);
+        equal(y === x, false);
+        equal(x === y, false);
+        equal(y !== x, true);
+        equal(x !== y, true);
+    }
+    equal(y == SIMD.Bool16x8(false, false, false, false, false, false, false, false), true);
+    equal(y == SIMD.Bool16x8(false, false, false, false, false, false, false, true), false);
+    equal(y != SIMD.Bool16x8(false, false, false, false, false, false, false, false), false);
+    equal(y != SIMD.Bool16x8(false, false, false, false, false, false, false, true), true);
+    equal(y === SIMD.Bool16x8(false, false, false, false, false, false, false, false), true);
+    equal(y === SIMD.Bool16x8(false, false, false, false, false, false, false, true), false);
+    equal(y !== SIMD.Bool16x8(false, false, false, false, false, false, false, false), false);
+    equal(y !== SIMD.Bool16x8(false, false, false, false, false, false, false, true), true);
+});
+
+test('Bool8x16 operators', function() {
+    throws(function() {Number(SIMD.Bool8x16(true, false, false, true, true, false, true, false, true, false, true, false, true, false, true, false))});
+    throws(function() {+SIMD.Bool8x16(true, false, false, true, true, false, true, false, true, false, true, false, true, false, true, false)});
+    throws(function() {-SIMD.Bool8x16(true, false, false, true, true, false, true, false, true, false, true, false, true, false, true, false)});
+    throws(function() {~SIMD.Bool8x16(true, false, false, true, true, false, true, false, true, false, true, false, true, false, true, false), -1});
+    throws(function() {Math.fround(SIMD.Bool8x16(true, false, false, true, true, false, true, false, true, false, true, false, true, false, true, false))});
+    throws(function() {SIMD.Bool8x16(true, false, false, true, true, false, true, false, true, false, true, false, true, false, true, false)|0});
+    throws(function() {SIMD.Bool8x16(true, false, false, true, true, false, true, false, true, false, true, false, true, false, true, false)&0});
+    throws(function() {SIMD.Bool8x16(true, false, false, true, true, false, true, false, true, false, true, false, true, false, true, false)^0});
+    throws(function() {SIMD.Bool8x16(true, false, false, true, true, false, true, false, true, false, true, false, true, false, true, false)>>>0});
+    throws(function() {SIMD.Bool8x16(true, false, false, true, true, false, true, false, true, false, true, false, true, false, true, false)>>0});
+    throws(function() {SIMD.Bool8x16(true, false, false, true, true, false, true, false, true, false, true, false, true, false, true, false)<<0});
+    throws(function() {(SIMD.Bool8x16(true, false, false, true, true, false, true, false, true, false, true, false, true, false, true, false) + SIMD.Bool8x16(false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true))});
+    throws(function() {SIMD.Bool8x16(true, false, false, true, true, false, true, false, true, false, true, false, true, false, true, false) - SIMD.Bool8x16(false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true)});
+    throws(function() {SIMD.Bool8x16(true, false, false, true, true, false, true, false, true, false, true, false, true, false, true, false) * SIMD.Bool8x16(false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true)});
+    throws(function() {SIMD.Bool8x16(true, false, false, true, true, false, true, false, true, false, true, false, true, false, true, false) / SIMD.Bool8x16(false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true)});
+    throws(function() {SIMD.Bool8x16(true, false, false, true, true, false, true, false, true, false, true, false, true, false, true, false) % SIMD.Bool8x16(false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true)});
+    throws(function() {SIMD.Bool8x16(true, false, false, true, true, false, true, false, true, false, true, false, true, false, true, false) < SIMD.Bool8x16(false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true)});
+    throws(function() {SIMD.Bool8x16(true, false, false, true, true, false, true, false, true, false, true, false, true, false, true, false) > SIMD.Bool8x16(false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true)});
+    throws(function() {SIMD.Bool8x16(true, false, false, true, true, false, true, false, true, false, true, false, true, false, true, false) <= SIMD.Bool8x16(false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true)});
+    throws(function() {SIMD.Bool8x16(true, false, false, true, true, false, true, false, true, false, true, false, true, false, true, false) >= SIMD.Bool8x16(false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true)});
+    equal(SIMD.Bool8x16(true, false, false, true, true, false, true, false, true, false, true, false, true, false, true, false).toString(), "Bool8x16(true, false, false, true, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false)");
+    equal(SIMD.Bool8x16(true, false, false, true, true, false, true, false, true, false, true, false, true, false, true, false).toLocaleString(), "Bool8x16(true, false, false, true, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false)");
+    throws(function() { SIMD.Bool8x16(true, false, false, true, true, false, true, false, true, false, true, false, true, false, true, false)(); });
+    equal(SIMD.Bool8x16(true, false, false, true, true, false, true, false, true, false, true, false, true, false, true, false)[0], undefined);
+    equal(SIMD.Bool8x16(true, false, false, true, true, false, true, false, true, false, true, false, true, false, true, false).a, undefined);
+    equal(!SIMD.Bool8x16(true, false, false, true, true, false, true, false, true, false, true, false, true, false, true, false), false);
+    equal(!SIMD.Bool8x16(false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false), false);
+    equal(SIMD.Bool8x16(true, false, false, true, true, false, true, false, true, false, true, false, true, false, true, false) ? 1 : 2, 1);
+    equal(SIMD.Bool8x16(false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false) ? 1 : 2, 1);
+});
+
+// Note: This fails in the polyfill due to the lack of value semantics.
+test('Bool8x16 value semantics', function() {
+    var y = SIMD.Bool8x16(false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false);
+    for (var x of [ {}, "", 0, 1, undefined, null, NaN, Infinity]) {
+        equal(y == x, false);
+        equal(x == y, false);
+        equal(y != x, true);
+        equal(x != y, true);
+        equal(y === x, false);
+        equal(x === y, false);
+        equal(y !== x, true);
+        equal(x !== y, true);
+    }
+    equal(y == SIMD.Bool8x16(false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false), true);
+    equal(y == SIMD.Bool8x16(false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true), false);
+    equal(y != SIMD.Bool8x16(false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false), false);
+    equal(y != SIMD.Bool8x16(false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true), true);
+    equal(y === SIMD.Bool8x16(false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false), true);
+    equal(y === SIMD.Bool8x16(false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true), false);
+    equal(y !== SIMD.Bool8x16(false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false), false);
+    equal(y !== SIMD.Bool8x16(false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true), true);
+});
+
 test('Bool64x2 constructor', function() {
   equal('function', typeof SIMD.Bool64x2);
   var m = SIMD.Bool64x2(false, true);
