@@ -35,8 +35,6 @@ function isNaN(x) {
 }
 
 test('Float32x4 operators', function() {
-    // Not possible to implement properly in polyfill:
-    //   ==, ===, !=, !==
     throws(function() {Number(SIMD.Float32x4(0, 1, 2, 3))});
     throws(function() {+SIMD.Float32x4(0, 1, 2, 3)});
     throws(function() {-SIMD.Float32x4(0, 1, 2, 3)});
@@ -68,9 +66,30 @@ test('Float32x4 operators', function() {
     equal(SIMD.Float32x4(0, 0, 0, 0) ? 1 : 2, 1);
 });
 
+// Note: This fails in the polyfill due to the lack of value semantics.
+test('Float32x4 value semantics', function() {
+    var y = SIMD.Float32x4(0, 0, 0, 0);
+    for (var x of [ {}, "", 0, 1, undefined, null, NaN, Infinity]) {
+        equal(y == x, false);
+        equal(x == y, false);
+        equal(y != x, true);
+        equal(x != y, true);
+        equal(y === x, false);
+        equal(x === y, false);
+        equal(y !== x, true);
+        equal(x !== y, true);
+    }
+    equal(y == SIMD.Float32x4(0, 0, 0, 0), true);
+    equal(y == SIMD.Float32x4(0, 0, 0, 1), false);
+    equal(y != SIMD.Float32x4(0, 0, 0, 0), false);
+    equal(y != SIMD.Float32x4(0, 0, 0, 1), true);
+    equal(y === SIMD.Float32x4(0, 0, 0, 0), true);
+    equal(y === SIMD.Float32x4(0, 0, 0, 1), false);
+    equal(y !== SIMD.Float32x4(0, 0, 0, 0), false);
+    equal(y !== SIMD.Float32x4(0, 0, 0, 1), true);
+});
+
 test('Int32x4 operators', function() {
-    // Not possible to implement properly in polyfill:
-    //   ==, ===, !=, !==
     throws(function() {Number(SIMD.Int32x4(0, 1, 2, 3))});
     throws(function() {+SIMD.Int32x4(0, 1, 2, 3)});
     throws(function() {-SIMD.Int32x4(0, 1, 2, 3)});
@@ -102,9 +121,30 @@ test('Int32x4 operators', function() {
     equal(SIMD.Int32x4(0, 0, 0, 0) ? 1 : 2, 1);
 });
 
+// Note: This fails in the polyfill due to the lack of value semantics.
+test('Int32x4 value semantics', function() {
+    var y = SIMD.Int32x4(0, 0, 0, 0);
+    for (var x of [ {}, "", 0, 1, undefined, null, NaN, Infinity]) {
+        equal(y == x, false);
+        equal(x == y, false);
+        equal(y != x, true);
+        equal(x != y, true);
+        equal(y === x, false);
+        equal(x === y, false);
+        equal(y !== x, true);
+        equal(x !== y, true);
+    }
+    equal(y == SIMD.Int32x4(0, 0, 0, 0), true);
+    equal(y == SIMD.Int32x4(0, 0, 0, 1), false);
+    equal(y != SIMD.Int32x4(0, 0, 0, 0), false);
+    equal(y != SIMD.Int32x4(0, 0, 0, 1), true);
+    equal(y === SIMD.Int32x4(0, 0, 0, 0), true);
+    equal(y === SIMD.Int32x4(0, 0, 0, 1), false);
+    equal(y !== SIMD.Int32x4(0, 0, 0, 0), false);
+    equal(y !== SIMD.Int32x4(0, 0, 0, 1), true);
+});
+
 test('Float64x2 operators', function() {
-    // Not possible to implement properly in polyfill:
-    //   ==, ===, !=, !==
     throws(function() {Number(SIMD.Float64x2(0, 1))});
     throws(function() {+SIMD.Float64x2(0, 1)});
     throws(function() {-SIMD.Float64x2(0, 1)});
@@ -136,9 +176,30 @@ test('Float64x2 operators', function() {
     equal(SIMD.Float64x2(0, 1) ? 1 : 2, 1);
 });
 
+// Note: This fails in the polyfill due to the lack of value semantics.
+test('Float64x2 value semantics', function() {
+    var y = SIMD.Float64x2(0, 0);
+    for (var x of [ {}, "", 0, 1, undefined, null, NaN, Infinity]) {
+        equal(y == x, false);
+        equal(x == y, false);
+        equal(y != x, true);
+        equal(x != y, true);
+        equal(y === x, false);
+        equal(x === y, false);
+        equal(y !== x, true);
+        equal(x !== y, true);
+    }
+    equal(y == SIMD.Float64x2(0, 0), true);
+    equal(y == SIMD.Float64x2(0, 1), false);
+    equal(y != SIMD.Float64x2(0, 0), false);
+    equal(y != SIMD.Float64x2(0, 1), true);
+    equal(y === SIMD.Float64x2(0, 0), true);
+    equal(y === SIMD.Float64x2(0, 1), false);
+    equal(y !== SIMD.Float64x2(0, 0), false);
+    equal(y !== SIMD.Float64x2(0, 1), true);
+});
+
 test('Int8x16 operators', function() {
-    // Not possible to implement properly in polyfill:
-    //   ==, ===, !=, !==
     throws(function() {Number(SIMD.Int8x16(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15))});
     throws(function() {+SIMD.Int8x16(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15)});
     throws(function() {-SIMD.Int8x16(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15)});
@@ -170,9 +231,30 @@ test('Int8x16 operators', function() {
     equal(SIMD.Int8x16(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15) ? 1 : 2, 1);
 });
 
+// Note: This fails in the polyfill due to the lack of value semantics.
+test('Int8x16 value semantics', function() {
+    var y = SIMD.Int8x16(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+    for (var x of [ {}, "", 0, 1, undefined, null, NaN, Infinity]) {
+        equal(y == x, false);
+        equal(x == y, false);
+        equal(y != x, true);
+        equal(x != y, true);
+        equal(y === x, false);
+        equal(x === y, false);
+        equal(y !== x, true);
+        equal(x !== y, true);
+    }
+    equal(y == SIMD.Int8x16(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), true);
+    equal(y == SIMD.Int8x16(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1), false);
+    equal(y != SIMD.Int8x16(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), false);
+    equal(y != SIMD.Int8x16(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1), true);
+    equal(y === SIMD.Int8x16(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), true);
+    equal(y === SIMD.Int8x16(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1), false);
+    equal(y !== SIMD.Int8x16(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), false);
+    equal(y !== SIMD.Int8x16(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1), true);
+});
+
 test('Int16x8 operators', function() {
-    // Not possible to implement properly in polyfill:
-    //   ==, ===, !=, !==
     throws(function() {Number(SIMD.Int16x8(0, 1, 2, 3, 4, 5, 6, 7))});
     throws(function() {+SIMD.Int16x8(0, 1, 2, 3, 4, 5, 6, 7)});
     throws(function() {-SIMD.Int16x8(0, 1, 2, 3, 4, 5, 6, 7)});
@@ -202,6 +284,29 @@ test('Int16x8 operators', function() {
     equal(!SIMD.Int16x8(0, 1, 2, 3, 4, 5, 6, 7), false);
     equal(SIMD.Int16x8(0, 1, 2, 3, 4, 5, 6, 7) ? 1 : 2, 1);
     equal(SIMD.Int16x8(0, 1, 2, 3, 4, 5, 6, 7) ? 1 : 2, 1);
+});
+
+// Note: This fails in the polyfill due to the lack of value semantics.
+test('Int16x8 value semantics', function() {
+    var y = SIMD.Int16x8(0, 0, 0, 0, 0, 0, 0, 0);
+    for (var x of [ {}, "", 0, 1, undefined, null, NaN, Infinity]) {
+        equal(y == x, false);
+        equal(x == y, false);
+        equal(y != x, true);
+        equal(x != y, true);
+        equal(y === x, false);
+        equal(x === y, false);
+        equal(y !== x, true);
+        equal(x !== y, true);
+    }
+    equal(y == SIMD.Int16x8(0, 0, 0, 0, 0, 0, 0, 0), true);
+    equal(y == SIMD.Int16x8(0, 0, 0, 0, 0, 0, 0, 1), false);
+    equal(y != SIMD.Int16x8(0, 0, 0, 0, 0, 0, 0, 0), false);
+    equal(y != SIMD.Int16x8(0, 0, 0, 0, 0, 0, 0, 1), true);
+    equal(y === SIMD.Int16x8(0, 0, 0, 0, 0, 0, 0, 0), true);
+    equal(y === SIMD.Int16x8(0, 0, 0, 0, 0, 0, 0, 1), false);
+    equal(y !== SIMD.Int16x8(0, 0, 0, 0, 0, 0, 0, 0), false);
+    equal(y !== SIMD.Int16x8(0, 0, 0, 0, 0, 0, 0, 1), true);
 });
 
 test('Bool64x2 constructor', function() {
