@@ -1219,7 +1219,7 @@ if (!Object.hasOwnProperty(SIMD.Float32x4.prototype, 'toString')) {
    * @return {String} a string representing the Float32x4.
    */
   SIMD.Float32x4.prototype.toString = function() {
-    return "Float32x4(" +
+    return "SIMD.Float32x4(" +
       this.x_ + ", " +
       this.y_ + ", " +
       this.z_ + ", " +
@@ -1232,7 +1232,7 @@ if (!Object.hasOwnProperty(SIMD.Float32x4.prototype, 'toLocaleString')) {
    * @return {String} a locale-sensitive string representing the Float32x4.
    */
   SIMD.Float32x4.prototype.toLocaleString = function() {
-    return "Float32x4(" +
+    return "SIMD.Float32x4(" +
       this.x_.toLocaleString() + ", " +
       this.y_.toLocaleString() + ", " +
       this.z_.toLocaleString() + ", " +
@@ -1380,7 +1380,7 @@ if (!Object.hasOwnProperty(SIMD.Int32x4.prototype, 'toString')) {
    * @return {String} a string representing the Int32x4.
    */
   SIMD.Int32x4.prototype.toString = function() {
-    return "Int32x4(" +
+    return "SIMD.Int32x4(" +
       this.x_ + ", " +
       this.y_ + ", " +
       this.z_ + ", " +
@@ -1393,7 +1393,7 @@ if (!Object.hasOwnProperty(SIMD.Int32x4.prototype, 'toLocaleString')) {
    * @return {String} a locale-sensitive string representing the Int32x4.
    */
   SIMD.Int32x4.prototype.toLocaleString = function() {
-    return "Int32x4(" +
+    return "SIMD.Int32x4(" +
       this.x_.toLocaleString() + ", " +
       this.y_.toLocaleString() + ", " +
       this.z_.toLocaleString() + ", " +
@@ -1561,7 +1561,7 @@ if (!Object.hasOwnProperty(SIMD.Int16x8.prototype, 'toString')) {
    * @return {String} a string representing the Int16x8.
    */
   SIMD.Int16x8.prototype.toString = function() {
-    return "Int16x8(" +
+    return "SIMD.Int16x8(" +
       this.s0_ + ", " +
       this.s1_ + ", " +
       this.s2_ + ", " +
@@ -1578,7 +1578,7 @@ if (!Object.hasOwnProperty(SIMD.Int16x8.prototype, 'toLocaleString')) {
    * @return {String} a locale-sensitive string representing the Int16x8.
    */
   SIMD.Int16x8.prototype.toLocaleString = function() {
-    return "Int16x8(" +
+    return "SIMD.Int16x8(" +
       this.s0_.toLocaleString() + ", " +
       this.s1_.toLocaleString() + ", " +
       this.s2_.toLocaleString() + ", " +
@@ -1785,7 +1785,7 @@ if (!Object.hasOwnProperty(SIMD.Int8x16.prototype, 'toString')) {
    * @return {String} a string representing the Int8x16.
    */
   SIMD.Int8x16.prototype.toString = function() {
-    return "Int8x16(" +
+    return "SIMD.Int8x16(" +
       this.s0_ + ", " +
       this.s1_ + ", " +
       this.s2_ + ", " +
@@ -1810,7 +1810,7 @@ if (!Object.hasOwnProperty(SIMD.Int8x16.prototype, 'toLocaleString')) {
    * @return {String} a locale-sensitive string representing the Int8x16.
    */
   SIMD.Int8x16.prototype.toLocaleString = function() {
-    return "Int8x16(" +
+    return "SIMD.Int8x16(" +
       this.s0_.toLocaleString() + ", " +
       this.s1_.toLocaleString() + ", " +
       this.s2_.toLocaleString() + ", " +
