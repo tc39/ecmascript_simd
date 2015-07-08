@@ -1773,7 +1773,7 @@ The initial value of <var>SIMD</var>Constructor.prototype.constructor is the int
     </ol>
   </li>
   <li>Let <var>results</var> be an Array containing the contents of <var>list</var>.</li>
-  <li>Let <var>t</var> be the result of evaluating <code>typeof</code> <var>argument</var>.</li>
+  <li>Let <var>t</var> be the string <code>"</code><var>SIMD</var><code>"</code>, e.g., <code>"Float32x4"</code>.</li>
   <li>Let <var>e</var> be <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-call-f-v-args">Call</a>(%ArrayPrototype_join%, <var>results</var>, «<var>separator</var>»).</li>
   <li>Return a new String value computed by concatenating the previous value of <var>t</var>, <code>"("</code>, <var>e</var>, and <code>")"</code>.</li>
 </ol></emu-alg>

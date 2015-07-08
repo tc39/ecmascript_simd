@@ -1606,7 +1606,7 @@ The initial value of _SIMD_Constructor.prototype.constructor is the intrinsic ob
   1. ReturnIfAbrupt(_R_).
   1. Append _R_ to _list_.
 1. Let _results_ be an Array containing the contents of _list_.
-1. Let _t_ be the result of evaluating `typeof` _argument_.
+1. Let _t_ be the string `"`<var>SIMD</var>`"`, e.g., `"Float32x4"`.
 1. Let _e_ be Call(%ArrayPrototype_join%, _results_, «_separator_»).
 1. Return a new String value computed by concatenating the previous value of _t_, "(", _e_, and ")".
 </emu-alg>
