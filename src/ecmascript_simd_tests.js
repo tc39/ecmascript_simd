@@ -330,7 +330,7 @@ test('Bool16x8 operators', function() {
     throws(function() {SIMD.Bool16x8(true, false, false, true, true, false, true, false) > SIMD.Bool16x8(false, true, false, true, false, true, false, true)});
     throws(function() {SIMD.Bool16x8(true, false, false, true, true, false, true, false) <= SIMD.Bool16x8(false, true, false, true, false, true, false, true)});
     throws(function() {SIMD.Bool16x8(true, false, false, true, true, false, true, false) >= SIMD.Bool16x8(false, true, false, true, false, true, false, true)});
-    equal(SIMD.Bool16x8(true, false, false, true, true, false, true, false).toString(), "Bool16x8(true, false, false, true, true, false, true, false)");
+    equal(SIMD.Bool16x8(true, false, false, true, true, false, true, false).toString(), "SIMD.Bool16x8(true, false, false, true, true, false, true, false)");
     equal(SIMD.Bool16x8(true, false, false, true, true, false, true, false).toLocaleString(), "SIMD.Bool16x8(true, false, false, true, true, false, true, false)");
     throws(function() { SIMD.Bool16x8(true, false, false, true, true, false, true, false)(); });
     equal(SIMD.Bool16x8(true, false, false, true, true, false, true, false)[0], undefined);
@@ -385,8 +385,8 @@ test('Bool8x16 operators', function() {
     throws(function() {SIMD.Bool8x16(true, false, false, true, true, false, true, false, true, false, true, false, true, false, true, false) > SIMD.Bool8x16(false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true)});
     throws(function() {SIMD.Bool8x16(true, false, false, true, true, false, true, false, true, false, true, false, true, false, true, false) <= SIMD.Bool8x16(false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true)});
     throws(function() {SIMD.Bool8x16(true, false, false, true, true, false, true, false, true, false, true, false, true, false, true, false) >= SIMD.Bool8x16(false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true)});
-    equal(SIMD.Bool8x16(true, false, false, true, true, false, true, false, true, false, true, false, true, false, true, false).toString(), "SIMD.Bool8x16(true, false, false, true, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false)");
-    equal(SIMD.Bool8x16(true, false, false, true, true, false, true, false, true, false, true, false, true, false, true, false).toLocaleString(), "SIMD.Bool8x16(true, false, false, true, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false)");
+    equal(SIMD.Bool8x16(true, false, false, true, true, false, true, false, true, false, true, false, true, false, true, false).toString(), "SIMD.Bool8x16(true, false, false, true, true, false, true, false, true, false, true, false, true, false, true, false)");
+    equal(SIMD.Bool8x16(true, false, false, true, true, false, true, false, true, false, true, false, true, false, true, false).toLocaleString(), "SIMD.Bool8x16(true, false, false, true, true, false, true, false, true, false, true, false, true, false, true, false)");
     throws(function() { SIMD.Bool8x16(true, false, false, true, true, false, true, false, true, false, true, false, true, false, true, false)(); });
     equal(SIMD.Bool8x16(true, false, false, true, true, false, true, false, true, false, true, false, true, false, true, false)[0], undefined);
     equal(SIMD.Bool8x16(true, false, false, true, true, false, true, false, true, false, true, false, true, false, true, false).a, undefined);

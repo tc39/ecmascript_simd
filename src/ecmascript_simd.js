@@ -474,6 +474,38 @@ if (typeof SIMD.Bool32x4.select === "undefined") {
   }
 }
 
+if (!Object.hasOwnProperty(SIMD.Bool32x4.prototype, 'valueOf')) {
+  SIMD.Bool32x4.prototype.valueOf = function() {
+    throw new TypeError("Bool32x4 cannot be converted to a number");
+  }
+}
+
+if (!Object.hasOwnProperty(SIMD.Bool32x4.prototype, 'toString')) {
+  /**
+   * @return {String} a string representing the Bool32x4.
+   */
+  SIMD.Bool32x4.prototype.toString = function() {
+    return "SIMD.Bool32x4(" +
+      this.x_ + ", " +
+      this.y_ + ", " +
+      this.z_ + ", " +
+      this.w_ + ")"
+  }
+}
+
+if (!Object.hasOwnProperty(SIMD.Bool32x4.prototype, 'toLocaleString')) {
+  /**
+   * @return {String} a locale-sensitive string representing the Bool32x4.
+   */
+  SIMD.Bool32x4.prototype.toLocaleString = function() {
+    return "SIMD.Bool32x4(" +
+      this.x_.toLocaleString() + ", " +
+      this.y_.toLocaleString() + ", " +
+      this.z_.toLocaleString() + ", " +
+      this.w_.toLocaleString() + ")"
+  }
+}
+
 if (typeof SIMD.Bool16x8 === "undefined") {
   /**
     * Construct a new instance of Bool16x8 number.
@@ -735,6 +767,46 @@ if (typeof SIMD.Bool16x8.select === "undefined") {
     var tr = SIMD.Bool16x8.and(mask, trueValue);
     var fr = SIMD.Bool16x8.and(SIMD.Bool16x8.not(mask), falseValue);
     return SIMD.Bool16x8.or(tr, fr);
+  }
+}
+
+if (!Object.hasOwnProperty(SIMD.Bool16x8.prototype, 'valueOf')) {
+  SIMD.Bool16x8.prototype.valueOf = function() {
+    throw new TypeError("Bool16x8 cannot be converted to a number");
+  }
+}
+
+if (!Object.hasOwnProperty(SIMD.Bool16x8.prototype, 'toString')) {
+  /**
+   * @return {String} a string representing the Bool32x4.
+   */
+  SIMD.Bool16x8.prototype.toString = function() {
+    return "SIMD.Bool16x8(" +
+      this.s0_ + ", " +
+      this.s1_ + ", " +
+      this.s2_ + ", " +
+      this.s3_ + ", " +
+      this.s4_ + ", " +
+      this.s5_ + ", " +
+      this.s6_ + ", " +
+      this.s7_ + ")";
+  }
+}
+
+if (!Object.hasOwnProperty(SIMD.Bool16x8.prototype, 'toLocaleString')) {
+  /**
+   * @return {String} a locale-sensitive string representing the Bool16x8.
+   */
+  SIMD.Bool16x8.prototype.toLocaleString = function() {
+    return "SIMD.Bool16x8(" +
+      this.s0_.toLocaleString() + ", " +
+      this.s1_.toLocaleString() + ", " +
+      this.s2_.toLocaleString() + ", " +
+      this.s3_.toLocaleString() + ", " +
+      this.s4_.toLocaleString() + ", " +
+      this.s5_.toLocaleString() + ", " +
+      this.s6_.toLocaleString() + ", " +
+      this.s7_.toLocaleString() + ")";
   }
 }
 
@@ -1084,6 +1156,63 @@ if (typeof SIMD.Bool8x16.select === "undefined") {
     return SIMD.Bool8x16.or(tr, fr);
   }
 }
+
+if (!Object.hasOwnProperty(SIMD.Bool8x16.prototype, 'valueOf')) {
+  SIMD.Bool8x16.prototype.valueOf = function() {
+    throw new TypeError("Bool8x16 cannot be converted to a number");
+  }
+}
+
+if (!Object.hasOwnProperty(SIMD.Bool8x16.prototype, 'toString')) {
+  /**
+   * @return {String} a string representing the Bool32x4.
+   */
+  SIMD.Bool8x16.prototype.toString = function() {
+    return "SIMD.Bool8x16(" +
+      this.s0_ + ", " +
+      this.s1_ + ", " +
+      this.s2_ + ", " +
+      this.s3_ + ", " +
+      this.s4_ + ", " +
+      this.s5_ + ", " +
+      this.s6_ + ", " +
+      this.s7_ + ", " +
+      this.s8_ + ", " +
+      this.s9_ + ", " +
+      this.s10_ + ", " +
+      this.s11_ + ", " +
+      this.s12_ + ", " +
+      this.s13_ + ", " +
+      this.s14_ + ", " +
+      this.s15_ + ")";
+  }
+}
+
+if (!Object.hasOwnProperty(SIMD.Bool8x16.prototype, 'toLocaleString')) {
+  /**
+   * @return {String} a locale-sensitive string representing the Bool8x16.
+   */
+  SIMD.Bool8x16.prototype.toLocaleString = function() {
+    return "SIMD.Bool8x16(" +
+      this.s0_.toLocaleString() + ", " +
+      this.s1_.toLocaleString() + ", " +
+      this.s2_.toLocaleString() + ", " +
+      this.s3_.toLocaleString() + ", " +
+      this.s4_.toLocaleString() + ", " +
+      this.s5_.toLocaleString() + ", " +
+      this.s6_.toLocaleString() + ", " +
+      this.s7_.toLocaleString() + ", " +
+      this.s8_.toLocaleString() + ", " +
+      this.s9_.toLocaleString() + ", " +
+      this.s10_.toLocaleString() + ", " +
+      this.s11_.toLocaleString() + ", " +
+      this.s12_.toLocaleString() + ", " +
+      this.s13_.toLocaleString() + ", " +
+      this.s14_.toLocaleString() + ", " +
+      this.s15_.toLocaleString() + ")";
+  }
+}
+
 
 if (typeof SIMD.Float32x4 === "undefined") {
   /**
