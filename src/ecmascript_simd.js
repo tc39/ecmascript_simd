@@ -158,12 +158,6 @@ function saveBool8x16(x) {
   _i8x16[15] = SIMD.Bool8x16.extractLane(x, 15);
 }
 
-function saveFloat64x2(x) {
-  x = SIMD.Float64x2.check(x);
-  _f64x2[0] = SIMD.Float64x2.extractLane(x, 0);
-  _f64x2[1] = SIMD.Float64x2.extractLane(x, 1);
-}
-
 function saveFloat32x4(x) {
   x = SIMD.Float32x4.check(x);
   _f32x4[0] = SIMD.Float32x4.extractLane(x, 0);
@@ -231,11 +225,6 @@ function restoreBool8x16() {
                        alias[12], alias[13], alias[14], alias[15]);
 }
 
-function restoreFloat64x2() {
-  var alias = _f64x2;
-  return SIMD.Float64x2(alias[0], alias[1]);
-}
-
 function restoreFloat32x4() {
   var alias = _f32x4;
   return SIMD.Float32x4(alias[0], alias[1], alias[2], alias[3]);
@@ -260,211 +249,6 @@ function restoreInt8x16() {
                       alias[12], alias[13], alias[14], alias[15]);
 }
 
-if (typeof SIMD.Bool64x2 === "undefined") {
-  /**
-    * Construct a new instance of Bool64x2 number.
-    * @constructor
-    */
-  SIMD.Bool64x2 = function(x, y) {
-    if (!(this instanceof SIMD.Bool64x2)) {
-      return new SIMD.Bool64x2(x, y);
-    }
-
-    this.x_ = !!x;
-    this.y_ = !!y;
-  }
-}
-
-if (typeof SIMD.Bool64x2.check === "undefined") {
-  /**
-    * Check whether the argument is a Bool64x2.
-    * @param {Bool64x2} v An instance of Bool64x2.
-    * @return {Bool64x2} The Bool64x2 instance.
-    */
-  SIMD.Bool64x2.check = function(v) {
-    if (!(v instanceof SIMD.Bool64x2)) {
-      throw new TypeError("argument is not a Bool64x2.");
-    }
-    return v;
-  }
-}
-
-if (typeof SIMD.Bool64x2.splat === "undefined") {
-  /**
-    * Construct a new instance of Bool64x2 with the same value
-    * in all lanes.
-    * @param {double} value used for all lanes.
-    * @constructor
-    */
-  SIMD.Bool64x2.splat = function(s) {
-    return SIMD.Bool64x2(s, s);
-  }
-}
-
-if (typeof SIMD.Bool64x2.extractLane === "undefined") {
-  /**
-    * @param {Bool64x2} v An instance of Bool64x2.
-    * @param {integer} i Index in concatenation of v for lane i
-    * @return {Boolean} The value in lane i of v.
-    */
-  SIMD.Bool64x2.extractLane = function(v, i) {
-    v = SIMD.Bool64x2.check(v);
-    check2(i);
-    switch(i) {
-      case 0: return v.x_;
-      case 1: return v.y_;
-    }
-  }
-}
-
-if (typeof SIMD.Bool64x2.replaceLane === "undefined") {
-  /**
-    * @param {Bool64x2} v An instance of Bool64x2.
-    * @param {integer} i Index in concatenation of v for lane i
-    * @param {double} value used for lane i.
-    * @return {Bool64x2} New instance of Bool64x2 with the values in v and
-    * lane i replaced with {s}.
-    */
-  SIMD.Bool64x2.replaceLane = function(v, i, s) {
-    v = SIMD.Bool64x2.check(v);
-    check2(i);
-    // Other replaceLane implementations do the replacement in memory, but
-    // this is awkward for Bool64x2 without something like Int64Array.
-    return i == 0 ?
-           SIMD.Bool64x2(s, SIMD.Bool64x2.extractLane(v, 1)) :
-           SIMD.Bool64x2(SIMD.Bool64x2.extractLane(v, 0), s);
-  }
-}
-
-if (typeof SIMD.Bool64x2.allTrue === "undefined") {
-  /**
-    * Check if all 2 lanes hold a true value
-    * @param {Bool64x2} v An instance of Bool64x2.
-    * @return {Boolean} All 2 lanes hold a true value
-    */
-  SIMD.Bool64x2.allTrue = function(v) {
-    v = SIMD.Bool64x2.check(v);
-    return SIMD.Bool64x2.extractLane(v, 0) &&
-        SIMD.Bool64x2.extractLane(v, 1);
-  }
-}
-
-if (typeof SIMD.Bool64x2.anyTrue === "undefined") {
-  /**
-    * Check if any of the 2 lanes hold a true value
-    * @param {Bool64x2} v An instance of Bool64x2.
-    * @return {Boolean} Any of the 2 lanes holds a true value
-    */
-  SIMD.Bool64x2.anyTrue = function(v) {
-    v = SIMD.Bool64x2.check(v);
-    return SIMD.Bool64x2.extractLane(v, 0) ||
-        SIMD.Bool64x2.extractLane(v, 1);
-  }
-}
-
-if (typeof SIMD.Bool64x2.and === "undefined") {
-  /**
-    * @param {Bool64x2} a An instance of Bool64x2.
-    * @param {Bool64x2} b An instance of Bool64x2.
-    * @return {Bool64x2} New instance of Bool64x2 with values of a & b.
-    */
-  SIMD.Bool64x2.and = function(a, b) {
-    a = SIMD.Bool64x2.check(a);
-    b = SIMD.Bool64x2.check(b);
-    return SIMD.Bool64x2(SIMD.Bool64x2.extractLane(a, 0) & SIMD.Bool64x2.extractLane(b, 0),
-                         SIMD.Bool64x2.extractLane(a, 1) & SIMD.Bool64x2.extractLane(b, 1));
-  }
-}
-
-if (typeof SIMD.Bool64x2.or === "undefined") {
-  /**
-    * @param {Bool64x2} a An instance of Bool64x2.
-    * @param {Bool64x2} b An instance of Bool64x2.
-    * @return {Bool64x2} New instance of Bool64x2 with values of a | b.
-    */
-  SIMD.Bool64x2.or = function(a, b) {
-    a = SIMD.Bool64x2.check(a);
-    b = SIMD.Bool64x2.check(b);
-    return SIMD.Bool64x2(SIMD.Bool64x2.extractLane(a, 0) | SIMD.Bool64x2.extractLane(b, 0),
-                         SIMD.Bool64x2.extractLane(a, 1) | SIMD.Bool64x2.extractLane(b, 1));
-  }
-}
-
-if (typeof SIMD.Bool64x2.xor === "undefined") {
-  /**
-    * @param {Bool64x2} a An instance of Bool64x2.
-    * @param {Bool64x2} b An instance of Bool64x2.
-    * @return {Bool64x2} New instance of Bool64x2 with values of a ^ b.
-    */
-  SIMD.Bool64x2.xor = function(a, b) {
-    a = SIMD.Bool64x2.check(a);
-    b = SIMD.Bool64x2.check(b);
-    return SIMD.Bool64x2(SIMD.Bool64x2.extractLane(a, 0) ^ SIMD.Bool64x2.extractLane(b, 0),
-                         SIMD.Bool64x2.extractLane(a, 1) ^ SIMD.Bool64x2.extractLane(b, 1));
-  }
-}
-
-if (typeof SIMD.Bool64x2.not === "undefined") {
-  /**
-    * @param {Bool64x2} a An instance of Bool64x2.
-    * @return {Bool64x2} New instance of Bool64x2 with values of !a
-    */
-  SIMD.Bool64x2.not = function(a) {
-    a = SIMD.Bool64x2.check(a);
-    return SIMD.Bool64x2(!SIMD.Bool64x2.extractLane(a, 0),
-                         !SIMD.Bool64x2.extractLane(a, 1));
-  }
-}
-
-if (typeof SIMD.Bool64x2.equal === "undefined") {
-  /**
-    * @param {Bool64x2} a An instance of Bool64x2.
-    * @param {Bool64x2} b An instance of Bool64x2.
-    * @return {Bool64x2} true or false in each lane depending on
-    * the result of a == b.
-    */
-  SIMD.Bool64x2.equal = function(a, b) {
-    a = SIMD.Bool64x2.check(a);
-    b = SIMD.Bool64x2.check(b);
-    return SIMD.Bool64x2(SIMD.Bool64x2.extractLane(a, 0) == SIMD.Bool64x2.extractLane(b, 0),
-                         SIMD.Bool64x2.extractLane(a, 1) == SIMD.Bool64x2.extractLane(b, 1));
-  }
-}
-
-if (typeof SIMD.Bool64x2.notEqual === "undefined") {
-  /**
-    * @param {Bool64x2} a An instance of Bool64x2.
-    * @param {Bool64x2} b An instance of Bool64x2.
-    * @return {Bool64x2} true or false in each lane depending on
-    * the result of a != b.
-    */
-  SIMD.Bool64x2.notEqual = function(a, b) {
-    a = SIMD.Bool64x2.check(a);
-    b = SIMD.Bool64x2.check(b);
-    return SIMD.Bool64x2(SIMD.Bool64x2.extractLane(a, 0) != SIMD.Bool64x2.extractLane(b, 0),
-                         SIMD.Bool64x2.extractLane(a, 1) != SIMD.Bool64x2.extractLane(b, 1));
-  }
-}
-
-if (typeof SIMD.Bool64x2.select === "undefined") {
-  /**
-    * @param {Bool64x2} mask Selector mask. An instance of Bool64x2
-    * @param {Bool64x2} trueValue Pick lane from here if corresponding
-    * selector lane is 1
-    * @param {Bool64x2} falseValue Pick lane from here if corresponding
-    * selector lane is 0
-    * @return {Bool64x2} Mix of lanes from trueValue or falseValue as
-    * indicated
-    */
-  SIMD.Bool64x2.select = function(mask, trueValue, falseValue) {
-    mask = SIMD.Bool64x2.check(mask);
-    trueValue = SIMD.Bool64x2.check(trueValue);
-    falseValue = SIMD.Bool64x2.check(falseValue);
-    var tr = SIMD.Bool64x2.and(mask, trueValue);
-    var fr = SIMD.Bool64x2.and(SIMD.Bool64x2.not(mask), falseValue);
-    return SIMD.Bool64x2.or(tr, fr);
-  }
-}
 
 if (typeof SIMD.Bool32x4 === "undefined") {
   /**
@@ -687,6 +471,38 @@ if (typeof SIMD.Bool32x4.select === "undefined") {
     var tr = SIMD.Bool32x4.and(mask, trueValue);
     var fr = SIMD.Bool32x4.and(SIMD.Bool32x4.not(mask), falseValue);
     return SIMD.Bool32x4.or(tr, fr);
+  }
+}
+
+if (!Object.hasOwnProperty(SIMD.Bool32x4.prototype, 'valueOf')) {
+  SIMD.Bool32x4.prototype.valueOf = function() {
+    throw new TypeError("Bool32x4 cannot be converted to a number");
+  }
+}
+
+if (!Object.hasOwnProperty(SIMD.Bool32x4.prototype, 'toString')) {
+  /**
+   * @return {String} a string representing the Bool32x4.
+   */
+  SIMD.Bool32x4.prototype.toString = function() {
+    return "SIMD.Bool32x4(" +
+      this.x_ + ", " +
+      this.y_ + ", " +
+      this.z_ + ", " +
+      this.w_ + ")"
+  }
+}
+
+if (!Object.hasOwnProperty(SIMD.Bool32x4.prototype, 'toLocaleString')) {
+  /**
+   * @return {String} a locale-sensitive string representing the Bool32x4.
+   */
+  SIMD.Bool32x4.prototype.toLocaleString = function() {
+    return "SIMD.Bool32x4(" +
+      this.x_.toLocaleString() + ", " +
+      this.y_.toLocaleString() + ", " +
+      this.z_.toLocaleString() + ", " +
+      this.w_.toLocaleString() + ")"
   }
 }
 
@@ -951,6 +767,46 @@ if (typeof SIMD.Bool16x8.select === "undefined") {
     var tr = SIMD.Bool16x8.and(mask, trueValue);
     var fr = SIMD.Bool16x8.and(SIMD.Bool16x8.not(mask), falseValue);
     return SIMD.Bool16x8.or(tr, fr);
+  }
+}
+
+if (!Object.hasOwnProperty(SIMD.Bool16x8.prototype, 'valueOf')) {
+  SIMD.Bool16x8.prototype.valueOf = function() {
+    throw new TypeError("Bool16x8 cannot be converted to a number");
+  }
+}
+
+if (!Object.hasOwnProperty(SIMD.Bool16x8.prototype, 'toString')) {
+  /**
+   * @return {String} a string representing the Bool32x4.
+   */
+  SIMD.Bool16x8.prototype.toString = function() {
+    return "SIMD.Bool16x8(" +
+      this.s0_ + ", " +
+      this.s1_ + ", " +
+      this.s2_ + ", " +
+      this.s3_ + ", " +
+      this.s4_ + ", " +
+      this.s5_ + ", " +
+      this.s6_ + ", " +
+      this.s7_ + ")";
+  }
+}
+
+if (!Object.hasOwnProperty(SIMD.Bool16x8.prototype, 'toLocaleString')) {
+  /**
+   * @return {String} a locale-sensitive string representing the Bool16x8.
+   */
+  SIMD.Bool16x8.prototype.toLocaleString = function() {
+    return "SIMD.Bool16x8(" +
+      this.s0_.toLocaleString() + ", " +
+      this.s1_.toLocaleString() + ", " +
+      this.s2_.toLocaleString() + ", " +
+      this.s3_.toLocaleString() + ", " +
+      this.s4_.toLocaleString() + ", " +
+      this.s5_.toLocaleString() + ", " +
+      this.s6_.toLocaleString() + ", " +
+      this.s7_.toLocaleString() + ")";
   }
 }
 
@@ -1301,6 +1157,63 @@ if (typeof SIMD.Bool8x16.select === "undefined") {
   }
 }
 
+if (!Object.hasOwnProperty(SIMD.Bool8x16.prototype, 'valueOf')) {
+  SIMD.Bool8x16.prototype.valueOf = function() {
+    throw new TypeError("Bool8x16 cannot be converted to a number");
+  }
+}
+
+if (!Object.hasOwnProperty(SIMD.Bool8x16.prototype, 'toString')) {
+  /**
+   * @return {String} a string representing the Bool32x4.
+   */
+  SIMD.Bool8x16.prototype.toString = function() {
+    return "SIMD.Bool8x16(" +
+      this.s0_ + ", " +
+      this.s1_ + ", " +
+      this.s2_ + ", " +
+      this.s3_ + ", " +
+      this.s4_ + ", " +
+      this.s5_ + ", " +
+      this.s6_ + ", " +
+      this.s7_ + ", " +
+      this.s8_ + ", " +
+      this.s9_ + ", " +
+      this.s10_ + ", " +
+      this.s11_ + ", " +
+      this.s12_ + ", " +
+      this.s13_ + ", " +
+      this.s14_ + ", " +
+      this.s15_ + ")";
+  }
+}
+
+if (!Object.hasOwnProperty(SIMD.Bool8x16.prototype, 'toLocaleString')) {
+  /**
+   * @return {String} a locale-sensitive string representing the Bool8x16.
+   */
+  SIMD.Bool8x16.prototype.toLocaleString = function() {
+    return "SIMD.Bool8x16(" +
+      this.s0_.toLocaleString() + ", " +
+      this.s1_.toLocaleString() + ", " +
+      this.s2_.toLocaleString() + ", " +
+      this.s3_.toLocaleString() + ", " +
+      this.s4_.toLocaleString() + ", " +
+      this.s5_.toLocaleString() + ", " +
+      this.s6_.toLocaleString() + ", " +
+      this.s7_.toLocaleString() + ", " +
+      this.s8_.toLocaleString() + ", " +
+      this.s9_.toLocaleString() + ", " +
+      this.s10_.toLocaleString() + ", " +
+      this.s11_.toLocaleString() + ", " +
+      this.s12_.toLocaleString() + ", " +
+      this.s13_.toLocaleString() + ", " +
+      this.s14_.toLocaleString() + ", " +
+      this.s15_.toLocaleString() + ")";
+  }
+}
+
+
 if (typeof SIMD.Float32x4 === "undefined") {
   /**
     * Construct a new instance of Float32x4 number.
@@ -1383,18 +1296,6 @@ if (typeof SIMD.Float32x4.splat === "undefined") {
   }
 }
 
-if (typeof SIMD.Float32x4.fromFloat64x2 === "undefined") {
-  /**
-    * @param {Float64x2} t An instance of Float64x2.
-    * @return {Float32x4} A Float32x4 with .x and .y from t
-    */
-  SIMD.Float32x4.fromFloat64x2 = function(t) {
-    t = SIMD.Float64x2.check(t);
-    return SIMD.Float32x4(SIMD.Float64x2.extractLane(t, 0),
-                          SIMD.Float64x2.extractLane(t, 1), 0, 0);
-  }
-}
-
 if (typeof SIMD.Float32x4.fromInt32x4 === "undefined") {
   /**
     * @param {Int32x4} t An instance of Int32x4.
@@ -1406,17 +1307,6 @@ if (typeof SIMD.Float32x4.fromInt32x4 === "undefined") {
                           SIMD.Int32x4.extractLane(t, 1),
                           SIMD.Int32x4.extractLane(t, 2),
                           SIMD.Int32x4.extractLane(t, 3));
-  }
-}
-
-if (typeof SIMD.Float32x4.fromFloat64x2Bits === "undefined") {
-  /**
-   * @param {Float64x2} t An instance of Float64x2.
-   * @return {Float32x4} a bit-wise copy of t as a Float32x4.
-   */
-  SIMD.Float32x4.fromFloat64x2Bits = function(t) {
-    saveFloat64x2(t);
-    return restoreFloat32x4();
   }
 }
 
@@ -1458,7 +1348,7 @@ if (!Object.hasOwnProperty(SIMD.Float32x4.prototype, 'toString')) {
    * @return {String} a string representing the Float32x4.
    */
   SIMD.Float32x4.prototype.toString = function() {
-    return "Float32x4(" +
+    return "SIMD.Float32x4(" +
       this.x_ + ", " +
       this.y_ + ", " +
       this.z_ + ", " +
@@ -1471,7 +1361,7 @@ if (!Object.hasOwnProperty(SIMD.Float32x4.prototype, 'toLocaleString')) {
    * @return {String} a locale-sensitive string representing the Float32x4.
    */
   SIMD.Float32x4.prototype.toLocaleString = function() {
-    return "Float32x4(" +
+    return "SIMD.Float32x4(" +
       this.x_.toLocaleString() + ", " +
       this.y_.toLocaleString() + ", " +
       this.z_.toLocaleString() + ", " +
@@ -1484,180 +1374,6 @@ if (!Object.hasOwnProperty(SIMD.Float32x4.prototype, 'valueOf')) {
     throw new TypeError("Float32x4 cannot be converted to a number");
   }
 }
-
-if (typeof SIMD.Float64x2 === "undefined") {
-  /**
-    * Construct a new instance of Float64x2 number.
-    * @param {double} value used for x lane.
-    * @param {double} value used for y lane.
-    * @constructor
-    */
-  SIMD.Float64x2 = function(x, y) {
-    if (!(this instanceof SIMD.Float64x2)) {
-      return new SIMD.Float64x2(x, y);
-    }
-
-    // Use unary + to force coercion to Number.
-    this.x_ = +x;
-    this.y_ = +y;
-  }
-}
-
-if (typeof SIMD.Float64x2.extractLane === "undefined") {
-  /**
-    * @param {Float64x2} t An instance of Float64x2.
-    * @param {integer} i Index in concatenation of t for lane i
-    * @return {double} The value in lane i of t.
-    */
-  SIMD.Float64x2.extractLane = function(t, i) {
-    t = SIMD.Float64x2.check(t);
-    check2(i);
-    switch(i) {
-      case 0: return t.x_;
-      case 1: return t.y_;
-    }
-  }
-}
-
-if (typeof SIMD.Float64x2.replaceLane === "undefined") {
-  /**
-    * @param {Float64x2} t An instance of Float64x2.
-    * @param {integer} i Index in concatenation of t for lane i
-    * @param {double} value used for lane i.
-    * @return {Float64x2} New instance of Float64x2 with the values in t and
-    * lane i replaced with {v}.
-    */
-  SIMD.Float64x2.replaceLane = function(t, i, v) {
-    t = SIMD.Float64x2.check(t);
-    check2(i);
-    saveFloat64x2(t);
-    _f64x2[i] = v;
-    return restoreFloat64x2();
-  }
-}
-
-if (typeof SIMD.Float64x2.check === "undefined") {
-  /**
-    * Check whether the argument is a Float64x2.
-    * @param {Float64x2} v An instance of Float64x2.
-    * @return {Float64x2} The Float64x2 instance.
-    */
-  SIMD.Float64x2.check = function(v) {
-    if (!(v instanceof SIMD.Float64x2)) {
-      throw new TypeError("argument is not a Float64x2.");
-    }
-    return v;
-  }
-}
-
-if (typeof SIMD.Float64x2.splat === "undefined") {
-  /**
-    * Construct a new instance of Float64x2 with the same value
-    * in all lanes.
-    * @param {double} value used for all lanes.
-    * @constructor
-    */
-  SIMD.Float64x2.splat = function(s) {
-    return SIMD.Float64x2(s, s);
-  }
-}
-
-if (typeof SIMD.Float64x2.fromFloat32x4 === "undefined") {
-  /**
-    * @param {Float32x4} t An instance of Float32x4.
-    * @return {Float64x2} A Float64x2 with .x and .y from t
-    */
-  SIMD.Float64x2.fromFloat32x4 = function(t) {
-    t = SIMD.Float32x4.check(t);
-    return SIMD.Float64x2(SIMD.Float32x4.extractLane(t, 0),
-                          SIMD.Float32x4.extractLane(t, 1));
-  }
-}
-
-if (typeof SIMD.Float64x2.fromInt32x4 === "undefined") {
-  /**
-    * @param {Int32x4} t An instance of Int32x4.
-    * @return {Float64x2} A Float64x2 with .x and .y from t
-    */
-  SIMD.Float64x2.fromInt32x4 = function(t) {
-    t = SIMD.Int32x4.check(t);
-    return SIMD.Float64x2(SIMD.Int32x4.extractLane(t, 0),
-                          SIMD.Int32x4.extractLane(t, 1));
-  }
-}
-
-if (typeof SIMD.Float64x2.fromFloat32x4Bits === "undefined") {
-  /**
-   * @param {Float32x4} t An instance of Float32x4.
-   * @return {Float64x2} a bit-wise copy of t as a Float64x2.
-   */
-  SIMD.Float64x2.fromFloat32x4Bits = function(t) {
-    saveFloat32x4(t);
-    return restoreFloat64x2();
-  }
-}
-
-if (typeof SIMD.Float64x2.fromInt32x4Bits === "undefined") {
-  /**
-   * @param {Int32x4} t An instance of Int32x4.
-   * @return {Float64x2} a bit-wise copy of t as a Float64x2.
-   */
-  SIMD.Float64x2.fromInt32x4Bits = function(t) {
-    saveInt32x4(t);
-    return restoreFloat64x2();
-  }
-}
-
-if (typeof SIMD.Float64x2.fromInt16x8Bits === "undefined") {
-  /**
-   * @param {Int16x8} t An instance of Int16x8.
-   * @return {Float64x2} a bit-wise copy of t as a Float64x2.
-   */
-  SIMD.Float64x2.fromInt16x8Bits = function(t) {
-    saveInt16x8(t);
-    return restoreFloat64x2();
-  }
-}
-
-if (typeof SIMD.Float64x2.fromInt8x16Bits === "undefined") {
-  /**
-   * @param {Int8x16} t An instance of Int8x16.
-   * @return {Float64x2} a bit-wise copy of t as a Float64x2.
-   */
-  SIMD.Float64x2.fromInt8x16Bits = function(t) {
-    saveInt8x16(t);
-    return restoreFloat64x2();
-  }
-}
-
-if (!Object.hasOwnProperty(SIMD.Float64x2.prototype, 'toString')) {
-  /**
-   * @return {String} a string representing the Float64x2.
-   */
-  SIMD.Float64x2.prototype.toString = function() {
-    return "Float64x2(" +
-      this.x_ + ", " +
-      this.y_ + ")";
-  }
-}
-
-if (!Object.hasOwnProperty(SIMD.Float64x2.prototype, 'toLocaleString')) {
-  /**
-   * @return {String} a locale-sensitive string representing the Float64x2.
-   */
-  SIMD.Float64x2.prototype.toLocaleString = function() {
-    return "Float64x2(" +
-      this.x_.toLocaleString() + ", " +
-      this.y_.toLocaleString() + ")";
-  }
-}
-
-if (!Object.hasOwnProperty(SIMD.Float64x2.prototype, 'valueOf')) {
-  SIMD.Float64x2.prototype.valueOf = function() {
-    throw new TypeError("Float64x2 cannot be converted to a number");
-  }
-}
-
 
 if (typeof SIMD.Int32x4 === "undefined") {
   /**
@@ -1755,20 +1471,6 @@ if (typeof SIMD.Int32x4.fromFloat32x4 === "undefined") {
   }
 }
 
-if (typeof SIMD.Int32x4.fromFloat64x2 === "undefined") {
-  /**
-    * @param {Float64x2} t An instance of Float64x2.
-    * @return {Int32x4}  An Int32x4 with .x and .y from t
-    */
-  SIMD.Int32x4.fromFloat64x2 = function(t) {
-    t = SIMD.Float64x2.check(t);
-    return SIMD.Int32x4(int32FromFloat(SIMD.Float64x2.extractLane(t, 0)),
-                        int32FromFloat(SIMD.Float64x2.extractLane(t, 1)),
-                        0,
-                        0);
-  }
-}
-
 if (typeof SIMD.Int32x4.fromFloat32x4Bits === "undefined") {
   /**
     * @param {Float32x4} t An instance of Float32x4.
@@ -1776,17 +1478,6 @@ if (typeof SIMD.Int32x4.fromFloat32x4Bits === "undefined") {
     */
   SIMD.Int32x4.fromFloat32x4Bits = function(t) {
     saveFloat32x4(t);
-    return restoreInt32x4();
-  }
-}
-
-if (typeof SIMD.Int32x4.fromFloat64x2Bits === "undefined") {
-  /**
-   * @param {Float64x2} t An instance of Float64x2.
-   * @return {Int32x4} a bit-wise copy of t as an Int32x4.
-   */
-  SIMD.Int32x4.fromFloat64x2Bits = function(t) {
-    saveFloat64x2(t);
     return restoreInt32x4();
   }
 }
@@ -1818,7 +1509,7 @@ if (!Object.hasOwnProperty(SIMD.Int32x4.prototype, 'toString')) {
    * @return {String} a string representing the Int32x4.
    */
   SIMD.Int32x4.prototype.toString = function() {
-    return "Int32x4(" +
+    return "SIMD.Int32x4(" +
       this.x_ + ", " +
       this.y_ + ", " +
       this.z_ + ", " +
@@ -1831,7 +1522,7 @@ if (!Object.hasOwnProperty(SIMD.Int32x4.prototype, 'toLocaleString')) {
    * @return {String} a locale-sensitive string representing the Int32x4.
    */
   SIMD.Int32x4.prototype.toLocaleString = function() {
-    return "Int32x4(" +
+    return "SIMD.Int32x4(" +
       this.x_.toLocaleString() + ", " +
       this.y_.toLocaleString() + ", " +
       this.z_.toLocaleString() + ", " +
@@ -1972,17 +1663,6 @@ if (typeof SIMD.Int16x8.fromFloat32x4Bits === "undefined") {
   }
 }
 
-if (typeof SIMD.Int16x8.fromFloat64x2Bits === "undefined") {
-  /**
-   * @param {Float64x2} t An instance of Float64x2.
-   * @return {Int16x8} a bit-wise copy of t as an Int16x8.
-   */
-  SIMD.Int16x8.fromFloat64x2Bits = function(t) {
-    saveFloat64x2(t);
-    return restoreInt16x8();
-  }
-}
-
 if (typeof SIMD.Int16x8.fromInt32x4Bits === "undefined") {
   /**
     * @param {Int32x4} t An instance of Int32x4.
@@ -2010,7 +1690,7 @@ if (!Object.hasOwnProperty(SIMD.Int16x8.prototype, 'toString')) {
    * @return {String} a string representing the Int16x8.
    */
   SIMD.Int16x8.prototype.toString = function() {
-    return "Int16x8(" +
+    return "SIMD.Int16x8(" +
       this.s0_ + ", " +
       this.s1_ + ", " +
       this.s2_ + ", " +
@@ -2027,7 +1707,7 @@ if (!Object.hasOwnProperty(SIMD.Int16x8.prototype, 'toLocaleString')) {
    * @return {String} a locale-sensitive string representing the Int16x8.
    */
   SIMD.Int16x8.prototype.toLocaleString = function() {
-    return "Int16x8(" +
+    return "SIMD.Int16x8(" +
       this.s0_.toLocaleString() + ", " +
       this.s1_.toLocaleString() + ", " +
       this.s2_.toLocaleString() + ", " +
@@ -2207,17 +1887,6 @@ if (typeof SIMD.Int8x16.fromFloat32x4Bits === "undefined") {
   }
 }
 
-if (typeof SIMD.Int8x16.fromFloat64x2Bits === "undefined") {
-  /**
-   * @param {Float64x2} t An instance of Float64x2.
-   * @return {Int8x16} a bit-wise copy of t as an Int8x16.
-   */
-  SIMD.Int8x16.fromFloat64x2Bits = function(t) {
-    saveFloat64x2(t);
-    return restoreInt8x16();
-  }
-}
-
 if (typeof SIMD.Int8x16.fromInt32x4Bits === "undefined") {
   /**
     * @param {Int32x4} t An instance of Int32x4.
@@ -2245,7 +1914,7 @@ if (!Object.hasOwnProperty(SIMD.Int8x16.prototype, 'toString')) {
    * @return {String} a string representing the Int8x16.
    */
   SIMD.Int8x16.prototype.toString = function() {
-    return "Int8x16(" +
+    return "SIMD.Int8x16(" +
       this.s0_ + ", " +
       this.s1_ + ", " +
       this.s2_ + ", " +
@@ -2270,7 +1939,7 @@ if (!Object.hasOwnProperty(SIMD.Int8x16.prototype, 'toLocaleString')) {
    * @return {String} a locale-sensitive string representing the Int8x16.
    */
   SIMD.Int8x16.prototype.toLocaleString = function() {
-    return "Int8x16(" +
+    return "SIMD.Int8x16(" +
       this.s0_.toLocaleString() + ", " +
       this.s1_.toLocaleString() + ", " +
       this.s2_.toLocaleString() + ", " +
@@ -2976,484 +2645,6 @@ if (typeof SIMD.Float32x4.store3 === "undefined") {
   }
 }
 
-if (typeof SIMD.Float64x2.abs === "undefined") {
-  /**
-   * @param {Float64x2} t An instance of Float64x2.
-   * @return {Float64x2} New instance of Float64x2 with absolute values of
-   * t.
-   */
-  SIMD.Float64x2.abs = function(t) {
-    t = SIMD.Float64x2.check(t);
-    return SIMD.Float64x2(Math.abs(SIMD.Float64x2.extractLane(t, 0)),
-                          Math.abs(SIMD.Float64x2.extractLane(t, 1)));
-  }
-}
-
-if (typeof SIMD.Float64x2.neg === "undefined") {
-  /**
-    * @param {Float64x2} t An instance of Float64x2.
-    * @return {Float64x2} New instance of Float64x2 with negated values of
-    * t.
-    */
-  SIMD.Float64x2.neg = function(t) {
-    t = SIMD.Float64x2.check(t);
-    return SIMD.Float64x2(-SIMD.Float64x2.extractLane(t, 0),
-                          -SIMD.Float64x2.extractLane(t, 1));
-  }
-}
-
-if (typeof SIMD.Float64x2.add === "undefined") {
-  /**
-    * @param {Float64x2} a An instance of Float64x2.
-    * @param {Float64x2} b An instance of Float64x2.
-    * @return {Float64x2} New instance of Float64x2 with a + b.
-    */
-  SIMD.Float64x2.add = function(a, b) {
-    a = SIMD.Float64x2.check(a);
-    b = SIMD.Float64x2.check(b);
-    return SIMD.Float64x2(
-        SIMD.Float64x2.extractLane(a, 0) + SIMD.Float64x2.extractLane(b, 0),
-        SIMD.Float64x2.extractLane(a, 1) + SIMD.Float64x2.extractLane(b, 1));
-  }
-}
-
-if (typeof SIMD.Float64x2.sub === "undefined") {
-  /**
-    * @param {Float64x2} a An instance of Float64x2.
-    * @param {Float64x2} b An instance of Float64x2.
-    * @return {Float64x2} New instance of Float64x2 with a - b.
-    */
-  SIMD.Float64x2.sub = function(a, b) {
-    a = SIMD.Float64x2.check(a);
-    b = SIMD.Float64x2.check(b);
-    return SIMD.Float64x2(
-        SIMD.Float64x2.extractLane(a, 0) - SIMD.Float64x2.extractLane(b, 0),
-        SIMD.Float64x2.extractLane(a, 1) - SIMD.Float64x2.extractLane(b, 1));
-  }
-}
-
-if (typeof SIMD.Float64x2.mul === "undefined") {
-  /**
-    * @param {Float64x2} a An instance of Float64x2.
-    * @param {Float64x2} b An instance of Float64x2.
-    * @return {Float64x2} New instance of Float64x2 with a * b.
-    */
-  SIMD.Float64x2.mul = function(a, b) {
-    a = SIMD.Float64x2.check(a);
-    b = SIMD.Float64x2.check(b);
-    return SIMD.Float64x2(
-        SIMD.Float64x2.extractLane(a, 0) * SIMD.Float64x2.extractLane(b, 0),
-        SIMD.Float64x2.extractLane(a, 1) * SIMD.Float64x2.extractLane(b, 1));
-  }
-}
-
-if (typeof SIMD.Float64x2.div === "undefined") {
-  /**
-    * @param {Float64x2} a An instance of Float64x2.
-    * @param {Float64x2} b An instance of Float64x2.
-    * @return {Float64x2} New instance of Float64x2 with a / b.
-    */
-  SIMD.Float64x2.div = function(a, b) {
-    a = SIMD.Float64x2.check(a);
-    b = SIMD.Float64x2.check(b);
-    return SIMD.Float64x2(
-        SIMD.Float64x2.extractLane(a, 0) / SIMD.Float64x2.extractLane(b, 0),
-        SIMD.Float64x2.extractLane(a, 1) / SIMD.Float64x2.extractLane(b, 1));
-  }
-}
-
-if (typeof SIMD.Float64x2.min === "undefined") {
-  /**
-    * @param {Float64x2} t An instance of Float64x2.
-    * @param {Float64x2} other An instance of Float64x2.
-    * @return {Float64x2} New instance of Float64x2 with the minimum value of
-    * t and other.
-    */
-  SIMD.Float64x2.min = function(t, other) {
-    t = SIMD.Float64x2.check(t);
-    other = SIMD.Float64x2.check(other);
-    var cx = Math.min(SIMD.Float64x2.extractLane(t, 0),
-                      SIMD.Float64x2.extractLane(other, 0));
-    var cy = Math.min(SIMD.Float64x2.extractLane(t, 1),
-                      SIMD.Float64x2.extractLane(other, 1));
-    return SIMD.Float64x2(cx, cy);
-  }
-}
-
-if (typeof SIMD.Float64x2.max === "undefined") {
-  /**
-    * @param {Float64x2} t An instance of Float64x2.
-    * @param {Float64x2} other An instance of Float64x2.
-    * @return {Float64x2} New instance of Float64x2 with the maximum value of
-    * t and other.
-    */
-  SIMD.Float64x2.max = function(t, other) {
-    t = SIMD.Float64x2.check(t);
-    other = SIMD.Float64x2.check(other);
-    var cx = Math.max(SIMD.Float64x2.extractLane(t, 0),
-                      SIMD.Float64x2.extractLane(other, 0));
-    var cy = Math.max(SIMD.Float64x2.extractLane(t, 1),
-                      SIMD.Float64x2.extractLane(other, 1));
-    return SIMD.Float64x2(cx, cy);
-  }
-}
-
-if (typeof SIMD.Float64x2.minNum === "undefined") {
-  /**
-    * @param {Float64x2} t An instance of Float64x2.
-    * @param {Float64x2} other An instance of Float64x2.
-    * @return {Float64x2} New instance of Float64x2 with the minimum value of
-    * t and other, preferring numbers over NaNs.
-    */
-  SIMD.Float64x2.minNum = function(t, other) {
-    t = SIMD.Float64x2.check(t);
-    other = SIMD.Float64x2.check(other);
-    var cx = minNum(SIMD.Float64x2.extractLane(t, 0),
-                    SIMD.Float64x2.extractLane(other, 0));
-    var cy = minNum(SIMD.Float64x2.extractLane(t, 1),
-                    SIMD.Float64x2.extractLane(other, 1));
-    return SIMD.Float64x2(cx, cy);
-  }
-}
-
-if (typeof SIMD.Float64x2.maxNum === "undefined") {
-  /**
-    * @param {Float64x2} t An instance of Float64x2.
-    * @param {Float64x2} other An instance of Float64x2.
-    * @return {Float64x2} New instance of Float64x2 with the maximum value of
-    * t and other, preferring numbers over NaNs.
-    */
-  SIMD.Float64x2.maxNum = function(t, other) {
-    t = SIMD.Float64x2.check(t);
-    other = SIMD.Float64x2.check(other);
-    var cx = maxNum(SIMD.Float64x2.extractLane(t, 0),
-                    SIMD.Float64x2.extractLane(other, 0));
-    var cy = maxNum(SIMD.Float64x2.extractLane(t, 1),
-                    SIMD.Float64x2.extractLane(other, 1));
-    return SIMD.Float64x2(cx, cy);
-  }
-}
-
-if (typeof SIMD.Float64x2.reciprocalApproximation === "undefined") {
-  /**
-    * @param {Float64x2} t An instance of Float64x2.
-    * @return {Float64x2} New instance of Float64x2 with an approximation of the
-    * reciprocal value of t.
-    */
-  SIMD.Float64x2.reciprocalApproximation = function(t) {
-    t = SIMD.Float64x2.check(t);
-    return SIMD.Float64x2.div(SIMD.Float64x2.splat(1.0), t);
-  }
-}
-
-if (typeof SIMD.Float64x2.reciprocalSqrtApproximation === "undefined") {
-  /**
-    * @param {Float64x2} t An instance of Float64x2.
-    * @return {Float64x2} New instance of Float64x2 with an approximation of the
-    * reciprocal value of the square root of t.
-    */
-  SIMD.Float64x2.reciprocalSqrtApproximation = function(t) {
-    t = SIMD.Float64x2.check(t);
-    return SIMD.Float64x2.reciprocalApproximation(SIMD.Float64x2.sqrt(t));
-  }
-}
-
-if (typeof SIMD.Float64x2.sqrt === "undefined") {
-  /**
-    * @param {Float64x2} t An instance of Float64x2.
-    * @return {Float64x2} New instance of Float64x2 with square root of
-    * values of t.
-    */
-  SIMD.Float64x2.sqrt = function(t) {
-    t = SIMD.Float64x2.check(t);
-    return SIMD.Float64x2(Math.sqrt(SIMD.Float64x2.extractLane(t, 0)),
-                          Math.sqrt(SIMD.Float64x2.extractLane(t, 1)));
-  }
-}
-
-if (typeof SIMD.Float64x2.swizzle === "undefined") {
-  /**
-    * @param {Float64x2} t An instance of Float64x2 to be swizzled.
-    * @param {integer} x - Index in t for lane x
-    * @param {integer} y - Index in t for lane y
-    * @return {Float64x2} New instance of Float64x2 with lanes swizzled.
-    */
-  SIMD.Float64x2.swizzle = function(t, x, y) {
-    t = SIMD.Float64x2.check(t);
-    check2(x);
-    check2(y);
-    var storage = _f64x2;
-    storage[0] = SIMD.Float64x2.extractLane(t, 0);
-    storage[1] = SIMD.Float64x2.extractLane(t, 1);
-    return SIMD.Float64x2(storage[x], storage[y]);
-  }
-}
-
-if (typeof SIMD.Float64x2.shuffle === "undefined") {
-
-  _f64x4 = new Float64Array(4);
-
-  /**
-    * @param {Float64x2} t1 An instance of Float64x2 to be shuffled.
-    * @param {Float64x2} t2 An instance of Float64x2 to be shuffled.
-    * @param {integer} x - Index in concatenation of t1 and t2 for lane x
-    * @param {integer} y - Index in concatenation of t1 and t2 for lane y
-    * @return {Float64x2} New instance of Float64x2 with lanes shuffled.
-    */
-  SIMD.Float64x2.shuffle = function(t1, t2, x, y) {
-    t1 = SIMD.Float64x2.check(t1);
-    t2 = SIMD.Float64x2.check(t2);
-    check4(x);
-    check4(y);
-    var storage = _f64x4;
-    storage[0] = SIMD.Float64x2.extractLane(t1, 0);
-    storage[1] = SIMD.Float64x2.extractLane(t1, 1);
-    storage[2] = SIMD.Float64x2.extractLane(t2, 0);
-    storage[3] = SIMD.Float64x2.extractLane(t2, 1);
-    return SIMD.Float64x2(storage[x], storage[y]);
-  }
-}
-
-if (typeof SIMD.Float64x2.lessThan === "undefined") {
-  /**
-    * @param {Float64x2} t An instance of Float64x2.
-    * @param {Float64x2} other An instance of Float64x2.
-    * @return {Bool64x2} true or false in each lane depending on
-    * the result of t < other.
-    */
-  SIMD.Float64x2.lessThan = function(t, other) {
-    t = SIMD.Float64x2.check(t);
-    other = SIMD.Float64x2.check(other);
-    var cx =
-        SIMD.Float64x2.extractLane(t, 0) < SIMD.Float64x2.extractLane(other, 0);
-    var cy =
-        SIMD.Float64x2.extractLane(t, 1) < SIMD.Float64x2.extractLane(other, 1);
-    return SIMD.Bool64x2(cx, cy);
-  }
-}
-
-if (typeof SIMD.Float64x2.lessThanOrEqual === "undefined") {
-  /**
-    * @param {Float64x2} t An instance of Float64x2.
-    * @param {Float64x2} other An instance of Float64x2.
-    * @return {Bool64x2} true or false in each lane depending on
-    * the result of t <= other.
-    */
-  SIMD.Float64x2.lessThanOrEqual = function(t, other) {
-    t = SIMD.Float64x2.check(t);
-    other = SIMD.Float64x2.check(other);
-    var cx = SIMD.Float64x2.extractLane(t, 0) <=
-        SIMD.Float64x2.extractLane(other, 0);
-    var cy = SIMD.Float64x2.extractLane(t, 1) <=
-        SIMD.Float64x2.extractLane(other, 1);
-    return SIMD.Bool64x2(cx, cy);
-  }
-}
-
-if (typeof SIMD.Float64x2.equal === "undefined") {
-  /**
-    * @param {Float64x2} t An instance of Float64x2.
-    * @param {Float64x2} other An instance of Float64x2.
-    * @return {Bool64x2} true or false in each lane depending on
-    * the result of t == other.
-    */
-  SIMD.Float64x2.equal = function(t, other) {
-    t = SIMD.Float64x2.check(t);
-    other = SIMD.Float64x2.check(other);
-    var cx = SIMD.Float64x2.extractLane(t, 0) ==
-        SIMD.Float64x2.extractLane(other, 0);
-    var cy = SIMD.Float64x2.extractLane(t, 1) ==
-        SIMD.Float64x2.extractLane(other, 1);
-    return SIMD.Bool64x2(cx, cy);
-  }
-}
-
-if (typeof SIMD.Float64x2.notEqual === "undefined") {
-  /**
-    * @param {Float64x2} t An instance of Float64x2.
-    * @param {Float64x2} other An instance of Float64x2.
-    * @return {Bool64x2} true or false in each lane depending on
-    * the result of t != other.
-    */
-  SIMD.Float64x2.notEqual = function(t, other) {
-    t = SIMD.Float64x2.check(t);
-    other = SIMD.Float64x2.check(other);
-    var cx = SIMD.Float64x2.extractLane(t, 0) !=
-        SIMD.Float64x2.extractLane(other, 0);
-    var cy = SIMD.Float64x2.extractLane(t, 1) !=
-        SIMD.Float64x2.extractLane(other, 1);
-    return SIMD.Bool64x2(cx, cy);
-  }
-}
-
-if (typeof SIMD.Float64x2.greaterThanOrEqual === "undefined") {
-  /**
-    * @param {Float64x2} t An instance of Float64x2.
-    * @param {Float64x2} other An instance of Float64x2.
-    * @return {Bool64x2} true or false in each lane depending on
-    * the result of t >= other.
-    */
-  SIMD.Float64x2.greaterThanOrEqual = function(t, other) {
-    t = SIMD.Float64x2.check(t);
-    other = SIMD.Float64x2.check(other);
-    var cx = SIMD.Float64x2.extractLane(t, 0) >=
-        SIMD.Float64x2.extractLane(other, 0);
-    var cy = SIMD.Float64x2.extractLane(t, 1) >=
-        SIMD.Float64x2.extractLane(other, 1);
-    return SIMD.Bool64x2(cx, cy);
-  }
-}
-
-if (typeof SIMD.Float64x2.greaterThan === "undefined") {
-  /**
-    * @param {Float64x2} t An instance of Float64x2.
-    * @param {Float64x2} other An instance of Float64x2.
-    * @return {Bool64x2} true or false in each lane depending on
-    * the result of t > other.
-    */
-  SIMD.Float64x2.greaterThan = function(t, other) {
-    t = SIMD.Float64x2.check(t);
-    other = SIMD.Float64x2.check(other);
-    var cx =
-        SIMD.Float64x2.extractLane(t, 0) > SIMD.Float64x2.extractLane(other, 0);
-    var cy =
-        SIMD.Float64x2.extractLane(t, 1) > SIMD.Float64x2.extractLane(other, 1);
-    return SIMD.Bool64x2(cx, cy);
-  }
-}
-
-if (typeof SIMD.Float64x2.select === "undefined") {
-  /**
-    * @param {Bool64x2} t Selector mask. An instance of Bool64x2
-    * @param {Float64x2} trueValue Pick lane from here if corresponding
-    * selector lane is true
-    * @param {Float64x2} falseValue Pick lane from here if corresponding
-    * selector lane is false
-    * @return {Float64x2} Mix of lanes from trueValue or falseValue as
-    * indicated
-    */
-  SIMD.Float64x2.select = function(t, trueValue, falseValue) {
-    t = SIMD.Bool64x2.check(t);
-    trueValue = SIMD.Float64x2.check(trueValue);
-    falseValue = SIMD.Float64x2.check(falseValue);
-    return SIMD.Float64x2(
-        SIMD.Bool64x2.extractLane(t, 0) ?
-            SIMD.Float64x2.extractLane(trueValue, 0) :
-                SIMD.Float64x2.extractLane(falseValue, 0),
-        SIMD.Bool64x2.extractLane(t, 1) ?
-            SIMD.Float64x2.extractLane(trueValue, 1) :
-                SIMD.Float64x2.extractLane(falseValue, 1));
-  }
-}
-
-if (typeof SIMD.Float64x2.load === "undefined") {
-  /**
-    * @param {Typed array} tarray An instance of a typed array.
-    * @param {Number} index An instance of Number.
-    * @return {Float64x2} New instance of Float64x2.
-    */
-  SIMD.Float64x2.load = function(tarray, index) {
-    if (!isTypedArray(tarray))
-      throw new TypeError("The 1st argument must be a typed array.");
-    if (!isInt32(index))
-      throw new TypeError("The 2nd argument must be an Int32.");
-    var bpe = tarray.BYTES_PER_ELEMENT;
-    if (index < 0 || (index * bpe + 16) > tarray.byteLength)
-      throw new RangeError("The value of index is invalid.");
-    var f64temp = _f64x2;
-    var array = bpe == 1 ? _i8x16 :
-                bpe == 2 ? _i16x8 :
-                bpe == 4 ? (tarray instanceof Float32Array ? _f32x4 : _i32x4) :
-                f64temp;
-    var n = 16 / bpe;
-    for (var i = 0; i < n; ++i)
-      array[i] = tarray[index + i];
-    return SIMD.Float64x2(f64temp[0], f64temp[1]);
-  }
-}
-
-if (typeof SIMD.Float64x2.load1 === "undefined") {
-  /**
-    * @param {Typed array} tarray An instance of a typed array.
-    * @param {Number} index An instance of Number.
-    * @return {Float64x2} New instance of Float64x2.
-    */
-  SIMD.Float64x2.load1 = function(tarray, index) {
-    if (!isTypedArray(tarray))
-      throw new TypeError("The 1st argument must be a typed array.");
-    if (!isInt32(index))
-      throw new TypeError("The 2nd argument must be an Int32.");
-    var bpe = tarray.BYTES_PER_ELEMENT;
-    if (index < 0 || (index * bpe + 8) > tarray.byteLength)
-      throw new RangeError("The value of index is invalid.");
-    var f64temp = _f64x2;
-    var array = bpe == 1 ? _i8x16 :
-                bpe == 2 ? _i16x8 :
-                bpe == 4 ? (tarray instanceof Float32Array ? _f32x4 : _i32x4) :
-                f64temp;
-    var n = 8 / bpe;
-    for (var i = 0; i < n; ++i)
-      array[i] = tarray[index + i];
-    return SIMD.Float64x2(f64temp[0], 0.0);
-  }
-}
-
-if (typeof SIMD.Float64x2.store === "undefined") {
-  /**
-    * @param {Typed array} tarray An instance of a typed array.
-    * @param {Number} index An instance of Number.
-    * @param {Float64x2} value An instance of Float64x2.
-    * @return {Float64x2} value
-    */
-  SIMD.Float64x2.store = function(tarray, index, value) {
-    if (!isTypedArray(tarray))
-      throw new TypeError("The 1st argument must be a typed array.");
-    if (!isInt32(index))
-      throw new TypeError("The 2nd argument must be an Int32.");
-    var bpe = tarray.BYTES_PER_ELEMENT;
-    if (index < 0 || (index * bpe + 16) > tarray.byteLength)
-      throw new RangeError("The value of index is invalid.");
-    value = SIMD.Float64x2.check(value);
-    _f64x2[0] = SIMD.Float64x2.extractLane(value, 0);
-    _f64x2[1] = SIMD.Float64x2.extractLane(value, 1);
-    var array = bpe == 1 ? _i8x16 :
-                bpe == 2 ? _i16x8 :
-                bpe == 4 ? (tarray instanceof Float32Array ? _f32x4 : _i32x4) :
-                _f64x2;
-    var n = 16 / bpe;
-    for (var i = 0; i < n; ++i)
-      tarray[index + i] = array[i];
-    return value;
-  }
-}
-
-if (typeof SIMD.Float64x2.store1 === "undefined") {
-  /**
-    * @param {Typed array} tarray An instance of a typed array.
-    * @param {Number} index An instance of Number.
-    * @param {Float64x2} value An instance of Float64x2.
-    * @return {Float64x2} value
-    */
-  SIMD.Float64x2.store1 = function(tarray, index, value) {
-    if (!isTypedArray(tarray))
-      throw new TypeError("The 1st argument must be a typed array.");
-    if (!isInt32(index))
-      throw new TypeError("The 2nd argument must be an Int32.");
-    var bpe = tarray.BYTES_PER_ELEMENT;
-    if (index < 0 || (index * bpe + 8) > tarray.byteLength)
-      throw new RangeError("The value of index is invalid.");
-    value = SIMD.Float64x2.check(value);
-    _f64x2[0] = SIMD.Float64x2.extractLane(value, 0);
-    var array = bpe == 1 ? _i8x16 :
-                bpe == 2 ? _i16x8 :
-                bpe == 4 ? (tarray instanceof Float32Array ? _f32x4 : _i32x4) :
-                _f64x2;
-    var n = 8 / bpe;
-    for (var i = 0; i < n; ++i)
-      tarray[index + i] = array[i];
-    return value;
-  }
-}
 
 if (typeof SIMD.Int32x4.and === "undefined") {
   /**
