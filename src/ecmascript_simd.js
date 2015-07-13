@@ -5526,4 +5526,12 @@ if (typeof SIMD.Int8x16.store === "undefined") {
   }
 }
 
-})(typeof window !== "undefined" ? window : this);
+// If we're in a browser, the global namespace is named 'window'. If we're
+// in node, it's named 'global'. If we're in a shell, 'this' might work.
+})(typeof window !== "undefined"
+   ? window
+   : (typeof process === 'object' &&
+      typeof require === 'function' &&
+      typeof global === 'object')
+     ? global
+     : this);
