@@ -1623,6 +1623,16 @@ The initial value of _SIMD_Constructor.prototype.constructor is the intrinsic ob
 <emu-note>This definition depends on the primitive _SIMD_Type's behavior under ToString. Alternatively, _SIMD_Type could have ToString defined by calling ToObject and then reaching this method (or whatever the user overrides it with), in which case the current definition in ToString would be brought down here.</emu-note>
 </emu-clause>
 
+<emu-clause id="simd-to-string-tag">
+<h1>_SIMD_Constructor.prototype [ @@toStringTag ]</h1>
+<p>
+The initial value of the @@toStringTag property is the String value `"SIMD.`_SIMD_`"`, e.g., `"SIMD.Float32x4"`.
+<p>
+</p>
+This property has the attributes { [[Writable]]: ~false~, [[Enumerable]]: ~false~, [[Configurable]]: ~true~ }.
+</p>
+</emu-clause>
+
 </emu-clause>
 
 <emu-clause id="simd-descriptors">
