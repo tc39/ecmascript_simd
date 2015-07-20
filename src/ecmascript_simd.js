@@ -474,13 +474,13 @@ if (typeof SIMD.Bool32x4.select === "undefined") {
   }
 }
 
-if (!Object.hasOwnProperty(SIMD.Bool32x4.prototype, 'valueOf')) {
+if (!SIMD.Bool32x4.prototype.hasOwnProperty('valueOf')) {
   SIMD.Bool32x4.prototype.valueOf = function() {
     throw new TypeError("Bool32x4 cannot be converted to a number");
   }
 }
 
-if (!Object.hasOwnProperty(SIMD.Bool32x4.prototype, 'toString')) {
+if (!SIMD.Bool32x4.prototype.hasOwnProperty('toString')) {
   /**
    * @return {String} a string representing the Bool32x4.
    */
@@ -493,7 +493,7 @@ if (!Object.hasOwnProperty(SIMD.Bool32x4.prototype, 'toString')) {
   }
 }
 
-if (!Object.hasOwnProperty(SIMD.Bool32x4.prototype, 'toLocaleString')) {
+if (!SIMD.Bool32x4.prototype.hasOwnProperty('toLocaleString')) {
   /**
    * @return {String} a locale-sensitive string representing the Bool32x4.
    */
@@ -770,13 +770,13 @@ if (typeof SIMD.Bool16x8.select === "undefined") {
   }
 }
 
-if (!Object.hasOwnProperty(SIMD.Bool16x8.prototype, 'valueOf')) {
+if (!SIMD.Bool16x8.prototype.hasOwnProperty('valueOf')) {
   SIMD.Bool16x8.prototype.valueOf = function() {
     throw new TypeError("Bool16x8 cannot be converted to a number");
   }
 }
 
-if (!Object.hasOwnProperty(SIMD.Bool16x8.prototype, 'toString')) {
+if (!SIMD.Bool16x8.prototype.hasOwnProperty('toString')) {
   /**
    * @return {String} a string representing the Bool32x4.
    */
@@ -793,7 +793,7 @@ if (!Object.hasOwnProperty(SIMD.Bool16x8.prototype, 'toString')) {
   }
 }
 
-if (!Object.hasOwnProperty(SIMD.Bool16x8.prototype, 'toLocaleString')) {
+if (!SIMD.Bool16x8.prototype.hasOwnProperty('toLocaleString')) {
   /**
    * @return {String} a locale-sensitive string representing the Bool16x8.
    */
@@ -1157,13 +1157,13 @@ if (typeof SIMD.Bool8x16.select === "undefined") {
   }
 }
 
-if (!Object.hasOwnProperty(SIMD.Bool8x16.prototype, 'valueOf')) {
+if (!SIMD.Bool8x16.prototype.hasOwnProperty('valueOf')) {
   SIMD.Bool8x16.prototype.valueOf = function() {
     throw new TypeError("Bool8x16 cannot be converted to a number");
   }
 }
 
-if (!Object.hasOwnProperty(SIMD.Bool8x16.prototype, 'toString')) {
+if (!SIMD.Bool8x16.prototype.hasOwnProperty('toString')) {
   /**
    * @return {String} a string representing the Bool32x4.
    */
@@ -1188,7 +1188,7 @@ if (!Object.hasOwnProperty(SIMD.Bool8x16.prototype, 'toString')) {
   }
 }
 
-if (!Object.hasOwnProperty(SIMD.Bool8x16.prototype, 'toLocaleString')) {
+if (!SIMD.Bool8x16.prototype.hasOwnProperty('toLocaleString')) {
   /**
    * @return {String} a locale-sensitive string representing the Bool8x16.
    */
@@ -1343,7 +1343,7 @@ if (typeof SIMD.Float32x4.fromInt8x16Bits === "undefined") {
   }
 }
 
-if (!Object.hasOwnProperty(SIMD.Float32x4.prototype, 'toString')) {
+if (!SIMD.Float32x4.prototype.hasOwnProperty('toString')) {
   /**
    * @return {String} a string representing the Float32x4.
    */
@@ -1356,7 +1356,7 @@ if (!Object.hasOwnProperty(SIMD.Float32x4.prototype, 'toString')) {
   }
 }
 
-if (!Object.hasOwnProperty(SIMD.Float32x4.prototype, 'toLocaleString')) {
+if (!SIMD.Float32x4.prototype.hasOwnProperty('toLocaleString')) {
   /**
    * @return {String} a locale-sensitive string representing the Float32x4.
    */
@@ -1369,7 +1369,7 @@ if (!Object.hasOwnProperty(SIMD.Float32x4.prototype, 'toLocaleString')) {
   }
 }
 
-if (!Object.hasOwnProperty(SIMD.Float32x4.prototype, 'valueOf')) {
+if (!SIMD.Float32x4.prototype.hasOwnProperty('valueOf')) {
   SIMD.Float32x4.prototype.valueOf = function() {
     throw new TypeError("Float32x4 cannot be converted to a number");
   }
@@ -1504,7 +1504,7 @@ if (typeof SIMD.Int32x4.fromInt8x16Bits === "undefined") {
   }
 }
 
-if (!Object.hasOwnProperty(SIMD.Int32x4.prototype, 'toString')) {
+if (!SIMD.Int32x4.prototype.hasOwnProperty('toString')) {
   /**
    * @return {String} a string representing the Int32x4.
    */
@@ -1517,7 +1517,7 @@ if (!Object.hasOwnProperty(SIMD.Int32x4.prototype, 'toString')) {
   }
 }
 
-if (!Object.hasOwnProperty(SIMD.Int32x4.prototype, 'toLocaleString')) {
+if (!SIMD.Int32x4.prototype.hasOwnProperty('toLocaleString')) {
   /**
    * @return {String} a locale-sensitive string representing the Int32x4.
    */
@@ -1530,7 +1530,7 @@ if (!Object.hasOwnProperty(SIMD.Int32x4.prototype, 'toLocaleString')) {
   }
 }
 
-if (!Object.hasOwnProperty(SIMD.Int32x4.prototype, 'valueOf')) {
+if (!SIMD.Int32x4.prototype.hasOwnProperty('valueOf')) {
   SIMD.Int32x4.prototype.valueOf = function() {
     throw new TypeError("Int32x4 cannot be converted to a number");
   }
@@ -1685,7 +1685,7 @@ if (typeof SIMD.Int16x8.fromInt8x16Bits === "undefined") {
   }
 }
 
-if (!Object.hasOwnProperty(SIMD.Int16x8.prototype, 'toString')) {
+if (!SIMD.Int16x8.prototype.hasOwnProperty('toString')) {
   /**
    * @return {String} a string representing the Int16x8.
    */
@@ -1702,7 +1702,7 @@ if (!Object.hasOwnProperty(SIMD.Int16x8.prototype, 'toString')) {
   }
 }
 
-if (!Object.hasOwnProperty(SIMD.Int16x8.prototype, 'toLocaleString')) {
+if (!SIMD.Int16x8.prototype.hasOwnProperty('toLocaleString')) {
   /**
    * @return {String} a locale-sensitive string representing the Int16x8.
    */
@@ -1719,7 +1719,7 @@ if (!Object.hasOwnProperty(SIMD.Int16x8.prototype, 'toLocaleString')) {
   }
 }
 
-if (!Object.hasOwnProperty(SIMD.Int16x8.prototype, 'valueOf')) {
+if (!SIMD.Int16x8.prototype.hasOwnProperty('valueOf')) {
   SIMD.Int16x8.prototype.valueOf = function() {
     throw new TypeError("Int16x8 cannot be converted to a number");
   }
@@ -1909,7 +1909,7 @@ if (typeof SIMD.Int8x16.fromInt16x8Bits === "undefined") {
   }
 }
 
-if (!Object.hasOwnProperty(SIMD.Int8x16.prototype, 'toString')) {
+if (!SIMD.Int8x16.prototype.hasOwnProperty('toString')) {
   /**
    * @return {String} a string representing the Int8x16.
    */
@@ -1934,7 +1934,7 @@ if (!Object.hasOwnProperty(SIMD.Int8x16.prototype, 'toString')) {
   }
 }
 
-if (!Object.hasOwnProperty(SIMD.Int8x16.prototype, 'toLocaleString')) {
+if (!SIMD.Int8x16.prototype.hasOwnProperty('toLocaleString')) {
   /**
    * @return {String} a locale-sensitive string representing the Int8x16.
    */
@@ -1959,7 +1959,7 @@ if (!Object.hasOwnProperty(SIMD.Int8x16.prototype, 'toLocaleString')) {
   }
 }
 
-if (!Object.hasOwnProperty(SIMD.Int8x16.prototype, 'valueOf')) {
+if (!SIMD.Int8x16.prototype.hasOwnProperty('valueOf')) {
   SIMD.Int8x16.prototype.valueOf = function() {
     throw new TypeError("Int8x16 cannot be converted to a number");
   }
