@@ -1,10 +1,10 @@
 <!doctype html>
 <meta charset="utf8">
-<title>SIMD.js specification v0.7.1</title>
+<title>SIMD.js specification v0.7.2</title>
 <link rel="stylesheet" href="https://bterlson.github.com/ecmarkup/elements.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/github.min.css">
 <emu-biblio href="./biblio.json"></emu-biblio>
-<h1>SIMD.js specification v0.7.1</h1>
+<h1>SIMD.js specification v0.7.2</h1>
 <emu-intro id="intro">
 <h1>Introduction</h1>
 <p>
@@ -63,6 +63,7 @@ Related links:
 <li>v0.6.1: Relax behavior on subnormals, float to int conversion throws on out of bounds, shift does not mask.</li>
 <li>v0.7: Remove Float64x2, Bool64x2, {load,store}[123], selectBits (could be in phase 2); add unsigned operations and sum of absolute differences operations; minor fix in 'shift' definition; clarify what the SIMD object is.</li>
 <li>v0.7.1: Add back in {load,store}[123], make ToString() homoiconic.</li>
+<li>v0.7.2: Fix shiftRightArithmetic, add @@toPrimitive.</li>
 </ul>
 </emu-intro>
 
@@ -1302,8 +1303,7 @@ This operation is only defined on integer SIMD types. This definition uses the r
 1. If _a_.[[SIMDTypeDescriptor]] is not _SIMD_Descriptor, throw a TypeError.
 1. If ToUint32(_scalar_) does not equal _scalar_, throw a TypeError.
 1. If _scalar_ >= _SIMD_Descriptor.[[SIMDElementSize]] * 8, then
-  1. Let _list_ be a list of length _SIMD_Descriptor.[[SIMDLength]], filled with 0.
-  1. return SIMDCreate(_SIMD_Descriptor, _list_).
+  1. Let _scalar_ be _SIMD_Descriptor.[[SIMDElementSize]] * 8 - 1.
 1. Let _result_ be SIMDScalarOp(_a_, _scalar_, >>).
 1. ReturnIfAbrupt(_result_).
 1. Return _result_.
@@ -1628,6 +1628,30 @@ The initial value of _SIMD_Constructor.prototype.constructor is the intrinsic ob
 <p>
 The initial value of the @@toStringTag property is the String value `"SIMD.`_SIMD_`"`, e.g., `"SIMD.Float32x4"`.
 <p>
+</p>
+This property has the attributes { [[Writable]]: ~false~, [[Enumerable]]: ~false~, [[Configurable]]: ~true~ }.
+</p>
+</emu-clause>
+
+<emu-clause id="simd-to-primitive">
+<h1>_SIMD_Constructor.prototype [ @@toPrimitive ] ( hint )</h1>
+<emu-note>
+This function is called by ECMAScript language operators to convert a Symbol object to a primitive value. The allowed values for hint are `"default"`, `"number"`, and `"string"`.
+</emu-note>
+
+<p>
+When the `@@toPrimitive` method is called with argument _hint_, the following steps are taken:
+</p>
+
+<emu-alg>
+1. Let _s_ be the ~this~ value.
+1. If Type(_s_) is a SIMD type, return _s_.
+1. If Type(_s_) is not `Object`, throw a ~TypeError~ exception.
+1. If _s_ does not have a [[SIMDWrapperData]] internal slot, throw a ~TypeError~ exception.
+1. Return the value of _s_’s [[SIMDWrapperData]] internal slot.
+</emu-alg>
+<p>
+The value of the `name` property of this function is `"[SIMD._SIMD_.toPrimitive]"`.
 </p>
 This property has the attributes { [[Writable]]: ~false~, [[Enumerable]]: ~false~, [[Configurable]]: ~true~ }.
 </p>
