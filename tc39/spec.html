@@ -63,7 +63,7 @@ Related links:
 <li>v0.6.1: Relax behavior on subnormals, float to int conversion throws on out of bounds, shift does not mask.</li>
 <li>v0.7: Remove Float64x2, Bool64x2, {load,store}[123], selectBits (could be in phase 2); add unsigned operations and sum of absolute differences operations; minor fix in 'shift' definition; clarify what the SIMD object is.</li>
 <li>v0.7.1: Add back in {load,store}[123], make ToString() homoiconic.</li>
-<li>v0.7.2: Fix shiftRightArithmetic, add @@toPrimitive.</li>
+<li>v0.7.2: Fix shiftRightArithmetic, add @@toPrimitive, do implicit coercion for shift bits.</li>
 </ul>
 </emu-intro>
 
@@ -1265,11 +1265,11 @@ This operation is only defined on integer SIMD types whose _SIMD_Descriptor.[[SI
 </emu-clause>
 
 <emu-clause id="simd-shift-left-by-scalar">
-<h1>_SIMD_Constructor.shiftLeftByScalar( a, scalar )</h1>
+<h1>_SIMD_Constructor.shiftLeftByScalar( a, bits )</h1>
 This operation is only defined on integer SIMD types. This definition uses the refers to << as defined by <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-left-shift-operator">ES2015 12.8.3 (The Left Shift Operator ( << ))</a>.
 <emu-alg>
 1. If _a_.[[SIMDTypeDescriptor]] is not _SIMD_Descriptor, throw a TypeError.
-1. If ToUint32(_scalar_) does not equal _scalar_, throw a TypeError.
+1. Let _scalar_ be ToUint32(_bits_).
 1. If _scalar_ >= _SIMD_Descriptor.[[SIMDElementSize]] * 8, then
   1. Let _list_ be a list of length _SIMD_Descriptor.[[SIMDLength]], filled with 0.
   1. return SIMDCreate(_SIMD_Descriptor, _list_).
@@ -1281,11 +1281,11 @@ This operation is only defined on integer SIMD types. This definition uses the r
 </emu-clause>
 
 <emu-clause id="simd-shift-right-logical-by-scalar">
-<h1>_SIMD_Constructor.shiftRightLogicalByScalar( a, scalar )</h1>
+<h1>_SIMD_Constructor.shiftRightLogicalByScalar( a, bits )</h1>
 This operation is only defined on integer SIMD types. This definition uses the refers to >>> as defined by <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-unsigned-right-shift-operator">ES2015 12.8.5 (The Unsigned Right Shift Operator ( >>> ))</a>.
 <emu-alg>
 1. If _a_.[[SIMDTypeDescriptor]] is not _SIMD_Descriptor, throw a TypeError.
-1. If ToUint32(_scalar_) does not equal _scalar_, throw a TypeError.
+1. Let _scalar_ be ToUint32(_bits_).
 1. If _scalar_ >= _SIMD_Descriptor.[[SIMDElementSize]] * 8, then
   1. Let _list_ be a list of length _SIMD_Descriptor.[[SIMDLength]], filled with 0.
   1. return SIMDCreate(_SIMD_Descriptor, _list_).
@@ -1297,11 +1297,11 @@ This operation is only defined on integer SIMD types. This definition uses the r
 </emu-clause>
 
 <emu-clause id="simd-shift-right-arithmetic-by-scalar">
-<h1>_SIMD_Constructor.shiftRightArithmeticByScalar( a, scalar )</h1>
+<h1>_SIMD_Constructor.shiftRightArithmeticByScalar( a, bits )</h1>
 This operation is only defined on integer SIMD types. This definition uses the refers to >> as defined by <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-signed-right-shift-operator">ES2015 12.8.4 (The Signed Right Shift Operator ( >> ))</a>.
 <emu-alg>
 1. If _a_.[[SIMDTypeDescriptor]] is not _SIMD_Descriptor, throw a TypeError.
-1. If ToUint32(_scalar_) does not equal _scalar_, throw a TypeError.
+1. Let _scalar_ be ToUint32(_bits_).
 1. If _scalar_ >= _SIMD_Descriptor.[[SIMDElementSize]] * 8, then
   1. Let _scalar_ be _SIMD_Descriptor.[[SIMDElementSize]] * 8 - 1.
 1. Let _result_ be SIMDScalarOp(_a_, _scalar_, >>).
@@ -1651,7 +1651,7 @@ When the `@@toPrimitive` method is called with argument _hint_, the following st
 1. Return the value of _s_’s [[SIMDWrapperData]] internal slot.
 </emu-alg>
 <p>
-The value of the `name` property of this function is `"[SIMD._SIMD_.toPrimitive]"`.
+The value of the `name` property of this function is `"[Symbol.toPrimitive]"`.
 </p>
 This property has the attributes { [[Writable]]: ~false~, [[Enumerable]]: ~false~, [[Configurable]]: ~true~ }.
 </p>
