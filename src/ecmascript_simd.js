@@ -2881,26 +2881,6 @@ if (typeof SIMD.Int32x4.select === "undefined") {
   }
 }
 
-if (typeof SIMD.Int32x4.selectBits === "undefined") {
-  /**
-    * @param {Int32x4} t Selector mask. An instance of Int32x4
-    * @param {Int32x4} trueValue Pick bit from here if corresponding
-    * selector bit is 1
-    * @param {Int32x4} falseValue Pick bit from here if corresponding
-    * selector bit is 0
-    * @return {Int32x4} Mix of bits from trueValue or falseValue as
-    * indicated
-    */
-  SIMD.Int32x4.selectBits = function(t, trueValue, falseValue) {
-    t = SIMD.Int32x4.check(t);
-    trueValue = SIMD.Int32x4.check(trueValue);
-    falseValue = SIMD.Int32x4.check(falseValue);
-    var tr = SIMD.Int32x4.and(t, trueValue);
-    var fr = SIMD.Int32x4.and(SIMD.Int32x4.not(t), falseValue);
-    return SIMD.Int32x4.or(tr, fr);
-  }
-}
-
 if (typeof SIMD.Int32x4.equal === "undefined") {
   /**
     * @param {Int32x4} t An instance of Int32x4.
@@ -3775,26 +3755,6 @@ if (typeof SIMD.Int16x8.select === "undefined") {
         SIMD.Bool16x8.extractLane(t, 7) ?
             SIMD.Int16x8.extractLane(trueValue, 7) :
                 SIMD.Int16x8.extractLane(falseValue, 7));
-  }
-}
-
-if (typeof SIMD.Int16x8.selectBits === "undefined") {
-  /**
-    * @param {Int16x8} t Selector mask. An instance of Int16x8
-    * @param {Int16x8} trueValue Pick bit from here if corresponding
-    * selector bit is 1
-    * @param {Int16x8} falseValue Pick bit from here if corresponding
-    * selector bit is 0
-    * @return {Int16x8} Mix of bits from trueValue or falseValue as
-    * indicated
-    */
-  SIMD.Int16x8.selectBits = function(t, trueValue, falseValue) {
-    t = SIMD.Int16x8.check(t);
-    trueValue = SIMD.Int16x8.check(trueValue);
-    falseValue = SIMD.Int16x8.check(falseValue);
-    var tr = SIMD.Int16x8.and(t, trueValue);
-    var fr = SIMD.Int16x8.and(SIMD.Int16x8.not(t), falseValue);
-    return SIMD.Int16x8.or(tr, fr);
   }
 }
 
@@ -4868,26 +4828,6 @@ if (typeof SIMD.Int8x16.select === "undefined") {
         SIMD.Bool8x16.extractLane(t, 15) ?
             SIMD.Int8x16.extractLane(trueValue, 15) :
                 SIMD.Int8x16.extractLane(falseValue, 15));
-  }
-}
-
-if (typeof SIMD.Int8x16.selectBits === "undefined") {
-  /**
-    * @param {Int8x16} t Selector mask. An instance of Int8x16
-    * @param {Int8x16} trueValue Pick bit from here if corresponding
-    * selector bit is 1
-    * @param {Int8x16} falseValue Pick bit from here if corresponding
-    * selector bit is 0
-    * @return {Int8x16} Mix of bits from trueValue or falseValue as
-    * indicated
-    */
-  SIMD.Int8x16.selectBits = function(t, trueValue, falseValue) {
-    t = SIMD.Int8x16.check(t);
-    trueValue = SIMD.Int8x16.check(trueValue);
-    falseValue = SIMD.Int8x16.check(falseValue);
-    var tr = SIMD.Int8x16.and(t, trueValue);
-    var fr = SIMD.Int8x16.and(SIMD.Int8x16.not(t), falseValue);
-    return SIMD.Int8x16.or(tr, fr);
   }
 }
 

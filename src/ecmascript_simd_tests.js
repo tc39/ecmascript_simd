@@ -2899,17 +2899,6 @@ test('Int32x4 select', function() {
   equal(8, SIMD.Int32x4.extractLane(s, 3));
 });
 
-test('Int32x4 selectBits', function() {
-  var m = SIMD.Int32x4(0xaaaaaaaa, 0xaaaaaaaa, 0x55555555, 0x55555555);
-  var t = SIMD.Int32x4(1, 2, 3, 4);
-  var f = SIMD.Int32x4(5, 6, 7, 8);
-  var s = SIMD.Int32x4.selectBits(m, t, f);
-  equal(5, SIMD.Int32x4.extractLane(s, 0));
-  equal(6, SIMD.Int32x4.extractLane(s, 1));
-  equal(3, SIMD.Int32x4.extractLane(s, 2));
-  equal(12, SIMD.Int32x4.extractLane(s, 3));
-});
-
 test('Int32x4 load', function() {
   var a = new Int32Array(8);
   for (var i = 0; i < a.length; i++) {
@@ -4125,21 +4114,6 @@ test('Int16x8 select', function() {
   equal(16, SIMD.Int16x8.extractLane(s, 7));
 });
 
-test('Int16x8 selectBits', function() {
-  var m = SIMD.Int16x8(0xaaaaaaaa, 0xbbbbbbbb, 0xcccccccc, 0xdddddddd, 0xeeeeeeee, 0xffffffff, 0x00000000, 0x55555555);
-  var t = SIMD.Int16x8(1, 2, 3, 4, 5, 6, 7, 8);
-  var f = SIMD.Int16x8(9, 10, 11, 12, 13, 14, 15, 16);
-  var s = SIMD.Int16x8.selectBits(m, t, f);
-  equal(1, SIMD.Int16x8.extractLane(s, 0));
-  equal(2, SIMD.Int16x8.extractLane(s, 1));
-  equal(3, SIMD.Int16x8.extractLane(s, 2));
-  equal(4, SIMD.Int16x8.extractLane(s, 3));
-  equal(5, SIMD.Int16x8.extractLane(s, 4));
-  equal(6, SIMD.Int16x8.extractLane(s, 5));
-  equal(15, SIMD.Int16x8.extractLane(s, 6));
-  equal(0, SIMD.Int16x8.extractLane(s, 7));
-});
-
 test('Int8x16 swizzle', function() {
   var a    = SIMD.Int8x16(1, 2, 3, 2147483647, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, -37);
   var xyxy = SIMD.Int8x16.swizzle(a, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1);
@@ -5238,30 +5212,6 @@ test('Int8x16 select', function() {
   equal(30, SIMD.Int8x16.extractLane(s, 13));
   equal(31, SIMD.Int8x16.extractLane(s, 14));
   equal(32, SIMD.Int8x16.extractLane(s, 15));
-});
-
-test('Int8x16 selectBits', function() {
-  var m = SIMD.Int8x16(0xaaaaaaaa, 0xbbbbbbbb, 0xcccccccc, 0xdddddddd, 0xeeeeeeee, 0xffffffff, 0x00000000, 0x11111111,
-                       0x22222222, 0x33333333, 0x44444444, 0x55555555, 0x66666666, 0x77777777, 0x88888888, 0x99999999);
-  var t = SIMD.Int8x16(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16);
-  var f = SIMD.Int8x16(17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32);
-  var s = SIMD.Int8x16.selectBits(m, t, f);
-  equal(17, SIMD.Int8x16.extractLane(s, 0));
-  equal(2, SIMD.Int8x16.extractLane(s, 1));
-  equal(19, SIMD.Int8x16.extractLane(s, 2));
-  equal(4, SIMD.Int8x16.extractLane(s, 3));
-  equal(21, SIMD.Int8x16.extractLane(s, 4));
-  equal(6, SIMD.Int8x16.extractLane(s, 5));
-  equal(23, SIMD.Int8x16.extractLane(s, 6));
-  equal(8, SIMD.Int8x16.extractLane(s, 7));
-  equal(25, SIMD.Int8x16.extractLane(s, 8));
-  equal(10, SIMD.Int8x16.extractLane(s, 9));
-  equal(27, SIMD.Int8x16.extractLane(s, 10));
-  equal(12, SIMD.Int8x16.extractLane(s, 11));
-  equal(29, SIMD.Int8x16.extractLane(s, 12));
-  equal(14, SIMD.Int8x16.extractLane(s, 13));
-  equal(31, SIMD.Int8x16.extractLane(s, 14));
-  equal(48, SIMD.Int8x16.extractLane(s, 15));
 });
 
 test('Int8x16 fromFloat32x4Bits constructor', function() {
