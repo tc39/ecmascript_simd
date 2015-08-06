@@ -635,7 +635,7 @@ This internal algorithm creates a new value of the type corresponding to the spe
 <emu-note><span class="note">Note</span>The following algorithm uses splat arguments in the spec and indexes them as an array, but there isn't proper machinery in the spec to describe this behavior</emu-note>
 
 <emu-alg><ol>
-  <li>If Length(fields) == <var>descriptor</var>.[[SIMDLength]], then throw a TypeError.</li>
+  <li>If Length(fields) ≠ <var>descriptor</var>.[[SIMDLength]], then throw a TypeError.</li>
   <li>Let <var>list</var> be a new List of length <var>descriptor</var>.[[SIMDLength]].</li>
   <li>For <var>i</var> from 0 to <var>descriptor</var>.[[SIMDLength]],
     <ol>
