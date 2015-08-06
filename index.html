@@ -545,6 +545,18 @@ Add a new step 9, before the existing step 9:
 <br>
 <strong>Result</strong>: "int8x16"
 <br>
+<strong>Type of val</strong>: Uint32x4
+<br>
+<strong>Result</strong>: "uint32x4"
+<br>
+<strong>Type of val</strong>: Uint16x8
+<br>
+<strong>Result</strong>: "uint16x8"
+<br>
+<strong>Type of val</strong>: Uint8x16
+<br>
+<strong>Result</strong>: "uint8x16"
+<br>
 <strong>Type of val</strong>: Bool32x4
 <br>
 <strong>Result</strong>: "bool32x4"
@@ -564,7 +576,7 @@ Add a new step 9, before the existing step 9:
 <h1><span class="secnum">4</span>The Addition operator ( + ) (<a href="http://www.ecma-international.org/ecma-262/6.0/#sec-addition-operator-plus">12.7.3</a>)</h1>
 <emu-clause id="addition-semantics">
 <h1><span class="secnum">4.1</span>Runtime Semantics: Evaluation (<a href="http://www.ecma-international.org/ecma-262/6.0/#sec-addition-operator-plus">12.7.3.1</a>)</h1>
-<emu-note><span class="note">Note</span><p>No changes needed for SIMD. With one SIMD argument and one argument which is a String after ToPrimitive is applied, this will coerce the SIMD value to a string, giving a printed representation like <code>"float32x4(1, 2, 3, 4)"</code>. Otherwise, if either argument is a SIMD value, then ToNumber will be run on step 12. or 14., which would throw a TypeError.</p><p>It is important for <code>+</code> to throw when applied to SIMD types to allow the future definition of operator overloading on <code>+</code> .</p></emu-note>
+<emu-note><span class="note">Note</span><p>No changes needed for SIMD. With one SIMD argument and one argument which is a String after ToPrimitive is applied, this will coerce the SIMD value to a string, giving a printed representation like <code>"SIMD.Float32x4(1, 2, 3, 4)"</code>. Otherwise, if either argument is a SIMD value, then ToNumber will be run on step 12. or 14., which would throw a TypeError.</p><p>It is important for <code>+</code> to throw when applied to SIMD types to allow the future definition of operator overloading on <code>+</code> .</p></emu-note>
 </emu-clause>
 </emu-clause>
 
