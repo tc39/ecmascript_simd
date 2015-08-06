@@ -1026,14 +1026,14 @@ This operation exists only on integer and boolean SIMD types.
 <emu-clause id="simd-not">
 <h1>_SIMD_Constructor.not(a)</h1>
 <p>
-This definition uses the refers to * as defined by <a href="http://www.ecma-international.org/ecma-262/6.0/#sec-bitwise-not-operator">ES2015 12.5.11</a> (Bitwise NOT Operator ( * )).
+This definition uses the refers to ~ as defined by <a href="http://www.ecma-international.org/ecma-262/6.0/#sec-bitwise-not-operator">ES2015 12.5.11</a> (Bitwise NOT Operator ( ~ )).
 </p>
 <p>
 This operation exists only on integer and boolean SIMD types.
 </p>
 <emu-alg>
 1. If _a_.[[SIMDTypeDescriptor]] is not _SIMD_Descriptor, throw a TypeError.
-1. Let _result_ be SIMDUnaryOp(_a_, *).
+1. Let _result_ be SIMDUnaryOp(_a_, ~).
 1. ReturnIfAbrupt(_result_).
 1. Return _result_.
 </emu-alg>
