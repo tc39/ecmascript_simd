@@ -537,7 +537,7 @@ This internal algorithm creates a new value of the type corresponding to the spe
 <emu-note>The following algorithm uses splat arguments in the spec and indexes them as an array, but there isn't proper machinery in the spec to describe this behavior</emu-note>
 
 <emu-alg>
-1. If Length(fields) == _descriptor_.[[SIMDLength]], then throw a TypeError.
+1. If Length(fields) &ne; _descriptor_.[[SIMDLength]], then throw a TypeError.
 1. Let _list_ be a new List of length _descriptor_.[[SIMDLength]].
 1. For _i_ from 0 to _descriptor_.[[SIMDLength]],
   1. Let _n_ be <var>descriptor</var>.[[SIMDCastNumber]](fields[<var>i</var>]).
