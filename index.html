@@ -26,7 +26,7 @@ This document is organized in terms of where changes would be made to the ES2015
 <p>
 In this text, <var>SIMD</var> is used to refer to the various SIMD types: Float32x4, Int32x4, Int16x8 Int8x16, Uint32x4, Uint16x8 Uint8x16, Bool32x4, Bool16x8 and Bool8x16. Similarly to Number, <var>SIMD</var> is used to refer to both the type <em>and</em> the wrapper constructor object. This looks a bit confusing, but it provides the most regularity, as an aim of this specification is to make SIMD types primitives that operate analogously to the existing primitives, rather than a new, exotic sort of thing. To reduce ambiguity, the wrapper constructor is usually referred to as <var>SIMD</var>Constructor, and the type is referred to as <var>SIMD</var>Type. SIMD types are associated with a descriptor spec object, called <var>SIMD</var>Descriptor.</p>
 
-<p><strong>Please file any issues <a href="https://github.com/tc39/ecmascript_simd/issues">here</a>!</strong> The authoritative copy of this file is in <a href="https://github.com/tc39/ecmascript_simd/blob/master/tc39/spec.html">in the simd.js repo</a>; to propose changes to this spec, please send pull requests against that repository. Daniel Ehrenberg (littledan) is responsible for watching for changes to that file, generating the output with ecmarkup and pushing it to <a href="http://littledan.github.io/simd.html">the current location</a>.</p>
+<p><strong>Please file any issues <a href="https://github.com/tc39/ecmascript_simd/issues">here</a>!</strong> The authoritative copy of this file is in <a href="https://github.com/tc39/ecmascript_simd/blob/master/tc39/spec.html">in the simd.js repo</a>; to propose changes to this spec, please send pull requests against that repository. Daniel Ehrenberg (littledan) is responsible for watching for changes to that file, generating the output with ecmarkup and pushing it to <a href="http://tc39.github.io/ecmascript_simd/">the official rendered location</a>.</p>
 
 <p>Because this document is in spec order, rather than written for direct readability, the logical starting point is actually <a href="#simd">halfway down</a>.</p>
 
@@ -35,8 +35,8 @@ Related links:
 </p>
 <ul>
 <li><a href="https://github.com/nikomatsakis/typed-objects-explainer/blob/master/valuetypes.md">Value types proposal</a></li>
-<li><a href="https://github.com/johnmccutchan/ecmascript_simd/blob/master/src/ecmascript_simd.js">SIMD polyfill</a></li>
-<li><a href="https://github.com/johnmccutchan/ecmascript_simd/issues/157">Bug about SIMD.js value semantics</a></li>
+<li><a href="https://github.com/tc39/ecmascript_simd/blob/master/src/ecmascript_simd.js">SIMD polyfill</a></li>
+<li><a href="https://github.com/tc39/ecmascript_simd/issues/157">Bug about SIMD.js value semantics</a></li>
 </ul>
 
 <p>Changelog:</p>
@@ -1403,7 +1403,7 @@ This operation is only defined on unsigned integer SIMD types. This definition u
 <p>
 This operation is only defined on integer SIMD types.
 </p>
-<emu-note><span class="note">Note</span>This operation is still under discussion. See <a href="https://github.com/johnmccutchan/ecmascript_simd/issues/135">this bug thread</a>.</emu-note>
+<emu-note><span class="note">Note</span>This operation is still under discussion. See <a href="https://github.com/tc39/ecmascript_simd/issues/135">this bug thread</a>.</emu-note>
 <emu-alg><ol>
   <li>If <var>a</var>.[[SIMDTypeDescriptor]] is not <var>SIMD</var>Descriptor, throw a TypeError.</li>
   <li>Let <var>sum</var> be 0.</li>
@@ -1426,7 +1426,7 @@ This operation is only defined on integer SIMD types.
 <emu-clause id="simd-unsigned-absolte-difference">
 <h1><span class="secnum">5.2.44</span><var>SIMD</var>Constructor.unsignedAbsoluteDifference( a, b )</h1>
 This operation is only defined on integer SIMD types whose <var>SIMD</var>Descriptor.[[SIMDElementSize]] &lt;= 2.
-<emu-note><span class="note">Note</span>This operation is still under discussion. See <a href="https://github.com/johnmccutchan/ecmascript_simd/issues/135">this bug thread</a>.</emu-note>
+<emu-note><span class="note">Note</span>This operation is still under discussion. See <a href="https://github.com/tc39/ecmascript_simd/issues/135">this bug thread</a>.</emu-note>
 <emu-alg><ol>
   <li>If <var>a</var>.[[SIMDTypeDescriptor]] is not <var>SIMD</var>Descriptor or <var>b</var>.[[SIMDTypeDescriptor]] is not <var>SIMD</var>Descriptor, throw a TypeError.</li>
   <li>Let <var>result</var> be <a href="#simd-binary">SIMDBinaryOp</a>(<var>a</var>, <var>b</var>, AbsoluteDifference).</li>
@@ -1438,7 +1438,7 @@ This operation is only defined on integer SIMD types whose <var>SIMD</var>Descri
 <emu-clause id="simd-unsigned-widened-absolute-difference">
 <h1><span class="secnum">5.2.45</span><var>SIMD</var>Constructor.widenedUnsignedAbsoluteDifference( a, b )</h1>
 This operation is only defined on integer SIMD types whose <var>SIMD</var>Descriptor.[[SIMDElementSize]] &lt;= 2.
-<emu-note><span class="note">Note</span>This operation is still under discussion. See <a href="https://github.com/johnmccutchan/ecmascript_simd/issues/135">this bug thread</a>. To use this operation and get at the upper half of a vector, a shuffle is required.</emu-note>
+<emu-note><span class="note">Note</span>This operation is still under discussion. See <a href="https://github.com/tc39/ecmascript_simd/issues/135">this bug thread</a>. To use this operation and get at the upper half of a vector, a shuffle is required.</emu-note>
 <emu-alg><ol>
   <li>If <var>a</var>.[[SIMDTypeDescriptor]] is not <var>SIMD</var>Descriptor or <var>b</var>.[[SIMDTypeDescriptor]] is not <var>SIMD</var>Descriptor, throw a TypeError.</li>
   <li>If <var>SIMD</var>Descriptor is <code>Int8x16</code>, then let <var>outputDescriptor</var> be <code>Int16x8</code>.</li>
