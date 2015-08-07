@@ -1286,7 +1286,7 @@ This operation exists only on integer and floating point SIMD types.
 <h1><span class="secnum">5.2.34</span>Saturate( descriptor, x )</h1>
 <emu-alg><ol>
   <li>If <var>x</var> &gt; <var>descriptor</var>.[[ElementMax]], return <var>descriptor</var>.[[ElementMax]].</li>
-  <li>Otherwise, if <var>z</var> &lt; <var>descriptor</var>.[[ElementMin]], return <var>descriptor</var>.[[ElementMin]]</li>
+  <li>Otherwise, if <var>x</var> &lt; <var>descriptor</var>.[[ElementMin]], return <var>descriptor</var>.[[ElementMin]]</li>
   <li>Return <var>x</var>.</li>
 </ol></emu-alg>
 </emu-clause>
@@ -1483,7 +1483,7 @@ This operation exists only on integer and floating point SIMD types.
   <li>If <var>tarray</var> does not have a [[ViewedArrayBuffer]] internal slot, throw a TypeError.</li>
   <li>Let <var>block</var> be <var>tarray</var>.[[ViewedArrayBuffer]].[[ArrayBufferData]]</li>
   <li>If <var>index</var> ≠ <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-toint32">ToInt32</a>(<var>index</var>), throw a TypeError.</li>
-  <li>Let <var>elementLength</var> be <var>tarray</var>.[[ByteLength]] / _tarray.[[ArrayLength]].</li>
+  <li>Let <var>elementLength</var> be <var>tarray</var>.[[ByteLength]] ÷ _tarray.[[ArrayLength]].</li>
   <li>Let <var>byteIndex</var> be <var>index</var> × <var>elementLength</var>.</li>
   <li>If <var>byteIndex</var> + <var>SIMD</var>Descriptor.[[ElementSize]] × <var>SIMD</var>Descriptor.[[VectorLength]] &gt; <var>tarray</var>.[[ByteLength]] or <var>byteIndex</var> &lt; 0, throw a RangeError.</li>
   <li><a href="#simd-store">SIMDStore</a>(<var>block</var>, <var>SIMD</var>Descriptor, <var>byteIndex</var>, <var>simd</var>).</li>
@@ -1503,7 +1503,7 @@ This operation exists only on integer and floating point SIMD types.
   <li>If <var>tarray</var> does not have a [[ViewedArrayBuffer]] internal slot, throw a TypeError.</li>
   <li>Let <var>block</var> be <var>tarray</var>.[[ViewedArrayBuffer]].[[ArrayBufferData]]</li>
   <li>If <var>index</var> ≠ <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-toint32">ToInt32</a>(<var>index</var>), throw a TypeError.</li>
-  <li>Let <var>elementLength</var> be <var>tarray</var>.[[ByteLength]] / _tarray.[[ArrayLength]].</li>
+  <li>Let <var>elementLength</var> be <var>tarray</var>.[[ByteLength]] ÷ _tarray.[[ArrayLength]].</li>
   <li>Let <var>byteIndex</var> be <var>index</var> × <var>elementLength</var>.</li>
   <li>If <var>byteIndex</var> + <var>SIMD</var>Descriptor.[[ElementSize]] &gt; <var>tarray</var>.[[ByteLength]] or <var>byteIndex</var> &lt; 0, throw a RangeError.</li>
   <li><a href="#simd-store">SIMDStore</a>(<var>block</var>, <var>SIMD</var>Descriptor, <var>byteIndex</var>, <var>simd</var>, 1).</li>
@@ -1523,7 +1523,7 @@ This operation exists only on integer and floating point SIMD types.
   <li>If <var>tarray</var> does not have a [[ViewedArrayBuffer]] internal slot, throw a TypeError.</li>
   <li>Let <var>block</var> be <var>tarray</var>.[[ViewedArrayBuffer]].[[ArrayBufferData]]</li>
   <li>If <var>index</var> ≠ <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-toint32">ToInt32</a>(<var>index</var>), throw a TypeError.</li>
-  <li>Let <var>elementLength</var> be <var>tarray</var>.[[ByteLength]] / _tarray.[[ArrayLength]].</li>
+  <li>Let <var>elementLength</var> be <var>tarray</var>.[[ByteLength]] ÷ _tarray.[[ArrayLength]].</li>
   <li>Let <var>byteIndex</var> be <var>index</var> × <var>elementLength</var>.</li>
   <li>If <var>byteIndex</var> + <var>SIMD</var>Descriptor.[[ElementSize]] × 2 &gt; <var>tarray</var>.[[ByteLength]] or <var>byteIndex</var> &lt; 0, throw a RangeError.</li>
   <li><a href="#simd-store">SIMDStore</a>(<var>block</var>, <var>SIMD</var>Descriptor, <var>byteIndex</var>, <var>simd</var>, 2).</li>
@@ -1543,7 +1543,7 @@ This operation exists only on integer and floating point SIMD types.
   <li>If <var>tarray</var> does not have a [[ViewedArrayBuffer]] internal slot, throw a TypeError.</li>
   <li>Let <var>block</var> be <var>tarray</var>.[[ViewedArrayBuffer]].[[ArrayBufferData]]</li>
   <li>If <var>index</var> ≠ <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-toint32">ToInt32</a>(<var>index</var>), throw a TypeError.</li>
-  <li>Let <var>elementLength</var> be <var>tarray</var>.[[ByteLength]] / _tarray.[[ArrayLength]].</li>
+  <li>Let <var>elementLength</var> be <var>tarray</var>.[[ByteLength]] ÷ _tarray.[[ArrayLength]].</li>
   <li>Let <var>byteIndex</var> be <var>index</var> × <var>elementLength</var>.</li>
   <li>If <var>byteIndex</var> + <var>SIMD</var>Descriptor.[[ElementSize]] × 3 &gt; <var>tarray</var>.[[ByteLength]] or <var>byteIndex</var> &lt; 0, throw a RangeError.</li>
   <li><a href="#simd-store">SIMDStore</a>(<var>block</var>, <var>SIMD</var>Descriptor, <var>byteIndex</var>, 3).</li>
@@ -1562,7 +1562,7 @@ This operation exists only on integer and floating point SIMD types.
   <li>If <var>tarray</var> does not have a [[ViewedArrayBuffer]] internal slot, throw a TypeError.</li>
   <li>Let <var>block</var> be <var>tarray</var>.[[ViewedArrayBuffer]].[[ArrayBufferData]]</li>
   <li>If <var>index</var> ≠ <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-toint32">ToInt32</a>(<var>index</var>), throw a TypeError.</li>
-  <li>Let <var>elementLength</var> be <var>tarray</var>.[[ByteLength]] / <var>tarray</var>.[[ArrayLength]].</li>
+  <li>Let <var>elementLength</var> be <var>tarray</var>.[[ByteLength]] ÷ <var>tarray</var>.[[ArrayLength]].</li>
   <li>Let <var>byteIndex</var> be <var>index</var> × <var>elementLength</var>.</li>
   <li>If <var>byteIndex</var> + <var>SIMD</var>Descriptor.[[ElementSize]] × <var>SIMD</var>Descriptor.[[VectorLength]] &gt; <var>tarray</var>.[[ByteLength]] or <var>byteIndex</var> &lt; 0, throw a RangeError.</li>
   <li>Return <a href="#simd-load">SIMDLoad</a>(<var>block</var>, <var>SIMD</var>Descriptor, <var>byteIndex</var>).</li>
@@ -1580,7 +1580,7 @@ This operation exists only on integer and floating point SIMD types.
   <li>If <var>tarray</var> does not have a [[ViewedArrayBuffer]] internal slot, throw a TypeError.</li>
   <li>Let <var>block</var> be <var>tarray</var>.[[ViewedArrayBuffer]].[[ArrayBufferData]]</li>
   <li>If <var>index</var> ≠ <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-toint32">ToInt32</a>(<var>index</var>), throw a TypeError.</li>
-  <li>Let <var>elementLength</var> be <var>tarray</var>.[[ByteLength]] / _tarray.[[ArrayLength]].</li>
+  <li>Let <var>elementLength</var> be <var>tarray</var>.[[ByteLength]] ÷ _tarray.[[ArrayLength]].</li>
   <li>Let <var>byteIndex</var> be <var>index</var> × <var>elementLength</var>.</li>
   <li>If <var>byteIndex</var> + <var>SIMD</var>Descriptor.[[ElementSize]] &gt; <var>tarray</var>.[[ByteLength]] or <var>byteIndex</var> &lt; 0, throw a RangeError.</li>
   <li>Return <a href="#simd-load">SIMDLoad</a>(<var>block</var>, <var>SIMD</var>Descriptor, <var>byteIndex</var>, 1).</li>
@@ -1598,7 +1598,7 @@ This operation exists only on integer and floating point SIMD types.
   <li>If <var>tarray</var> does not have a [[ViewedArrayBuffer]] internal slot, throw a TypeError.</li>
   <li>Let <var>block</var> be <var>tarray</var>.[[ViewedArrayBuffer]].[[ArrayBufferData]]</li>
   <li>If <var>index</var> ≠ <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-toint32">ToInt32</a>(<var>index</var>), throw a TypeError.</li>
-  <li>Let <var>elementLength</var> be <var>tarray</var>.[[ByteLength]] / _tarray.[[ArrayLength]].</li>
+  <li>Let <var>elementLength</var> be <var>tarray</var>.[[ByteLength]] ÷ _tarray.[[ArrayLength]].</li>
   <li>Let <var>byteIndex</var> be <var>index</var> × <var>elementLength</var>.</li>
   <li>If <var>byteIndex</var> + <var>SIMD</var>Descriptor.[[ElementSize]] × 2 &gt; <var>tarray</var>.[[ByteLength]] or <var>byteIndex</var> &lt; 0, throw a RangeError.</li>
   <li>Return <a href="#simd-load">SIMDLoad</a>(<var>block</var>, <var>SIMD</var>Descriptor, <var>byteIndex</var>, 2).</li>
@@ -1616,7 +1616,7 @@ This operation exists only on integer and floating point SIMD types.
   <li>If <var>tarray</var> does not have a [[ViewedArrayBuffer]] internal slot, throw a TypeError.</li>
   <li>Let <var>block</var> be <var>tarray</var>.[[ViewedArrayBuffer]].[[ArrayBufferData]]</li>
   <li>If <var>index</var> ≠ <a href="https://people.mozilla.org/~jorendorff/es6-draft.html#sec-toint32">ToInt32</a>(<var>index</var>), throw a TypeError.</li>
-  <li>Let <var>elementLength</var> be <var>tarray</var>.[[ByteLength]] / _tarray.[[ArrayLength]].</li>
+  <li>Let <var>elementLength</var> be <var>tarray</var>.[[ByteLength]] ÷ _tarray.[[ArrayLength]].</li>
   <li>Let <var>byteIndex</var> be <var>index</var> × <var>elementLength</var>.</li>
   <li>If <var>byteIndex</var> + <var>SIMD</var>Descriptor.[[ElementSize]] × 3 &gt; <var>tarray</var>.[[ByteLength]] or <var>byteIndex</var> &lt; 0, throw a RangeError.</li>
   <li>Return <a href="#simd-load">SIMDLoad</a>(<var>block</var>, <var>SIMD</var>Descriptor, <var>byteIndex</var>, 3).</li>
