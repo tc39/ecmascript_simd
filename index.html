@@ -66,7 +66,7 @@ Related links:
 <li>v0.7.2: Fix shiftRightArithmetic, add @@toPrimitive, do implicit coercion for shift bits.</li>
 <li>v0.7.3: Coerce lane arguments, no bitcast on bool, fix typo in .check() and .valueOf(), no constructing wrappers, fix denormal behavior to be deterministic and match hardware, fix shuffle definition, define arithmetic operations only on numeric types, fix up ES2015 links.</li>
 <li>v0.8: Separate signed and unsigned integer types</li>
-<li>v0.8.1: Minor bug fixes and cleanups from review</li>
+<li>v0.8.1: Minor language fixes and cleanups from review; no behavior changes</li>
 </ul>
 </emu-intro>
 
@@ -740,7 +740,7 @@ The second option:
 </ol></emu-alg>
 </emu-clause>
 
-<emu-clause id="simd-scalar" aoid="SIMDUnaryOp">
+<emu-clause id="simd-scalar" aoid="SIMDScalarOp">
 <h1><span class="secnum">5.1.7</span>SIMDScalarOp( a, scalar, op )</h1>
 <emu-alg><ol>
   <li>Let <var>descriptor</var> be <var>a</var>.[[SIMDTypeDescriptor]].</li>
@@ -826,7 +826,7 @@ The second option:
 <emu-clause id="simd-constructor">
 <h1><span class="secnum">5.2</span><var>SIMD</var>Constructor</h1>
 <p>
-Each <var>SIMD</var>Constructor, namely Float32x4, Int32x4, Int16x8, and Int8x16, is associated with a <var>SIMD</var>Type and <var>SIMD</var>Descriptor. This section describes the constructors and properties on them. Most properties are identical, existing separately defined on each constructor, with most differences being in the <var>SIMD</var>Descriptor. Certain functions are defined only on a subset of <var>SIMD</var>Constructors, however, and this is noted above their algorithm definition.
+Each <var>SIMD</var>Constructor, namely Float32x4, Int32x4, Int16x8, Int8x16, Uint32x4, Uint16x8, Uint8x16, Bool32x4, Bool16x8, and Bool8x16, is associated with a <var>SIMD</var>Type and <var>SIMD</var>Descriptor. This section describes the constructors and properties on them. Most properties are identical, existing separately defined on each constructor, with most differences being in the <var>SIMD</var>Descriptor. Certain functions are defined only on a subset of <var>SIMD</var>Constructors, however, and this is noted above their algorithm definition.
 </p>
 
 <p>
@@ -1002,7 +1002,7 @@ This operation is only defined on signed integer and floating point SIMD types.
 </p>
 <emu-alg><ol>
   <li>If <var>a</var>.[[SIMDTypeDescriptor]] is not <var>SIMD</var>Descriptor, throw a TypeError.</li>
-  <li>Let <var>result</var> be <a href="#simd-scalar">SIMDUnaryOp</a>(<var>a</var>, <a href="http://www.ecma-international.org/ecma-262/6.0/#sec-unary-minus-operator"><code>-</code></a>, <emu-val>false</emu-val>).</li>
+  <li>Let <var>result</var> be <a href="#simd-unary">SIMDUnaryOp</a>(<var>a</var>, <a href="http://www.ecma-international.org/ecma-262/6.0/#sec-unary-minus-operator"><code>-</code></a>, <emu-val>false</emu-val>).</li>
   <li><a href="http://people.mozilla.org/~jorendorff/es6-draft.html#sec-returnifabrupt">ReturnIfAbrupt</a>(<var>result</var>).</li>
   <li>Return <var>result</var>.</li>
 </ol></emu-alg>
@@ -1013,7 +1013,7 @@ This operation is only defined on signed integer and floating point SIMD types.
 This property is defined only on floating point SIMD types.
 <emu-alg><ol>
   <li>If <var>a</var>.[[SIMDTypeDescriptor]] is not <var>SIMD</var>Descriptor, throw a TypeError.</li>
-  <li>Let <var>result</var> be <a href="#simd-scalar">SIMDUnaryOp</a>(<var>a</var>, %Math_sqrt%).</li>
+  <li>Let <var>result</var> be <a href="#simd-unary">SIMDUnaryOp</a>(<var>a</var>, %Math_sqrt%).</li>
   <li><a href="http://people.mozilla.org/~jorendorff/es6-draft.html#sec-returnifabrupt">ReturnIfAbrupt</a>(<var>result</var>).</li>
   <li>Return <var>result</var>.</li>
 </ol></emu-alg>
@@ -1036,7 +1036,7 @@ Returns an implementation-dependent approximation to the reciprocal of <var>n</v
 This property is defined only on floating point SIMD types.
 <emu-alg><ol>
   <li>If <var>a</var>.[[SIMDTypeDescriptor]] is not <var>SIMD</var>Descriptor, throw a TypeError.</li>
-  <li>Let <var>result</var> be <a href="#simd-scalar">SIMDUnaryOp</a>(<var>a</var>, ReciprocalApproximation).</li>
+  <li>Let <var>result</var> be <a href="#simd-unary">SIMDUnaryOp</a>(<var>a</var>, ReciprocalApproximation).</li>
   <li><a href="http://people.mozilla.org/~jorendorff/es6-draft.html#sec-returnifabrupt">ReturnIfAbrupt</a>(<var>result</var>).</li>
   <li>Return <var>result</var>.</li>
 </ol></emu-alg>
@@ -1059,7 +1059,7 @@ Returns an implementation-dependent approximation to the reciprocal of the squar
 This property is defined only on floating point SIMD types.
 <emu-alg><ol>
   <li>If <var>a</var>.[[SIMDTypeDescriptor]] is not <var>SIMD</var>Descriptor, throw a TypeError.</li>
-  <li>Let <var>result</var> be <a href="#simd-scalar">SIMDUnaryOp</a>(<var>a</var>, ReciprocalSqrtApproximation).</li>
+  <li>Let <var>result</var> be <a href="#simd-unary">SIMDUnaryOp</a>(<var>a</var>, ReciprocalSqrtApproximation).</li>
   <li><a href="http://people.mozilla.org/~jorendorff/es6-draft.html#sec-returnifabrupt">ReturnIfAbrupt</a>(<var>result</var>).</li>
   <li>Return <var>result</var>.</li>
 </ol></emu-alg>
@@ -1070,7 +1070,7 @@ This property is defined only on floating point SIMD types.
 This operation exists only on floating point SIMD types.
 <emu-alg><ol>
   <li>If <var>a</var>.[[SIMDTypeDescriptor]] is not <var>SIMD</var>Descriptor, throw a TypeError.</li>
-  <li>Let <var>result</var> be <a href="#simd-scalar">SIMDUnaryOp</a>(<var>a</var>, %Math_abs%, <emu-val>false</emu-val>).</li>
+  <li>Let <var>result</var> be <a href="#simd-unary">SIMDUnaryOp</a>(<var>a</var>, %Math_abs%, <emu-val>false</emu-val>).</li>
   <li><a href="http://people.mozilla.org/~jorendorff/es6-draft.html#sec-returnifabrupt">ReturnIfAbrupt</a>(<var>result</var>).</li>
   <li>Return <var>result</var>.</li>
 </ol></emu-alg>
@@ -1135,7 +1135,7 @@ This operation exists only on integer and boolean SIMD types.
 </p>
 <emu-alg><ol>
   <li>If <var>a</var>.[[SIMDTypeDescriptor]] is not <var>SIMD</var>Descriptor, throw a TypeError.</li>
-  <li>Let <var>result</var> be <a href="#simd-scalar">SIMDUnaryOp</a>(<var>a</var>, <code>~</code>).</li>
+  <li>Let <var>result</var> be <a href="#simd-unary">SIMDUnaryOp</a>(<var>a</var>, <code>~</code>).</li>
   <li><a href="http://people.mozilla.org/~jorendorff/es6-draft.html#sec-returnifabrupt">ReturnIfAbrupt</a>(<var>result</var>).</li>
   <li>Return <var>result</var>.</li>
 </ol></emu-alg>
@@ -1341,7 +1341,7 @@ This operation is only defined on integer SIMD types. This definition uses the r
       <li>return <a href="#simd-create">SIMDCreate</a>(<var>SIMD</var>Descriptor, <var>list</var>).</li>
     </ol>
   </li>
-  <li>Let <var>result</var> be SIMDScalarOp(<var>a</var>, <var>scalar</var>, <code>&lt;&lt;</code>).</li>
+  <li>Let <var>result</var> be <a href="#simd-scalar">SIMDScalarOp</a>(<var>a</var>, <var>scalar</var>, <code>&lt;&lt;</code>).</li>
   <li><a href="http://people.mozilla.org/~jorendorff/es6-draft.html#sec-returnifabrupt">ReturnIfAbrupt</a>(<var>result</var>).</li>
   <li>Return <var>result</var>.</li>
 </ol></emu-alg>
@@ -1360,7 +1360,7 @@ This operation is only defined on signed integer SIMD types. This definition use
       <li>return <a href="#simd-create">SIMDCreate</a>(<var>SIMD</var>Descriptor, <var>list</var>).</li>
     </ol>
   </li>
-  <li>Let <var>result</var> be SIMDScalarOp(<var>a</var>, <var>scalar</var>, <code>&gt;&gt;&gt;</code>).</li>
+  <li>Let <var>result</var> be <a href="#simd-scalar">SIMDScalarOp</a>(<var>a</var>, <var>scalar</var>, <code>&gt;&gt;&gt;</code>).</li>
   <li><a href="http://people.mozilla.org/~jorendorff/es6-draft.html#sec-returnifabrupt">ReturnIfAbrupt</a>(<var>result</var>).</li>
   <li>Return <var>result</var>.</li>
 </ol></emu-alg>
@@ -1378,7 +1378,7 @@ This operation is only defined on unsigned integer SIMD types. This definition u
       <li>Let <var>scalar</var> be <var>SIMD</var>Descriptor.[[ElementSize]] × 8 - 1.</li>
     </ol>
   </li>
-  <li>Let <var>result</var> be SIMDScalarOp(<var>a</var>, <var>scalar</var>, <code>&gt;&gt;</code>).</li>
+  <li>Let <var>result</var> be <a href="#simd-scalar">SIMDScalarOp</a>(<var>a</var>, <var>scalar</var>, <code>&gt;&gt;</code>).</li>
   <li><a href="http://people.mozilla.org/~jorendorff/es6-draft.html#sec-returnifabrupt">ReturnIfAbrupt</a>(<var>result</var>).</li>
   <li>Return <var>result</var>.</li>
 </ol></emu-alg>
