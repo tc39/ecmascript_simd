@@ -629,7 +629,7 @@ The second option:
 </emu-alg>
 </emu-clause>
 
-<emu-clause id="simd-scalar" aoid="SIMDUnaryOp">
+<emu-clause id="simd-scalar" aoid="SIMDScalarOp">
 <h1>SIMDScalarOp( a, scalar, op )</h1>
 <emu-alg>
 1. Let _descriptor_ be _a_.[[SIMDTypeDescriptor]].
@@ -724,7 +724,7 @@ The second option:
 <emu-clause id="simd-constructor">
 <h1>_SIMD_Constructor</h1>
 <p>
-Each _SIMD_Constructor, namely Float32x4, Int32x4, Int16x8, and Int8x16, is associated with a _SIMD_Type and _SIMD_Descriptor. This section describes the constructors and properties on them. Most properties are identical, existing separately defined on each constructor, with most differences being in the _SIMD_Descriptor. Certain functions are defined only on a subset of _SIMD_Constructors, however, and this is noted above their algorithm definition.
+Each _SIMD_Constructor, namely Float32x4, Int32x4, Int16x8, Int8x16, Uint32x4, Uint16x8, Uint8x16, Bool32x4, Bool16x8, and Bool8x16, is associated with a _SIMD_Type and _SIMD_Descriptor. This section describes the constructors and properties on them. Most properties are identical, existing separately defined on each constructor, with most differences being in the _SIMD_Descriptor. Certain functions are defined only on a subset of _SIMD_Constructors, however, and this is noted above their algorithm definition.
 </p>
 
 <p>
