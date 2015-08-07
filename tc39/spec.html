@@ -1340,7 +1340,7 @@ This operation exists only on integer and floating point SIMD types.
 1. If _tarray_ does not have a [[ViewedArrayBuffer]] internal slot, throw a TypeError.
 1. Let _block_ be _tarray_.[[ViewedArrayBuffer]].[[ArrayBufferData]]
 1. If _index_ &ne; ToInt32(_index_), throw a TypeError.
-1. Let _elementLength_ be _tarray_.[[ByteLength]] / _tarray.[[ArrayLength]].
+1. Let _elementLength_ be _tarray_.[[ByteLength]] &divide; _tarray.[[ArrayLength]].
 1. Let _byteIndex_ be _index_ &times; _elementLength_.
 1. If _byteIndex_ + _SIMD_Descriptor.[[ElementSize]] &times; _SIMD_Descriptor.[[VectorLength]] > _tarray_.[[ByteLength]] or _byteIndex_ < 0, throw a RangeError.
 1. SIMDStore(_block_, _SIMD_Descriptor, _byteIndex_, _simd_).
@@ -1360,7 +1360,7 @@ This operation exists only on integer and floating point SIMD types.
 1. If _tarray_ does not have a [[ViewedArrayBuffer]] internal slot, throw a TypeError.
 1. Let _block_ be _tarray_.[[ViewedArrayBuffer]].[[ArrayBufferData]]
 1. If _index_ &ne; ToInt32(_index_), throw a TypeError.
-1. Let _elementLength_ be _tarray_.[[ByteLength]] / _tarray.[[ArrayLength]].
+1. Let _elementLength_ be _tarray_.[[ByteLength]] &divide; _tarray.[[ArrayLength]].
 1. Let _byteIndex_ be _index_ &times; _elementLength_.
 1. If _byteIndex_ + _SIMD_Descriptor.[[ElementSize]] > _tarray_.[[ByteLength]] or _byteIndex_ < 0, throw a RangeError.
 1. SIMDStore(_block_, _SIMD_Descriptor, _byteIndex_, _simd_, 1).
@@ -1380,7 +1380,7 @@ This operation exists only on integer and floating point SIMD types.
 1. If _tarray_ does not have a [[ViewedArrayBuffer]] internal slot, throw a TypeError.
 1. Let _block_ be _tarray_.[[ViewedArrayBuffer]].[[ArrayBufferData]]
 1. If _index_ &ne; ToInt32(_index_), throw a TypeError.
-1. Let _elementLength_ be _tarray_.[[ByteLength]] / _tarray.[[ArrayLength]].
+1. Let _elementLength_ be _tarray_.[[ByteLength]] &divide; _tarray.[[ArrayLength]].
 1. Let _byteIndex_ be _index_ &times; _elementLength_.
 1. If _byteIndex_ + _SIMD_Descriptor.[[ElementSize]] &times; 2 > _tarray_.[[ByteLength]] or _byteIndex_ < 0, throw a RangeError.
 1. SIMDStore(_block_, _SIMD_Descriptor, _byteIndex_, _simd_, 2).
@@ -1400,7 +1400,7 @@ This operation exists only on integer and floating point SIMD types.
 1. If _tarray_ does not have a [[ViewedArrayBuffer]] internal slot, throw a TypeError.
 1. Let _block_ be _tarray_.[[ViewedArrayBuffer]].[[ArrayBufferData]]
 1. If _index_ &ne; ToInt32(_index_), throw a TypeError.
-1. Let _elementLength_ be _tarray_.[[ByteLength]] / _tarray.[[ArrayLength]].
+1. Let _elementLength_ be _tarray_.[[ByteLength]] &divide; _tarray.[[ArrayLength]].
 1. Let _byteIndex_ be _index_ &times; _elementLength_.
 1. If _byteIndex_ + _SIMD_Descriptor.[[ElementSize]] &times; 3 > _tarray_.[[ByteLength]] or _byteIndex_ < 0, throw a RangeError.
 1. SIMDStore(_block_, _SIMD_Descriptor, _byteIndex_, 3).
@@ -1419,7 +1419,7 @@ This operation exists only on integer and floating point SIMD types.
 1. If _tarray_ does not have a [[ViewedArrayBuffer]] internal slot, throw a TypeError.
 1. Let _block_ be _tarray_.[[ViewedArrayBuffer]].[[ArrayBufferData]]
 1. If _index_ &ne; ToInt32(_index_), throw a TypeError.
-1. Let _elementLength_ be _tarray_.[[ByteLength]] / _tarray_.[[ArrayLength]].
+1. Let _elementLength_ be _tarray_.[[ByteLength]] &divide; _tarray_.[[ArrayLength]].
 1. Let _byteIndex_ be _index_ &times; _elementLength_.
 1. If _byteIndex_ + _SIMD_Descriptor.[[ElementSize]] &times; _SIMD_Descriptor.[[VectorLength]] > _tarray_.[[ByteLength]] or _byteIndex_ < 0, throw a RangeError.
 1. Return SIMDLoad(_block_, _SIMD_Descriptor, _byteIndex_).
@@ -1437,7 +1437,7 @@ This operation exists only on integer and floating point SIMD types.
 1. If _tarray_ does not have a [[ViewedArrayBuffer]] internal slot, throw a TypeError.
 1. Let _block_ be _tarray_.[[ViewedArrayBuffer]].[[ArrayBufferData]]
 1. If _index_ &ne; ToInt32(_index_), throw a TypeError.
-1. Let _elementLength_ be _tarray_.[[ByteLength]] / _tarray.[[ArrayLength]].
+1. Let _elementLength_ be _tarray_.[[ByteLength]] &divide; _tarray.[[ArrayLength]].
 1. Let _byteIndex_ be _index_ &times; _elementLength_.
 1. If _byteIndex_ + _SIMD_Descriptor.[[ElementSize]] > _tarray_.[[ByteLength]] or _byteIndex_ < 0, throw a RangeError.
 1. Return SIMDLoad(_block_, _SIMD_Descriptor, _byteIndex_, 1).
@@ -1455,7 +1455,7 @@ This operation exists only on integer and floating point SIMD types.
 1. If _tarray_ does not have a [[ViewedArrayBuffer]] internal slot, throw a TypeError.
 1. Let _block_ be _tarray_.[[ViewedArrayBuffer]].[[ArrayBufferData]]
 1. If _index_ &ne; ToInt32(_index_), throw a TypeError.
-1. Let _elementLength_ be _tarray_.[[ByteLength]] / _tarray.[[ArrayLength]].
+1. Let _elementLength_ be _tarray_.[[ByteLength]] &divide; _tarray.[[ArrayLength]].
 1. Let _byteIndex_ be _index_ &times; _elementLength_.
 1. If _byteIndex_ + _SIMD_Descriptor.[[ElementSize]] &times; 2 > _tarray_.[[ByteLength]] or _byteIndex_ < 0, throw a RangeError.
 1. Return SIMDLoad(_block_, _SIMD_Descriptor, _byteIndex_, 2).
@@ -1473,7 +1473,7 @@ This operation exists only on integer and floating point SIMD types.
 1. If _tarray_ does not have a [[ViewedArrayBuffer]] internal slot, throw a TypeError.
 1. Let _block_ be _tarray_.[[ViewedArrayBuffer]].[[ArrayBufferData]]
 1. If _index_ &ne; ToInt32(_index_), throw a TypeError.
-1. Let _elementLength_ be _tarray_.[[ByteLength]] / _tarray.[[ArrayLength]].
+1. Let _elementLength_ be _tarray_.[[ByteLength]] &divide; _tarray.[[ArrayLength]].
 1. Let _byteIndex_ be _index_ &times; _elementLength_.
 1. If _byteIndex_ + _SIMD_Descriptor.[[ElementSize]] &times; 3 > _tarray_.[[ByteLength]] or _byteIndex_ < 0, throw a RangeError.
 1. Return SIMDLoad(_block_, _SIMD_Descriptor, _byteIndex_, 3).
