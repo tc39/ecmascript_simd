@@ -1158,7 +1158,7 @@ This operation exists only on integer and floating point SIMD types.
 <h1>Saturate( descriptor, x )</h1>
 <emu-alg>
 1. If _x_ > _descriptor_.[[ElementMax]], return _descriptor_.[[ElementMax]].
-1. Otherwise, if _z_ < _descriptor_.[[ElementMin]], return _descriptor_.[[ElementMin]]
+1. Otherwise, if _x_ < _descriptor_.[[ElementMin]], return _descriptor_.[[ElementMin]]
 1. Return _x_.
 </emu-alg>
 </emu-clause>
