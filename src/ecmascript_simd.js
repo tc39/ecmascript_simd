@@ -933,7 +933,6 @@ var simdFns = {
     function(type) {
       return function(a) {
         a = type.fn.check(a);
-        // TODO generalize on lane count.
         return type.fn(Math.sqrt(type.fn.extractLane(a, 0)),
                        Math.sqrt(type.fn.extractLane(a, 1)),
                        Math.sqrt(type.fn.extractLane(a, 2)),
@@ -1020,7 +1019,7 @@ var simdFns = {
 var simdTypes = [float32x4,
                  int32x4, int16x8, int8x16,
                  bool32x4, bool16x8, bool8x16];
-// TODO function and only execute once.
+
 for (var i = 0; i < simdTypes.length; i++) {
   var type = simdTypes[i];
   // Install each prototype function on each SIMD prototype.
