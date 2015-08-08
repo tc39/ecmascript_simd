@@ -573,7 +573,8 @@ var int16x8 = {
         "and", "or", "xor", "not",
         "add", "sub", "mul", "neg", "min", "max",
         "shiftLeftByScalar", "shiftRightLogicalByScalar", "shiftRightArithmeticByScalar",
-        "unsignedHorizontalSum", "unsignedAbsoluteDifference", "widenedUnsignedAbsoluteDifference", "addSaturate", "subSaturate",
+        "unsignedHorizontalSum", "unsignedAbsoluteDifference", "widenedUnsignedAbsoluteDifference",
+        "addSaturate", "subSaturate",
         "load", "store"],
 }
 
@@ -592,7 +593,8 @@ var int8x16 = {
         "and", "or", "xor", "not",
         "add", "sub", "mul", "neg", "min", "max",
         "shiftLeftByScalar", "shiftRightLogicalByScalar", "shiftRightArithmeticByScalar",
-        "unsignedHorizontalSum", "unsignedAbsoluteDifference", "widenedUnsignedAbsoluteDifference", "addSaturate", "subSaturate",
+        "unsignedHorizontalSum", "unsignedAbsoluteDifference", "widenedUnsignedAbsoluteDifference",
+        "addSaturate", "subSaturate",
         "load", "store"],
 }
 
