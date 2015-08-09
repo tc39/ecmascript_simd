@@ -566,6 +566,7 @@ var int16x8 = {
   fn: SIMD.Int16x8,
   buffer: _i16x8,
   notFn: unaryBitwiseNot,
+  view: Int16Array,
   fns: ["check", "splat", "replaceLane", "select",
         "equal", "notEqual", "lessThan", "lessThanOrEqual", "greaterThan", "greaterThanOrEqual",
         "and", "or", "xor", "not",
@@ -573,7 +574,7 @@ var int16x8 = {
         "shiftLeftByScalar", "shiftRightLogicalByScalar", "shiftRightArithmeticByScalar",
         "unsignedHorizontalSum", "unsignedAbsoluteDifference", "widenedUnsignedAbsoluteDifference",
         "addSaturate", "subSaturate",
-        "load", "store"],
+        "load", "load1", "load2", "load3", "store", "store1", "store2", "store3"],
 }
 
 var int8x16 = {
@@ -586,6 +587,7 @@ var int8x16 = {
   fn: SIMD.Int8x16,
   buffer: _i8x16,
   notFn: unaryBitwiseNot,
+  view: Int8Array,
   fns: ["check", "splat", "replaceLane", "select",
         "equal", "notEqual", "lessThan", "lessThanOrEqual", "greaterThan", "greaterThanOrEqual",
         "and", "or", "xor", "not",
@@ -593,7 +595,7 @@ var int8x16 = {
         "shiftLeftByScalar", "shiftRightLogicalByScalar", "shiftRightArithmeticByScalar",
         "unsignedHorizontalSum", "unsignedAbsoluteDifference", "widenedUnsignedAbsoluteDifference",
         "addSaturate", "subSaturate",
-        "load", "store"],
+        "load", "load1", "load2", "load3", "store", "store1", "store2", "store3"],
 }
 
 var bool32x4 = {
