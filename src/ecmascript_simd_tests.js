@@ -18,22 +18,6 @@
   3. This notice may not be removed or altered from any source distribution.
 */
 
-function almostEqual(a, b) {
-  ok(Math.abs(a - b) < 0.00001);
-}
-
-function isPositiveZero(x) {
-  ok(x == 0 && 1/x == Infinity);
-}
-
-function isNegativeZero(x) {
-  ok(x == 0 && 1/x == -Infinity);
-}
-
-function isNaN(x) {
-  ok(x != x);
-}
-
 function minNum(x, y) {
   return x != x ? y :
          y != y ? x :
@@ -168,6 +152,8 @@ var floatTypes = [float32x4];
 
 var intTypes = [int32x4, int16x8, int8x16];
 
+var largeTypes = [float32x4, int32x4];
+
 var smallIntTypes = [int16x8, int8x16];
 
 var boolTypes = [bool32x4, bool16x8, bool8x16];
@@ -221,20 +207,17 @@ function simdToLocaleString(type, value) {
 
 function createTestValue(type) {
   // Create a value for testing.
-  switch (type.lanes) {
-    case 4: return type.fn(0, 1, 2, 3);
-    case 8: return type.fn(0, 1, 2, 3, 4, 5, 6, 7);
-    case 16: return type.fn(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15);
-  }
+  var lanes = [];
+  for (var i = 0; i < type.lanes; i++)
+    lanes.push(i);
+  return type.fn.apply(type.fn, lanes);
 }
 
 function createSplatValue(type, v) {
-  var result;
-  switch (type.lanes) {
-    case 4: return type.fn(v, v, v, v);
-    case 8: return type.fn(v, v, v, v, v, v, v, v);
-    case 16: return type.fn(v, v, v, v, v, v, v, v, v, v, v, v, v, v, v, v);
-  }
+  var lanes = [];
+  for (var i = 0; i < type.lanes; i++)
+    lanes.push(v);
+  return type.fn.apply(type.fn, lanes);
 }
 
 function checkValue(type, a, expect) {
@@ -249,6 +232,7 @@ function checkValue(type, a, expect) {
   }
 }
 
+// Test methods for the different kinds of operations.
 
 // Test the constructor and splat with the given lane values.
 function testConstructor(type) {
@@ -469,6 +453,7 @@ function testSwizzle(type) {
 }
 
 function testShuffle(type) {
+  equal('function', typeof type.fn.shuffle);
   var indices = [];
   for (var i = 0; i < type.lanes; i++) indices.push(i);
 
@@ -508,6 +493,89 @@ function testShuffle(type) {
   testIndexCheck('yo');
   testIndexCheck(-1);
   testIndexCheck(128);
+}
+
+function testLoad(type, name, count) {
+  var loadFn = type.fn[name];
+  equal('function', typeof loadFn);
+  var bufLanes = 2 * type.lanes;  // Test all alignments.
+  var bufSize = bufLanes * type.laneSize + 8;  // Extra for over-alignment test.
+  var ab = new ArrayBuffer(bufSize);
+  var buf = new type.view(ab);
+  for (var i = 0; i < bufLanes; i++) buf[i] = i; // Number buffer sequentially.
+  // Test aligned loads.
+  for (var i = 0; i < type.lanes; i++) {
+    var a = loadFn(buf, i);
+    checkValue(type, a, function(index) { return index < count ? i + index : 0; });
+  }
+  // Test the 2 possible over-alignments.
+  var f64 = new Float64Array(ab);
+  var stride = 8 / type.laneSize;
+  for (var i = 0; i < 1; i++) {
+    var a = loadFn(f64, i);
+    checkValue(type, a, function(index) { return index < count ? stride * i + index : 0; });
+  }
+  // Test the 7 possible mis-alignments.
+  var i8 = new Int8Array(ab);
+  for (var misalignment = 1; misalignment < 8; misalignment++) {
+    // Shift the buffer up by 1 byte.
+    for (var i = i8.length - 1; i > 0; i--)
+      i8[i] = i8[i - 1];
+    var a = loadFn(i8, misalignment);
+    checkValue(type, a, function(index) { return index < count ? i + index : 0; });
+  }
+
+  function testIndexCheck(buf, index) {
+    throws(function () { loadFn(buf, index); });
+  }
+  testIndexCheck(buf, -1);
+  // testIndexCheck(buf, bufSize / type.laneSize);
+  testIndexCheck(buf.buffer, 1);
+  testIndexCheck(buf, "a");
+}
+
+function testStore(type, name, count) {
+  var storeFn = type.fn[name];
+  equal('function', typeof storeFn);
+  var bufLanes = 2 * type.lanes;  // Test all alignments.
+  var bufSize = bufLanes * type.laneSize + 8;  // Extra for over-alignment test.
+  var ab = new ArrayBuffer(bufSize);
+  var buf = new type.view(ab);
+  var a = createTestValue(type); // Value containing 0, 1, 2, 3 ...
+  function checkBuffer(offset) {
+    for (var i = 0; i < count; i++)
+      if (buf[offset + i] != i) return false;
+    return true;
+  }
+  // Test aligned stores.
+  for (var i = 0; i < type.lanes; i++) {
+    storeFn(buf, i, a);
+    ok(checkBuffer(i));
+  }
+  // Test the 2 over-alignments.
+  var f64 = new Float64Array(ab);
+  var stride = 8 / type.laneSize;
+  for (var i = 0; i < 1; i++) {
+    storeFn(f64, i, a);
+    ok(checkBuffer(stride * i));
+  }
+  // Test the 7 mis-alignments.
+  var i8 = new Int8Array(ab);
+  for (var misalignment = 1; misalignment < 8; misalignment++) {
+    storeFn(i8, misalignment, a);
+    // Shift the buffer down by misalignment.
+    for (var i = 0; i < i8.length - misalignment; i++)
+      i8[i] = i8[i + misalignment];
+    ok(checkBuffer(0));
+  }
+
+  function testIndexCheck(buf, index) {
+    throws(function () { storeFn(buf, index, type.fn()); });
+  }
+  testIndexCheck(buf, -1);
+  // testIndexCheck(buf, bufSize / type.laneSize);
+  testIndexCheck(buf.buffer, 1);
+  testIndexCheck(buf, "a");
 }
 
 function testOperators(type) {
@@ -638,6 +706,12 @@ for (var type of numericalTypes) {
   test(type.name + ' shuffle', function() {
     testShuffle(type);
   });
+  test(type.name + ' load', function() {
+    testLoad(type, 'load', type.lanes);
+  });
+  test(type.name + ' store', function() {
+    testStore(type, 'store', type.lanes);
+  });
 }
 
 for (var type of logicalTypes) {
@@ -649,6 +723,27 @@ for (var type of logicalTypes) {
   });
   test(type.name + ' xor', function() {
     testBinaryOp(type, 'xor', function(a, b) { return a ^ b; });
+  });
+}
+
+for (var type of largeTypes) {
+  test(type.name + ' load1', function() {
+    testLoad(type, 'load1', 1);
+  });
+  test(type.name + ' load2', function() {
+    testLoad(type, 'load2', 2);
+  });
+  test(type.name + ' load3', function() {
+    testLoad(type, 'load3', 3);
+  });
+  test(type.name + ' store1', function() {
+    testStore(type, 'store1', 1);
+  });
+  test(type.name + ' store1', function() {
+    testStore(type, 'store2', 2);
+  });
+  test(type.name + ' store3', function() {
+    testStore(type, 'store3', 3);
   });
 }
 
@@ -757,1108 +852,8 @@ for (var type of allTypes) {
   }
 }
 
-
-
-
-test('Float32x4 load', function() {
-  var a = new Float32Array(8);
-  for (var i = 0; i < a.length; i++) {
-    a[i] = i;
-  }
-  for (var i = 0; i < a.length - 3; i++) {
-    var v = SIMD.Float32x4.load(a, i);
-    equal(i, SIMD.Float32x4.extractLane(v, 0));
-    equal(i+1, SIMD.Float32x4.extractLane(v, 1));
-    equal(i+2, SIMD.Float32x4.extractLane(v, 2));
-    equal(i+3, SIMD.Float32x4.extractLane(v, 3));
-  }
-});
-
-test('Float32x4 overaligned load', function() {
-  var b = new ArrayBuffer(40);
-  var a = new Float32Array(b, 8);
-  var af = new Float64Array(b, 8);
-  for (var i = 0; i < a.length; i++) {
-    a[i] = i;
-  }
-  for (var i = 0; i < a.length - 3; i += 2) {
-    var v = SIMD.Float32x4.load(af, i / 2);
-    equal(i, SIMD.Float32x4.extractLane(v, 0));
-    equal(i+1, SIMD.Float32x4.extractLane(v, 1));
-    equal(i+2, SIMD.Float32x4.extractLane(v, 2));
-    equal(i+3, SIMD.Float32x4.extractLane(v, 3));
-  }
-});
-
-test('Float32x4 unaligned load', function() {
-  var a = new Float32Array(8);
-  var ai = new Int8Array(a.buffer);
-  for (var i = 0; i < a.length; i++) {
-    a[i] = i;
-  }
-
-  // Copy the bytes, offset by 1.
-  var b = new Int8Array(ai.length + 1);
-  for (var i = 0; i < ai.length; i++) {
-    b[i + 1] = ai[i];
-  }
-
-  // Load the values unaligned.
-  for (var i = 0; i < a.length - 3; i++) {
-    var v = SIMD.Float32x4.load(b, i * 4 + 1);
-    equal(i, SIMD.Float32x4.extractLane(v, 0));
-    equal(i+1, SIMD.Float32x4.extractLane(v, 1));
-    equal(i+2, SIMD.Float32x4.extractLane(v, 2));
-    equal(i+3, SIMD.Float32x4.extractLane(v, 3));
-  }
-});
-
-test('Float32x4 load1', function() {
-  var a = new Float32Array(8);
-  for (var i = 0; i < a.length; i++) {
-    a[i] = i;
-  }
-  for (var i = 0; i < a.length; i++) {
-    var v = SIMD.Float32x4.load1(a, i);
-    equal(i, SIMD.Float32x4.extractLane(v, 0));
-    isPositiveZero(SIMD.Float32x4.extractLane(v, 1));
-    isPositiveZero(SIMD.Float32x4.extractLane(v, 2));
-    isPositiveZero(SIMD.Float32x4.extractLane(v, 3));
-  }
-});
-
-test('Float32x4 overaligned load1', function() {
-  var b = new ArrayBuffer(40);
-  var a = new Float32Array(b, 8);
-  var af = new Float64Array(b, 8);
-  for (var i = 0; i < a.length; i++) {
-    a[i] = i;
-  }
-  for (var i = 0; i < a.length; i += 2) {
-    var v = SIMD.Float32x4.load1(af, i / 2);
-    equal(i, SIMD.Float32x4.extractLane(v, 0));
-    isPositiveZero(SIMD.Float32x4.extractLane(v, 1));
-    isPositiveZero(SIMD.Float32x4.extractLane(v, 2));
-    isPositiveZero(SIMD.Float32x4.extractLane(v, 3));
-  }
-});
-
-test('Float32x4 unaligned load1', function() {
-  var a = new Float32Array(8);
-  var ai = new Int8Array(a.buffer);
-  for (var i = 0; i < a.length; i++) {
-    a[i] = i;
-  }
-
-  // Copy the bytes, offset by 1.
-  var b = new Int8Array(ai.length + 1);
-  for (var i = 0; i < ai.length; i++) {
-    b[i + 1] = ai[i];
-  }
-
-  // Load the values unaligned.
-  for (var i = 0; i < a.length; i++) {
-    var v = SIMD.Float32x4.load1(b, i * 4 + 1);
-    equal(i, SIMD.Float32x4.extractLane(v, 0));
-    isPositiveZero(SIMD.Float32x4.extractLane(v, 1));
-    isPositiveZero(SIMD.Float32x4.extractLane(v, 2));
-    isPositiveZero(SIMD.Float32x4.extractLane(v, 3));
-  }
-});
-
-test('Float32x4 load2', function() {
-  var a = new Float32Array(8);
-  for (var i = 0; i < a.length; i++) {
-    a[i] = i;
-  }
-  for (var i = 0; i < a.length - 1; i++) {
-    var v = SIMD.Float32x4.load2(a, i);
-    equal(i, SIMD.Float32x4.extractLane(v, 0));
-    equal(i+1, SIMD.Float32x4.extractLane(v, 1));
-    isPositiveZero(SIMD.Float32x4.extractLane(v, 2));
-    isPositiveZero(SIMD.Float32x4.extractLane(v, 3));
-  }
-});
-
-test('Float32x4 overaligned load2', function() {
-  var b = new ArrayBuffer(40);
-  var a = new Float32Array(b, 8);
-  var af = new Float64Array(b, 8);
-  for (var i = 0; i < a.length; i++) {
-    a[i] = i;
-  }
-  for (var i = 0; i < a.length - 1; i += 2) {
-    var v = SIMD.Float32x4.load2(af, i / 2);
-    equal(i, SIMD.Float32x4.extractLane(v, 0));
-    equal(i+1, SIMD.Float32x4.extractLane(v, 1));
-    isPositiveZero(SIMD.Float32x4.extractLane(v, 2));
-    isPositiveZero(SIMD.Float32x4.extractLane(v, 3));
-  }
-});
-
-test('Float32x4 unaligned load2', function() {
-  var a = new Float32Array(8);
-  var ai = new Int8Array(a.buffer);
-  for (var i = 0; i < a.length; i++) {
-    a[i] = i;
-  }
-
-  // Copy the bytes, offset by 1.
-  var b = new Int8Array(ai.length + 1);
-  for (var i = 0; i < ai.length; i++) {
-    b[i + 1] = ai[i];
-  }
-
-  // Load the values unaligned.
-  for (var i = 0; i < a.length - 1; i++) {
-    var v = SIMD.Float32x4.load2(b, i * 4 + 1);
-    equal(i, SIMD.Float32x4.extractLane(v, 0));
-    equal(i+1, SIMD.Float32x4.extractLane(v, 1));
-    isPositiveZero(SIMD.Float32x4.extractLane(v, 2));
-    isPositiveZero(SIMD.Float32x4.extractLane(v, 3));
-  }
-});
-
-test('Float32x4 load3', function() {
-  var a = new Float32Array(9);
-  for (var i = 0; i < a.length; i++) {
-    a[i] = i;
-  }
-  for (var i = 0; i < a.length - 2; i++) {
-    var v = SIMD.Float32x4.load3(a, i);
-    equal(i, SIMD.Float32x4.extractLane(v, 0));
-    equal(i+1, SIMD.Float32x4.extractLane(v, 1));
-    equal(i+2, SIMD.Float32x4.extractLane(v, 2));
-    isPositiveZero(SIMD.Float32x4.extractLane(v, 3));
-  }
-});
-
-test('Float32x4 overaligned load3', function() {
-  var b = new ArrayBuffer(48);
-  var a = new Float32Array(b, 8);
-  var af = new Float64Array(b, 8);
-  for (var i = 0; i < a.length; i++) {
-    a[i] = i;
-  }
-  for (var i = 0; i < a.length - 2; i += 2) {
-    var v = SIMD.Float32x4.load3(af, i / 2);
-    equal(i, SIMD.Float32x4.extractLane(v, 0));
-    equal(i+1, SIMD.Float32x4.extractLane(v, 1));
-    equal(i+2, SIMD.Float32x4.extractLane(v, 2));
-    isPositiveZero(SIMD.Float32x4.extractLane(v, 3));
-  }
-});
-
-test('Float32x4 unaligned load3', function() {
-  var a = new Float32Array(9);
-  var ai = new Int8Array(a.buffer);
-  for (var i = 0; i < a.length; i++) {
-    a[i] = i;
-  }
-
-  // Copy the bytes, offset by 1.
-  var b = new Int8Array(ai.length + 1);
-  for (var i = 0; i < ai.length; i++) {
-    b[i + 1] = ai[i];
-  }
-
-  // Load the values unaligned.
-  for (var i = 0; i < a.length - 2; i++) {
-    var v = SIMD.Float32x4.load3(b, i * 4 + 1);
-    equal(i, SIMD.Float32x4.extractLane(v, 0));
-    equal(i+1, SIMD.Float32x4.extractLane(v, 1));
-    equal(i+2, SIMD.Float32x4.extractLane(v, 2));
-    isPositiveZero(SIMD.Float32x4.extractLane(v, 3));
-  }
-});
-
-test('Float32x4 store', function() {
-  var a = new Float32Array(12);
-  SIMD.Float32x4.store(a, 0, SIMD.Float32x4(0, 1, 2, 3));
-  SIMD.Float32x4.store(a, 4, SIMD.Float32x4(4, 5, 6, 7));
-  SIMD.Float32x4.store(a, 8, SIMD.Float32x4(8, 9, 10, 11));
-  for (var i = 0; i < a.length; i++) {
-    equal(i, a[i]);
-  }
-
-  var v = SIMD.Float32x4(0, 1, 2, 3);
-  equal(true, SIMD.Bool32x4.allTrue(SIMD.Float32x4.equal(SIMD.Float32x4.store(a, 0, v), v)));
-});
-
-test('Float32x4 overaligned store', function() {
-  var b = new ArrayBuffer(56);
-  var a = new Float32Array(b, 8);
-  var af = new Float64Array(b, 8);
-  SIMD.Float32x4.store(af, 0, SIMD.Float32x4(0, 1, 2, 3));
-  SIMD.Float32x4.store(af, 2, SIMD.Float32x4(4, 5, 6, 7));
-  SIMD.Float32x4.store(af, 4, SIMD.Float32x4(8, 9, 10, 11));
-  for (var i = 0; i < a.length; i++) {
-    equal(i, a[i]);
-  }
-});
-
-test('Float32x4 unaligned store', function() {
-  var c = new Int8Array(48 + 1);
-  SIMD.Float32x4.store(c, 0 + 1, SIMD.Float32x4(0, 1, 2, 3));
-  SIMD.Float32x4.store(c, 16 + 1, SIMD.Float32x4(4, 5, 6, 7));
-  SIMD.Float32x4.store(c, 32 + 1, SIMD.Float32x4(8, 9, 10, 11));
-
-  // Copy the bytes, offset by 1.
-  var b = new Int8Array(c.length - 1);
-  for (var i = 1; i < c.length; i++) {
-      b[i - 1] = c[i];
-  }
-
-  var a = new Float32Array(b.buffer);
-  for (var i = 0; i < a.length; i++) {
-    equal(i, a[i]);
-  }
-});
-
-test('Float32x4 store1', function() {
-  var a = new Float32Array(4);
-  SIMD.Float32x4.store1(a, 0, SIMD.Float32x4(0, -1, -1, -1));
-  SIMD.Float32x4.store1(a, 1, SIMD.Float32x4(1, -1, -1, -1));
-  SIMD.Float32x4.store1(a, 2, SIMD.Float32x4(2, -1, -1, -1));
-  SIMD.Float32x4.store1(a, 3, SIMD.Float32x4(3, -1, -1, -1));
-  for (var i = 0; i < a.length; i++) {
-    equal(i, a[i]);
-  }
-
-  var v = SIMD.Float32x4(0, 1, 2, 3);
-  equal(true, SIMD.Bool32x4.allTrue(SIMD.Float32x4.equal(SIMD.Float32x4.store1(a, 0, v), v)));
-});
-
-test('Float32x4 overaligned store1', function() {
-  var b = new ArrayBuffer(24);
-  var a = new Float32Array(b, 8);
-  var af = new Float64Array(b, 8);
-  a[1] = -2;
-  a[3] = -2;
-  SIMD.Float32x4.store1(af, 0, SIMD.Float32x4(0, -1, -1, -1));
-  SIMD.Float32x4.store1(af, 1, SIMD.Float32x4(2, -1, -1, -1));
-  for (var i = 0; i < a.length; i++) {
-    if (i % 2 == 0) {
-      equal(i, a[i]);
-    } else {
-      equal(-2, a[i]);
-    }
-  }
-});
-
-test('Float32x4 unaligned store1', function() {
-  var c = new Int8Array(16 + 1);
-  SIMD.Float32x4.store1(c, 0 + 1, SIMD.Float32x4(0, -1, -1, -1));
-  SIMD.Float32x4.store1(c, 4 + 1, SIMD.Float32x4(1, -1, -1, -1));
-  SIMD.Float32x4.store1(c, 8 + 1, SIMD.Float32x4(2, -1, -1, -1));
-  SIMD.Float32x4.store1(c, 12 + 1, SIMD.Float32x4(3, -1, -1, -1));
-
-  // Copy the bytes, offset by 1.
-  var b = new Int8Array(c.length - 1);
-  for (var i = 1; i < c.length; i++) {
-      b[i - 1] = c[i];
-  }
-
-  var a = new Float32Array(b.buffer);
-  for (var i = 0; i < a.length; i++) {
-    equal(i, a[i]);
-  }
-});
-
-test('Float32x4 store2', function() {
-  var a = new Float32Array(8);
-  SIMD.Float32x4.store2(a, 0, SIMD.Float32x4(0, 1, -1, -1));
-  SIMD.Float32x4.store2(a, 2, SIMD.Float32x4(2, 3, -1, -1));
-  SIMD.Float32x4.store2(a, 4, SIMD.Float32x4(4, 5, -1, -1));
-  SIMD.Float32x4.store2(a, 6, SIMD.Float32x4(6, 7, -1, -1));
-  for (var i = 0; i < a.length; i++) {
-    equal(i, a[i]);
-  }
-
-  var v = SIMD.Float32x4(0, 1, 2, 3);
-  equal(true, SIMD.Bool32x4.allTrue(SIMD.Float32x4.equal(SIMD.Float32x4.store2(a, 0, v), v)));
-});
-
-test('Float32x4 overaligned store2', function() {
-  var b = new ArrayBuffer(40);
-  var a = new Float32Array(b, 8);
-  var af = new Float64Array(b, 8);
-  SIMD.Float32x4.store2(af, 0, SIMD.Float32x4(0, 1, -1, -1));
-  SIMD.Float32x4.store2(af, 1, SIMD.Float32x4(2, 3, -1, -1));
-  SIMD.Float32x4.store2(af, 2, SIMD.Float32x4(4, 5, -1, -1));
-  SIMD.Float32x4.store2(af, 3, SIMD.Float32x4(6, 7, -1, -1));
-  for (var i = 0; i < a.length; i++) {
-    equal(i, a[i]);
-  }
-});
-
-test('Float32x4 unaligned store2', function() {
-  var c = new Int8Array(32 + 1);
-  SIMD.Float32x4.store2(c, 0 + 1, SIMD.Float32x4(0, 1, -1, -1));
-  SIMD.Float32x4.store2(c, 8 + 1, SIMD.Float32x4(2, 3, -1, -1));
-  SIMD.Float32x4.store2(c, 16 + 1, SIMD.Float32x4(4, 5, -1, -1));
-  SIMD.Float32x4.store2(c, 24 + 1, SIMD.Float32x4(6, 7, -1, -1));
-
-  // Copy the bytes, offset by 1.
-  var b = new Int8Array(c.length - 1);
-  for (var i = 1; i < c.length; i++) {
-      b[i - 1] = c[i];
-  }
-
-  var a = new Float32Array(b.buffer);
-  for (var i = 0; i < a.length; i++) {
-    equal(i, a[i]);
-  }
-});
-
-test('Float32x4 store3', function() {
-  var a = new Float32Array(9);
-  SIMD.Float32x4.store3(a, 0, SIMD.Float32x4(0, 1, 2, -1));
-  SIMD.Float32x4.store3(a, 3, SIMD.Float32x4(3, 4, 5, -1));
-  SIMD.Float32x4.store3(a, 6, SIMD.Float32x4(6, 7, 8, -1));
-  for (var i = 0; i < a.length; i++) {
-    equal(i, a[i]);
-  }
-
-  var v = SIMD.Float32x4(0, 1, 2, 3);
-  equal(true, SIMD.Bool32x4.allTrue(SIMD.Float32x4.equal(SIMD.Float32x4.store3(a, 0, v), v)));
-});
-
-test('Float32x4 overaligned store3', function() {
-  var b = new ArrayBuffer(56);
-  var a = new Float32Array(b, 8);
-  var af = new Float64Array(b, 8);
-  a[3] = -2;
-  a[7] = -2;
-  a[11] = -2;
-  SIMD.Float32x4.store3(af, 0, SIMD.Float32x4(0, 1, 2, -1));
-  SIMD.Float32x4.store3(af, 2, SIMD.Float32x4(4, 5, 6, -1));
-  SIMD.Float32x4.store3(af, 4, SIMD.Float32x4(8, 9, 10, -1));
-  for (var i = 0; i < a.length; i++) {
-    if (i % 4 != 3) {
-      equal(i, a[i]);
-    } else {
-      equal(-2, a[i]);
-    }
-  }
-});
-
-test('Float32x4 unaligned store3', function() {
-  var c = new Int8Array(36 + 1);
-  SIMD.Float32x4.store3(c, 0 + 1, SIMD.Float32x4(0, 1, 2, -1));
-  SIMD.Float32x4.store3(c, 12 + 1, SIMD.Float32x4(3, 4, 5, -1));
-  SIMD.Float32x4.store3(c, 24 + 1, SIMD.Float32x4(6, 7, 8, -1));
-
-  // Copy the bytes, offset by 1.
-  var b = new Int8Array(c.length - 1);
-  for (var i = 1; i < c.length; i++) {
-      b[i - 1] = c[i];
-  }
-
-  var a = new Float32Array(b.buffer);
-  for (var i = 0; i < a.length; i++) {
-    equal(i, a[i]);
-  }
-});
-
-test('Float32x4 load exceptions', function () {
-  var a = new Float32Array(8);
-  throws(function () {
-    var f = SIMD.Float32x4.load(a, -1);
-  });
-  throws(function () {
-    var f = SIMD.Float32x4.load(a, 5);
-  });
-  throws(function () {
-    var f = SIMD.Float32x4.load(a.buffer, 1);
-  });
-  throws(function () {
-    var f = SIMD.Float32x4.load(a, "a");
-  });
-});
-
-test('Float32x4 load1 exceptions', function () {
-  var a = new Float32Array(8);
-  throws(function () {
-    var f = SIMD.Float32x4.load1(a, -1);
-  });
-  throws(function () {
-    var f = SIMD.Float32x4.load1(a, 8);
-  });
-  throws(function () {
-    var f = SIMD.Float32x4.load1(a.buffer, 1);
-  });
-  throws(function () {
-    var f = SIMD.Float32x4.load1(a, "a");
-  });
-});
-
-test('Float32x4 load2 exceptions', function () {
-  var a = new Float32Array(8);
-  throws(function () {
-    var f = SIMD.Float32x4.load2(a, -1);
-  });
-  throws(function () {
-    var f = SIMD.Float32x4.load2(a, 7);
-  });
-  throws(function () {
-    var f = SIMD.Float32x4.load2(a.buffer, 1);
-  });
-  throws(function () {
-    var f = SIMD.Float32x4.load2(a, "a");
-  });
-});
-
-test('Float32x4 load3 exceptions', function () {
-  var a = new Float32Array(8);
-  throws(function () {
-    var f = SIMD.Float32x4.load3(a, -1);
-  });
-  throws(function () {
-    var f = SIMD.Float32x4.load3(a, 6);
-  });
-  throws(function () {
-    var f = SIMD.Float32x4.load3(a.buffer, 1);
-  });
-  throws(function () {
-    var f = SIMD.Float32x4.load3(a, "a");
-  });
-});
-
-test('Float32x4 store exceptions', function () {
-  var a = new Float32Array(8);
-  var f = SIMD.Float32x4(1, 2, 3, 4);
-  var i = SIMD.Int32x4(1, 2, 3, 4);
-  throws(function () {
-    SIMD.Float32x4.store(a, -1, f);
-  });
-  throws(function () {
-    SIMD.Float32x4.store(a, 5, f);
-  });
-  throws(function () {
-    SIMD.Float32x4.store(a.buffer, 1, f);
-  });
-  throws(function () {
-    SIMD.Float32x4.store(a, "a", f);
-  });
-  throws(function () {
-    SIMD.Float32x4.store(a, 1, i);
-  });
-});
-
-test('Float32x4 store1 exceptions', function () {
-  var a = new Float32Array(8);
-  var f = SIMD.Float32x4(1, 2, 3, 4);
-  var i = SIMD.Int32x4(1, 2, 3, 4);
-  throws(function () {
-    SIMD.Float32x4.store1(a, -1, f);
-  });
-  throws(function () {
-    SIMD.Float32x4.store1(a, 8, f);
-  });
-  throws(function () {
-    SIMD.Float32x4.store1(a.buffer, 1, f);
-  });
-  throws(function () {
-    SIMD.Float32x4.store1(a, "a", f);
-  });
-  throws(function () {
-    SIMD.Float32x4.store1(a, 1, i);
-  });
-});
-
-test('Float32x4 store2 exceptions', function () {
-  var a = new Float32Array(8);
-  var f = SIMD.Float32x4(1, 2, 3, 4);
-  var i = SIMD.Int32x4(1, 2, 3, 4);
-  throws(function () {
-    SIMD.Float32x4.store2(a, -1, f);
-  });
-  throws(function () {
-    SIMD.Float32x4.store2(a, 7, f);
-  });
-  throws(function () {
-    SIMD.Float32x4.store2(a.buffer, 1, f);
-  });
-  throws(function () {
-    SIMD.Float32x4.store2(a, "a", f);
-  });
-  throws(function () {
-    SIMD.Float32x4.store2(a, 1, i);
-  });
-});
-
-test('Float32x4 store3 exceptions', function () {
-  var a = new Float32Array(8);
-  var f = SIMD.Float32x4(1, 2, 3, 4);
-  var i = SIMD.Int32x4(1, 2, 3, 4);
-  throws(function () {
-    SIMD.Float32x4.store3(a, -1, f);
-  });
-  throws(function () {
-    SIMD.Float32x4.store3(a, 6, f);
-  });
-  throws(function () {
-    SIMD.Float32x4.store3(a.buffer, 1, f);
-  });
-  throws(function () {
-    SIMD.Float32x4.store3(a, "a", f);
-  });
-  throws(function () {
-    SIMD.Float32x4.store3(a, 1, i);
-  });
-});
-
-
-test('Int32x4 load', function() {
-  var a = new Int32Array(8);
-  for (var i = 0; i < a.length; i++) {
-    a[i] = i;
-  }
-  for (var i = 0; i < a.length - 3; i++) {
-    var v = SIMD.Int32x4.load(a, i);
-    equal(i, SIMD.Int32x4.extractLane(v, 0));
-    equal(i+1, SIMD.Int32x4.extractLane(v, 1));
-    equal(i+2, SIMD.Int32x4.extractLane(v, 2));
-    equal(i+3, SIMD.Int32x4.extractLane(v, 3));
-  }
-});
-
-test('Int32x4 overaligned load', function() {
-  var b = new ArrayBuffer(40);
-  var a = new Int32Array(b, 8);
-  var af = new Float64Array(b, 8);
-  for (var i = 0; i < a.length; i++) {
-    a[i] = i;
-  }
-  for (var i = 0; i < a.length - 3; i += 2) {
-    var v = SIMD.Int32x4.load(af, i / 2);
-    equal(i, SIMD.Int32x4.extractLane(v, 0));
-    equal(i+1, SIMD.Int32x4.extractLane(v, 1));
-    equal(i+2, SIMD.Int32x4.extractLane(v, 2));
-    equal(i+3, SIMD.Int32x4.extractLane(v, 3));
-  }
-});
-
-test('Int32x4 unaligned load', function() {
-  var a = new Int32Array(8);
-  var ai = new Int8Array(a.buffer);
-  for (var i = 0; i < a.length; i++) {
-    a[i] = i;
-  }
-
-  // Copy the bytes, offset by 1.
-  var b = new Int8Array(ai.length + 1);
-  for (var i = 0; i < ai.length; i++) {
-    b[i + 1] = ai[i];
-  }
-
-  // Load the values unaligned.
-  for (var i = 0; i < a.length - 3; i++) {
-    var v = SIMD.Int32x4.load(b, i * 4 + 1);
-    equal(i, SIMD.Int32x4.extractLane(v, 0));
-    equal(i+1, SIMD.Int32x4.extractLane(v, 1));
-    equal(i+2, SIMD.Int32x4.extractLane(v, 2));
-    equal(i+3, SIMD.Int32x4.extractLane(v, 3));
-  }
-});
-
-test('Int32x4 load1', function() {
-  var a = new Int32Array(8);
-  for (var i = 0; i < a.length; i++) {
-    a[i] = i;
-  }
-  for (var i = 0; i < a.length ; i++) {
-    var v = SIMD.Int32x4.load1(a, i);
-    equal(i, SIMD.Int32x4.extractLane(v, 0));
-    equal(0, SIMD.Int32x4.extractLane(v, 1));
-    equal(0, SIMD.Int32x4.extractLane(v, 2));
-    equal(0, SIMD.Int32x4.extractLane(v, 3));
-  }
-});
-
-test('Int32x4 overaligned load1', function() {
-  var b = new ArrayBuffer(40);
-  var a = new Int32Array(b, 8);
-  var af = new Int32Array(b, 8);
-  for (var i = 0; i < a.length; i++) {
-    a[i] = i;
-  }
-  for (var i = 0; i < a.length; i++) {
-    var v = SIMD.Int32x4.load1(af, i);
-    equal(i, SIMD.Int32x4.extractLane(v, 0));
-    equal(0, SIMD.Int32x4.extractLane(v, 1));
-    equal(0, SIMD.Int32x4.extractLane(v, 2));
-    equal(0, SIMD.Int32x4.extractLane(v, 3));
-  }
-});
-
-test('Int32x4 unaligned load1', function() {
-  var a = new Int32Array(8);
-  var ai = new Int8Array(a.buffer);
-  for (var i = 0; i < a.length; i++) {
-    a[i] = i;
-  }
-
-  // Copy the bytes, offset by 1.
-  var b = new Int8Array(ai.length + 1);
-  for (var i = 0; i < ai.length; i++) {
-    b[i + 1] = ai[i];
-  }
-
-  // Load the values unaligned.
-  for (var i = 0; i < a.length ; i++) {
-    var v = SIMD.Int32x4.load1(b, i * 4 + 1);
-    equal(i, SIMD.Int32x4.extractLane(v, 0));
-    equal(0, SIMD.Int32x4.extractLane(v, 1));
-    equal(0, SIMD.Int32x4.extractLane(v, 2));
-    equal(0, SIMD.Int32x4.extractLane(v, 3));
-  }
-});
-
-test('Int32x4 load2', function() {
-  var a = new Int32Array(8);
-  for (var i = 0; i < a.length; i++) {
-    a[i] = i;
-  }
-  for (var i = 0; i < a.length - 1; i++) {
-    var v = SIMD.Int32x4.load2(a, i);
-    equal(i, SIMD.Int32x4.extractLane(v, 0));
-    equal(i+1, SIMD.Int32x4.extractLane(v, 1));
-    equal(0, SIMD.Int32x4.extractLane(v, 2));
-    equal(0, SIMD.Int32x4.extractLane(v, 3));
-  }
-});
-
-test('Int32x4 overaligned load2', function() {
-  var b = new ArrayBuffer(40);
-  var a = new Int32Array(b, 8);
-  var af = new Float64Array(b, 8);
-  for (var i = 0; i < a.length; i++) {
-    a[i] = i;
-  }
-  for (var i = 0; i < a.length - 1; i += 2) {
-    var v = SIMD.Int32x4.load2(af, i / 2);
-    equal(i, SIMD.Int32x4.extractLane(v, 0));
-    equal(i+1, SIMD.Int32x4.extractLane(v, 1));
-    equal(0, SIMD.Int32x4.extractLane(v, 2));
-    equal(0, SIMD.Int32x4.extractLane(v, 3));
-  }
-});
-
-test('Int32x4 unaligned load2', function() {
-  var a = new Int32Array(8);
-  var ai = new Int8Array(a.buffer);
-  for (var i = 0; i < a.length; i++) {
-    a[i] = i;
-  }
-
-  // Copy the bytes, offset by 1.
-  var b = new Int8Array(ai.length + 1);
-  for (var i = 0; i < ai.length; i++) {
-    b[i + 1] = ai[i];
-  }
-
-  // Load the values unaligned.
-  for (var i = 0; i < a.length - 1; i++) {
-    var v = SIMD.Int32x4.load2(b, i * 4 + 1);
-    equal(i, SIMD.Int32x4.extractLane(v, 0));
-    equal(i+1, SIMD.Int32x4.extractLane(v, 1));
-    equal(0, SIMD.Int32x4.extractLane(v, 2));
-    equal(0, SIMD.Int32x4.extractLane(v, 3));
-  }
-});
-
-test('Int32x4 load3', function() {
-  var a = new Int32Array(9);
-  for (var i = 0; i < a.length; i++) {
-    a[i] = i;
-  }
-  for (var i = 0; i < a.length - 2; i++) {
-    var v = SIMD.Int32x4.load3(a, i);
-    equal(i, SIMD.Int32x4.extractLane(v, 0));
-    equal(i+1, SIMD.Int32x4.extractLane(v, 1));
-    equal(i+2, SIMD.Int32x4.extractLane(v, 2));
-    equal(0, SIMD.Int32x4.extractLane(v, 3));
-  }
-});
-
-test('Int32x4 overaligned load3', function() {
-  var b = new ArrayBuffer(48);
-  var a = new Int32Array(b, 8);
-  var af = new Float64Array(b, 8);
-  for (var i = 0; i < a.length; i++) {
-    a[i] = i;
-  }
-  for (var i = 0; i < a.length - 2; i += 2) {
-    var v = SIMD.Int32x4.load3(af, i / 2);
-    equal(i, SIMD.Int32x4.extractLane(v, 0));
-    equal(i+1, SIMD.Int32x4.extractLane(v, 1));
-    equal(i+2, SIMD.Int32x4.extractLane(v, 2));
-    equal(0, SIMD.Int32x4.extractLane(v, 3));
-  }
-});
-
-test('Int32x4 load3', function() {
-  var a = new Int32Array(9);
-  var ai = new Int8Array(a.buffer);
-  for (var i = 0; i < a.length; i++) {
-    a[i] = i;
-  }
-
-  // Copy the bytes, offset by 1.
-  var b = new Int8Array(ai.length + 1);
-  for (var i = 0; i < ai.length; i++) {
-    b[i + 1] = ai[i];
-  }
-
-  // Load the values unaligned.
-  for (var i = 0; i < a.length - 2; i++) {
-    var v = SIMD.Int32x4.load3(b, i * 4 + 1);
-    equal(i, SIMD.Int32x4.extractLane(v, 0));
-    equal(i+1, SIMD.Int32x4.extractLane(v, 1));
-    equal(i+2, SIMD.Int32x4.extractLane(v, 2));
-    equal(0, SIMD.Int32x4.extractLane(v, 3));
-  }
-});
-
-test('Int32x4 store', function() {
-  var a = new Int32Array(12);
-  SIMD.Int32x4.store(a, 0, SIMD.Int32x4(0, 1, 2, 3));
-  SIMD.Int32x4.store(a, 4, SIMD.Int32x4(4, 5, 6, 7));
-  SIMD.Int32x4.store(a, 8, SIMD.Int32x4(8, 9, 10, 11));
-  for (var i = 0; i < a.length; i++) {
-    equal(i, a[i]);
-  }
-
-  var v = SIMD.Int32x4(0, 1, 2, 3);
-  equal(true, SIMD.Bool32x4.allTrue(SIMD.Int32x4.equal(SIMD.Int32x4.store(a, 0, v), v)));
-});
-
-test('Int32x4 overaligned store', function() {
-  var b = new ArrayBuffer(56);
-  var a = new Int32Array(b, 8);
-  var af = new Float64Array(b, 8);
-  SIMD.Int32x4.store(af, 0, SIMD.Int32x4(0, 1, 2, 3));
-  SIMD.Int32x4.store(af, 2, SIMD.Int32x4(4, 5, 6, 7));
-  SIMD.Int32x4.store(af, 4, SIMD.Int32x4(8, 9, 10, 11));
-  for (var i = 0; i < a.length; i++) {
-    equal(i, a[i]);
-  }
-});
-
-test('Int32x4 unaligned store', function() {
-  var c = new Int8Array(48 + 1);
-  SIMD.Int32x4.store(c, 0 + 1, SIMD.Int32x4(0, 1, 2, 3));
-  SIMD.Int32x4.store(c, 16 + 1, SIMD.Int32x4(4, 5, 6, 7));
-  SIMD.Int32x4.store(c, 32 + 1, SIMD.Int32x4(8, 9, 10, 11));
-
-  // Copy the bytes, offset by 1.
-  var b = new Int8Array(c.length - 1);
-  for (var i = 1; i < c.length; i++) {
-      b[i - 1] = c[i];
-  }
-
-  var a = new Int32Array(b.buffer);
-  for (var i = 0; i < a.length; i++) {
-    equal(i, a[i]);
-  }
-});
-
-test('Int32x4 store1', function() {
-  var a = new Int32Array(4);
-  SIMD.Int32x4.store1(a, 0, SIMD.Int32x4(0, -1, -1, -1));
-  SIMD.Int32x4.store1(a, 1, SIMD.Int32x4(1, -1, -1, -1));
-  SIMD.Int32x4.store1(a, 2, SIMD.Int32x4(2, -1, -1, -1));
-  SIMD.Int32x4.store1(a, 3, SIMD.Int32x4(3, -1, -1, -1));
-  for (var i = 0; i < a.length; i++) {
-    equal(i, a[i]);
-  }
-
-  var v = SIMD.Int32x4(0, 1, 2, 3);
-  equal(true, SIMD.Bool32x4.allTrue(SIMD.Int32x4.equal(SIMD.Int32x4.store1(a, 0, v), v)));
-});
-
-test('Int32x4 overaligned store1', function() {
-  var b = new ArrayBuffer(24);
-  var a = new Int32Array(b, 8);
-  var af = new Float64Array(b, 8);
-  a[1] = -2;
-  a[3] = -2;
-  SIMD.Int32x4.store1(af, 0, SIMD.Int32x4(0, -1, -1, -1));
-  SIMD.Int32x4.store1(af, 1, SIMD.Int32x4(2, -1, -1, -1));
-  for (var i = 0; i < a.length; i++) {
-    if (i % 2 == 0) {
-      equal(i, a[i]);
-    } else {
-      equal(-2, a[i]);
-    }
-  }
-});
-
-test('Int32x4 unaligned store1', function() {
-  var c = new Int8Array(16 + 1);
-  SIMD.Int32x4.store1(c, 0 + 1, SIMD.Int32x4(0, -1, -1, -1));
-  SIMD.Int32x4.store1(c, 4 + 1, SIMD.Int32x4(1, -1, -1, -1));
-  SIMD.Int32x4.store1(c, 8 + 1, SIMD.Int32x4(2, -1, -1, -1));
-  SIMD.Int32x4.store1(c, 12 + 1, SIMD.Int32x4(3, -1, -1, -1));
-
-  // Copy the bytes, offset by 1.
-  var b = new Int8Array(c.length - 1);
-  for (var i = 1; i < c.length; i++) {
-      b[i - 1] = c[i];
-  }
-
-  var a = new Int32Array(b.buffer);
-  for (var i = 0; i < a.length; i++) {
-    equal(i, a[i]);
-  }
-
-  var v = SIMD.Int32x4(0, 1, 2, 3);
-  equal(true, SIMD.Bool32x4.allTrue(SIMD.Int32x4.equal(SIMD.Int32x4.store2(a, 0, v), v)));
-});
-
-test('Int32x4 store2', function() {
-  var a = new Int32Array(8);
-  SIMD.Int32x4.store2(a, 0, SIMD.Int32x4(0, 1, -1, -1));
-  SIMD.Int32x4.store2(a, 2, SIMD.Int32x4(2, 3, -1, -1));
-  SIMD.Int32x4.store2(a, 4, SIMD.Int32x4(4, 5, -1, -1));
-  SIMD.Int32x4.store2(a, 6, SIMD.Int32x4(6, 7, -1, -1));
-  for (var i = 0; i < a.length; i++) {
-    equal(i, a[i]);
-  }
-});
-
-test('Int32x4 store2', function() {
-  var a = new Int32Array(8);
-  var af = new Float64Array(a.buffer);
-  SIMD.Int32x4.store2(af, 0, SIMD.Int32x4(0, 1, -1, -1));
-  SIMD.Int32x4.store2(af, 1, SIMD.Int32x4(2, 3, -1, -1));
-  SIMD.Int32x4.store2(af, 2, SIMD.Int32x4(4, 5, -1, -1));
-  SIMD.Int32x4.store2(af, 3, SIMD.Int32x4(6, 7, -1, -1));
-  for (var i = 0; i < a.length; i++) {
-    equal(i, a[i]);
-  }
-});
-
-test('Int32x4 unaligned store2', function() {
-  var c = new Int8Array(32 + 1);
-  SIMD.Int32x4.store2(c, 0 + 1, SIMD.Int32x4(0, 1, -1, -1));
-  SIMD.Int32x4.store2(c, 8 + 1, SIMD.Int32x4(2, 3, -1, -1));
-  SIMD.Int32x4.store2(c, 16 + 1, SIMD.Int32x4(4, 5, -1, -1));
-  SIMD.Int32x4.store2(c, 24 + 1, SIMD.Int32x4(6, 7, -1, -1));
-
-  // Copy the bytes, offset by 1.
-  var b = new Int8Array(c.length - 1);
-  for (var i = 1; i < c.length; i++) {
-      b[i - 1] = c[i];
-  }
-
-  var a = new Int32Array(b.buffer);
-  for (var i = 0; i < a.length; i++) {
-    equal(i, a[i]);
-  }
-});
-
-test('Int32x4 store3', function() {
-  var a = new Int32Array(9);
-  SIMD.Int32x4.store3(a, 0, SIMD.Int32x4(0, 1, 2, -1));
-  SIMD.Int32x4.store3(a, 3, SIMD.Int32x4(3, 4, 5, -1));
-  SIMD.Int32x4.store3(a, 6, SIMD.Int32x4(6, 7, 8, -1));
-  for (var i = 0; i < a.length; i++) {
-    equal(i, a[i]);
-  }
-
-  var v = SIMD.Int32x4(0, 1, 2, 3);
-  equal(true, SIMD.Bool32x4.allTrue(SIMD.Int32x4.equal(SIMD.Int32x4.store3(a, 0, v), v)));
-});
-
-test('Int32x4 overaligned store3', function() {
-  var b = new ArrayBuffer(56);
-  var a = new Int32Array(b, 8);
-  var af = new Float64Array(b, 8);
-  a[3] = -2;
-  a[7] = -2;
-  a[11] = -2;
-  SIMD.Int32x4.store3(af, 0, SIMD.Int32x4(0, 1, 2, -1));
-  SIMD.Int32x4.store3(af, 2, SIMD.Int32x4(4, 5, 6, -1));
-  SIMD.Int32x4.store3(af, 4, SIMD.Int32x4(8, 9, 10, -1));
-  for (var i = 0; i < a.length; i++) {
-    if (i % 4 != 3) {
-      equal(i, a[i]);
-    } else {
-      equal(-2, a[i]);
-    }
-  }
-});
-
-test('Int32x4 unaligned store3', function() {
-  var c = new Int8Array(36 + 1);
-  SIMD.Int32x4.store3(c, 0 + 1, SIMD.Int32x4(0, 1, 2, -1));
-  SIMD.Int32x4.store3(c, 12 + 1, SIMD.Int32x4(3, 4, 5, -1));
-  SIMD.Int32x4.store3(c, 24 + 1, SIMD.Int32x4(6, 7, 8, -1));
-
-  // Copy the bytes, offset by 1.
-  var b = new Int8Array(c.length - 1);
-  for (var i = 1; i < c.length; i++) {
-      b[i - 1] = c[i];
-  }
-
-  var a = new Int32Array(b.buffer);
-  for (var i = 0; i < a.length; i++) {
-    equal(i, a[i]);
-  }
-});
-
-test('Int32x4 load exceptions', function () {
-  var a = new Int32Array(8);
-  throws(function () {
-    var f = SIMD.Int32x4.load(a, -1);
-  });
-  throws(function () {
-    var f = SIMD.Int32x4.load(a, 5);
-  });
-  throws(function () {
-    var f = SIMD.Int32x4.load(a.buffer, 1);
-  });
-  throws(function () {
-    var f = SIMD.Int32x4.load(a, "a");
-  });
-});
-
-test('Int32x4 load1 exceptions', function () {
-  var a = new Int32Array(8);
-  throws(function () {
-    var f = SIMD.Int32x4.load1(a, -1);
-  });
-  throws(function () {
-    var f = SIMD.Int32x4.load1(a, 8);
-  });
-  throws(function () {
-    var f = SIMD.Int32x4.load1(a.buffer, 1);
-  });
-  throws(function () {
-    var f = SIMD.Int32x4.load1(a, "a");
-  });
-});
-
-test('Int32x4 load2 exceptions', function () {
-  var a = new Int32Array(8);
-  throws(function () {
-    var f = SIMD.Int32x4.load2(a, -1);
-  });
-  throws(function () {
-    var f = SIMD.Int32x4.load2(a, 7);
-  });
-  throws(function () {
-    var f = SIMD.Int32x4.load2(a.buffer, 1);
-  });
-  throws(function () {
-    var f = SIMD.Int32x4.load2(a, "a");
-  });
-});
-
-test('Int32x4 load3 exceptions', function () {
-  var a = new Int32Array(8);
-  throws(function () {
-    var f = SIMD.Int32x4.load3(a, -1);
-  });
-  throws(function () {
-    var f = SIMD.Int32x4.load3(a, 6);
-  });
-  throws(function () {
-    var f = SIMD.Int32x4.load3(a.buffer, 1);
-  });
-  throws(function () {
-    var f = SIMD.Int32x4.load3(a, "a");
-  });
-});
-
-test('Int32x4 store exceptions', function () {
-  var a = new Int32Array(8);
-  var f = SIMD.Float32x4(1, 2, 3, 4);
-  var i = SIMD.Int32x4(1, 2, 3, 4);
-  throws(function () {
-    SIMD.Int32x4.store(a, -1, i);
-  });
-  throws(function () {
-    SIMD.Int32x4.store(a, 5, i);
-  });
-  throws(function () {
-    SIMD.Int32x4.store(a.buffer, 1, i);
-  });
-  throws(function () {
-    SIMD.Int32x4.store(a, "a", i);
-  });
-  throws(function () {
-    SIMD.Int32x4.store(a, 1, f);
-  });
-});
-
-test('Int32x4 store1 exceptions', function () {
-  var a = new Int32Array(8);
-  var f = SIMD.Float32x4(1, 2, 3, 4);
-  var i = SIMD.Int32x4(1, 2, 3, 4);
-  throws(function () {
-    SIMD.Int32x4.store1(a, -1, i);
-  });
-  throws(function () {
-    SIMD.Int32x4.store1(a, 8, i);
-  });
-  throws(function () {
-    SIMD.Int32x4.store1(a.buffer, 1, i);
-  });
-  throws(function () {
-    SIMD.Int32x4.store1(a, "a", i);
-  });
-  throws(function () {
-    SIMD.Int32x4.store1(a, 1, f);
-  });
-});
-
-test('Int32x4 store2 exceptions', function () {
-  var a = new Int32Array(8);
-  var f = SIMD.Float32x4(1, 2, 3, 4);
-  var i = SIMD.Int32x4(1, 2, 3, 4);
-  throws(function () {
-    SIMD.Int32x4.store2(a, -1, i);
-  });
-  throws(function () {
-    SIMD.Int32x4.store2(a, 7, i);
-  });
-  throws(function () {
-    SIMD.Int32x4.store2(a.buffer, 1, i);
-  });
-  throws(function () {
-    SIMD.Int32x4.store2(a, "a", i);
-  });
-  throws(function () {
-    SIMD.Int32x4.store2(a, 1, f);
-  });
-});
-
-test('Int32x4 store3 exceptions', function () {
-  var a = new Int32Array(8);
-  var f = SIMD.Float32x4(1, 2, 3, 4);
-  var i = SIMD.Int32x4(1, 2, 3, 4);
-  throws(function () {
-    SIMD.Int32x4.store3(a, -1, i);
-  });
-  throws(function () {
-    SIMD.Int32x4.store3(a, 6, i);
-  });
-  throws(function () {
-    SIMD.Int32x4.store3(a.buffer, 1, i);
-  });
-  throws(function () {
-    SIMD.Int32x4.store3(a, "a", i);
-  });
-  throws(function () {
-    SIMD.Int32x4.store3(a, 1, f);
-  });
-});
-
-
+// Miscellaneous test methods.
+// TODO refactor to match the other tests.
 
 test('Float32x4 Int32x4 bit conversion', function() {
   var m = SIMD.Int32x4(0x3F800000, 0x40000000, 0x40400000, 0x40800000);
@@ -1898,7 +893,3 @@ test('Float32x4 Int32x4 bit conversion', function() {
   equal(SIMD.Int32x4.extractLane(m, 2), SIMD.Int32x4.extractLane(m2, 2));
   equal(SIMD.Int32x4.extractLane(m, 3), SIMD.Int32x4.extractLane(m2, 3));
 });
-
-
-
-
