@@ -528,9 +528,9 @@ if (typeof SIMD.Int8x16 === "undefined" ||
 
 var float32x4 = {
   name: "Float32x4",
+  fn: SIMD.Float32x4,
   lanes: 4,
   laneSize: 4,
-  fn: SIMD.Float32x4,
   buffer: _f32x4,
   view: Float32Array,
   fns: ["check", "splat", "replaceLane", "select",
@@ -542,9 +542,9 @@ var float32x4 = {
 
 var int32x4 = {
   name: "Int32x4",
+  fn: SIMD.Int32x4,
   lanes: 4,
   laneSize: 4,
-  fn: SIMD.Int32x4,
   buffer: _i32x4,
   notFn: unaryBitwiseNot,
   view: Int32Array,
@@ -558,12 +558,12 @@ var int32x4 = {
 
 var int16x8 = {
   name: "Int16x8",
+  fn: SIMD.Int16x8,
   lanes: 8,
   laneSize: 2,
   laneMask: 0xffff,
   minVal: -0x8000,
   maxVal: 0x7fff,
-  fn: SIMD.Int16x8,
   buffer: _i16x8,
   notFn: unaryBitwiseNot,
   view: Int16Array,
@@ -579,12 +579,12 @@ var int16x8 = {
 
 var int8x16 = {
   name: "Int8x16",
+  fn: SIMD.Int8x16,
   lanes: 16,
   laneSize: 1,
   laneMask: 0xff,
   minVal: -0x80,
   maxVal: 0x7f,
-  fn: SIMD.Int8x16,
   buffer: _i8x16,
   notFn: unaryBitwiseNot,
   view: Int8Array,
@@ -600,9 +600,9 @@ var int8x16 = {
 
 var bool32x4 = {
   name: "Bool32x4",
+  fn: SIMD.Bool32x4,
   lanes: 4,
   laneSize: 4,
-  fn: SIMD.Bool32x4,
   buffer: _i32x4,
   notFn: unaryLogicalNot,
   fns: ["check", "splat", "replaceLane",
@@ -612,9 +612,9 @@ var bool32x4 = {
 
 var bool16x8 = {
   name: "Bool16x8",
+  fn: SIMD.Bool16x8,
   lanes: 8,
   laneSize: 2,
-  fn: SIMD.Bool16x8,
   buffer: _i16x8,
   notFn: unaryLogicalNot,
   fns: ["check", "splat", "replaceLane",
@@ -624,9 +624,9 @@ var bool16x8 = {
 
 var bool8x16 = {
   name: "Bool8x16",
+  fn: SIMD.Bool8x16,
   lanes: 16,
   laneSize: 1,
-  fn: SIMD.Bool8x16,
   buffer: _i8x16,
   notFn: unaryLogicalNot,
   fns: ["check", "splat", "replaceLane",
@@ -645,7 +645,6 @@ float32x4.fromBits = [int32x4, int16x8, int8x16];
 int32x4.fromBits = [float32x4, int16x8, int8x16];
 int16x8.fromBits = [float32x4, int32x4, int8x16];
 int8x16.fromBits = [float32x4, int32x4, int16x8];
-
 
 // Simd widening types.
 int16x8.wideType = int32x4;
@@ -943,7 +942,7 @@ var simdFns = {
     function(type) {
       return function(a, bits) {
         if (bits>>>0 >= type.laneSize * 8)
-          return type.fn.splat(0.0);
+          return type.fn.splat(0);
         return simdShiftOp(type, binaryShiftLeft, a, bits);
       }
     },
@@ -952,7 +951,7 @@ var simdFns = {
     function(type) {
       return function(a, bits) {
         if (bits>>>0 >= type.laneSize * 8)
-          return type.fn.splat(0.0);
+          return type.fn.splat(0);
 
         function shift(val, amount) {
           if (type.laneMask)
@@ -966,8 +965,8 @@ var simdFns = {
   shiftRightArithmeticByScalar:
     function(type) {
       return function(a, bits) {
-        if (bits>>>0 >= 32)
-          bits = 31;
+        if (bits>>>0 >= type.laneSize * 8)
+          bits = type.laneSize * 8 - 1;
         return simdShiftOp(type, binaryShiftRightArithmetic, a, bits);
       }
     },
