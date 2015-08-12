@@ -574,7 +574,7 @@ var int16x8 = {
         "shiftLeftByScalar", "shiftRightLogicalByScalar", "shiftRightArithmeticByScalar",
         "unsignedHorizontalSum", "unsignedAbsoluteDifference", "widenedUnsignedAbsoluteDifference",
         "addSaturate", "subSaturate",
-        "load", "load1", "load2", "load3", "store", "store1", "store2", "store3"],
+        "load", "store"],
 }
 
 var int8x16 = {
@@ -595,7 +595,7 @@ var int8x16 = {
         "shiftLeftByScalar", "shiftRightLogicalByScalar", "shiftRightArithmeticByScalar",
         "unsignedHorizontalSum", "unsignedAbsoluteDifference", "widenedUnsignedAbsoluteDifference",
         "addSaturate", "subSaturate",
-        "load", "load1", "load2", "load3", "store", "store1", "store2", "store3"],
+        "load", "store"],
 }
 
 var bool32x4 = {
