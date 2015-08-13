@@ -56,8 +56,6 @@ var float32x4 = {
   fn: SIMD.Float32x4,
   lanes: 4,
   laneSize: 4,
-  minVal: Number.MIN_VALUE,
-  maxVal: Number.MAX_VALUE,
   interestingValues: [0, -0, 1, -1, 1.414, Infinity, -Infinity, NaN],
   view: Float32Array,
   buffer: _f32x4,
@@ -107,7 +105,7 @@ var uint32x4 = {
   lanes: 4,
   laneSize: 4,
   minVal: 0,
-  maxVal: 0xFfffffff,
+  maxVal: 0xFFFFFFFF,
   interestingValues: [0, 1, 0x40000000, 0x7FFFFFFF, 0xFFFFFFFF],
   view: Uint32Array,
   buffer: _ui32x4,
@@ -149,19 +147,9 @@ int32x4.from = [float32x4, uint32x4];
 uint32x4.from = [float32x4, int32x4];
 
 // SIMD fromTIMD conversion functions.
-float32x4.checkRange = function(x) { return x; }
-
-int32x4.checkRange = function(x) {
-  if (x < -2147483648.0 || x >= 2147483648.0)
-    return NaN;
-  return x|0;
-}
-
-uint32x4.checkRange = function(x) {
-  if (x < 0 || x >= 4294967296.0)
-    return NaN;
-  return x|0;
-}
+float32x4.convert = function(x) { return Math.fround(x); }
+int32x4.convert = function(x) {return x|0; }
+uint32x4.convert = function(x) { return x>>>0; }
 
 // SIMD fromBits types.
 float32x4.fromBits = [int32x4, int16x8, int8x16];
@@ -383,14 +371,15 @@ function testFrom(toType, fromType, name) {
   equal('function', typeof toType.fn[name]);
   for (var v of fromType.interestingValues) {
     var fromValue = createSplatValue(fromType, v);
-    var checked = toType.checkRange(v);
-    if (checked != checked) {  // NaN signals failure.
-      throws(function() { toType.fn[name](fromValue) });
-    } else {
-      var expected = simdCoerce(toType, checked);
-      var result = toType.fn[name](fromValue);
-      checkValue(toType, result, function(index) { return expected; });
+    if (toType.minVal && toType.maxVal) {
+      if (v < toType.minVal || v > toType.maxVal) {
+        throws(function() { toType.fn[name](fromValue) });
+        continue;
+      }
     }
+    v = toType.convert(v);
+    var result = toType.fn[name](fromValue);
+    checkValue(toType, result, function(index) { return v; });
   }
 }
 
@@ -824,6 +813,9 @@ for (var type of intTypes) {
 }
 
 for (var type of unsignedIntTypes) {
+  test(type.name + ' absoluteDifference', function() {
+    testBinaryOp(type, 'absoluteDifference', function(a, b) { return Math.abs(a - b); });
+  });
   test(type.name + ' shiftRightByScalar', function() {
     function shift(a, bits) {
       if (bits>>>0 >= type.laneSize * 8) return 0;

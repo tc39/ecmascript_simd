@@ -177,7 +177,13 @@ function simdFrom(toType, fromType, a) {
   a = fromType.fn.check(a);
   var lanes = [];
   for (var i = 0; i < fromType.lanes; i++) {
-    lanes[i] = toType.checkRange(fromType.fn.extractLane(a, i));
+    var v = fromType.fn.extractLane(a, i);
+    if (toType.minVal) {
+      if (v < toType.minVal || v > toType.maxVal)
+        throw new RangeError("Can't convert value");
+      v = toType.convert(v);
+    }
+    lanes[i] = v;
   }
   return simdCreate(toType, lanes);
 }
@@ -251,15 +257,15 @@ function simdBinaryOp(type, op, a, b) {
   return simdCreate(type, lanes);
 }
 
-// function simdWideningUnsignedBinaryOp(type, op, a, b) {
-//   a = type.fn.check(a);
-//   b = type.fn.check(b);
-//   var lanes = [];
-//   for (var i = 0; i < type.lanes; i++)
-//     lanes[i] = op(type.fn.unsignedExtractLane(a, i),
-//                   type.fn.unsignedExtractLane(b, i));
-//   return simdCreate(type.wideType, lanes);
-// }
+function simdWideningBinaryOp(type, op, a, b) {
+  a = type.fn.check(a);
+  b = type.fn.check(b);
+  var lanes = [];
+  for (var i = 0; i < type.lanes; i++)
+    lanes[i] = op(type.fn.extractLane(a, i),
+                  type.fn.extractLane(b, i));
+  return simdCreate(type.wideType, lanes);
+}
 
 function binaryEqual(a, b) { return a == b; }
 function binaryNotEqual(a, b) { return a != b; }
@@ -457,23 +463,6 @@ if (typeof SIMD.Int32x4 === "undefined" ||
   }
 }
 
-// Uint32x4
-if (typeof SIMD.Uint32x4 === "undefined" ||
-    typeof SIMD.Uint32x4.extractLane === "undefined") {
-  SIMD.Uint32x4 = function(s0, s1, s2, s3) {
-    if (!(this instanceof SIMD.Uint32x4)) {
-      return new SIMD.Uint32x4(s0, s1, s2, s3);
-    }
-    this.s_ = [s0>>>0, s1>>>0, s2>>>0, s3>>>0];
-  }
-
-  SIMD.Uint32x4.extractLane = function(v, i) {
-    v = SIMD.Uint32x4.check(v);
-    simdCheckLaneIndex(i, 4);
-    return v.s_[i];
-  }
-}
-
 // Int16x8
 if (typeof SIMD.Int16x8 === "undefined" ||
     typeof SIMD.Int16x8.extractLane === "undefined") {
@@ -517,6 +506,63 @@ if (typeof SIMD.Int8x16 === "undefined" ||
   }
 }
 
+// Uint32x4
+if (typeof SIMD.Uint32x4 === "undefined" ||
+    typeof SIMD.Uint32x4.extractLane === "undefined") {
+  SIMD.Uint32x4 = function(s0, s1, s2, s3) {
+    if (!(this instanceof SIMD.Uint32x4)) {
+      return new SIMD.Uint32x4(s0, s1, s2, s3);
+    }
+    this.s_ = [s0>>>0, s1>>>0, s2>>>0, s3>>>0];
+  }
+
+  SIMD.Uint32x4.extractLane = function(v, i) {
+    v = SIMD.Uint32x4.check(v);
+    simdCheckLaneIndex(i, 4);
+    return v.s_[i];
+  }
+}
+
+// Uint16x8
+if (typeof SIMD.Uint16x8 === "undefined" ||
+    typeof SIMD.Uint16x8.extractLane === "undefined") {
+  SIMD.Uint16x8 = function(s0, s1, s2, s3, s4, s5, s6, s7) {
+    if (!(this instanceof SIMD.Uint16x8)) {
+      return new SIMD.Uint16x8(s0, s1, s2, s3, s4, s5, s6, s7);
+    }
+    this.s_ = [s0>>>0 >> 16, s1>>>0 >> 16, s2>>>0 >> 16, s3>>>0 >> 16,
+               s4>>>0 >> 16, s5>>>0 >> 16, s6>>>0 >> 16, s7>>>0 >> 16];
+  }
+
+  SIMD.Uint16x8.extractLane = function(v, i) {
+    v = SIMD.Uint16x8.check(v);
+    simdCheckLaneIndex(i, 8);
+    return v.s_[i];
+  }
+}
+
+// Uint8x16
+if (typeof SIMD.Uint8x16 === "undefined" ||
+    typeof SIMD.Uint8x16.extractLane === "undefined") {
+  SIMD.Uint8x16 = function(s0, s1, s2, s3, s4, s5, s6, s7,
+                          s8, s9, s10, s11, s12, s13, s14, s15) {
+    if (!(this instanceof SIMD.Uint8x16)) {
+      return new SIMD.Uint8x16(s0, s1, s2, s3, s4, s5, s6, s7,
+                              s8, s9, s10, s11, s12, s13, s14, s15);
+    }
+    this.s_ = [s0>>>0 >> 24, s1>>>0 >> 24, s2>>>0 >> 24, s3>>>0 >> 24,
+               s4>>>0 >> 24, s5>>>0 >> 24, s6>>>0 >> 24, s7>>>0 >> 24,
+               s8>>>0 >> 24, s9>>>0 >> 24, s10>>>0 >> 24, s11>>>0 >> 24,
+               s12>>>0 >> 24, s13>>>0 >> 24, s14>>>0 >> 24, s15>>>0 >> 24];
+  }
+
+  SIMD.Uint8x16.extractLane = function(v, i) {
+    v = SIMD.Uint8x16.check(v);
+    simdCheckLaneIndex(i, 16);
+    return v.s_[i];
+  }
+}
+
 var float32x4 = {
   name: "Float32x4",
   fn: SIMD.Float32x4,
@@ -536,6 +582,8 @@ var int32x4 = {
   fn: SIMD.Int32x4,
   lanes: 4,
   laneSize: 4,
+  minVal: -0x80000000,
+  maxVal: 0x7FFFFFFF,
   buffer: _i32x4,
   notFn: unaryBitwiseNot,
   view: Int32Array,
@@ -545,6 +593,46 @@ var int32x4 = {
         "add", "sub", "mul", "neg", "min", "max",
         "shiftLeftByScalar", "shiftRightByScalar",
         "load", "load1", "load2", "load3", "store", "store1", "store2", "store3"],
+}
+
+var int16x8 = {
+  name: "Int16x8",
+  fn: SIMD.Int16x8,
+  lanes: 8,
+  laneSize: 2,
+  laneMask: 0xFFFF,
+  minVal: -0x8000,
+  maxVal: 0x7FFF,
+  buffer: _i16x8,
+  notFn: unaryBitwiseNot,
+  view: Int16Array,
+  fns: ["check", "splat", "replaceLane", "select",
+        "equal", "notEqual", "lessThan", "lessThanOrEqual", "greaterThan", "greaterThanOrEqual",
+        "and", "or", "xor", "not",
+        "add", "sub", "mul", "neg", "min", "max",
+        "shiftLeftByScalar", "shiftRightByScalar",
+        "addSaturate", "subSaturate",
+        "load", "store"],
+}
+
+var int8x16 = {
+  name: "Int8x16",
+  fn: SIMD.Int8x16,
+  lanes: 16,
+  laneSize: 1,
+  laneMask: 0xFF,
+  minVal: -0x80,
+  maxVal: 0x7F,
+  buffer: _i8x16,
+  notFn: unaryBitwiseNot,
+  view: Int8Array,
+  fns: ["check", "splat", "replaceLane", "select",
+        "equal", "notEqual", "lessThan", "lessThanOrEqual", "greaterThan", "greaterThanOrEqual",
+        "and", "or", "xor", "not",
+        "add", "sub", "mul", "neg", "min", "max",
+        "shiftLeftByScalar", "shiftRightByScalar",
+        "addSaturate", "subSaturate",
+        "load", "store"],
 }
 
 var uint32x4 = {
@@ -565,41 +653,41 @@ var uint32x4 = {
         "load", "load1", "load2", "load3", "store", "store1", "store2", "store3"],
 }
 
-var int16x8 = {
-  name: "Int16x8",
-  fn: SIMD.Int16x8,
+var uint16x8 = {
+  name: "Uint16x8",
+  fn: SIMD.Uint16x8,
   lanes: 8,
   laneSize: 2,
-  laneMask: 0xffff,
-  minVal: -0x8000,
-  maxVal: 0x7fff,
-  buffer: _i16x8,
+  laneMask: 0xFFFF,
+  minVal: 0,
+  maxVal: 0xFFFF,
+  buffer: _ui16x8,
   notFn: unaryBitwiseNot,
-  view: Int16Array,
+  view: Uint16Array,
   fns: ["check", "splat", "replaceLane", "select",
         "equal", "notEqual", "lessThan", "lessThanOrEqual", "greaterThan", "greaterThanOrEqual",
         "and", "or", "xor", "not",
-        "add", "sub", "mul", "neg", "min", "max",
+        "add", "sub", "mul", "min", "max",
         "shiftLeftByScalar", "shiftRightByScalar",
         "addSaturate", "subSaturate",
         "load", "store"],
 }
 
-var int8x16 = {
-  name: "Int8x16",
-  fn: SIMD.Int8x16,
+var uint8x16 = {
+  name: "Uint8x16",
+  fn: SIMD.Uint8x16,
   lanes: 16,
   laneSize: 1,
-  laneMask: 0xff,
-  minVal: -0x80,
-  maxVal: 0x7f,
+  laneMask: 0xFF,
+  minVal: 0,
+  maxVal: 0xFF,
   buffer: _i8x16,
   notFn: unaryBitwiseNot,
-  view: Int8Array,
+  view: Uint8Array,
   fns: ["check", "splat", "replaceLane", "select",
         "equal", "notEqual", "lessThan", "lessThanOrEqual", "greaterThan", "greaterThanOrEqual",
         "and", "or", "xor", "not",
-        "add", "sub", "mul", "neg", "min", "max",
+        "add", "sub", "mul", "min", "max",
         "shiftLeftByScalar", "shiftRightByScalar",
         "addSaturate", "subSaturate",
         "load", "store"],
@@ -650,33 +738,31 @@ int8x16.boolType = bool8x16.boolType = bool8x16;
 // SIMD fromTIMD types.
 float32x4.from = [int32x4, uint32x4];
 int32x4.from = [float32x4, uint32x4];
+int16x8.from = [uint16x8];
+int8x16.from = [uint8x16];
 uint32x4.from = [float32x4, int32x4];
-
-// SIMD fromTIMD conversion functions.
-float32x4.checkRange = function(x) { return x; }  // Float type can accept any value.
-
-int32x4.checkRange = function(x) {
-  if (x < -2147483648.0 || x >= 2147483648.0)
-    throw new RangeError("Conversion to integer failed");
-  return x|0;
-}
-
-uint32x4.checkRange = function(x) {
-  if (x < 0 || x >= 4294967296.0)
-    throw new RangeError("Conversion to unsigned integer failed");
-  return x>>>0;
-}
+uint16x8.from = [int16x8];
+uint8x16.from = [int8x16];
 
 // SIMD fromTIMDBits types.
-float32x4.fromBits = [int32x4, uint32x4, int16x8, int8x16];
-int32x4.fromBits = [float32x4, uint32x4, int16x8, int8x16];
-int16x8.fromBits = [float32x4, uint32x4, int32x4, int8x16];
-int8x16.fromBits = [float32x4, uint32x4, int32x4, int16x8];
-uint32x4.fromBits = [float32x4, int32x4, int16x8, int8x16];
+float32x4.fromBits = [int32x4, int16x8, int8x16, uint32x4, uint16x8, uint8x16];
+int32x4.fromBits = [float32x4, int16x8, int8x16, uint32x4, uint16x8, uint8x16];
+int16x8.fromBits = [float32x4, int32x4, int8x16, uint32x4, uint16x8, uint8x16];
+int8x16.fromBits = [float32x4, int32x4, int16x8, uint32x4, uint16x8, uint8x16];
+uint32x4.fromBits = [float32x4, int32x4, int16x8, int8x16, uint16x8, uint8x16];
+uint16x8.fromBits = [float32x4, int32x4, int16x8, int8x16, uint32x4, uint8x16];
+uint8x16.fromBits = [float32x4, int32x4, int16x8, int8x16, uint32x4, uint16x8];
 
 // Simd widening types.
 int16x8.wideType = int32x4;
 int8x16.wideType = int16x8;
+uint16x8.wideType = uint32x4;
+uint8x16.wideType = uint16x8;
+
+// SIMD fromTIMD conversion functions.
+float32x4.convert = function(x) { return truncatef32(x); }
+int32x4.convert = int16x8.convert = int8x16.convert = function(x) { return x|0; }
+uint32x4.convert = uint16x8.convert = uint8x16.convert = function(x) { return x>>>0; }
 
 // SIMD prototype functions.
 var prototypeFns = {
@@ -1012,12 +1098,12 @@ var simdFns = {
       }
     },
 
-  // widenedAbsoluteDifference:
-  //   function(type) {
-  //     return function(a, b) {
-  //       return simdWideningUnsignedBinaryOp(type, binaryAbsDiff, a, b);
-  //     }
-  //   },
+  widenedAbsoluteDifference:
+    function(type) {
+      return function(a, b) {
+        return simdWideningBinaryOp(type, binaryAbsDiff, a, b);
+      }
+    },
 
   addSaturate:
     function(type) {
@@ -1118,16 +1204,6 @@ if (typeof SIMD.Uint32x4.shuffle === "undefined") {
     return simdShuffle(uint32x4, a, b, [s0, s1, s2, s3]);
   }
 }
-
-// if (typeof SIMD.Int32x4.unsignedHorizontalSum === "undefined") {
-//   SIMD.Int32x4.unsignedHorizontalSum = function(a) {
-//     a = SIMD.Int32x4.check(a);
-//     return (SIMD.Int32x4.extractLane(a, 0)>>>0) +
-//            (SIMD.Int32x4.extractLane(a, 1)>>>0) +
-//            (SIMD.Int32x4.extractLane(a, 2)>>>0) +
-//            (SIMD.Int32x4.extractLane(a, 3)>>>0);
-//   }
-// }
 
 if (typeof SIMD.Int16x8.swizzle === "undefined") {
   SIMD.Int16x8.swizzle = function(a, s0, s1, s2, s3, s4, s5, s6, s7) {
