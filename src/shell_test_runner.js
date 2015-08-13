@@ -24,7 +24,8 @@ function test(name, func) {
     func();
   } catch (e) {
     console.log('exception thrown from ' + currentName + ': ' + e.toString());
-    printIndented(e.stack);
+    if (e.stack)
+      printIndented(e.stack);
     numFails++;
   }
 }
