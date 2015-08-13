@@ -18,7 +18,6 @@ function fail(str) {
 }
 
 function test(name, func) {
-  print(name)
   currentName = name;
   if (skipValueTests && name.indexOf("value semantics") != -1) return;
   try {
