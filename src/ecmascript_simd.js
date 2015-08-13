@@ -513,7 +513,8 @@ if (typeof SIMD.Uint32x4 === "undefined" ||
     if (!(this instanceof SIMD.Uint32x4)) {
       return new SIMD.Uint32x4(s0, s1, s2, s3);
     }
-    this.s_ = [s0>>>0, s1>>>0, s2>>>0, s3>>>0];
+    this.s_ = [(s0 & 0xFFFFFFFF)>>>0, (s1 & 0xFFFFFFFF)>>>0,
+               (s2 & 0xFFFFFFFF)>>>0, (s3 & 0xFFFFFFFF)>>>0];
   }
 
   SIMD.Uint32x4.extractLane = function(v, i) {
