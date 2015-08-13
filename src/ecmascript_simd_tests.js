@@ -812,24 +812,26 @@ for (var type of intTypes) {
 
     testShiftOp(type, 'shiftLeftByScalar', shift);
   });
-  // test(type.name + ' shiftRightLogicalByScalar', function() {
-  //   function shift(a, bits) {
-  //     if (bits>>>0 >= type.laneSize * 8) return 0;
-  //     if (type.laneMask)
-  //       a &= type.laneMask;
-  //     return a >>> bits;
-  //   }
-
-  //   testShiftOp(type, 'shiftRightLogicalByScalar', shift);
-  // });
-  test(type.name + ' shiftRightArithmeticByScalar', function() {
+  test(type.name + ' shiftRightByScalar', function() {
     function shift(a, bits) {
       if (bits>>>0 >= type.laneSize * 8)
         bits = type.laneSize * 8 - 1;
       return a >> bits;
     }
 
-    testShiftOp(type, 'shiftRightArithmeticByScalar', shift);
+    testShiftOp(type, 'shiftRightByScalar', shift);
+  });
+}
+
+for (var type of unsignedIntTypes) {
+  test(type.name + ' shiftRightByScalar', function() {
+    function shift(a, bits) {
+      if (bits>>>0 >= type.laneSize * 8) return 0;
+      if (type.laneMask)
+        a &= type.laneMask;
+      return a >>> bits;
+    }
+    testShiftOp(type, 'shiftRightByScalar', shift);
   });
 }
 

@@ -251,16 +251,6 @@ function simdBinaryOp(type, op, a, b) {
   return simdCreate(type, lanes);
 }
 
-// function simdUnsignedBinaryOp(type, op, a, b) {
-//   a = type.fn.check(a);
-//   b = type.fn.check(b);
-//   var lanes = [];
-//   for (var i = 0; i < type.lanes; i++)
-//     lanes[i] = op(type.fn.unsignedExtractLane(a, i),
-//                   type.fn.unsignedExtractLane(b, i));
-//   return simdCreate(type, lanes);
-// }
-
 // function simdWideningUnsignedBinaryOp(type, op, a, b) {
 //   a = type.fn.check(a);
 //   b = type.fn.check(b);
@@ -312,13 +302,13 @@ function simdShiftOp(type, op, a, bits) {
   return simdCreate(type, lanes);
 }
 
-// function simdUnsignedHorizSum(type, a) {
-//   a = type.fn.check(a);
-//   var result = 0;
-//   for (var i = 0; i < type.lanes; i++)
-//     result += type.fn.unsignedExtractLane(a, i);
-//   return result;
-// }
+function simdHorizontalSum(type, a) {
+  a = type.fn.check(a);
+  var result = 0;
+  for (var i = 0; i < type.lanes; i++)
+    result += type.fn.extractLane(a, i);
+  return result;
+}
 
 function simdLoad(type, tarray, index, count) {
   if (!isTypedArray(tarray))
@@ -553,7 +543,7 @@ var int32x4 = {
         "equal", "notEqual", "lessThan", "lessThanOrEqual", "greaterThan", "greaterThanOrEqual",
         "and", "or", "xor", "not",
         "add", "sub", "mul", "neg", "min", "max",
-        "shiftLeftByScalar", "shiftRightArithmeticByScalar",
+        "shiftLeftByScalar", "shiftRightByScalar",
         "load", "load1", "load2", "load3", "store", "store1", "store2", "store3"],
 }
 
@@ -564,12 +554,14 @@ var uint32x4 = {
   laneSize: 4,
   buffer: _ui32x4,
   notFn: unaryBitwiseNot,
-  view: Int32Array,
+  view: Uint32Array,
+  unsigned: true,
   fns: ["check", "splat", "replaceLane", "select",
         "equal", "notEqual", "lessThan", "lessThanOrEqual", "greaterThan", "greaterThanOrEqual",
         "and", "or", "xor", "not",
         "add", "sub", "mul", "min", "max",
-        "shiftLeftByScalar", "shiftRightLogicalByScalar",
+        "horizontalSum", "absoluteDifference", //, "widenedAbsoluteDifference",
+        "shiftLeftByScalar", "shiftRightByScalar",
         "load", "load1", "load2", "load3", "store", "store1", "store2", "store3"],
 }
 
@@ -588,8 +580,7 @@ var int16x8 = {
         "equal", "notEqual", "lessThan", "lessThanOrEqual", "greaterThan", "greaterThanOrEqual",
         "and", "or", "xor", "not",
         "add", "sub", "mul", "neg", "min", "max",
-        "shiftLeftByScalar", "shiftRightLogicalByScalar", "shiftRightArithmeticByScalar",
-        // "unsignedHorizontalSum", "unsignedAbsoluteDifference", "widenedUnsignedAbsoluteDifference",
+        "shiftLeftByScalar", "shiftRightByScalar",
         "addSaturate", "subSaturate",
         "load", "store"],
 }
@@ -609,8 +600,7 @@ var int8x16 = {
         "equal", "notEqual", "lessThan", "lessThanOrEqual", "greaterThan", "greaterThanOrEqual",
         "and", "or", "xor", "not",
         "add", "sub", "mul", "neg", "min", "max",
-        "shiftLeftByScalar", "shiftRightLogicalByScalar", "shiftRightArithmeticByScalar",
-        // "unsignedHorizontalSum", "unsignedAbsoluteDifference", "widenedUnsignedAbsoluteDifference",
+        "shiftLeftByScalar", "shiftRightByScalar",
         "addSaturate", "subSaturate",
         "load", "store"],
 }
@@ -985,45 +975,44 @@ var simdFns = {
       }
     },
 
-  shiftRightLogicalByScalar:
+  shiftRightByScalar:
     function(type) {
-      return function(a, bits) {
-        if (bits>>>0 >= type.laneSize * 8)
-          return type.fn.splat(0);
-
-        function shift(val, amount) {
-          if (type.laneMask)
-            val &= type.laneMask;
-          return val >>> amount;
+      if (type.unsigned) {
+        return function(a, bits) {
+          if (bits>>>0 >= type.laneSize * 8)
+            return type.fn.splat(0);
+//TODO masking shouldn't be needed for unsigned types
+          function shift(val, amount) {
+            if (type.laneMask)
+              val &= type.laneMask;
+            return val >>> amount;
+          }
+          return simdShiftOp(type, shift, a, bits);
         }
-        return simdShiftOp(type, shift, a, bits);
+      } else {
+        return function(a, bits) {
+          if (bits>>>0 >= type.laneSize * 8)
+            bits = type.laneSize * 8 - 1;
+          return simdShiftOp(type, binaryShiftRightArithmetic, a, bits);
+        }
       }
     },
 
-  shiftRightArithmeticByScalar:
+  absoluteDifference:
     function(type) {
-      return function(a, bits) {
-        if (bits>>>0 >= type.laneSize * 8)
-          bits = type.laneSize * 8 - 1;
-        return simdShiftOp(type, binaryShiftRightArithmetic, a, bits);
+      return function(a, b) {
+        return simdBinaryOp(type, binaryAbsDiff, a, b);
       }
     },
 
-  // unsignedAbsoluteDifference:
-  //   function(type) {
-  //     return function(a, b) {
-  //       return simdUnsignedBinaryOp(type, binaryAbsDiff, a, b);
-  //     }
-  //   },
+  horizontalSum:
+    function(type) {
+      return function(a) {
+        return simdHorizontalSum(type, a);
+      }
+    },
 
-  // unsignedHorizontalSum:
-  //   function(type) {
-  //     return function(a) {
-  //       return simdUnsignedHorizSum(type, a);
-  //     }
-  //   },
-
-  // widenedUnsignedAbsoluteDifference:
+  // widenedAbsoluteDifference:
   //   function(type) {
   //     return function(a, b) {
   //       return simdWideningUnsignedBinaryOp(type, binaryAbsDiff, a, b);
