@@ -187,7 +187,7 @@ function simdToString(type, value) {
   var str = "SIMD." + type.name + "(";
   str += type.fn.extractLane(value, 0);
   for (var i = 1; i < type.lanes; i++) {
-    str += ", " + type.fn.extractLane(value, i);
+    str += "," + type.fn.extractLane(value, i);
   }
   return str + ")";
 }
