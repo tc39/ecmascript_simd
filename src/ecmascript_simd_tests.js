@@ -188,6 +188,8 @@ uint8x16.fromBits = [float32x4, int32x4, int16x8, int8x16, uint32x4, uint16x8];
 // Simd widening types.
 int16x8.wideType = int32x4;
 int8x16.wideType = int16x8;
+uint16x8.wideType = uint32x4;
+uint8x16.wideType = uint16x8;
 
 // SIMD fromTIMD conversion functions.
 float32x4.convert = function(x) { return Math.fround(x); }
@@ -197,11 +199,14 @@ uint32x4.convert = uint16x8.convert = uint8x16.convert = function(x) { return x>
 var floatTypes = [float32x4];
 
 var intTypes = [int32x4, int16x8, int8x16];
+
 var unsignedIntTypes = [uint32x4, uint16x8, uint8x16];
 
 var largeTypes = [float32x4, int32x4, uint32x4];
 
 var smallIntTypes = [int16x8, int8x16, uint16x8, uint8x16];
+
+var smallUnsignedIntTypes = [uint16x8, uint8x16];
 
 var boolTypes = [bool32x4, bool16x8, bool8x16];
 
@@ -369,6 +374,20 @@ function testBinaryOp(type, op, refOp) {
   }
 }
 
+function testWideningBinaryOp(type, op, refOp) {
+  equal('function', typeof type.fn[op]);
+  var zero = type.fn();
+  for (var av of type.interestingValues) {
+    for (var bv of type.interestingValues) {
+      var expected = simdCoerce(type.wideType, refOp(simdCoerce(type, av), simdCoerce(type, bv)));
+      var a = type.fn.splat(av);
+      var b = type.fn.splat(bv);
+      var result = type.fn[op](a, b);
+      checkValue(type.wideType, result, function(index) { return expected; });
+    }
+  }
+}
+
 // Compare relational op's behavior to ref op at each lane with the Cartesian
 // product of the given values.
 function testRelationalOp(type, op, refOp) {
@@ -397,6 +416,17 @@ function testShiftOp(type, op, refOp) {
       var result = type.fn[op](a, bits);
       checkValue(type, result, function(index) { return expected; });
     }
+  }
+}
+
+function testHorizontalSum(type) {
+  equal('function', typeof type.fn.horizontalSum);
+  var zero = type.fn();
+  for (var av of type.interestingValues) {
+    var expected = type.lanes * av;
+    var a = type.fn.splat(av);
+    var result = type.fn.horizontalSum(a);
+    equal(result, expected);
   }
 }
 
@@ -846,9 +876,6 @@ for (var type of intTypes) {
 }
 
 for (var type of unsignedIntTypes) {
-  test(type.name + ' absoluteDifference', function() {
-    testBinaryOp(type, 'absoluteDifference', function(a, b) { return Math.abs(a - b); });
-  });
   test(type.name + ' shiftRightByScalar', function() {
     function shift(a, bits) {
       if (bits>>>0 >= type.laneSize * 8) return 0;
@@ -857,6 +884,18 @@ for (var type of unsignedIntTypes) {
       return a >>> bits;
     }
     testShiftOp(type, 'shiftRightByScalar', shift);
+  });
+}
+
+for (var type of smallUnsignedIntTypes) {testHorizontalSum
+  test(type.name + ' horizontalSum', function() {
+    testHorizontalSum(type);
+  });
+  test(type.name + ' absoluteDifference', function() {
+    testBinaryOp(type, 'absoluteDifference', function(a, b) { return Math.abs(a - b); });
+  });
+  test(type.name + ' widenedAbsoluteDifference', function() {
+    testWideningBinaryOp(type, 'widenedAbsoluteDifference', function(a, b) { return Math.abs(a - b); });
   });
 }
 

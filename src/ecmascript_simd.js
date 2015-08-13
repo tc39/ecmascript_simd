@@ -650,8 +650,8 @@ var uint32x4 = {
         "equal", "notEqual", "lessThan", "lessThanOrEqual", "greaterThan", "greaterThanOrEqual",
         "and", "or", "xor", "not",
         "add", "sub", "mul", "min", "max",
-        "horizontalSum", "absoluteDifference",
         "shiftLeftByScalar", "shiftRightByScalar",
+        "horizontalSum",
         "load", "load1", "load2", "load3", "store", "store1", "store2", "store3"],
 }
 
@@ -671,8 +671,8 @@ var uint16x8 = {
         "equal", "notEqual", "lessThan", "lessThanOrEqual", "greaterThan", "greaterThanOrEqual",
         "and", "or", "xor", "not",
         "add", "sub", "mul", "min", "max",
-        "horizontalSum", "absoluteDifference", "widenedAbsoluteDifference",
         "shiftLeftByScalar", "shiftRightByScalar",
+        "horizontalSum", "absoluteDifference", "widenedAbsoluteDifference",
         "addSaturate", "subSaturate",
         "load", "store"],
 }
@@ -693,8 +693,8 @@ var uint8x16 = {
         "equal", "notEqual", "lessThan", "lessThanOrEqual", "greaterThan", "greaterThanOrEqual",
         "and", "or", "xor", "not",
         "add", "sub", "mul", "min", "max",
-        "horizontalSum", "absoluteDifference", "widenedAbsoluteDifference",
         "shiftLeftByScalar", "shiftRightByScalar",
+        "horizontalSum", "absoluteDifference", "widenedAbsoluteDifference",
         "addSaturate", "subSaturate",
         "load", "store"],
 }
