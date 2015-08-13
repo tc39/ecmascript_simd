@@ -47,14 +47,15 @@ var _f64x2 = new Float64Array(_f32x4.buffer);
 var _i32x4 = new Int32Array(_f32x4.buffer);
 var _i16x8 = new Int16Array(_f32x4.buffer);
 var _i8x16 = new Int8Array(_f32x4.buffer);
+var _ui32x4 = new Uint32Array(_f32x4.buffer);
+var _ui16x8 = new Uint16Array(_f32x4.buffer);
+var _ui8x16 = new Uint8Array(_f32x4.buffer);
 
 var float32x4 = {
   name: "Float32x4",
   fn: SIMD.Float32x4,
   lanes: 4,
   laneSize: 4,
-  minVal: Number.MIN_VALUE,
-  maxVal: Number.MAX_VALUE,
   interestingValues: [0, -0, 1, -1, 1.414, Infinity, -Infinity, NaN],
   view: Float32Array,
   buffer: _f32x4,
@@ -66,8 +67,8 @@ var int32x4 = {
   lanes: 4,
   laneSize: 4,
   minVal: -0x80000000,
-  maxVal: 0x7fffffff,
-  interestingValues: [0, 1, -1, 0xFFFFFFFF, 0x7FFFFFFF, 0x80000000],
+  maxVal: 0x7FFFFFFF,
+  interestingValues: [0, 1, -1, 0x40000000, 0x7FFFFFFF, -0x80000000],
   view: Int32Array,
   buffer: _i32x4,
 }
@@ -77,10 +78,10 @@ var int16x8 = {
   fn: SIMD.Int16x8,
   lanes: 8,
   laneSize: 2,
-  laneMask: 0xffff,
+  laneMask: 0xFFFF,
   minVal: -0x8000,
-  maxVal: 0x7fff,
-  interestingValues: [0, 1, -1, 0xFFFF, 0x7FFF, 0x8000],
+  maxVal: 0x7FFF,
+  interestingValues: [0, 1, -1, 0x4000, 0x7FFF, -0x8000],
   view: Int16Array,
   buffer: _i16x8,
 }
@@ -90,12 +91,50 @@ var int8x16 = {
   fn: SIMD.Int8x16,
   lanes: 16,
   laneSize: 1,
-  laneMask: 0xff,
+  laneMask: 0xFF,
   minVal: -0x80,
-  maxVal: 0x7f,
-  interestingValues: [0, 1, -1, 0xFF, 0x7F, 0x80],
+  maxVal: 0x7F,
+  interestingValues: [0, 1, -1, 0x40, 0x7F, -0x80],
   view: Int8Array,
   buffer: _i8x16,
+}
+
+var uint32x4 = {
+  name: "Uint32x4",
+  fn: SIMD.Uint32x4,
+  lanes: 4,
+  laneSize: 4,
+  minVal: 0,
+  maxVal: 0xFFFFFFFF,
+  interestingValues: [0, 1, 0x40000000, 0x7FFFFFFF, 0xFFFFFFFF],
+  view: Uint32Array,
+  buffer: _ui32x4,
+}
+
+var uint16x8 = {
+  name: "Uint16x8",
+  fn: SIMD.Uint16x8,
+  lanes: 8,
+  laneSize: 2,
+  laneMask: 0xFFFF,
+  minVal: 0,
+  maxVal: 0xFFFF,
+  interestingValues: [0, 1, 0x4000, 0x7FFF, 0xFFFF],
+  view: Uint16Array,
+  buffer: _ui16x8,
+}
+
+var uint8x16 = {
+  name: "Uint8x16",
+  fn: SIMD.Uint8x16,
+  lanes: 16,
+  laneSize: 1,
+  laneMask: 0xFF,
+  minVal: 0,
+  maxVal: 0xFF,
+  interestingValues: [0, 1, 0x40, 0x7F, 0xFF],
+  view: Int8Array,
+  buffer: _ui8x16,
 }
 
 var bool32x4 = {
@@ -124,48 +163,64 @@ var bool8x16 = {
 
 // Each SIMD type has a corresponding Boolean SIMD type, which is returned by
 // relational ops.
-float32x4.boolType = int32x4.boolType = bool32x4.boolType = bool32x4;
-int16x8.boolType = bool16x8.boolType = bool16x8;
-int8x16.boolType = bool8x16.boolType = bool8x16;
+float32x4.boolType = int32x4.boolType = uint32x4.boolType = bool32x4.boolType = bool32x4;
+int16x8.boolType = uint16x8.boolType = bool16x8.boolType = bool16x8;
+int8x16.boolType = uint8x16.boolType = bool8x16.boolType = bool8x16;
 
-// SIMD from types.
-float32x4.from = [int32x4];
-
-int32x4.from = [float32x4];
-int32x4.fromFn = function(x) {
-  if (x > -2147483649.0 && x < 2147483648.0)
-    return x|0;
-  return NaN;
-}
+// SIMD fromTIMD types.
+float32x4.from = [int32x4, uint32x4];
+int32x4.from = [float32x4, uint32x4];
+int16x8.from = [uint16x8];
+int8x16.from = [uint8x16];
+uint32x4.from = [float32x4, int32x4];
+uint16x8.from = [int16x8];
+uint8x16.from = [int8x16];
 
 // SIMD fromBits types.
-float32x4.fromBits = [int32x4, int16x8, int8x16];
-int32x4.fromBits = [float32x4, int16x8, int8x16];
-int16x8.fromBits = [float32x4, int32x4, int8x16];
-int8x16.fromBits = [float32x4, int32x4, int16x8];
+float32x4.fromBits = [int32x4, int16x8, int8x16, uint32x4, uint16x8, uint8x16];
+int32x4.fromBits = [float32x4, int16x8, int8x16, uint32x4, uint16x8, uint8x16];
+int16x8.fromBits = [float32x4, int32x4, int8x16, uint32x4, uint16x8, uint8x16];
+int8x16.fromBits = [float32x4, int32x4, int16x8, uint32x4, uint16x8, uint8x16];
+uint32x4.fromBits = [float32x4, int32x4, int16x8, int8x16, uint16x8, uint8x16];
+uint16x8.fromBits = [float32x4, int32x4, int16x8, int8x16, uint32x4, uint8x16];
+uint8x16.fromBits = [float32x4, int32x4, int16x8, int8x16, uint32x4, uint16x8];
 
 // Simd widening types.
 int16x8.wideType = int32x4;
 int8x16.wideType = int16x8;
+uint16x8.wideType = uint32x4;
+uint8x16.wideType = uint16x8;
+
+// SIMD fromTIMD conversion functions.
+float32x4.convert = function(x) { return Math.fround(x); }
+int32x4.convert = int16x8.convert = int8x16.convert = function(x) { return x|0; }
+uint32x4.convert = uint16x8.convert = uint8x16.convert = function(x) { return x>>>0; }
 
 var floatTypes = [float32x4];
 
 var intTypes = [int32x4, int16x8, int8x16];
 
-var largeTypes = [float32x4, int32x4];
+var unsignedIntTypes = [uint32x4, uint16x8, uint8x16];
 
-var smallIntTypes = [int16x8, int8x16];
+var largeTypes = [float32x4, int32x4, uint32x4];
+
+var smallIntTypes = [int16x8, int8x16, uint16x8, uint8x16];
+
+var smallUnsignedIntTypes = [uint16x8, uint8x16];
 
 var boolTypes = [bool32x4, bool16x8, bool8x16];
 
 var numericalTypes = [float32x4,
-                      int32x4, int16x8, int8x16];
+                      int32x4, int16x8, int8x16,
+                      uint32x4, uint16x8, uint8x16];
 
 var logicalTypes = [int32x4, int16x8, int8x16,
+                    uint32x4, uint16x8, uint8x16,
                     bool32x4, bool16x8, bool8x16];
 
 var allTypes = [float32x4,
                 int32x4, int16x8, int8x16,
+                uint32x4, uint16x8, uint8x16,
                 bool32x4, bool16x8, bool8x16];
 
 // SIMD reference functions.
@@ -319,6 +374,20 @@ function testBinaryOp(type, op, refOp) {
   }
 }
 
+function testWideningBinaryOp(type, op, refOp) {
+  equal('function', typeof type.fn[op]);
+  var zero = type.fn();
+  for (var av of type.interestingValues) {
+    for (var bv of type.interestingValues) {
+      var expected = simdCoerce(type.wideType, refOp(simdCoerce(type, av), simdCoerce(type, bv)));
+      var a = type.fn.splat(av);
+      var b = type.fn.splat(bv);
+      var result = type.fn[op](a, b);
+      checkValue(type.wideType, result, function(index) { return expected; });
+    }
+  }
+}
+
 // Compare relational op's behavior to ref op at each lane with the Cartesian
 // product of the given values.
 function testRelationalOp(type, op, refOp) {
@@ -350,18 +419,30 @@ function testShiftOp(type, op, refOp) {
   }
 }
 
+function testHorizontalSum(type) {
+  equal('function', typeof type.fn.horizontalSum);
+  var zero = type.fn();
+  for (var av of type.interestingValues) {
+    var expected = type.lanes * av;
+    var a = type.fn.splat(av);
+    var result = type.fn.horizontalSum(a);
+    equal(result, expected);
+  }
+}
+
 function testFrom(toType, fromType, name) {
   equal('function', typeof toType.fn[name]);
   for (var v of fromType.interestingValues) {
     var fromValue = createSplatValue(fromType, v);
-    var expected = toType.fromFn ? toType.fromFn(v) :
-                   simdCoerce(toType, simdCoerce(fromType, v));
-    if (expected != expected) {  // NaN signals failure.
-      throws(function() { toType.fn[name](fromValue) });
-    } else {
-      var result = toType.fn[name](fromValue);
-      checkValue(toType, result, function(index) { return expected; });
+    if (toType.minVal !== undefined) {
+      if (v < toType.minVal || v > toType.maxVal) {
+        throws(function() { toType.fn[name](fromValue) });
+        continue;
+      }
     }
+    v = toType.convert(v);
+    var result = toType.fn[name](fromValue);
+    checkValue(toType, result, function(index) { return v; });
   }
 }
 
@@ -679,9 +760,6 @@ for (var type of numericalTypes) {
   test(type.name + ' greaterThanOrEqual', function() {
     testRelationalOp(type, 'greaterThanOrEqual', function(a, b) { return a >= b; });
   });
-  test(type.name + ' neg', function() {
-    testUnaryOp(type, 'neg', function(a) { return -a; });
-  });
   test(type.name + ' add', function() {
     testBinaryOp(type, 'add', function(a, b) { return a + b; });
   });
@@ -772,6 +850,9 @@ for (var type of floatTypes) {
 }
 
 for (var type of intTypes) {
+  test(type.name + ' neg', function() {
+    testUnaryOp(type, 'neg', function(a) { return -a; });
+  });
   test(type.name + ' not', function() {
     testUnaryOp(type, 'not', function(a) { return ~a; });
   });
@@ -783,24 +864,38 @@ for (var type of intTypes) {
 
     testShiftOp(type, 'shiftLeftByScalar', shift);
   });
-  test(type.name + ' shiftRightLogicalByScalar', function() {
-    function shift(a, bits) {
-      if (bits>>>0 >= type.laneSize * 8) return 0;
-      if (type.laneMask)
-        a &= type.laneMask;
-      return a >>> bits;
-    }
-
-    testShiftOp(type, 'shiftRightLogicalByScalar', shift);
-  });
-  test(type.name + ' shiftRightArithmeticByScalar', function() {
+  test(type.name + ' shiftRightByScalar', function() {
     function shift(a, bits) {
       if (bits>>>0 >= type.laneSize * 8)
         bits = type.laneSize * 8 - 1;
       return a >> bits;
     }
 
-    testShiftOp(type, 'shiftRightArithmeticByScalar', shift);
+    testShiftOp(type, 'shiftRightByScalar', shift);
+  });
+}
+
+for (var type of unsignedIntTypes) {
+  test(type.name + ' shiftRightByScalar', function() {
+    function shift(a, bits) {
+      if (bits>>>0 >= type.laneSize * 8) return 0;
+      if (type.laneMask)
+        a &= type.laneMask;
+      return a >>> bits;
+    }
+    testShiftOp(type, 'shiftRightByScalar', shift);
+  });
+}
+
+for (var type of smallUnsignedIntTypes) {testHorizontalSum
+  test(type.name + ' horizontalSum', function() {
+    testHorizontalSum(type);
+  });
+  test(type.name + ' absoluteDifference', function() {
+    testBinaryOp(type, 'absoluteDifference', function(a, b) { return Math.abs(a - b); });
+  });
+  test(type.name + ' widenedAbsoluteDifference', function() {
+    testWideningBinaryOp(type, 'widenedAbsoluteDifference', function(a, b) { return Math.abs(a - b); });
   });
 }
 
