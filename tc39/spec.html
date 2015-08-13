@@ -1,10 +1,10 @@
 <!doctype html>
 <meta charset="utf8">
-<title>SIMD.js specification v0.8.1</title>
+<title>SIMD.js specification v0.8.2</title>
 <link rel="stylesheet" href="https://bterlson.github.io/ecmarkup/elements.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/github.min.css">
 <emu-biblio href="./biblio.json"></emu-biblio>
-<h1>SIMD.js specification v0.8.1</h1>
+<h1>SIMD.js specification v0.8.2</h1>
 <emu-intro id="intro">
 <h1>Introduction</h1>
 <p>
@@ -67,6 +67,7 @@ Related links:
 <li>v0.7.3: Coerce lane arguments, no bitcast on bool, fix typo in .check() and .valueOf(), no constructing wrappers, fix denormal behavior to be deterministic and match hardware, fix shuffle definition, define arithmetic operations only on numeric types, fix up ES2015 links.</li>
 <li>v0.8: Separate signed and unsigned integer types</li>
 <li>v0.8.1: Minor language fixes and cleanups from review; no behavior changes</li>
+<li>v0.8.2: Remove unsignedExtractLane, remove equals, notEquals, swizzle and shuffle from boolean vectors, improve internal algorithm notation, restrict rest argument usage, toString `", "`</li>
 </ul>
 </emu-intro>
 
@@ -284,7 +285,7 @@ While it would be possible to make the zero-vector false as a boolean, there are
 <emu-alg>
 1. Let _elements_ be an Array containing the contents of _argument_.[[SIMDElements]]
 1. Let _t_ be the string `"`<var>SIMD</var>`"`, e.g., `"Float32x4"`.
-1. Let e be Call(%ArrayPrototype_join%, _elements_, «","»).
+1. Let e be Call(%ArrayPrototype_join%, _elements_, «", "»).
 1. Return a new String value computed by concatenating the previous value of "SIMD.", _t_, "(", _e_, and ")".
 </emu-alg>
 
@@ -525,20 +526,19 @@ All SIMD types are either integer SIMD types, boolean SIMD types or or floating 
 <p>
 The [[ElementMax]], [[ElementMin]], [[ElementSize]], [[SerializeElement]] and [[DeserializeElement]] slots are optional, and defined only on certain SIMD types. Operations which use these slots have been defined only on the types which have them.
 </p>
-<emu-note>Rather than constructors having internal slots, this could be specified by a table analogous to Table 49 in the ES6 description for TypedArrays. However, the author finds it easier to express this purely in terms of records. TypedArrays could be specified like this too, and share some infrastructure with SIMD, but in their current form, it seems difficult to generalize them to SIMD directly.</emu-note>
+<emu-note>Rather than descriptors having internal slots, this could be specified by a table analogous to Table 49 in the ES6 description for TypedArrays. However, the author finds it easier to express this purely in terms of records. TypedArrays could be specified like this too, and share some infrastructure with SIMD, but in their current form, it seems difficult to generalize them to SIMD directly.</emu-note>
 <emu-note>CastNumber converts elements to Numbers; however, for most SIMD types, it will convert them to a restricted range of Number. In a real implementation, the numbers would likely be represented in a more compact form. However, the internal representation is not observable.</emu-note>
+<p>
+SIMD wrappers are objects whose [[Prototype]] is a _SIMD_Constructor and which have a [[SIMDWrapperData]] internal slot. They can be created by calling `ToObject` on a SIMD value.
+</p>
 
 <emu-clause id="simd-algorithms">
 <h1>Internal algorithms on SIMD types</h1>
 
 <emu-clause id="simd-create" aoid="SIMDCreate">
-<h1>SIMDCreate( descriptor, fields...)</h1>
-This internal algorithm creates a new value of the type corresponding to the specified wrapper with the following procedure:
-
-<emu-note>The following algorithm uses splat arguments in the spec and indexes them as an array, but there isn't proper machinery in the spec to describe this behavior</emu-note>
-
+<h1>Runtime Semantics: SIMDCreate( descriptor, fields )</h1>
 <emu-alg>
-1. If Length(fields) &ne; _descriptor_.[[VectorLength]], then throw a TypeError.
+1. Assert: The length of _fields_ = _descriptor_.[[VectorLength]].
 1. Let _list_ be a new List of length _descriptor_.[[VectorLength]].
 1. For _i_ from 0 to _descriptor_.[[VectorLength]],
   1. Let _n_ be <var>descriptor</var>.[[CastNumber]](fields[<var>i</var>]).
@@ -548,35 +548,44 @@ This internal algorithm creates a new value of the type corresponding to the spe
 </emu-alg>
 </emu-clause>
 
+<emu-clause id="simd-to-lane" aoid="SIMDToLane">
+<h1>Runtime Semantics: SIMDToLane( max, lane )</h1>
+<emu-alg>
+1. Let _index_ be ToNumber(_lane_).
+1. ReturnIfAbrupt(_index_).
+1. If _index_ &ne; ToInt32(_index_) or _index_ < 0 or _index_ &ge; _max_, throw a RangeError.
+1. Return _index_
+</emu-alg>
+<emu-note>While this single definition doesn't explicitly refer to the SIMD type in indexing the list, an implementation may use different representations for the Number elements on different types and generate different code for the accesses.</emu-note>
+</emu-clause>
+
 <emu-clause id="simd-abstract-extract-lane" aoid="SIMDExtractLane">
-<h1>SIMDExtractLane( value, field )</h1>
+<h1>Runtime Semantics: SIMDExtractLane( value, lane )</h1>
 <emu-alg>
 1. Assert: Type(_value_) is a _SIMD_Type.
-1. Let _index_ be ToNumber(_field_).
+1. Let _index_ be SIMDToLane(_value_.[[SIMDTypeDescriptor]].[[VectorLength]], _lane_).
 1. ReturnIfAbrupt(_index_).
-1. If _index_ &ne; ToInt32(_index_) or _index_ < 0 or _index_ &ge; _descriptor_.[[VectorLength]], throw a RangeError.
 1. Return <var>value</var>.[[SIMDElements]][<var>index</var>]
 </emu-alg>
 <emu-note>While this single definition doesn't explicitly refer to the SIMD type in indexing the list, an implementation may use different representations for the Number elements on different types and generate different code for the accesses.</emu-note>
 </emu-clause>
 
 <emu-clause id="simd-abstract-replace-lane" aoid="SIMDReplaceLane">
-<h1>SIMDReplaceLane( value, field, replacement )</h1>
+<h1>Runtime Semantics: SIMDReplaceLane( value, lane, replacement )</h1>
 <emu-alg>
 1. Assert: Type(_value_) is a _SIMD_Type.
-1. Let _descriptor_ be _a_.[[SIMDTypeDescriptor]].
-1. Let _index_ be ToNumber(_field_).
+1. Let _descriptor_ be _value_.[[SIMDTypeDescriptor]].
+1. Let _index_ be SIMDToLane(_descriptor_.[[VectorLength]], _lane_).
 1. ReturnIfAbrupt(_index_).
-1. If _index_ &ne; ToInt32(_index_) or _index_ < 0 or _index_ &ge; _descriptor_.[[VectorLength]], throw a RangeError.
 1. Let _list_ be a copy of _value_.[[SIMDElements]].
 1. Set <var>list</var>[<var>index</var>] to _replacement_.
-1. Return SIMDCreate(_descriptor_, ..._list_).
+1. Return SIMDCreate(_descriptor_, _list_).
 </emu-alg>
 <emu-note>While this single definition doesn't explicitly refer to the SIMD type in indexing the list, an implementation may use different representations for the Number elements on different types and generate different code for the accesses.</emu-note>
 </emu-clause>
 
 <emu-clause id="maybe-flush-denormal" aoid="MaybeFlushDenormal">
-<h1>MaybeFlushDenormal( n )</h1>
+<h1>Runtime Semantics: MaybeFlushDenormal( n )</h1>
 <p>
 Two possible internal algorithms are provided. The choice is implementation dependent and should be the alternative that is most efficient for the implementation. An implementation must use the same value each time this step is executed.
 </p>
@@ -596,7 +605,7 @@ The second option:
 </emu-clause>
 
 <emu-clause id="simd-binary" aoid="SIMDBinaryOp">
-<h1>SIMDBinaryOp( a, b, op, outputDescriptor )</h1>
+<h1>Runtime Semantics: SIMDBinaryOp( a, b, op, outputDescriptor )</h1>
 <emu-alg>
 1. Assert: _a_.[[SIMDTypeDescriptor]] is _b_.[[SIMDTypeDescriptor]]
 1. Let _descriptor_ be _a_.[[SIMDTypeDescriptor]].
@@ -608,12 +617,12 @@ The second option:
   1. Let _res_ = MaybeFlushDenormal(op(_ax_, _bx_)).
   1. ReturnIfAbrupt(_res_).
   1. Set <var>list</var>[<var>i</var>] to _res_.
-1. Return SIMDCreate(_outputDescriptor_, ..._list_).
+1. Return SIMDCreate(_outputDescriptor_, _list_).
 </emu-alg>
 </emu-clause>
 
 <emu-clause id="simd-unary" aoid="SIMDUnaryOp">
-<h1>SIMDUnaryOp( a, op [ , flushDenormal ] )</h1>
+<h1>Runtime Semantics: SIMDUnaryOp( a, op [ , flushDenormal ] )</h1>
 <emu-alg>
 1. Let _descriptor_ be _a_.[[SIMDTypeDescriptor]].
 1. If _flushDenormal_ is not provided, let _flushDenormal_true be *true*.
@@ -626,12 +635,12 @@ The second option:
   1. If _flushDenormal_, let _res_ be MaybeFlushDenormal(_res_).
   1. ReturnIfAbrupt(_res_).
   1. Set <var>list</var>[<var>i</var>] to _res_.
-1. Return SIMDCreate(_descriptor_, ..._list_).
+1. Return SIMDCreate(_descriptor_, _list_).
 </emu-alg>
 </emu-clause>
 
 <emu-clause id="simd-scalar" aoid="SIMDScalarOp">
-<h1>SIMDScalarOp( a, scalar, op )</h1>
+<h1>Runtime Semantics: SIMDScalarOp( a, scalar, op )</h1>
 <emu-alg>
 1. Let _descriptor_ be _a_.[[SIMDTypeDescriptor]].
 1. Let _list_ be a new List of length _descriptor_.[[VectorLength]].
@@ -641,12 +650,12 @@ The second option:
   1. Let _res_ = op(_ax_, _scalar_).
   1. ReturnIfAbrupt(_res_).
   1. Set <var>list</var>[<var>i</var>] to _res_.
-1. Return SIMDCreate(_descriptor_, ..._list_).
+1. Return SIMDCreate(_descriptor_, _list_).
 </emu-alg>
 </emu-clause>
 
 <emu-clause id="simd-load" aoid="SIMDLoad">
-<h1>SIMDLoad( dataBlock, descriptor, byteOffset [, length] )</h1>
+<h1>Runtime Semantics: SIMDLoad( dataBlock, descriptor, byteOffset [, length] )</h1>
 <emu-alg>
 1. Assert: _dataBlock_ is a Data Block, _descriptor_ is a SIMD type descriptor
 1. If _length_ is not provided, let _length_ be _descriptor_.[[VectorLength]]. Otherwise, assert _length_ &le; _descriptor_.[[VectorLength]].
@@ -659,7 +668,7 @@ The second option:
 </emu-clause>
 
 <emu-clause id="simd-store" aoid="SIMDStore">
-<h1>SIMDStore( dataBlock, descriptor, byteOffset, n [, length] )</h1>
+<h1>Runtime Semantics: SIMDStore( dataBlock, descriptor, byteOffset, n [, length] )</h1>
 <emu-alg>
 1. Assert: _dataBlock_ is a Data Block, _descriptor_ is a SIMD type descriptor
 1. If _length_ is not provided, let _length_ be _descriptor_.[[VectorLength]]. Otherwise, assert _length_ &le; _descriptor_.[[VectorLength]].
@@ -670,7 +679,7 @@ The second option:
 </emu-clause>
 
 <emu-clause id="simd-reinterpret-cast" aoid="SIMDReinterpretCast">
-<h1>SIMDReinterpretCast( value, newDescriptor )</h1>
+<h1>Runtime Semantics: SIMDReinterpretCast( value, newDescriptor )</h1>
 <emu-note>This is used to define operations like SIMD.Float32x4.fromInt8x16Bits.</emu-note>
 <emu-alg>
 1. Assert: _value_.[[SIMDTypeDescriptor]].[[VectorLength]] &times; _value_.[[SIMDTypeDescriptor]].[[ElementSize]] = _newDescriptor_.[[VectorLength]] &times; _newDescriptor_.[[ElementSize]].
@@ -683,7 +692,7 @@ The second option:
 </emu-clause>
 
 <emu-clause id="simd-int-type" aoid="SIMDBoolType">
-<h1>SIMDBoolType( descriptor )</h1>
+<h1>Runtime Semantics: SIMDBoolType( descriptor )</h1>
 <emu-alg>
 1. Assert: _descriptor_.[[VectorLength]] &times; _descriptor.[[ElementSize]] = 128. Otherwise, in a future extension to the spec, different boolean descriptors will be returned.
 1. Let _length_ be _descriptor_.[[VectorLength]].
@@ -695,7 +704,7 @@ The second option:
 </emu-clause>
 
 <emu-clause id="simd-relational-op" aoid="SIMDRelationalOp">
-<h1>SIMDRelationalOp( a, b, op )</h1>
+<h1>Runtime Semantics: SIMDRelationalOp( a, b, op )</h1>
 <emu-alg>
 1. Let _outputDescriptor_ be SIMDBoolType(_a_.[[SIMDTypeDescriptor]]).
 1. Return SIMDBinaryOp(_a_, _b_, _op_, _outputDescriptor_).
@@ -715,20 +724,23 @@ The definitions of the constructor and properties of the constructor to follow c
 </p>
 
 <emu-clause id="simd-wrapper">
-<h1>_SIMD_Constructor( fields... )</h1>
+<h1>_SIMD_Constructor( ...values )</h1>
 <emu-note>SIMD wrapped objects cannot be created using `new` on _SIMD_Constructor; they can be created explicitly with `Object()` however.</emu-note>
 <emu-alg>
 1. If *NewTarget* is not undefined, throw a *TypeError*.
-1. If _SIMD_Descriptor.[[SIMDElementsLength]] does not equal the length of the specification List _fields_, throw a *TypeError*.
-1. Return SIMDCreate(_SIMD_Descriptor, fields...).
+1. Let _fields_ be a new List.
+1. For integer _n_ from *0* to _SIMD_Descriptor.[[VectorLength]],
+  1. Append _values_[_n_] to the end of _fields_, or *undefined* if there were not enough arguments.
+1. Return SIMDCreate(_SIMD_Descriptor, _fields_).
 </emu-alg>
+The `length` property of `_SIMD_Constructor` is _SIMD_Descriptor.[[VectorLength]].
 </emu-clause>
 
 <emu-clause id="simd-splat">
 <h1>_SIMD_Constructor.splat(n)</h1>
 <emu-alg>
 1. Let _list_ be a new List of length _SIMD_Descriptor.[[VectorLength]], with all entries filled with _n_.
-1. Return SIMDCreate(_SIMD_Descriptor, ..._list_).
+1. Return SIMDCreate(_SIMD_Descriptor, _list_).
 </emu-alg>
 </emu-clause>
 
@@ -828,7 +840,7 @@ This property is defined only on floating point SIMD types.
 </emu-clause>
 
 <emu-clause id="max-num" aoid="MaxNum">
-<h1>MaxNum(n, m)</h1>
+<h1>Runtime Semantics: MaxNum(n, m)</h1>
 <emu-alg>
 1. Assert Type(_n_) is Number and Type(_m_) is Number.
 1. If _n_ is *NaN*, return _m_.
@@ -851,7 +863,7 @@ This property is defined only on floating point SIMD types.
 </emu-clause>
 
 <emu-clause id="min-num" aoid="MinNum">
-<h1>MinNum(n, m)</h1>
+<h1>Runtime Semantics: MinNum(n, m)</h1>
 <emu-alg>
 1. Assert Type(_n_) is Number and Type(_m_) is Number.
 1. If _n_ is *NaN*, return _m_.
@@ -901,7 +913,7 @@ This property is defined only on floating point SIMD types.
 </emu-clause>
 
 <emu-clause id="reciprocal" aoid="ReciprocalApproximation">
-<h1>ReciprocalApproximation(n)</h1>
+<h1>Runtime Semantics: ReciprocalApproximation(n)</h1>
 Returns an implementation-dependent approximation to the reciprocal of _n_.
 <ul>
 <li>If _n_ is *NaN*, the result is *NaN*.</li>
@@ -924,7 +936,7 @@ This property is defined only on floating point SIMD types.
 </emu-clause>
 
 <emu-clause id="reciprocal" aoid="ReciprocalSqrtApproximation">
-<h1>ReciprocalSqrtApproximation(n)</h1>
+<h1>Runtime Semantics: ReciprocalSqrtApproximation(n)</h1>
 Returns an implementation-dependent approximation to the reciprocal of the square root of _n_.
 <ul>
 <li>If _n_ is *NaN*, the result is *NaN*.</li>
@@ -1092,6 +1104,9 @@ This operation exists only on integer and floating point SIMD types.
 <p>
 This definition uses the refers to `===` as defined by <a href="http://www.ecma-international.org/ecma-262/6.0/#sec-strict-equality-comparison">ES2015 7.2.13 (Strict Equality Comparison)</a>.
 </p>
+<p>
+This operation exists only on integer and floating point SIMD types.
+</p>
 <emu-alg>
 1. If _a_.[[SIMDTypeDescriptor]] is not _SIMD_Descriptor or _b_.[[SIMDTypeDescriptor]] is not _SIMD_Descriptor, throw a TypeError.
 1. Let _result_ be SIMDRelationalOp(_a_, _b_, `===`).
@@ -1105,6 +1120,9 @@ This definition uses the refers to `===` as defined by <a href="http://www.ecma-
 <h1>_SIMD_Constructor.notEqual(a, b)</h1>
 <p>
 This definition uses the refers to `!==` as defined by <a href="http://www.ecma-international.org/ecma-262/6.0/#sec-strict-equality-comparison">ES2015 7.2.13 (Strict Equality Comparison)</a>.
+</p>
+<p>
+This operation exists only on integer and floating point SIMD types.
 </p>
 <emu-alg>
 1. If _a_.[[SIMDTypeDescriptor]] is not _SIMD_Descriptor or _b_.[[SIMDTypeDescriptor]] is not _SIMD_Descriptor, throw a TypeError.
@@ -1150,12 +1168,12 @@ This operation exists only on integer and floating point SIMD types.
 1. For _i_ from 0 to _SIMD_Descriptor.[[VectorLength]] - 1,
   1. If <var>sector</var>.[[SIMDElements]][<var>i</var>] is *true*, let <var>list</var>[<var>i</var>] be <var>a</var>.[[SIMDElements]][<var>i</var>].
   1. Otherwise, let <var>list</var>[<var>i</var>] be <var>b</var>.[[SIMDElements]][<var>i</var>].
-1. Return SIMDCreate(_SIMD_Descriptor, ..._list_).
+1. Return SIMDCreate(_SIMD_Descriptor, _list_).
 </emu-alg>
 </emu-clause>
 
 <emu-clause id="saturate" aoid="Saturate">
-<h1>Saturate( descriptor, x )</h1>
+<h1>Runtime Semantics: Saturate( descriptor, x )</h1>
 <emu-alg>
 1. If _x_ > _descriptor_.[[ElementMax]], return _descriptor_.[[ElementMax]].
 1. Otherwise, if _x_ < _descriptor_.[[ElementMin]], return _descriptor_.[[ElementMin]]
@@ -1164,7 +1182,7 @@ This operation exists only on integer and floating point SIMD types.
 </emu-clause>
 
 <emu-clause id="add-saturate" aoid="AddSaturate">
-<h1>AddSaturate( descriptor )( x, y )</h1>
+<h1>Runtime Semantics: AddSaturate( descriptor )( x, y )</h1>
 <emu-alg>
 1. Return Saturate(_descriptor_, _x_ + _y_).
 </emu-alg>
@@ -1183,7 +1201,7 @@ This operation is only defined on integer SIMD types whose _SIMD_Descriptor.[[El
 </emu-clause>
 
 <emu-clause id="sub-saturate" aoid="SubSaturate">
-<h1>SubSaturate( descriptor )( x, y )</h1>
+<h1>Runtime Semantics: SubSaturate( descriptor )( x, y )</h1>
 <emu-alg>
 1. Return Saturate(_descriptor_, _x_ - _y_).
 </emu-alg>
@@ -1264,7 +1282,7 @@ This operation is only defined on unsigned integer SIMD types.
 </emu-clause>
 
 <emu-clause id="absolute-difference" aoid="AbsoluteDifference">
-<h1>AbsoluteDifference( a, b )</h1>
+<h1>Runtime Semantics: AbsoluteDifference( a, b )</h1>
 <emu-alg>
 1. Return Call(%Math_abs%, %Math%, «_a_ - _b_»).
 </emu-alg>
@@ -1297,34 +1315,23 @@ This operation is only defined on unsigned integer SIMD types whose _SIMD_Descri
   1. Let _res_ = AbsoluteDifference(_ax_, _bx_).
   1. ReturnIfAbrupt(_res_).
   1. Set <var>list</var>[<var>i</var>] to _res_.
-1. Return SIMDCreate(_outputDescriptor_, ..._list_).
+1. Return SIMDCreate(_outputDescriptor_, _list_).
 </emu-alg>
 </emu-clause>
 
 <emu-clause id="simd-extract-lane">
-<h1>_SIMD_Constructor.extractLane( simd, field )</h1>
+<h1>_SIMD_Constructor.extractLane( simd, lane )</h1>
 <emu-alg>
 1. If _simd_.[[SIMDTypeDescriptor]] is not _SIMD_Descriptor, throw a TypeError.
-1. Return SIMDExtractLane(_simd_, _field_).
+1. Return SIMDExtractLane(_simd_, _lane_).
 </emu-alg>
-</emu-clause>
-
-<emu-clause id="simd-unsigned-extract-lane">
-<h1>_SIMD_Constructor.unsignedExtractLane( simd, field )</h1>
-This operation is only defined on integer SIMD types whose _SIMD_Descriptor.[[ElementSize]] &le; 2.
-<emu-alg>
-1. If _simd_.[[SIMDTypeDescriptor]] is not _SIMD_Descriptor, throw a TypeError.
-1. Let _value_ SIMDExtractLane(_simd_, _field_).
-1. Return UnsignedValue(_value_, _descriptor_).
-</emu-alg>
-<emu-note>No unsignedReplaceLane or unsigned constructor is needed because replaceLane's implicit cast will handle unsigned elements.</emu-note>
 </emu-clause>
 
 <emu-clause id="simd-replace-lane">
-<h1>_SIMD_Constructor.replaceLane(simd, field, value)</h1>
+<h1>_SIMD_Constructor.replaceLane(simd, lane, value)</h1>
 <emu-alg>
 1. If _simd_.[[SIMDTypeDescriptor]] is not _SIMD_Descriptor, throw a TypeError.
-1. Return SIMDReplaceLane(_simd_, _field_, _value_).
+1. Return SIMDReplaceLane(_simd_, _lane_, _value_).
 </emu-alg>
 </emu-clause>
 
@@ -1498,42 +1505,54 @@ In this definition, _TIMD_ ranges over all SIMD types for which _SIMD_Descriptor
 1. Let _list_ be a copy of _value_.[[SIMDElements]].
 1. For _element_ in _list_,
   1. If _SIMD_ is an integer type and _TIMD_ is a floating point type, and _element_ is greater than the maximum value or less than the minimum value of _SIMD_, throw a *RangeError*.
-1. Return SIMDCreate(_SIMD_Descriptor, ..._list_).
+1. Return SIMDCreate(_SIMD_Descriptor, _list_).
 </emu-alg>
 </emu-clause>
 
 <emu-clause id="swizzle">
-<h1>_SIMD_.swizzle( a, lanes... )</h1>
+<h1>_SIMD_.swizzle( a, ...lanes )</h1>
+<p>
+This operation exists only on integer and floating point SIMD types.
+</p>
 <emu-alg>
 1. If _a_.[[SIMDTypeDescriptor]] is not _SIMD_Descriptor, throw a *TypeError*.
-1. If the length of _lanes_ does not equal _SIMD_Descriptor.[[VectorLength]], throw a *TypeError*.
-1. For each _lane_ in _lanes_:
-  1. If _lane_ is not a Number, or _lane_ &ne; ToInt32(_lane_), throw a *TypeError*.
-  1. If _lane_ < 0 or _lane_ &ge; _SIMD_Descriptor.[[VectorLength]], throw a *RangeError*.
-1. Let _list_ be a new List of length _SIMD_Descriptor.[[VectorLength]].
+1. Let _indices_ be a new List.
+1. For integer _n_ from *0* to _SIMD_Descriptor.[[VectorLength]],
+  1. Let _lane_ be <var>lanes</var>[<var>i</var>], or 0 if _lanes_ is not long enough.
+  1. Let _index_ be SIMDToLane(_value_.[[SIMDTypeDescriptor]].[[VectorLength]], _lane_).
+  1. ReturnIfAbrupt(_index_).
+  1. Append _index_ to the end of _indices_.
+1. Let _fields_ be a new List of length _SIMD_Descriptor.[[VectorLength]].
 1. For _i_ in from 0 to _SIMD_Descriptor.[[VectorLength]] - 1,
-  1. Set <var>list</var>[<var>i</var>] to SIMDExtractLane(_a_, <var>lanes</var>[<var>i</var>])
-1. Return SIMDCreate(_SIMD_Descriptor, ..._list_).
+  1. Set <var>fields</var>[<var>i</var>] to SIMDExtractLane(_a_, <var>indices</var>[<var>i</var>])
+1. Return SIMDCreate(_SIMD_Descriptor, _fields_).
 </emu-alg>
+The `length` property of `_SIMD_.swizzle` is 1 + _SIMD_Descriptor.[[VectorLength]].
 </emu-clause>
 
 <emu-clause id="shuffle">
-<h1>_SIMD_.shuffle( a, b, lanes... )</h1>
+<h1>_SIMD_.shuffle( a, b, ...lanes )</h1>
+<p>
+This operation exists only on integer and floating point SIMD types.
+</p>
 <emu-alg>
 1. If _a_.[[SIMDTypeDescriptor]] is not _SIMD_Descriptor, or if _b_.[[SIMDTypeDescriptor]] is not _SIMD_Descriptor, throw a *TypeError*.
-1. If the length of _lanes_ does not equal _SIMD_Descriptor.[[VectorLength]], throw a *TypeError*.
-1. For each _lane_ in _lanes_:
-  1. If _lane_ is not a Number, or _lane_ &ne; ToInt32(_lane_), throw a *TypeError*.
-  1. If _lane_ < 0 or _lane_ &ge; _SIMD_Descriptor.[[VectorLength]] &times; 2, throw a *RangeError*.
-1. Let _list_ be a new List of length _SIMD_Descriptor.[[VectorLength]].
+1. Let _indices_ be a new List.
+1. For integer _n_ from *0* to _SIMD_Descriptor.[[VectorLength]],
+  1. Let _lane_ be <var>lanes</var>[<var>i</var>], or 0 if _lanes_ is not long enough.
+  1. Let _index_ be SIMDToLane(_SIMD_Descriptor.[[VectorLength]] * 2, _lane_).
+  1. ReturnIfAbrupt(_index_).
+  1. Append _index_ to the end of _indices_.
+1. Let _fields_ be a new List of length _SIMD_Descriptor.[[VectorLength]].
 1. For _i_ in from 0 to _SIMD_Descriptor.[[VectorLength]] - 1,
-  1. Let _idx_ be <var>lanes</var>[<var>i</var>].
+  1. Let _idx_ be <var>indices</var>[<var>i</var>].
   1. If _idx_ &ge; _SIMD_Descriptor.[[VectorLength]],
-    1. Set <var>list</var>[<var>i</var>] to SIMDExtractLane(_b_, <var>lanes</var>[<var>i</var>] - _SIMD_Descriptor.[[VectorLength]])
+    1. Set <var>fields</var>[<var>i</var>] to SIMDExtractLane(_b_, _idx_ - _SIMD_Descriptor.[[VectorLength]])
   1. Otherwise,
-    1. Set <var>list</var>[<var>i</var>] to SIMDExtractLane(_a_, <var>lanes</var>[<var>i</var>])
-1. Return SIMDCreate(_SIMD_Descriptor, ..._list_).
+    1. Set <var>fields</var>[<var>i</var>] to SIMDExtractLane(_a_, _idx_)
+1. Return SIMDCreate(_SIMD_Descriptor, _fields_).
 </emu-alg>
+The `length` property of `_SIMD_.shuffle` is 2 + _SIMD_Descriptor.[[VectorLength]] * 2.
 </emu-clause>
 
 
@@ -1637,7 +1656,7 @@ The Float32x4Descriptor floating point SIMD type descriptor has the following in
 </ul>
 
 <emu-clause id="serialize-float32" aoid="SerializeFloat32">
-<h1>SerializeFloat32( block, offset, n, isLittleEndian )</h1>
+<h1>Runtime Semantics: SerializeFloat32( block, offset, n, isLittleEndian )</h1>
 <emu-note>Derived from part of <a href="http://www.ecma-international.org/ecma-262/6.0/#sec-setvalueinbuffer">SetValueInBuffer</a>. Note that this specification does not require a particular bit pattern for *NaN*, and that it does not need to be the same across calls.</emu-note>
 <emu-alg>
 1. Assert: _block_ is a Data Block.
@@ -1650,7 +1669,7 @@ The Float32x4Descriptor floating point SIMD type descriptor has the following in
 </emu-clause>
 
 <emu-clause id="deserialize-float32" aoid="DeserializeFloat32">
-<h1>DeserializeFloat32( block, offset, isLittleEndian )</h1>
+<h1>Runtime Semantics: DeserializeFloat32( block, offset, isLittleEndian )</h1>
 <emu-note>Derived from part of <a href="http://www.ecma-international.org/ecma-262/6.0/#sec-getvaluefrombuffer">GetValueFromBuffer</a>. Note that while this says to return "the *NaN* value", the binary representation is not observable and canonicalization is not required.</emu-note>
 <emu-alg>
 1. Assert: _block_ is a Data Block.
@@ -1681,7 +1700,7 @@ The Int32x4Descriptor signed integer SIMD type descriptor has the following inte
 </ul>
 
 <emu-clause id="serialize-int" aoid="SerializeInt">
-<h1>SerializeInt( block, offset, n, isLittleEndian, descriptor )</h1>
+<h1>Runtime Semantics: SerializeInt( block, offset, n, isLittleEndian, descriptor )</h1>
 <emu-note>Derived from part of <a href="http://www.ecma-international.org/ecma-262/6.0/#sec-setvalueinbuffer">SetValueInBuffer</a>.</emu-note>
 <emu-alg>
 1. Assert: _block_ is a Data Block.
@@ -1695,7 +1714,7 @@ The Int32x4Descriptor signed integer SIMD type descriptor has the following inte
 </emu-clause>
 
 <emu-clause id="deserialize-int" aoid="DeserializeInt">
-<h1>DeserializeInt( block, offset, isLittleEndian, descriptor )</h1>
+<h1>Runtime Semantics: DeserializeInt( block, offset, isLittleEndian, descriptor )</h1>
 <emu-note>Derived from part of <a href="http://www.ecma-international.org/ecma-262/6.0/#sec-getvaluefrombuffer">GetValueFromBuffer</a>.</emu-note>
 <emu-alg>
 1. Assert: _block_ is a Data Block.
@@ -1709,14 +1728,14 @@ The Int32x4Descriptor signed integer SIMD type descriptor has the following inte
 </emu-clause>
 
 <emu-clause id="serialize-int32" aoid="SerializeInt32">
-<h1>SerializeInt32( block, offset, n, isLittleEndian )</h1>
+<h1>Runtime Semantics: SerializeInt32( block, offset, n, isLittleEndian )</h1>
 <emu-alg>
 1. SerializeInt( block, offset, n, isLittleEndian, Int32x4Descriptor ).
 </emu-alg>
 </emu-clause>
 
 <emu-clause id="deserialize-int32" aoid="DeserializeInt32">
-<h1>DeserializeInt32( block, offset, isLittleEndian )</h1>
+<h1>Runtime Semantics: DeserializeInt32( block, offset, isLittleEndian )</h1>
 <emu-alg>
 1. Return DeserializeInt( block, offset, isLittleEndian, Int32x4Descriptor).
 </emu-alg>
@@ -1739,14 +1758,14 @@ The Int16x8Descriptor signed integer SIMD type descriptor has the following inte
 </ul>
 
 <emu-clause id="serialize-int16" aoid="SerializeInt16">
-<h1>SerializeInt16( block, offset, n, isLittleEndian )</h1>
+<h1>Runtime Semantics: SerializeInt16( block, offset, n, isLittleEndian )</h1>
 <emu-alg>
 1. SerializeInt( block, offset, n, isLittleEndian, Int16x8Descriptor ).
 </emu-alg>
 </emu-clause>
 
 <emu-clause id="deserialize-int16" aoid="DeserializeInt16">
-<h1>DeserializeInt16( block, offset, isLittleEndian )</h1>
+<h1>Runtime Semantics: DeserializeInt16( block, offset, isLittleEndian )</h1>
 <emu-alg>
 1. Return DeserializeInt( block, offset, isLittleEndian, Int16x8Descriptor).
 </emu-alg>
@@ -1770,14 +1789,14 @@ The Int8x16Descriptor signed integer SIMD type descriptor has the following inte
 </ul>
 
 <emu-clause id="serialize-int8" aoid="SerializeInt8">
-<h1>SerializeInt8( block, offset, n, isLittleEndian )</h1>
+<h1>Runtime Semantics: SerializeInt8( block, offset, n, isLittleEndian )</h1>
 <emu-alg>
 1. SerializeInt( block, offset, n, isLittleEndian, Int8x16Descriptor ).
 </emu-alg>
 </emu-clause>
 
 <emu-clause id="deserialize-int8" aoid="DeserializeInt8">
-<h1>DeserializeInt8( block, offset, isLittleEndian )</h1>
+<h1>Runtime Semantics: DeserializeInt8( block, offset, isLittleEndian )</h1>
 <emu-alg>
 1. Return DeserializeInt( block, offset, isLittleEndian, Int8x16Descriptor).
 </emu-alg>
@@ -1800,14 +1819,14 @@ The Uint32x4Descriptor unsigned integer SIMD type descriptor has the following i
 </ul>
 
 <emu-clause id="serialize-uint32" aoid="SerializeUint32">
-<h1>SerializeUint32( block, offset, n, isLittleEndian )</h1>
+<h1>Runtime Semantics: SerializeUint32( block, offset, n, isLittleEndian )</h1>
 <emu-alg>
 1. SerializeInt( block, offset, n, isLittleEndian, Uint32x4Descriptor ).
 </emu-alg>
 </emu-clause>
 
 <emu-clause id="deserialize-int32" aoid="DeserializeInt32">
-<h1>DeserializeUint32( block, offset, isLittleEndian )</h1>
+<h1>Runtime Semantics: DeserializeUint32( block, offset, isLittleEndian )</h1>
 <emu-alg>
 1. Return DeserializeInt( block, offset, isLittleEndian, Uint32x4Descriptor).
 </emu-alg>
@@ -1830,14 +1849,14 @@ The Uint16x8Descriptor integer SIMD type descriptor has the following internal s
 </ul>
 
 <emu-clause id="serialize-uint16" aoid="SerializeUint16">
-<h1>SerializeUint16( block, offset, n, isLittleEndian )</h1>
+<h1>Runtime Semantics: SerializeUint16( block, offset, n, isLittleEndian )</h1>
 <emu-alg>
 1. SerializeInt( block, offset, n, isLittleEndian, Uint16x8Descriptor ).
 </emu-alg>
 </emu-clause>
 
 <emu-clause id="deserialize-uint16" aoid="DeserializeUint16">
-<h1>DeserializeUint16( block, offset, isLittleEndian )</h1>
+<h1>Runtime Semantics: DeserializeUint16( block, offset, isLittleEndian )</h1>
 <emu-alg>
 1. Return DeserializeInt( block, offset, isLittleEndian, Uint16x8Descriptor).
 </emu-alg>
@@ -1861,14 +1880,14 @@ The Uint8x16Descriptor integer SIMD type descriptor has the following internal s
 </ul>
 
 <emu-clause id="serialize-uint8" aoid="SerializeUint8">
-<h1>SerializeUint8( block, offset, n, isLittleEndian )</h1>
+<h1>Runtime Semantics: SerializeUint8( block, offset, n, isLittleEndian )</h1>
 <emu-alg>
 1. SerializeInt( block, offset, n, isLittleEndian, Uint8x16Descriptor ).
 </emu-alg>
 </emu-clause>
 
 <emu-clause id="deserialize-int8" aoid="DeserializeInt8">
-<h1>DeserializeInt8( block, offset, isLittleEndian )</h1>
+<h1>Runtime Semantics: DeserializeInt8( block, offset, isLittleEndian )</h1>
 <emu-alg>
 1. Return DeserializeInt( block, offset, isLittleEndian, Int8x16Descriptor).
 </emu-alg>
