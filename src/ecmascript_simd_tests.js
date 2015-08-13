@@ -67,7 +67,7 @@ var int32x4 = {
   lanes: 4,
   laneSize: 4,
   minVal: -0x80000000,
-  maxVal: 0x7fffffff,
+  maxVal: 0x7FFFFFFF,
   interestingValues: [0, 1, -1, 0x40000000, 0x7FFFFFFF, -0x80000000],
   view: Int32Array,
   buffer: _i32x4,
@@ -78,9 +78,9 @@ var int16x8 = {
   fn: SIMD.Int16x8,
   lanes: 8,
   laneSize: 2,
-  laneMask: 0xffff,
+  laneMask: 0xFFFF,
   minVal: -0x8000,
-  maxVal: 0x7fff,
+  maxVal: 0x7FFF,
   interestingValues: [0, 1, -1, 0x4000, 0x7FFF, -0x8000],
   view: Int16Array,
   buffer: _i16x8,
@@ -91,9 +91,9 @@ var int8x16 = {
   fn: SIMD.Int8x16,
   lanes: 16,
   laneSize: 1,
-  laneMask: 0xff,
+  laneMask: 0xFF,
   minVal: -0x80,
-  maxVal: 0x7f,
+  maxVal: 0x7F,
   interestingValues: [0, 1, -1, 0x40, 0x7F, -0x80],
   view: Int8Array,
   buffer: _i8x16,
@@ -109,6 +109,32 @@ var uint32x4 = {
   interestingValues: [0, 1, 0x40000000, 0x7FFFFFFF, 0xFFFFFFFF],
   view: Uint32Array,
   buffer: _ui32x4,
+}
+
+var uint16x8 = {
+  name: "Uint16x8",
+  fn: SIMD.Uint16x8,
+  lanes: 8,
+  laneSize: 2,
+  laneMask: 0xFFFF,
+  minVal: 0,
+  maxVal: 0xFFFF,
+  interestingValues: [0, 1, 0x4000, 0x7FFF, 0xFFFF],
+  view: Uint16Array,
+  buffer: _ui16x8,
+}
+
+var uint8x16 = {
+  name: "Uint8x16",
+  fn: SIMD.Uint8x16,
+  lanes: 16,
+  laneSize: 1,
+  laneMask: 0xFF,
+  minVal: 0,
+  maxVal: 0xFF,
+  interestingValues: [0, 1, 0x40, 0x7F, 0xFF],
+  view: Int8Array,
+  buffer: _ui8x16,
 }
 
 var bool32x4 = {
@@ -138,51 +164,58 @@ var bool8x16 = {
 // Each SIMD type has a corresponding Boolean SIMD type, which is returned by
 // relational ops.
 float32x4.boolType = int32x4.boolType = uint32x4.boolType = bool32x4.boolType = bool32x4;
-int16x8.boolType = bool16x8.boolType = bool16x8;
-int8x16.boolType = bool8x16.boolType = bool8x16;
+int16x8.boolType = uint16x8.boolType = bool16x8.boolType = bool16x8;
+int8x16.boolType = uint8x16.boolType = bool8x16.boolType = bool8x16;
 
 // SIMD fromTIMD types.
 float32x4.from = [int32x4, uint32x4];
 int32x4.from = [float32x4, uint32x4];
+int16x8.from = [uint16x8];
+int8x16.from = [uint8x16];
 uint32x4.from = [float32x4, int32x4];
-
-// SIMD fromTIMD conversion functions.
-float32x4.convert = function(x) { return Math.fround(x); }
-int32x4.convert = function(x) {return x|0; }
-uint32x4.convert = function(x) { return x>>>0; }
+uint16x8.from = [int16x8];
+uint8x16.from = [int8x16];
 
 // SIMD fromBits types.
-float32x4.fromBits = [int32x4, int16x8, int8x16];
-int32x4.fromBits = [float32x4, int16x8, int8x16];
-int16x8.fromBits = [float32x4, int32x4, int8x16];
-int8x16.fromBits = [float32x4, int32x4, int16x8];
+float32x4.fromBits = [int32x4, int16x8, int8x16, uint32x4, uint16x8, uint8x16];
+int32x4.fromBits = [float32x4, int16x8, int8x16, uint32x4, uint16x8, uint8x16];
+int16x8.fromBits = [float32x4, int32x4, int8x16, uint32x4, uint16x8, uint8x16];
+int8x16.fromBits = [float32x4, int32x4, int16x8, uint32x4, uint16x8, uint8x16];
+uint32x4.fromBits = [float32x4, int32x4, int16x8, int8x16, uint16x8, uint8x16];
+uint16x8.fromBits = [float32x4, int32x4, int16x8, int8x16, uint32x4, uint8x16];
+uint8x16.fromBits = [float32x4, int32x4, int16x8, int8x16, uint32x4, uint16x8];
 
 // Simd widening types.
 int16x8.wideType = int32x4;
 int8x16.wideType = int16x8;
 
+// SIMD fromTIMD conversion functions.
+float32x4.convert = function(x) { return Math.fround(x); }
+int32x4.convert = int16x8.convert = int8x16.convert = function(x) { return x|0; }
+uint32x4.convert = uint16x8.convert = uint8x16.convert = function(x) { return x>>>0; }
+
 var floatTypes = [float32x4];
 
 var intTypes = [int32x4, int16x8, int8x16];
-var unsignedIntTypes = [uint32x4];
+var unsignedIntTypes = [uint32x4, uint16x8, uint8x16];
 
 var largeTypes = [float32x4, int32x4, uint32x4];
 
-var smallIntTypes = [int16x8, int8x16];
+var smallIntTypes = [int16x8, int8x16, uint16x8, uint8x16];
 
 var boolTypes = [bool32x4, bool16x8, bool8x16];
 
 var numericalTypes = [float32x4,
                       int32x4, int16x8, int8x16,
-                      uint32x4];
+                      uint32x4, uint16x8, uint8x16];
 
 var logicalTypes = [int32x4, int16x8, int8x16,
-                    uint32x4,
+                    uint32x4, uint16x8, uint8x16,
                     bool32x4, bool16x8, bool8x16];
 
 var allTypes = [float32x4,
                 int32x4, int16x8, int8x16,
-                uint32x4,
+                uint32x4, uint16x8, uint8x16,
                 bool32x4, bool16x8, bool8x16];
 
 // SIMD reference functions.
@@ -371,7 +404,7 @@ function testFrom(toType, fromType, name) {
   equal('function', typeof toType.fn[name]);
   for (var v of fromType.interestingValues) {
     var fromValue = createSplatValue(fromType, v);
-    if (toType.minVal && toType.maxVal) {
+    if (toType.minVal !== undefined) {
       if (v < toType.minVal || v > toType.maxVal) {
         throws(function() { toType.fn[name](fromValue) });
         continue;
