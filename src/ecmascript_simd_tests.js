@@ -192,14 +192,6 @@ uint16x8.wideType = uint32x4;
 uint8x16.wideType = uint16x8;
 
 // SIMD fromTIMD conversion functions.
-float32x4.convert = function(x) { _f32x4[0] = x; return _f32x4[0]; }
-int32x4.convert = function(x) { _i32x4[0] = x; return _i32x4[0]; }
-int16x8.convert = function(x) { _i16x8[0] = x; return _i16x8[0]; }
-int8x16.convert = function(x) { _i8x16[0] = x; return _i8x16[0]; }
-uint32x4.convert = function(x) { _ui32x4[0] = x; return _ui32x4[0]; }
-uint16x8.convert = function(x) { _ui16x8[0] = x; return _ui16x8[0]; }
-uint8x16.convert = function(x) { _ui8x16[0] = x; return _ui8x16[0]; }
-bool32x4.convert = bool16x8.convert = bool8x16.convert = function(x) { return !!x; }
 
 var floatTypes = [float32x4];
 
@@ -230,9 +222,10 @@ var allTypes = [float32x4,
 
 // SIMD reference functions.
 
-function simdSave(type, value) {
-  for (var i = 0; i < type.lanes; i++)
-    type.buffer[i] = type.fn.extractLane(value, i);
+function simdConvert(type, value) {
+  if (type.buffer === undefined) return !!value;  // bool types
+  type.buffer[0] = value;
+  return type.buffer[0];
 }
 
 // Reference implementation of toString.
@@ -278,14 +271,14 @@ function checkValue(type, a, expect) {
   var ok = true;
   for (var i = 0; i < type.lanes; i++) {
     var v = type.fn.extractLane(a, i);
-    var ev = type.convert(expect(i));
+    var ev = simdConvert(type, expect(i));
     if (!sameValue(ev, v) && Math.abs(ev - v) >= 0.00001)
       ok = false;
   }
   if (!ok) {
     var lanes = [];
     for (var i = 0; i < type.lanes; i++)
-      lanes.push(type.convert(expect(i)));
+      lanes.push(simdConvert(type, expect(i)));
     fail('expected SIMD.' + type.name + '(' + lanes + ') but found ' + a.toString());
   }
 }
@@ -297,7 +290,7 @@ function testConstructor(type) {
   equal('function', typeof type.fn);
   equal('function', typeof type.fn.splat);
   for (var v of type.interestingValues) {
-    var expected = type.convert(v);
+    var expected = simdConvert(type, v);
     var result = createSplatValue(type, v);
     checkValue(type, result, function(index) { return expected; });
     // splat.
@@ -326,7 +319,7 @@ function testReplaceLane(type) {
   equal('function', typeof type.fn.replaceLane);
   a = createTestValue(type);
   for (var v of type.interestingValues) {
-    var expected = type.convert(v);
+    var expected = simdConvert(type, v);
     for (var i = 0; i < type.lanes; i++) {
       var result = type.fn.replaceLane(a, i, v);
       checkValue(type, result,
@@ -354,7 +347,7 @@ function testReplaceLane(type) {
 function testUnaryOp(type, op, refOp) {
   equal('function', typeof type.fn[op]);
   for (var v of type.interestingValues) {
-    var expected = type.convert(refOp(v));
+    var expected = simdConvert(type, refOp(v));
     var a = type.fn.splat(v);
     var result = type.fn[op](a);
     checkValue(type, result, function(index) { return expected; });
@@ -368,7 +361,7 @@ function testBinaryOp(type, op, refOp) {
   var zero = type.fn();
   for (var av of type.interestingValues) {
     for (var bv of type.interestingValues) {
-      var expected = type.convert(refOp(type.convert(av), type.convert(bv)));
+      var expected = simdConvert(type, refOp(simdConvert(type, av), simdConvert(type, bv)));
       var a = type.fn.splat(av);
       var b = type.fn.splat(bv);
       var result = type.fn[op](a, b);
@@ -382,7 +375,7 @@ function testWideningBinaryOp(type, op, refOp) {
   var zero = type.fn();
   for (var av of type.interestingValues) {
     for (var bv of type.interestingValues) {
-      var expected = type.convert(refOp(type.convert(av), type.convert(bv)));
+      var expected = simdConvert(type, refOp(simdConvert(type, av), simdConvert(type, bv)));
       var a = type.fn.splat(av);
       var b = type.fn.splat(bv);
       var result = type.fn[op](a, b);
@@ -398,7 +391,7 @@ function testRelationalOp(type, op, refOp) {
   var zero = type.fn();
   for (var av of type.interestingValues) {
     for (var bv of type.interestingValues) {
-      var expected = refOp(type.convert(av), type.convert(bv));
+      var expected = refOp(simdConvert(type, av), simdConvert(type, bv));
       var a = type.fn.splat(av);
       var b = type.fn.splat(bv);
       var result = type.fn[op](a, b);
@@ -414,7 +407,7 @@ function testShiftOp(type, op, refOp) {
   for (var v of type.interestingValues) {
     var s = type.laneSize * 8;
     for (var bits of [-1, 0, 1, 2, s - 1, s, s + 1]) {
-      var expected = type.convert(refOp(type.convert(v), bits));
+      var expected = simdConvert(type, refOp(simdConvert(type, v), bits));
       var a = type.fn.splat(v);
       var result = type.fn[op](a, bits);
       checkValue(type, result, function(index) { return expected; });
@@ -437,12 +430,12 @@ function testFrom(toType, fromType, name) {
   equal('function', typeof toType.fn[name]);
   for (var v of fromType.interestingValues) {
     var fromValue = createSplatValue(fromType, v);
-    v = fromType.convert(v);
+    v = simdConvert(fromType, v);
     if (toType.minVal !== undefined &&
         (v < toType.minVal || v > toType.maxVal)) {
       throws(function() { toType.fn[name](fromValue) });
     } else {
-      v = toType.convert(v);
+      v = simdConvert(toType, v);
       var result = toType.fn[name](fromValue);
       checkValue(toType, result, function(index) { return v; });
     }
@@ -453,8 +446,9 @@ function testFromBits(toType, fromType, name) {
   equal('function', typeof toType.fn[name]);
   for (var v of fromType.interestingValues) {
     var fromValue = createSplatValue(fromType, v);
-    simdSave(fromType, fromValue);
     var result = toType.fn[name](fromValue);
+    for (var i = 0; i < fromType.lanes; i++)
+      fromType.buffer[i] = fromType.fn.extractLane(fromValue, i);
     checkValue(toType, result, function(index) { return toType.buffer[index]; });
   }
 }
@@ -909,10 +903,10 @@ for (var type of smallIntTypes) {
     return a;
   }
   test(type.name + ' addSaturate', function() {
-    testBinaryOp(type, 'addSaturate', function(a, b) { return type.convert(saturate(type, a + b)); });
+    testBinaryOp(type, 'addSaturate', function(a, b) { return saturate(type, a + b); });
   });
   test(type.name + ' subSaturate', function() {
-    testBinaryOp(type, 'subSaturate', function(a, b) { return type.convert(saturate(type, a - b)); });
+    testBinaryOp(type, 'subSaturate', function(a, b) { return saturate(type, a - b); });
   });
 }
 
