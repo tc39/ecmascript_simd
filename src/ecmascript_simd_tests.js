@@ -42,6 +42,22 @@ function sameValueZero(x, y) {
   return x != x & y != y;
 }
 
+function binaryMul(a, b) { return a * b; }
+var binaryImul;
+if (typeof Math.imul !== 'undefined') {
+  binaryImul = Math.imul;
+} else {
+  binaryImul = function(a, b) {
+    var ah = (a >>> 16) & 0xffff;
+    var al = a & 0xffff;
+    var bh = (b >>> 16) & 0xffff;
+    var bl = b & 0xffff;
+    // the shift by 0 fixes the sign on the high part
+    // the final |0 converts the unsigned value into a signed value
+    return ((al * bl) + (((ah * bl + al * bh) << 16) >>> 0)|0);
+  };
+}
+
 var _f32x4 = new Float32Array(4);
 var _f64x2 = new Float64Array(_f32x4.buffer);
 var _i32x4 = new Int32Array(_f32x4.buffer);
@@ -59,6 +75,7 @@ var float32x4 = {
   interestingValues: [0, -0, 1, -1, 1.414, 0x7F, -0x80, -0x8000, -0x80000000, 0x7FFF, 0x7FFFFFFF, Infinity, -Infinity, NaN],
   view: Float32Array,
   buffer: _f32x4,
+  mulFn: binaryMul,
 }
 
 var int32x4 = {
@@ -71,6 +88,7 @@ var int32x4 = {
   interestingValues: [0, 1, -1, 0x40000000, 0x7FFFFFFF, -0x80000000],
   view: Int32Array,
   buffer: _i32x4,
+  mulFn: binaryImul,
 }
 
 var int16x8 = {
@@ -84,6 +102,7 @@ var int16x8 = {
   interestingValues: [0, 1, -1, 0x4000, 0x7FFF, -0x8000],
   view: Int16Array,
   buffer: _i16x8,
+  mulFn: binaryMul,
 }
 
 var int8x16 = {
@@ -97,6 +116,7 @@ var int8x16 = {
   interestingValues: [0, 1, -1, 0x40, 0x7F, -0x80],
   view: Int8Array,
   buffer: _i8x16,
+  mulFn: binaryMul,
 }
 
 var uint32x4 = {
@@ -109,6 +129,7 @@ var uint32x4 = {
   interestingValues: [0, 1, 0x40000000, 0x7FFFFFFF, 0xFFFFFFFF],
   view: Uint32Array,
   buffer: _ui32x4,
+  mulFn: binaryMul,
 }
 
 var uint16x8 = {
@@ -122,6 +143,7 @@ var uint16x8 = {
   interestingValues: [0, 1, 0x4000, 0x7FFF, 0xFFFF],
   view: Uint16Array,
   buffer: _ui16x8,
+  mulFn: binaryMul,
 }
 
 var uint8x16 = {
@@ -135,6 +157,7 @@ var uint8x16 = {
   interestingValues: [0, 1, 0x40, 0x7F, 0xFF],
   view: Int8Array,
   buffer: _ui8x16,
+  mulFn: binaryMul,
 }
 
 var bool32x4 = {
@@ -764,7 +787,7 @@ for (var type of numericalTypes) {
     testBinaryOp(type, 'sub', function(a, b) { return a - b; });
   });
   test(type.name + ' mul', function() {
-    testBinaryOp(type, 'mul', function(a, b) { return a * b; });
+    testBinaryOp(type, 'mul', type.mulFn);
   });
   test(type.name + ' min', function() {
     testBinaryOp(type, 'min', Math.min);

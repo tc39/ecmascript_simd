@@ -229,6 +229,21 @@ function binaryMul(a, b) { return a * b; }
 function binaryDiv(a, b) { return a / b; }
 function binaryAbsDiff(a, b) { return Math.abs(a - b); }
 
+var binaryImul;
+if (typeof Math.imul !== 'undefined') {
+  binaryImul = Math.imul;
+} else {
+  binaryImul = function(a, b) {
+    var ah = (a >>> 16) & 0xffff;
+    var al = a & 0xffff;
+    var bh = (b >>> 16) & 0xffff;
+    var bl = b & 0xffff;
+    // the shift by 0 fixes the sign on the high part
+    // the final |0 converts the unsigned value into a signed value
+    return ((al * bl) + (((ah * bl + al * bh) << 16) >>> 0)|0);
+  };
+}
+
 function simdBinaryOp(type, op, a, b) {
   a = type.fn.check(a);
   b = type.fn.check(b);
@@ -537,6 +552,7 @@ var float32x4 = {
   laneSize: 4,
   buffer: _f32x4,
   view: Float32Array,
+  mulFn: binaryMul,
   fns: ["check", "splat", "replaceLane", "select",
         "equal", "notEqual", "lessThan", "lessThanOrEqual", "greaterThan", "greaterThanOrEqual",
         "add", "sub", "mul", "div", "neg", "abs", "min", "max", "minNum", "maxNum",
@@ -554,6 +570,7 @@ var int32x4 = {
   buffer: _i32x4,
   notFn: unaryBitwiseNot,
   view: Int32Array,
+  mulFn: binaryImul,
   fns: ["check", "splat", "replaceLane", "select",
         "equal", "notEqual", "lessThan", "lessThanOrEqual", "greaterThan", "greaterThanOrEqual",
         "and", "or", "xor", "not",
@@ -572,6 +589,7 @@ var int16x8 = {
   buffer: _i16x8,
   notFn: unaryBitwiseNot,
   view: Int16Array,
+  mulFn: binaryMul,
   fns: ["check", "splat", "replaceLane", "select",
         "equal", "notEqual", "lessThan", "lessThanOrEqual", "greaterThan", "greaterThanOrEqual",
         "and", "or", "xor", "not",
@@ -591,6 +609,7 @@ var int8x16 = {
   buffer: _i8x16,
   notFn: unaryBitwiseNot,
   view: Int8Array,
+  mulFn: binaryMul,
   fns: ["check", "splat", "replaceLane", "select",
         "equal", "notEqual", "lessThan", "lessThanOrEqual", "greaterThan", "greaterThanOrEqual",
         "and", "or", "xor", "not",
@@ -611,6 +630,7 @@ var uint32x4 = {
   buffer: _ui32x4,
   notFn: unaryBitwiseNot,
   view: Uint32Array,
+  mulFn: binaryMul,
   fns: ["check", "splat", "replaceLane", "select",
         "equal", "notEqual", "lessThan", "lessThanOrEqual", "greaterThan", "greaterThanOrEqual",
         "and", "or", "xor", "not",
@@ -631,6 +651,7 @@ var uint16x8 = {
   buffer: _ui16x8,
   notFn: unaryBitwiseNot,
   view: Uint16Array,
+  mulFn: binaryMul,
   fns: ["check", "splat", "replaceLane", "select",
         "equal", "notEqual", "lessThan", "lessThanOrEqual", "greaterThan", "greaterThanOrEqual",
         "and", "or", "xor", "not",
@@ -652,6 +673,7 @@ var uint8x16 = {
   buffer: _ui8x16,
   notFn: unaryBitwiseNot,
   view: Uint8Array,
+  mulFn: binaryMul,
   fns: ["check", "splat", "replaceLane", "select",
         "equal", "notEqual", "lessThan", "lessThanOrEqual", "greaterThan", "greaterThanOrEqual",
         "and", "or", "xor", "not",
@@ -874,7 +896,7 @@ var simdFns = {
   mul:
     function(type) {
       return function(a, b) {
-        return simdBinaryOp(type, binaryMul, a, b);
+        return simdBinaryOp(type, type.mulFn, a, b);
       }
     },
 
