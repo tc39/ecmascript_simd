@@ -572,7 +572,6 @@ var int16x8 = {
   fn: SIMD.Int16x8,
   lanes: 8,
   laneSize: 2,
-  laneMask: 0xFFFF,
   minVal: -0x8000,
   maxVal: 0x7FFF,
   buffer: _i16x8,
@@ -592,7 +591,6 @@ var int8x16 = {
   fn: SIMD.Int8x16,
   lanes: 16,
   laneSize: 1,
-  laneMask: 0xFF,
   minVal: -0x80,
   maxVal: 0x7F,
   buffer: _i8x16,
@@ -633,7 +631,6 @@ var uint16x8 = {
   lanes: 8,
   laneSize: 2,
   unsigned: true,
-  laneMask: 0xFFFF,
   minVal: 0,
   maxVal: 0xFFFF,
   buffer: _ui16x8,
@@ -655,7 +652,6 @@ var uint8x16 = {
   lanes: 16,
   laneSize: 1,
   unsigned: true,
-  laneMask: 0xFF,
   minVal: 0,
   maxVal: 0xFF,
   buffer: _ui8x16,
@@ -1042,10 +1038,7 @@ var simdFns = {
         return function(a, bits) {
           if (bits>>>0 >= type.laneSize * 8)
             return type.fn.splat(0);
-//TODO masking shouldn't be needed for unsigned types
           function shift(val, amount) {
-            if (type.laneMask)
-              val &= type.laneMask;
             return val >>> amount;
           }
           return simdShiftOp(type, shift, a, bits);
