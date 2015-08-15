@@ -120,12 +120,6 @@ function simdCreate(type) {
   return type.fn.apply(type.fn, lanes);
 }
 
-function simdSave(type, a) {
-  a = type.fn.check(a);
-  for (var i = 0; i < type.lanes; i++)
-    lanes[i] = type.fn.extractLane(a, i);
-}
-
 function simdToString(type, a) {
   a = type.fn.check(a);
   var str = "SIMD." + type.name + "(";
@@ -155,7 +149,8 @@ function simdSplat(type, s) {
 function simdReplaceLane(type, a, i, s) {
   a = type.fn.check(a);
   simdCheckLaneIndex(i, type.lanes);
-  simdSave(type, a);
+  for (var j = 0; j < type.lanes; j++)
+    lanes[j] = type.fn.extractLane(a, j);
   lanes[i] = s;
   return simdCreate(type);
 }
