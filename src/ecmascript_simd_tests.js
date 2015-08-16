@@ -129,7 +129,7 @@ var uint32x4 = {
   interestingValues: [0, 1, 0x40000000, 0x7FFFFFFF, 0xFFFFFFFF],
   view: Uint32Array,
   buffer: _ui32x4,
-  mulFn: binaryMul,
+  mulFn: binaryImul,
 }
 
 var uint16x8 = {

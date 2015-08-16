@@ -630,7 +630,7 @@ var uint32x4 = {
   buffer: _ui32x4,
   notFn: unaryBitwiseNot,
   view: Uint32Array,
-  mulFn: binaryMul,
+  mulFn: binaryImul,
   fns: ["check", "splat", "replaceLane", "select",
         "equal", "notEqual", "lessThan", "lessThanOrEqual", "greaterThan", "greaterThanOrEqual",
         "and", "or", "xor", "not",
