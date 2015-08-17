@@ -884,26 +884,26 @@ for (var type of intTypes) {
 
     testShiftOp(type, 'shiftLeftByScalar', shift);
   });
-  test(type.name + ' shiftRightByScalar', function() {
+  test(type.name + ' shiftRightArithmeticByScalar', function() {
     function shift(a, bits) {
       if (bits>>>0 >= type.laneSize * 8)
         bits = type.laneSize * 8 - 1;
       return a >> bits;
     }
 
-    testShiftOp(type, 'shiftRightByScalar', shift);
+    testShiftOp(type, 'shiftRightArithmeticByScalar', shift);
   });
 }
 
 for (var type of unsignedIntTypes) {
-  test(type.name + ' shiftRightByScalar', function() {
+  test(type.name + ' shiftRightLogicalByScalar', function() {
     function shift(a, bits) {
       if (bits>>>0 >= type.laneSize * 8) return 0;
       if (type.laneMask)
         a &= type.laneMask;
       return a >>> bits;
     }
-    testShiftOp(type, 'shiftRightByScalar', shift);
+    testShiftOp(type, 'shiftRightLogicalByScalar', shift);
   });
 }
 

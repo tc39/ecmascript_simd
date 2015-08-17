@@ -575,7 +575,7 @@ var int32x4 = {
         "equal", "notEqual", "lessThan", "lessThanOrEqual", "greaterThan", "greaterThanOrEqual",
         "and", "or", "xor", "not",
         "add", "sub", "mul", "neg", "min", "max",
-        "shiftLeftByScalar", "shiftRightByScalar",
+        "shiftLeftByScalar", "shiftRightArithmeticByScalar",
         "load", "load1", "load2", "load3", "store", "store1", "store2", "store3"],
 }
 
@@ -594,7 +594,7 @@ var int16x8 = {
         "equal", "notEqual", "lessThan", "lessThanOrEqual", "greaterThan", "greaterThanOrEqual",
         "and", "or", "xor", "not",
         "add", "sub", "mul", "neg", "min", "max",
-        "shiftLeftByScalar", "shiftRightByScalar",
+        "shiftLeftByScalar", "shiftRightArithmeticByScalar",
         "addSaturate", "subSaturate",
         "load", "store"],
 }
@@ -614,7 +614,7 @@ var int8x16 = {
         "equal", "notEqual", "lessThan", "lessThanOrEqual", "greaterThan", "greaterThanOrEqual",
         "and", "or", "xor", "not",
         "add", "sub", "mul", "neg", "min", "max",
-        "shiftLeftByScalar", "shiftRightByScalar",
+        "shiftLeftByScalar", "shiftRightArithmeticByScalar",
         "addSaturate", "subSaturate",
         "load", "store"],
 }
@@ -635,7 +635,7 @@ var uint32x4 = {
         "equal", "notEqual", "lessThan", "lessThanOrEqual", "greaterThan", "greaterThanOrEqual",
         "and", "or", "xor", "not",
         "add", "sub", "mul", "min", "max",
-        "shiftLeftByScalar", "shiftRightByScalar",
+        "shiftLeftByScalar", "shiftRightLogicalByScalar",
         "horizontalSum",
         "load", "load1", "load2", "load3", "store", "store1", "store2", "store3"],
 }
@@ -656,7 +656,7 @@ var uint16x8 = {
         "equal", "notEqual", "lessThan", "lessThanOrEqual", "greaterThan", "greaterThanOrEqual",
         "and", "or", "xor", "not",
         "add", "sub", "mul", "min", "max",
-        "shiftLeftByScalar", "shiftRightByScalar",
+        "shiftLeftByScalar", "shiftRightLogicalByScalar",
         "horizontalSum", "absoluteDifference", "widenedAbsoluteDifference",
         "addSaturate", "subSaturate",
         "load", "store"],
@@ -678,7 +678,7 @@ var uint8x16 = {
         "equal", "notEqual", "lessThan", "lessThanOrEqual", "greaterThan", "greaterThanOrEqual",
         "and", "or", "xor", "not",
         "add", "sub", "mul", "min", "max",
-        "shiftLeftByScalar", "shiftRightByScalar",
+        "shiftLeftByScalar", "shiftRightLogicalByScalar",
         "horizontalSum", "absoluteDifference", "widenedAbsoluteDifference",
         "addSaturate", "subSaturate",
         "load", "store"],
@@ -1049,23 +1049,24 @@ var simdFns = {
       }
     },
 
-  shiftRightByScalar:
+  shiftRightArithmeticByScalar:
     function(type) {
-      if (type.unsigned) {
-        return function(a, bits) {
-          if (bits>>>0 >= type.laneSize * 8)
-            return type.fn.splat(0);
-          function shift(val, amount) {
-            return val >>> amount;
-          }
-          return simdShiftOp(type, shift, a, bits);
+      return function(a, bits) {
+        if (bits>>>0 >= type.laneSize * 8)
+          bits = type.laneSize * 8 - 1;
+        return simdShiftOp(type, binaryShiftRightArithmetic, a, bits);
+      }
+    },
+
+  shiftRightLogicalByScalar:
+    function(type) {
+      return function(a, bits) {
+        if (bits>>>0 >= type.laneSize * 8)
+          return type.fn.splat(0);
+        function shift(val, amount) {
+          return val >>> amount;
         }
-      } else {
-        return function(a, bits) {
-          if (bits>>>0 >= type.laneSize * 8)
-            bits = type.laneSize * 8 - 1;
-          return simdShiftOp(type, binaryShiftRightArithmetic, a, bits);
-        }
+        return simdShiftOp(type, shift, a, bits);
       }
     },
 
