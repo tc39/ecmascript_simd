@@ -218,7 +218,10 @@ uint8x16.wideType = uint16x8;
 
 var floatTypes = [float32x4];
 
-var intTypes = [int32x4, int16x8, int8x16];
+var intTypes = [int32x4, int16x8, int8x16,
+                uint32x4, uint16x8, uint8x16];
+
+var signedIntTypes = [int32x4, int16x8, int8x16];
 
 var unsignedIntTypes = [uint32x4, uint16x8, uint8x16];
 
@@ -846,6 +849,9 @@ for (var type of largeTypes) {
 }
 
 for (var type of floatTypes) {
+  test(type.name + ' neg', function() {
+    testUnaryOp(type, 'neg', function(a) { return -a; });
+  });
   test(type.name + ' div', function() {
     testBinaryOp(type, 'div', function(a, b) { return a / b; });
   });
@@ -870,9 +876,6 @@ for (var type of floatTypes) {
 }
 
 for (var type of intTypes) {
-  test(type.name + ' neg', function() {
-    testUnaryOp(type, 'neg', function(a) { return -a; });
-  });
   test(type.name + ' not', function() {
     testUnaryOp(type, 'not', function(a) { return ~a; });
   });
@@ -881,8 +884,13 @@ for (var type of intTypes) {
       if (bits>>>0 >= type.laneSize * 8) return 0;
       return a << bits;
     }
-
     testShiftOp(type, 'shiftLeftByScalar', shift);
+  });
+}
+
+for (var type of signedIntTypes) {
+  test(type.name + ' neg', function() {
+    testUnaryOp(type, 'neg', function(a) { return -a; });
   });
   test(type.name + ' shiftRightArithmeticByScalar', function() {
     function shift(a, bits) {
@@ -890,7 +898,6 @@ for (var type of intTypes) {
         bits = type.laneSize * 8 - 1;
       return a >> bits;
     }
-
     testShiftOp(type, 'shiftRightArithmeticByScalar', shift);
   });
 }
@@ -905,12 +912,12 @@ for (var type of unsignedIntTypes) {
     }
     testShiftOp(type, 'shiftRightLogicalByScalar', shift);
   });
-}
-
-for (var type of smallUnsignedIntTypes) {testHorizontalSum
   test(type.name + ' horizontalSum', function() {
     testHorizontalSum(type);
   });
+}
+
+for (var type of smallUnsignedIntTypes) {testHorizontalSum
   test(type.name + ' absoluteDifference', function() {
     testBinaryOp(type, 'absoluteDifference', function(a, b) { return Math.abs(a - b); });
   });
