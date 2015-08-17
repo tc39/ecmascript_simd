@@ -221,6 +221,8 @@ var floatTypes = [float32x4];
 var intTypes = [int32x4, int16x8, int8x16,
                 uint32x4, uint16x8, uint8x16];
 
+var signedTypes = [float32x4, int32x4, int16x8, int8x16];
+
 var signedIntTypes = [int32x4, int16x8, int8x16];
 
 var unsignedIntTypes = [uint32x4, uint16x8, uint8x16];
@@ -848,10 +850,13 @@ for (var type of largeTypes) {
   });
 }
 
-for (var type of floatTypes) {
+for (var type of signedTypes) {
   test(type.name + ' neg', function() {
     testUnaryOp(type, 'neg', function(a) { return -a; });
   });
+}
+
+for (var type of floatTypes) {
   test(type.name + ' div', function() {
     testBinaryOp(type, 'div', function(a, b) { return a / b; });
   });
@@ -889,9 +894,6 @@ for (var type of intTypes) {
 }
 
 for (var type of signedIntTypes) {
-  test(type.name + ' neg', function() {
-    testUnaryOp(type, 'neg', function(a) { return -a; });
-  });
   test(type.name + ' shiftRightArithmeticByScalar', function() {
     function shift(a, bits) {
       if (bits>>>0 >= type.laneSize * 8)
@@ -917,7 +919,7 @@ for (var type of unsignedIntTypes) {
   });
 }
 
-for (var type of smallUnsignedIntTypes) {testHorizontalSum
+for (var type of smallUnsignedIntTypes) {
   test(type.name + ' absoluteDifference', function() {
     testBinaryOp(type, 'absoluteDifference', function(a, b) { return Math.abs(a - b); });
   });
