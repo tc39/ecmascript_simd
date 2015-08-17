@@ -759,15 +759,15 @@ for (var type of allTypes) {
   test(type.name + ' replaceLane', function() {
     testReplaceLane(type);
   });
+}
+
+for (var type of numericalTypes) {
   test(type.name + ' equal', function() {
     testRelationalOp(type, 'equal', function(a, b) { return a == b; });
   });
   test(type.name + ' notEqual', function() {
     testRelationalOp(type, 'notEqual', function(a, b) { return a != b; });
   });
-}
-
-for (var type of numericalTypes) {
   test(type.name + ' lessThan', function() {
     testRelationalOp(type, 'lessThan', function(a, b) { return a < b; });
   });

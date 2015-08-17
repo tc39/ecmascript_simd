@@ -691,7 +691,6 @@ var bool32x4 = {
   laneSize: 4,
   notFn: unaryLogicalNot,
   fns: ["check", "splat", "replaceLane",
-        "equal", "notEqual",
         "allTrue", "anyTrue", "and", "or", "xor", "not"],
 }
 
@@ -702,7 +701,6 @@ var bool16x8 = {
   laneSize: 2,
   notFn: unaryLogicalNot,
   fns: ["check", "splat", "replaceLane",
-        "equal", "notEqual",
         "allTrue", "anyTrue", "and", "or", "xor", "not"],
 }
 
@@ -713,7 +711,6 @@ var bool8x16 = {
   laneSize: 1,
   notFn: unaryLogicalNot,
   fns: ["check", "splat", "replaceLane",
-        "equal", "notEqual",
         "allTrue", "anyTrue", "and", "or", "xor", "not"],
 }
 
