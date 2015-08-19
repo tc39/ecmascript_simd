@@ -747,7 +747,7 @@ function testValueSemantics(type) {
 }
 
 
-for (var type of allTypes) {
+allTypes.forEach(function(type) {
   test(type.name + ' constructor', function() {
     testConstructor(type);
   });
@@ -764,9 +764,9 @@ for (var type of allTypes) {
   test(type.name + ' replaceLane', function() {
     testReplaceLane(type);
   });
-}
+});
 
-for (var type of numericalTypes) {
+numericalTypes.forEach(function(type) {
   test(type.name + ' equal', function() {
     testRelationalOp(type, 'equal', function(a, b) { return a == b; });
   });
@@ -815,9 +815,9 @@ for (var type of numericalTypes) {
   test(type.name + ' store', function() {
     testStore(type, 'store', type.lanes);
   });
-}
+});
 
-for (var type of logicalTypes) {
+logicalTypes.forEach(function(type) {
   test(type.name + ' and', function() {
     testBinaryOp(type, 'and', function(a, b) { return a & b; });
   });
@@ -827,9 +827,9 @@ for (var type of logicalTypes) {
   test(type.name + ' xor', function() {
     testBinaryOp(type, 'xor', function(a, b) { return a ^ b; });
   });
-}
+});
 
-for (var type of largeTypes) {
+largeTypes.forEach(function(type) {
   test(type.name + ' load1', function() {
     testLoad(type, 'load1', 1);
   });
@@ -848,15 +848,15 @@ for (var type of largeTypes) {
   test(type.name + ' store3', function() {
     testStore(type, 'store3', 3);
   });
-}
+});
 
-for (var type of signedTypes) {
+signedTypes.forEach(function(type) {
   test(type.name + ' neg', function() {
     testUnaryOp(type, 'neg', function(a) { return -a; });
   });
-}
+});
 
-for (var type of floatTypes) {
+floatTypes.forEach(function(type) {
   test(type.name + ' div', function() {
     testBinaryOp(type, 'div', function(a, b) { return a / b; });
   });
@@ -878,9 +878,9 @@ for (var type of floatTypes) {
   test(type.name + ' reciprocalSqrtApproximation', function() {
     testUnaryOp(type, 'reciprocalSqrtApproximation', function(a) { return 1 / Math.sqrt(a); });
   });
-}
+});
 
-for (var type of intTypes) {
+intTypes.forEach(function(type) {
   test(type.name + ' not', function() {
     testUnaryOp(type, 'not', function(a) { return ~a; });
   });
@@ -891,9 +891,9 @@ for (var type of intTypes) {
     }
     testShiftOp(type, 'shiftLeftByScalar', shift);
   });
-}
+});
 
-for (var type of signedIntTypes) {
+signedIntTypes.forEach(function(type) {
   test(type.name + ' shiftRightArithmeticByScalar', function() {
     function shift(a, bits) {
       if (bits>>>0 >= type.laneSize * 8)
@@ -902,9 +902,9 @@ for (var type of signedIntTypes) {
     }
     testShiftOp(type, 'shiftRightArithmeticByScalar', shift);
   });
-}
+});
 
-for (var type of unsignedIntTypes) {
+unsignedIntTypes.forEach(function(type) {
   test(type.name + ' shiftRightLogicalByScalar', function() {
     function shift(a, bits) {
       if (bits>>>0 >= type.laneSize * 8) return 0;
@@ -917,18 +917,18 @@ for (var type of unsignedIntTypes) {
   test(type.name + ' horizontalSum', function() {
     testHorizontalSum(type);
   });
-}
+});
 
-for (var type of smallUnsignedIntTypes) {
+smallUnsignedIntTypes.forEach(function(type) {
   test(type.name + ' absoluteDifference', function() {
     testBinaryOp(type, 'absoluteDifference', function(a, b) { return Math.abs(a - b); });
   });
   test(type.name + ' widenedAbsoluteDifference', function() {
     testWideningBinaryOp(type, 'widenedAbsoluteDifference', function(a, b) { return Math.abs(a - b); });
   });
-}
+});
 
-for (var type of smallIntTypes) {
+smallIntTypes.forEach(function(type) {
   function saturate(type, a) {
     if (a < type.minVal) return type.minVal;
     if (a > type.maxVal) return type.maxVal;
@@ -940,9 +940,9 @@ for (var type of smallIntTypes) {
   test(type.name + ' subSaturate', function() {
     testBinaryOp(type, 'subSaturate', function(a, b) { return saturate(type, a - b); });
   });
-}
+});
 
-for (var type of boolTypes) {
+boolTypes.forEach(function(type) {
   test(type.name + ' not', function() {
     testUnaryOp(type, 'not', function(a) { return !a; });
   });
@@ -952,29 +952,29 @@ for (var type of boolTypes) {
   test(type.name + ' allTrue', function() {
     testAllTrue(type, 'allTrue');
   });
-}
+});
 
 // From<type> functions.
-for (var toType of allTypes) {
-  if (!toType.from) continue;
+allTypes.forEach(function(toType) {
+  if (!toType.from) return;
   for (var fromType of toType.from) {
     var fn = 'from' + fromType.name;
     test(toType.name + ' ' + fn, function() {
       testFrom(toType, fromType, fn);
     });
   }
-}
+});
 
 // From<type>Bits functions.
-for (var toType of allTypes) {
-  if (!toType.fromBits) continue;
+allTypes.forEach(function(toType) {
+  if (!toType.fromBits) return;
   for (var fromType of toType.fromBits) {
     var fn = 'from' + fromType.name + 'Bits';
     test(toType.name + ' ' + fn, function() {
       testFromBits(toType, fromType, fn);
     });
   }
-}
+});
 
 // Miscellaneous test methods.
 // TODO refactor to match the other tests.
