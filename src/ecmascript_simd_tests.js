@@ -767,7 +767,19 @@ simdTypes.forEach(function(type) {
   });
 });
 
-simdTypes.filter(function(type) { return type.numerical; }).forEach(function(type) {
+function isFloatType(type) { return type.floatLane; }
+function isIntType(type) { return type.intLane; }
+function isBoolType(type) { return type.boolLane; }
+function isNumerical(type) { return type.numerical; }
+function isLogical(type) { return type.logical; }
+function isSigned(type) { return type.signed; }
+function isSignedIntType(type) { return type.intLane && type.signed; }
+function isUnsignedIntType(type) { return type.intLane && type.unsigned; }
+function isSmallIntType(type) { return type.intLane && type.lanes >= 8; }
+function isSmallUnsignedIntType(type) { return type.intLane && type.unsigned && type.lanes >= 8; }
+function hasPartialLoadStore(type) { return !type.boolLane && type.lanes == 4; }
+
+simdTypes.filter(isNumerical).forEach(function(type) {
   test(type.name + ' equal', function() {
     testRelationalOp(type, 'equal', function(a, b) { return a == b; });
   });
@@ -818,19 +830,7 @@ simdTypes.filter(function(type) { return type.numerical; }).forEach(function(typ
   });
 });
 
-simdTypes.filter(function(type) { return type.logical; }).forEach(function(type) {
-  test(type.name + ' and', function() {
-    testBinaryOp(type, 'and', function(a, b) { return a & b; });
-  });
-  test(type.name + ' or', function() {
-    testBinaryOp(type, 'or', function(a, b) { return a | b; });
-  });
-  test(type.name + ' xor', function() {
-    testBinaryOp(type, 'xor', function(a, b) { return a ^ b; });
-  });
-});
-
-simdTypes.filter(function(type) { return !type.boolLane && type.lanes == 4; }).forEach(function(type) {
+simdTypes.filter(hasPartialLoadStore).forEach(function(type) {
   test(type.name + ' load1', function() {
     testLoad(type, 'load1', 1);
   });
@@ -851,13 +851,25 @@ simdTypes.filter(function(type) { return !type.boolLane && type.lanes == 4; }).f
   });
 });
 
-simdTypes.filter(function(type) { return type.signed; }).forEach(function(type) {
+simdTypes.filter(isLogical).forEach(function(type) {
+  test(type.name + ' and', function() {
+    testBinaryOp(type, 'and', function(a, b) { return a & b; });
+  });
+  test(type.name + ' or', function() {
+    testBinaryOp(type, 'or', function(a, b) { return a | b; });
+  });
+  test(type.name + ' xor', function() {
+    testBinaryOp(type, 'xor', function(a, b) { return a ^ b; });
+  });
+});
+
+simdTypes.filter(isSigned).forEach(function(type) {
   test(type.name + ' neg', function() {
     testUnaryOp(type, 'neg', function(a) { return -a; });
   });
 });
 
-simdTypes.filter(function(type) { return type.floatLane; }).forEach(function(type) {
+simdTypes.filter(isFloatType).forEach(function(type) {
   test(type.name + ' div', function() {
     testBinaryOp(type, 'div', function(a, b) { return a / b; });
   });
@@ -881,7 +893,7 @@ simdTypes.filter(function(type) { return type.floatLane; }).forEach(function(typ
   });
 })
 
-simdTypes.filter(function(type) { return type.intLane; }).forEach(function(type) {
+simdTypes.filter(isIntType).forEach(function(type) {
   test(type.name + ' not', function() {
     testUnaryOp(type, 'not', function(a) { return ~a; });
   });
@@ -894,7 +906,7 @@ simdTypes.filter(function(type) { return type.intLane; }).forEach(function(type)
   });
 });
 
-simdTypes.filter(function(type) { return type.intLane && type.signed; }).forEach(function(type) {
+simdTypes.filter(isSignedIntType).forEach(function(type) {
   test(type.name + ' shiftRightArithmeticByScalar', function() {
     function shift(a, bits) {
       if (bits>>>0 >= type.laneSize * 8)
@@ -905,7 +917,7 @@ simdTypes.filter(function(type) { return type.intLane && type.signed; }).forEach
   });
 });
 
-simdTypes.filter(function(type) { return type.intLane && type.unsigned; }).forEach(function(type) {
+simdTypes.filter(isUnsignedIntType).forEach(function(type) {
   test(type.name + ' shiftRightLogicalByScalar', function() {
     function shift(a, bits) {
       if (bits>>>0 >= type.laneSize * 8) return 0;
@@ -920,7 +932,7 @@ simdTypes.filter(function(type) { return type.intLane && type.unsigned; }).forEa
   });
 });
 
-simdTypes.filter(function(type) { return type.intLane && type.unsigned && type.lanes >= 8; }).forEach(function(type) {
+simdTypes.filter(isSmallUnsignedIntType).forEach(function(type) {
   test(type.name + ' absoluteDifference', function() {
     testBinaryOp(type, 'absoluteDifference', function(a, b) { return Math.abs(a - b); });
   });
@@ -929,7 +941,7 @@ simdTypes.filter(function(type) { return type.intLane && type.unsigned && type.l
   });
 });
 
-simdTypes.filter(function(type) { return type.intLane && type.lanes >= 8; }).forEach(function(type) {
+simdTypes.filter(isSmallIntType).forEach(function(type) {
   function saturate(type, a) {
     if (a < type.minVal) return type.minVal;
     if (a > type.maxVal) return type.maxVal;
@@ -943,7 +955,7 @@ simdTypes.filter(function(type) { return type.intLane && type.lanes >= 8; }).for
   });
 });
 
-simdTypes.filter(function(type) { return type.boolLane; }).forEach(function(type) {
+simdTypes.filter(isBoolType).forEach(function(type) {
   test(type.name + ' not', function() {
     testUnaryOp(type, 'not', function(a) { return !a; });
   });
