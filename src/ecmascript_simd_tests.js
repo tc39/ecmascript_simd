@@ -214,6 +214,19 @@ var bool8x16 = {
   interestingValues: [true, false],
 }
 
+// Filter functions.
+function isFloatType(type) { return type.floatLane; }
+function isIntType(type) { return type.intLane; }
+function isBoolType(type) { return type.boolLane; }
+function isNumerical(type) { return type.numerical; }
+function isLogical(type) { return type.logical; }
+function isSigned(type) { return type.signed; }
+function isSignedIntType(type) { return type.intLane && type.signed; }
+function isUnsignedIntType(type) { return type.intLane && type.unsigned; }
+function isSmallIntType(type) { return type.intLane && type.lanes >= 8; }
+function isSmallUnsignedIntType(type) { return type.intLane && type.unsigned && type.lanes >= 8; }
+function hasLoadStore123(type) { return !type.boolLane && type.lanes == 4; }
+
 // Each SIMD type has a corresponding Boolean SIMD type, which is returned by
 // relational ops.
 float32x4.boolType = int32x4.boolType = uint32x4.boolType = bool32x4.boolType = bool32x4;
@@ -767,18 +780,6 @@ simdTypes.forEach(function(type) {
   });
 });
 
-function isFloatType(type) { return type.floatLane; }
-function isIntType(type) { return type.intLane; }
-function isBoolType(type) { return type.boolLane; }
-function isNumerical(type) { return type.numerical; }
-function isLogical(type) { return type.logical; }
-function isSigned(type) { return type.signed; }
-function isSignedIntType(type) { return type.intLane && type.signed; }
-function isUnsignedIntType(type) { return type.intLane && type.unsigned; }
-function isSmallIntType(type) { return type.intLane && type.lanes >= 8; }
-function isSmallUnsignedIntType(type) { return type.intLane && type.unsigned && type.lanes >= 8; }
-function hasPartialLoadStore(type) { return !type.boolLane && type.lanes == 4; }
-
 simdTypes.filter(isNumerical).forEach(function(type) {
   test(type.name + ' equal', function() {
     testRelationalOp(type, 'equal', function(a, b) { return a == b; });
@@ -830,7 +831,7 @@ simdTypes.filter(isNumerical).forEach(function(type) {
   });
 });
 
-simdTypes.filter(hasPartialLoadStore).forEach(function(type) {
+simdTypes.filter(hasLoadStore123).forEach(function(type) {
   test(type.name + ' load1', function() {
     testLoad(type, 'load1', 1);
   });
