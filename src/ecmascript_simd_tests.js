@@ -229,9 +229,9 @@ function hasLoadStore123(type) { return !type.boolLane && type.lanes == 4; }
 
 // Each SIMD type has a corresponding Boolean SIMD type, which is returned by
 // relational ops.
-float32x4.boolType = int32x4.boolType = uint32x4.boolType = bool32x4.boolType = bool32x4;
-int16x8.boolType = uint16x8.boolType = bool16x8.boolType = bool16x8;
-int8x16.boolType = uint8x16.boolType = bool8x16.boolType = bool8x16;
+float32x4.boolType = int32x4.boolType = uint32x4.boolType = bool32x4;
+int16x8.boolType = uint16x8.boolType = bool16x8;
+int8x16.boolType = uint8x16.boolType = bool8x16;
 
 // SIMD fromTIMD types.
 float32x4.from = [int32x4, uint32x4];
@@ -261,6 +261,54 @@ var simdTypes = [float32x4,
                  int32x4, int16x8, int8x16,
                  uint32x4, uint16x8, uint8x16,
                  bool32x4, bool16x8, bool8x16];
+
+if (typeof simdPhase2 !== 'undefined') {
+  var float64x2 = {
+    name: "Float64x2",
+    fn: SIMD.Float64x2,
+    floatLane: true,
+    signed: true,
+    numerical: true,
+    lanes: 2,
+    laneSize: 8,
+    interestingValues: [0, -0, 1, -1, 1.414, 0x7F, -0x80, -0x8000, -0x80000000, 0x7FFF, 0x7FFFFFFF, Infinity, -Infinity, NaN],
+    view: Float64Array,
+    buffer: _f64x2,
+    mulFn: binaryMul,
+  }
+
+  var bool64x2 = {
+    name: "Bool64x2",
+    fn: SIMD.Bool64x2,
+    boolLane: true,
+    lanes: 2,
+    laneSize: 8,
+    interestingValues: [true, false],
+  }
+
+  float64x2.boolType = bool64x2;
+
+  float32x4.fromBits.push(float64x2);
+  int32x4.fromBits.push(float64x2);
+  int16x8.fromBits.push(float64x2);
+  int8x16.fromBits.push(float64x2);
+  uint32x4.fromBits.push(float64x2);
+  uint16x8.fromBits.push(float64x2);
+  uint8x16.fromBits.push(float64x2);
+
+  float64x2.fromBits = [float32x4, int32x4, int16x8, int8x16,
+                        uint32x4, uint16x8, uint8x16];
+
+  int32x4.fromBits = [float32x4, int16x8, int8x16, uint32x4, uint16x8, uint8x16];
+  int16x8.fromBits = [float32x4, int32x4, int8x16, uint32x4, uint16x8, uint8x16];
+  int8x16.fromBits = [float32x4, int32x4, int16x8, uint32x4, uint16x8, uint8x16];
+  uint32x4.fromBits = [float32x4, int32x4, int16x8, int8x16, uint16x8, uint8x16];
+  uint16x8.fromBits = [float32x4, int32x4, int16x8, int8x16, uint32x4, uint8x16];
+  uint8x16.fromBits = [float32x4, int32x4, int16x8, int8x16, uint32x4, uint16x8];
+
+  simdTypes.push(float64x2);
+  simdTypes.push(bool64x2);
+}
 
 // SIMD reference functions.
 
