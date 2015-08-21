@@ -70,6 +70,9 @@ var _ui8x16 = new Uint8Array(_f32x4.buffer);
 var float32x4 = {
   name: "Float32x4",
   fn: SIMD.Float32x4,
+  floatLane: true,
+  signed: true,
+  numerical: true,
   lanes: 4,
   laneSize: 4,
   interestingValues: [0, -0, 1, -1, 1.414, 0x7F, -0x80, -0x8000, -0x80000000, 0x7FFF, 0x7FFFFFFF, Infinity, -Infinity, NaN],
@@ -81,6 +84,10 @@ var float32x4 = {
 var int32x4 = {
   name: "Int32x4",
   fn: SIMD.Int32x4,
+  intLane: true,
+  signed: true,
+  numerical: true,
+  logical: true,
   lanes: 4,
   laneSize: 4,
   minVal: -0x80000000,
@@ -94,6 +101,10 @@ var int32x4 = {
 var int16x8 = {
   name: "Int16x8",
   fn: SIMD.Int16x8,
+  intLane: true,
+  signed: true,
+  numerical: true,
+  logical: true,
   lanes: 8,
   laneSize: 2,
   laneMask: 0xFFFF,
@@ -108,6 +119,10 @@ var int16x8 = {
 var int8x16 = {
   name: "Int8x16",
   fn: SIMD.Int8x16,
+  intLane: true,
+  signed: true,
+  numerical: true,
+  logical: true,
   lanes: 16,
   laneSize: 1,
   laneMask: 0xFF,
@@ -122,6 +137,10 @@ var int8x16 = {
 var uint32x4 = {
   name: "Uint32x4",
   fn: SIMD.Uint32x4,
+  intLane: true,
+  unsigned: true,
+  numerical: true,
+  logical: true,
   lanes: 4,
   laneSize: 4,
   minVal: 0,
@@ -135,6 +154,10 @@ var uint32x4 = {
 var uint16x8 = {
   name: "Uint16x8",
   fn: SIMD.Uint16x8,
+  intLane: true,
+  unsigned: true,
+  numerical: true,
+  logical: true,
   lanes: 8,
   laneSize: 2,
   laneMask: 0xFFFF,
@@ -149,6 +172,10 @@ var uint16x8 = {
 var uint8x16 = {
   name: "Uint8x16",
   fn: SIMD.Uint8x16,
+  intLane: true,
+  unsigned: true,
+  numerical: true,
+  logical: true,
   lanes: 16,
   laneSize: 1,
   laneMask: 0xFF,
@@ -163,6 +190,7 @@ var uint8x16 = {
 var bool32x4 = {
   name: "Bool32x4",
   fn: SIMD.Bool32x4,
+  boolLane: true,
   lanes: 4,
   laneSize: 4,
   interestingValues: [true, false],
@@ -171,6 +199,7 @@ var bool32x4 = {
 var bool16x8 = {
   name: "Bool16x8",
   fn: SIMD.Bool16x8,
+  boolLane: true,
   lanes: 8,
   laneSize: 2,
   interestingValues: [true, false],
@@ -179,10 +208,24 @@ var bool16x8 = {
 var bool8x16 = {
   name: "Bool8x16",
   fn: SIMD.Bool8x16,
+  boolLane: true,
   lanes: 16,
   laneSize: 1,
   interestingValues: [true, false],
 }
+
+// Filter functions.
+function isFloatType(type) { return type.floatLane; }
+function isIntType(type) { return type.intLane; }
+function isBoolType(type) { return type.boolLane; }
+function isNumerical(type) { return type.numerical; }
+function isLogical(type) { return type.logical; }
+function isSigned(type) { return type.signed; }
+function isSignedIntType(type) { return type.intLane && type.signed; }
+function isUnsignedIntType(type) { return type.intLane && type.unsigned; }
+function isSmallIntType(type) { return type.intLane && type.lanes >= 8; }
+function isSmallUnsignedIntType(type) { return type.intLane && type.unsigned && type.lanes >= 8; }
+function hasLoadStore123(type) { return !type.boolLane && type.lanes == 4; }
 
 // Each SIMD type has a corresponding Boolean SIMD type, which is returned by
 // relational ops.
@@ -214,39 +257,10 @@ int8x16.wideType = int16x8;
 uint16x8.wideType = uint32x4;
 uint8x16.wideType = uint16x8;
 
-// SIMD fromTIMD conversion functions.
-
-var floatTypes = [float32x4];
-
-var intTypes = [int32x4, int16x8, int8x16,
-                uint32x4, uint16x8, uint8x16];
-
-var signedTypes = [float32x4, int32x4, int16x8, int8x16];
-
-var signedIntTypes = [int32x4, int16x8, int8x16];
-
-var unsignedIntTypes = [uint32x4, uint16x8, uint8x16];
-
-var largeTypes = [float32x4, int32x4, uint32x4];
-
-var smallIntTypes = [int16x8, int8x16, uint16x8, uint8x16];
-
-var smallUnsignedIntTypes = [uint16x8, uint8x16];
-
-var boolTypes = [bool32x4, bool16x8, bool8x16];
-
-var numericalTypes = [float32x4,
-                      int32x4, int16x8, int8x16,
-                      uint32x4, uint16x8, uint8x16];
-
-var logicalTypes = [int32x4, int16x8, int8x16,
-                    uint32x4, uint16x8, uint8x16,
-                    bool32x4, bool16x8, bool8x16];
-
-var allTypes = [float32x4,
-                int32x4, int16x8, int8x16,
-                uint32x4, uint16x8, uint8x16,
-                bool32x4, bool16x8, bool8x16];
+var simdTypes = [float32x4,
+                 int32x4, int16x8, int8x16,
+                 uint32x4, uint16x8, uint8x16,
+                 bool32x4, bool16x8, bool8x16];
 
 // SIMD reference functions.
 
@@ -331,7 +345,7 @@ function testCheck(type) {
   equal('function', typeof type.fn.check);
   // Other SIMD types shouldn't check for this type.
   var a = type.fn();
-  for (var otherType of allTypes) {
+  for (var otherType of simdTypes) {
     if (otherType === type)
       equal(a, type.fn.check(a));
     else
@@ -747,7 +761,7 @@ function testValueSemantics(type) {
 }
 
 
-allTypes.forEach(function(type) {
+simdTypes.forEach(function(type) {
   test(type.name + ' constructor', function() {
     testConstructor(type);
   });
@@ -766,7 +780,7 @@ allTypes.forEach(function(type) {
   });
 });
 
-numericalTypes.forEach(function(type) {
+simdTypes.filter(isNumerical).forEach(function(type) {
   test(type.name + ' equal', function() {
     testRelationalOp(type, 'equal', function(a, b) { return a == b; });
   });
@@ -817,19 +831,7 @@ numericalTypes.forEach(function(type) {
   });
 });
 
-logicalTypes.forEach(function(type) {
-  test(type.name + ' and', function() {
-    testBinaryOp(type, 'and', function(a, b) { return a & b; });
-  });
-  test(type.name + ' or', function() {
-    testBinaryOp(type, 'or', function(a, b) { return a | b; });
-  });
-  test(type.name + ' xor', function() {
-    testBinaryOp(type, 'xor', function(a, b) { return a ^ b; });
-  });
-});
-
-largeTypes.forEach(function(type) {
+simdTypes.filter(hasLoadStore123).forEach(function(type) {
   test(type.name + ' load1', function() {
     testLoad(type, 'load1', 1);
   });
@@ -850,13 +852,25 @@ largeTypes.forEach(function(type) {
   });
 });
 
-signedTypes.forEach(function(type) {
+simdTypes.filter(isLogical).forEach(function(type) {
+  test(type.name + ' and', function() {
+    testBinaryOp(type, 'and', function(a, b) { return a & b; });
+  });
+  test(type.name + ' or', function() {
+    testBinaryOp(type, 'or', function(a, b) { return a | b; });
+  });
+  test(type.name + ' xor', function() {
+    testBinaryOp(type, 'xor', function(a, b) { return a ^ b; });
+  });
+});
+
+simdTypes.filter(isSigned).forEach(function(type) {
   test(type.name + ' neg', function() {
     testUnaryOp(type, 'neg', function(a) { return -a; });
   });
 });
 
-floatTypes.forEach(function(type) {
+simdTypes.filter(isFloatType).forEach(function(type) {
   test(type.name + ' div', function() {
     testBinaryOp(type, 'div', function(a, b) { return a / b; });
   });
@@ -878,9 +892,9 @@ floatTypes.forEach(function(type) {
   test(type.name + ' reciprocalSqrtApproximation', function() {
     testUnaryOp(type, 'reciprocalSqrtApproximation', function(a) { return 1 / Math.sqrt(a); });
   });
-});
+})
 
-intTypes.forEach(function(type) {
+simdTypes.filter(isIntType).forEach(function(type) {
   test(type.name + ' not', function() {
     testUnaryOp(type, 'not', function(a) { return ~a; });
   });
@@ -893,7 +907,7 @@ intTypes.forEach(function(type) {
   });
 });
 
-signedIntTypes.forEach(function(type) {
+simdTypes.filter(isSignedIntType).forEach(function(type) {
   test(type.name + ' shiftRightArithmeticByScalar', function() {
     function shift(a, bits) {
       if (bits>>>0 >= type.laneSize * 8)
@@ -904,7 +918,7 @@ signedIntTypes.forEach(function(type) {
   });
 });
 
-unsignedIntTypes.forEach(function(type) {
+simdTypes.filter(isUnsignedIntType).forEach(function(type) {
   test(type.name + ' shiftRightLogicalByScalar', function() {
     function shift(a, bits) {
       if (bits>>>0 >= type.laneSize * 8) return 0;
@@ -919,7 +933,7 @@ unsignedIntTypes.forEach(function(type) {
   });
 });
 
-smallUnsignedIntTypes.forEach(function(type) {
+simdTypes.filter(isSmallUnsignedIntType).forEach(function(type) {
   test(type.name + ' absoluteDifference', function() {
     testBinaryOp(type, 'absoluteDifference', function(a, b) { return Math.abs(a - b); });
   });
@@ -928,7 +942,7 @@ smallUnsignedIntTypes.forEach(function(type) {
   });
 });
 
-smallIntTypes.forEach(function(type) {
+simdTypes.filter(isSmallIntType).forEach(function(type) {
   function saturate(type, a) {
     if (a < type.minVal) return type.minVal;
     if (a > type.maxVal) return type.maxVal;
@@ -942,7 +956,7 @@ smallIntTypes.forEach(function(type) {
   });
 });
 
-boolTypes.forEach(function(type) {
+simdTypes.filter(isBoolType).forEach(function(type) {
   test(type.name + ' not', function() {
     testUnaryOp(type, 'not', function(a) { return !a; });
   });
@@ -955,7 +969,7 @@ boolTypes.forEach(function(type) {
 });
 
 // From<type> functions.
-allTypes.forEach(function(toType) {
+simdTypes.forEach(function(toType) {
   if (!toType.from) return;
   for (var fromType of toType.from) {
     var fn = 'from' + fromType.name;
@@ -966,7 +980,7 @@ allTypes.forEach(function(toType) {
 });
 
 // From<type>Bits functions.
-allTypes.forEach(function(toType) {
+simdTypes.forEach(function(toType) {
   if (!toType.fromBits) return;
   for (var fromType of toType.fromBits) {
     var fn = 'from' + fromType.name + 'Bits';
