@@ -6,21 +6,21 @@
 <h1>SIMD.js specification v0.8.3</h1>
 <emu-intro id="intro">
 <h1>Introduction</h1>
-This proposal adds SIMD types and operations to ECMAScript. The proposal adds new primitive types Float32x4, etc, together with wrappers and a definition of their behavior in the language. The current proposal should form a full first draft with all functions and types included.
+<p>This proposal adds SIMD types and operations to ECMAScript. The proposal adds new primitive types Float32x4, etc, together with wrappers and a definition of their behavior in the language. The current proposal should form a full first draft with all functions and types included.</p>
 
-One problem that this spec aims to solve is to define equality for SIMD values. Before the spec was written, prior implementations used object identity-based equality. However, maintaining object identity puts a big burden on compilers to maintain this identity through operations, where they would rather be able to duplicate and de-duplicate SIMD values arbitrarily based on algebraic identities. By making SIMD values into primitive types with structural equality, compilers are given more freedom.
+<p>One problem that this spec aims to solve is to define equality for SIMD values. Before the spec was written, prior implementations used object identity-based equality. However, maintaining object identity puts a big burden on compilers to maintain this identity through operations, where they would rather be able to duplicate and de-duplicate SIMD values arbitrarily based on algebraic identities. By making SIMD values into primitive types with structural equality, compilers are given more freedom.</p>
 
-Ideally, SIMD values will fit into a larger value types proposal. Such a proposal would be a bit more involved, but good work has already been done in that direction. This document describes SIMD without a larger value type system, but it aims to be consistent with how value types might work, and once value types are described in more detail, it will be great to refactor this text by just explaining SIMD in terms of value types. On the other hand, this proposal gives a vehicle to work out some of the issues in value types and can be used as a guide for future value type designs.
+<p>Ideally, SIMD values will fit into a larger value types proposal. Such a proposal would be a bit more involved, but good work has already been done in that direction. This document describes SIMD without a larger value type system, but it aims to be consistent with how value types might work, and once value types are described in more detail, it will be great to refactor this text by just explaining SIMD in terms of value types. On the other hand, this proposal gives a vehicle to work out some of the issues in value types and can be used as a guide for future value type designs.</p>
 
-This document is organized in terms of where changes would be made to the ES2015 spec. Although ecmarkup generates numbering at the beginning of headers, these won't correspond to the numbering within the existing ECMAScript spec, so I've included a matching numbering in parentheses afterwards, referring to the ES2015 spec.
+<p>This document is organized in terms of where changes would be made to the ES2015 spec. Although ecmarkup generates numbering at the beginning of headers, these won't correspond to the numbering within the existing ECMAScript spec, so I've included a matching numbering in parentheses afterwards, referring to the ES2015 spec.</p>
 
-In this text, _SIMD_ is used to refer to the various SIMD types: Float32x4, Int32x4, Int16x8 Int8x16, Uint32x4, Uint16x8 Uint8x16, Bool32x4, Bool16x8 and Bool8x16. Similarly to Number, _SIMD_ is used to refer to both the type <em>and</em> the wrapper constructor object. This looks a bit confusing, but it provides the most regularity, as an aim of this specification is to make SIMD types primitives that operate analogously to the existing primitives, rather than a new, exotic sort of thing. To reduce ambiguity, the wrapper constructor is usually referred to as _SIMD_Constructor, and the type is referred to as _SIMD_Type. SIMD types are associated with a descriptor spec object, called _SIMD_Descriptor.
+<p>In this text, _SIMD_ is used to refer to the various SIMD types: Float32x4, Int32x4, Int16x8 Int8x16, Uint32x4, Uint16x8 Uint8x16, Bool32x4, Bool16x8 and Bool8x16. Similarly to Number, _SIMD_ is used to refer to both the type <em>and</em> the wrapper constructor object. This looks a bit confusing, but it provides the most regularity, as an aim of this specification is to make SIMD types primitives that operate analogously to the existing primitives, rather than a new, exotic sort of thing. To reduce ambiguity, the wrapper constructor is usually referred to as _SIMD_Constructor, and the type is referred to as _SIMD_Type. SIMD types are associated with a descriptor spec object, called _SIMD_Descriptor.</p>
 
-<strong>Please file any issues <a href="https://github.com/tc39/ecmascript_simd/issues">here</a>!</strong> The authoritative copy of this file is in <a href="https://github.com/tc39/ecmascript_simd/blob/master/tc39/spec.html">in the simd.js repo</a>; to propose changes to this spec, please send pull requests against that repository. Daniel Ehrenberg (littledan) is responsible for watching for changes to that file, generating the output with ecmarkup and pushing it to <a href="http://tc39.github.io/ecmascript_simd/">the official rendered location</a>.
+<p><strong>Please file any issues <a href="https://github.com/tc39/ecmascript_simd/issues">here</a>!</strong> The authoritative copy of this file is in <a href="https://github.com/tc39/ecmascript_simd/blob/master/tc39/spec.html">in the simd.js repo</a>; to propose changes to this spec, please send pull requests against that repository. Daniel Ehrenberg (littledan) is responsible for watching for changes to that file, generating the output with ecmarkup and pushing it to <a href="http://tc39.github.io/ecmascript_simd/">the official rendered location</a>.</p>
 
-Because this document is in spec order, rather than written for direct readability, the logical starting point is actually <a href="#simd">halfway down</a>.
+<p>Because this document is in spec order, rather than written for direct readability, the logical starting point is actually <a href="#simd">halfway down</a>.</p>
 
-Related links:
+<p>Related links:</p>
 
 <ul>
 <li><a href="https://github.com/nikomatsakis/typed-objects-explainer/blob/master/valuetypes.md">Value types proposal</a></li>
@@ -135,65 +135,85 @@ A SIMD type whose values are unsigned integers, namely Uint32x4, Uint16x8, and U
 <emu-clause id="intrinsics">
 <h1>Well-Known Intrinsic Objects (<a href="http://www.ecma-international.org/ecma-262/6.0/#sec-well-known-intrinsic-objects">6.1.7.4</a>)</h1>
 
+<p>
 <strong>Intrinsic name</strong>: %SIMD%
 <br/>
 <strong>Global name</strong>: `SIMD`
 <br/>
 <strong>ECMAScript Language Association</strong>: The <a href="#simd">`SIMD`</a> object
+</p>
 
+<p>
 <strong>Intrinsic name</strong>: %_SIMD_Constructor%
 <br/>
 <strong>Global name</strong>: `SIMD.`_SIMD_ (e.g., `SIMD.Float32x4`)
 <br/>
 <strong>ECMAScript Language Association</strong>: The <a href="#simd-constructor">_SIMD_Constructor</a> constructor
+</p>
 
+<p>
 <strong>Intrinsic name</strong>: %_SIMD_Prototype%
 <br/>
 <strong>Global name</strong>: `SIMD.`_SIMD_`.prototype` (e.g., `SIMD.Float32x4.prototype`)
 <br/>
 <strong>ECMAScript Language Association</strong>: The initial value of the prototype data property of <a href="#simd-constructor">%_SIMD_Constructor%</a>
+</p>
 
+<p>
 <strong>Intrinsic name</strong>: %ArrayPrototype_join%
 <br/>
 <strong>Global name</strong>: `Array.prototype.join`
 <br/>
 <strong>ECMAScript Language Association</strong>: The initial value of the "join" data property of the intrinsic %ArrayPrototype% object (<a href="http://www.ecma-international.org/ecma-262/6.0/#sec-array.prototype.join">ES2015 2.1.3.12</a>)
+</p>
 
+<p>
 <strong>Intrinsic name</strong>: %Math_abs%
 <br/>
 <strong>Global name</strong>: `Math.abs`
 <br/>
 <strong>ECMAScript Language Association</strong>: The initial value of the "abs" data property of the intrinsic %Math% object (<a href="http://www.ecma-international.org/ecma-262/6.0/#sec-math.abs">ES2015 20.2.2.1</a>)
+</p>
 
+<p>
 <strong>Intrinsic name</strong>: %Math_fround%
 <br/>
 <strong>Global name</strong>: `Math.fround`
 <br/>
 <strong>ECMAScript Language Association</strong>: The initial value of the "fround" data property of the intrinsic %Math% object (<a href="http://www.ecma-international.org/ecma-262/6.0/#sec-math.fround">ES2015 20.2.2.17</a>)
+</p>
 
+<p>
 <strong>Intrinsic name</strong>: %Math_max%
 <br/>
 <strong>Global name</strong>: `Math.max`
 <br/>
 <strong>ECMAScript Language Association</strong>: The initial value of the "max" data property of the intrinsic %Math% object (<a href="http://www.ecma-international.org/ecma-262/6.0/#sec-math.max">ES2015 20.2.2.24</a>)
+</p>
 
+<p>
 <strong>Intrinsic name</strong>: %Math_min%
 <br/>
 <strong>Global name</strong>: `Math.min`
 <br/>
 <strong>ECMAScript Language Association</strong>: The initial value of the "min" data property of the intrinsic %Math% object (<a href="http://www.ecma-international.org/ecma-262/6.0/#sec-math.min">ES2015 20.2.2.25</a>)
+</p>
 
+<p>
 <strong>Intrinsic name</strong>: %Math_sqrt%
 <br/>
 <strong>Global name</strong>: `Math.sqrt`
 <br/>
 <strong>ECMAScript Language Association</strong>: The initial value of the "max" data property of the intrinsic %Math% object (<a href="http://www.ecma-international.org/ecma-262/6.0/#sec-math.sqrt">ES2015 20.2.2.32</a>)
+</p>
 
+<p>
 <strong>Intrinsic name</strong>: %Math_imul%
 <br/>
 <strong>Global name</strong>: `Math.imul`
 <br/>
 <strong>ECMAScript Language Association</strong>: The initial value of the "imul" data property of the intrinsic %Math% object (<a href="http://www.ecma-international.org/ecma-262/6.0/#sec-math.imul">ES2015 20.2.2.19</a>)
+</p>
 
 </emu-clause>
 </emu-clause>
@@ -203,70 +223,60 @@ A SIMD type whose values are unsigned integers, namely Uint32x4, Uint16x8, and U
 <h1>SIMD types</h1>
 <emu-clause id="float32x4" aoid="Float32x4">
 <h1>Float32x4</h1>
-
 `Float32x4` is a SIMD type representing four 32-bit floating point values. Float32x4 values can be created using the [[Call]] operation on the <a href="#simd-constructor">SIMD.Float32x4</a> object. Its behavior as a SIMD type is defined by the <a href="#simd-float32x4">Float32x4 SIMD type descriptor</a>.
 
 </emu-clause>
 
 <emu-clause id="int32x4" aoid="Int32x4">
 <h1>Int32x4</h1>
-
 `Int32x4` is a SIMD type representing four 32-bit signed integer values. Int32x4 values can be created using the [[Call]] operation on the <a href="#simd-constructor">SIMD.Int32x4</a> object. Its behavior as a SIMD type is defined by the <a href="#simd-int32x4">Int32x4 SIMD type descriptor</a>.
 
 </emu-clause>
 
 <emu-clause id="int16x8" aoid="Int16x8">
 <h1>Int16x8</h1>
-
 `Int16x8` is a SIMD type representing eight 16-bit signed integer values. Int16x8 values can be created using the [[Call]] operation on the <a href="#simd-constructor">SIMD.Int16x8</a> object. Its behavior as a SIMD type is defined by the <a href="#simd-int16x8">Int16x8 SIMD type descriptor</a>.
 
 </emu-clause>
 
 <emu-clause id="int8x16" aoid="Int8x16">
 <h1>Int8x16</h1>
-
 `Int8x16` is a SIMD type representing sixteen 8-bit signed integer values. Int8x16 values can be created using the [[Call]] operation on the <a href="#simd-constructor">SIMD.Int8x16</a> object. Its behavior as a SIMD type is defined by the <a href="#simd-int8x16">Int8x16 SIMD type descriptor</a>.
 
 </emu-clause>
 
 <emu-clause id="uint32x4" aoid="Uint32x4">
 <h1>Uint32x4</h1>
-
 `Uint32x4` is a SIMD type representing four 32-bit unsigned integer values. Uint32x4 values can be created using the [[Call]] operation on the <a href="#simd-constructor">SIMD.Uint32x4</a> object. Its behavior as a SIMD type is defined by the <a href="#simd-uint32x4">Uint32x4 SIMD type descriptor</a>.
 
 </emu-clause>
 
 <emu-clause id="uint16x8" aoid="Uint16x8">
 <h1>Uint16x8</h1>
-
 `Uint16x8` is a SIMD type representing eight 16-bit unsigned integer values. Uint16x8 values can be created using the [[Call]] operation on the <a href="#simd-constructor">SIMD.Uint16x8</a> object. Its behavior as a SIMD type is defined by the <a href="#simd-uint16x8">Uint16x8 SIMD type descriptor</a>.
 
 </emu-clause>
 
 <emu-clause id="uint8x16" aoid="Uint8x16">
 <h1>Uint8x16</h1>
-
 `Uint8x16` is a SIMD type representing sixteen 8-bit unsigned integer values. Uint8x16 values can be created using the [[Call]] operation on the <a href="#simd-constructor">SIMD.Uint8x16</a> object. Its behavior as a SIMD type is defined by the <a href="#simd-uint8x16">Uint8x16 SIMD type descriptor</a>.
 
 </emu-clause>
 
 <emu-clause id="bool32x4" aoid="Bool32x4">
 <h1>Bool32x4</h1>
-
 `Bool32x4` is a SIMD type representing two boolean values, as an intermediate value in manipulating 128-bit vectors. Bool32x4 values can be created using the [[Call]] operation on the <a href="#simd-constructor">SIMD.Bool32x4</a> object. Its behavior as a SIMD type is defined by the <a href="#simd-bool32x4">Bool32x4 SIMD type descriptor</a>.
 
 </emu-clause>
 
 <emu-clause id="bool16x8" aoid="Bool16x8">
 <h1>Bool16x8</h1>
-
 `Bool16x8` is a SIMD type representing two boolean values, as an intermediate value in manipulating 128-bit vectors. Bool16x8 values can be created using the [[Call]] operation on the <a href="#simd-constructor">SIMD.Bool16x8</a> object. Its behavior as a SIMD type is defined by the <a href="#simd-bool16x8">Bool16x8 SIMD type descriptor</a>.
 
 </emu-clause>
 
 <emu-clause id="bool8x16" aoid="Bool8x16">
 <h1>Bool8x16</h1>
-
 `Bool8x16` is a SIMD type representing two boolean values, as an intermediate value in manipulating 128-bit vectors. Bool8x16 values can be created using the [[Call]] operation on the <a href="#simd-constructor">SIMD.Bool8x16</a> object. Its behavior as a SIMD type is defined by the <a href="#simd-bool8x16">Bool8x16 SIMD type descriptor</a>.
 
 </emu-clause>
@@ -518,12 +528,11 @@ Add a new step 9, before the existing step 9:
 
 <emu-clause id="simd" aoid="%SIMD%">
 <h1>SIMD</h1>
+<p>The SIMD object is the %SIMD% intrinsic object and the initial value of the SIMD property of the global object. The SIMD object is an ordinary object.</p>
 
-The SIMD object is the %SIMD% intrinsic object and the initial value of the SIMD property of the global object. The SIMD object is an ordinary object.
+<p>The value of the [[Prototype]] internal slot of %SIMD% is the intrinsic object %ObjectPrototype% (19.1.3).</p>
 
-The value of the [[Prototype]] internal slot of %SIMD% is the intrinsic object %ObjectPrototype% (19.1.3).
-
-%SIMD% has several constructor properties, one for each SIMD type.
+<p>%SIMD% has several constructor properties, one for each SIMD type.</p>
 
 Each SIMD value is specified as a record with the following immutable fields:
 
@@ -546,7 +555,7 @@ SIMD type descriptors are records with the following fields:
 <li>[[ElementMin]]: The minimum value included in the range representable by the element type</li>
 </ul>
 
-All SIMD types are either integer SIMD types, boolean SIMD types or or floating point SIMD types. Certain operations are defined on either integer, boolean or floating point types. It is noted in the section on each SIMD type whether it is an integer, boolean or floating point type.
+<p>All SIMD types are either integer SIMD types, boolean SIMD types or or floating point SIMD types. Certain operations are defined on either integer, boolean or floating point types. It is noted in the section on each SIMD type whether it is an integer, boolean or floating point type.</p>
 
 The [[ElementMax]], [[ElementMin]], [[ElementSize]], [[SerializeElement]] and [[DeserializeElement]] slots are optional, and defined only on certain SIMD types. Operations which use these slots have been defined only on the types which have them.
 
@@ -609,8 +618,7 @@ The [[ElementMax]], [[ElementMin]], [[ElementSize]], [[SerializeElement]] and [[
 
 <emu-clause id="maybe-flush-denormal" aoid="MaybeFlushDenormal">
 <h1>MaybeFlushDenormal( n )</h1>
-
-Two possible internal algorithms are provided. The choice is implementation dependent and should be the alternative that is most efficient for the implementation. An implementation must use the same value each time this step is executed.
+<p>Two possible internal algorithms are provided. The choice is implementation dependent and should be the alternative that is most efficient for the implementation. An implementation must use the same value each time this step is executed.</p>
 
 The first option:
 
@@ -737,8 +745,7 @@ The second option:
 
 <emu-clause id="simd-constructor">
 <h1>_SIMD_Constructor</h1>
-
-Each _SIMD_Constructor, namely Float32x4, Int32x4, Int16x8, Int8x16, Uint32x4, Uint16x8, Uint8x16, Bool32x4, Bool16x8, and Bool8x16, is associated with a _SIMD_Type and _SIMD_Descriptor. This section describes the constructors and properties on them. Most properties are identical, existing separately defined on each constructor, with most differences being in the _SIMD_Descriptor. Certain functions are defined only on a subset of _SIMD_Constructors, however, and this is noted above their algorithm definition.
+<p>Each _SIMD_Constructor, namely Float32x4, Int32x4, Int16x8, Int8x16, Uint32x4, Uint16x8, Uint8x16, Bool32x4, Bool16x8, and Bool8x16, is associated with a _SIMD_Type and _SIMD_Descriptor. This section describes the constructors and properties on them. Most properties are identical, existing separately defined on each constructor, with most differences being in the _SIMD_Descriptor. Certain functions are defined only on a subset of _SIMD_Constructors, however, and this is noted above their algorithm definition.</p>
 
 The definitions of the constructor and properties of the constructor to follow constitute different identities of functions and objects for each of the copies; in a real implementation, they may call out to completely different pieces of code, even if their implementation in the spec is the same.
 
@@ -775,8 +782,7 @@ Each _SIMD_Constructor has the following properties:
 
 <emu-clause id="simd-add">
 <h1>_SIMD_Constructor.add(a, b)</h1>
-
-This definition uses the refers to `+` as defined by <a href="http://www.ecma-international.org/ecma-262/6.0/#sec-addition-operator-plus">ES2015 12.7.3 (The Addition operator ( + ))</a>.
+<p>This definition uses the refers to `+` as defined by <a href="http://www.ecma-international.org/ecma-262/6.0/#sec-addition-operator-plus">ES2015 12.7.3 (The Addition operator ( + ))</a>.</p>
 
 This operation is only defined on integer and floating point SIMD types.
 
@@ -790,8 +796,7 @@ This operation is only defined on integer and floating point SIMD types.
 
 <emu-clause id="simd-sub">
 <h1>_SIMD_Constructor.sub(a, b)</h1>
-
-This definition uses the refers to `-` as defined by <a href="http://www.ecma-international.org/ecma-262/6.0/#sec-subtraction-operator-minus">ES2015 12.7.4 (The Subtraction operator ( - ))</a>.
+<p>This definition uses the refers to `-` as defined by <a href="http://www.ecma-international.org/ecma-262/6.0/#sec-subtraction-operator-minus">ES2015 12.7.4 (The Subtraction operator ( - ))</a>.</p>
 
 This operation is only defined on integer and floating point SIMD types.
 
@@ -805,8 +810,7 @@ This operation is only defined on integer and floating point SIMD types.
 
 <emu-clause id="simd-mul">
 <h1>_SIMD_Constructor.mul(a, b)</h1>
-
-This definition uses the refers to `*` as defined by <a href="http://www.ecma-international.org/ecma-262/6.0/#sec-applying-the-mul-operator">ES2015 12.6.3.1 (Applying the * Operator)</a>.
+<p>This definition uses the refers to `*` as defined by <a href="http://www.ecma-international.org/ecma-262/6.0/#sec-applying-the-mul-operator">ES2015 12.6.3.1 (Applying the * Operator)</a>.</p>
 
 This operation is only defined on integer and floating point SIMD types.
 
@@ -821,8 +825,7 @@ This operation is only defined on integer and floating point SIMD types.
 
 <emu-clause id="simd-div">
 <h1>_SIMD_Constructor.div(a, b)</h1>
-
-This definition uses the refers to `/` as defined by <a href="http://www.ecma-international.org/ecma-262/6.0/#sec-applying-the-div-operator">ES2015 12.6.3.2 (Applying the / Operator)</a>.
+<p>This definition uses the refers to `/` as defined by <a href="http://www.ecma-international.org/ecma-262/6.0/#sec-applying-the-div-operator">ES2015 12.6.3.2 (Applying the / Operator)</a>.</p>
 
 This function is defined only on floating point SIMD types.
 
@@ -904,8 +907,7 @@ This property is defined only on floating point SIMD types.
 
 <emu-clause id="simd-neg">
 <h1>_SIMD_Constructor.neg(a)</h1>
-
-This definition uses the refers to unary `-` as defined by <a href="http://www.ecma-international.org/ecma-262/6.0/#sec-unary-minus-operator">ES2015 12.5.10 (Unary - Operator)</a>.
+<p>This definition uses the refers to unary `-` as defined by <a href="http://www.ecma-international.org/ecma-262/6.0/#sec-unary-minus-operator">ES2015 12.5.10 (Unary - Operator)</a>.</p>
 
 This operation is only defined on signed integer and floating point SIMD types.
 
@@ -987,8 +989,7 @@ This operation exists only on floating point SIMD types.
 
 <emu-clause id="simd-and">
 <h1>_SIMD_Constructor.and(a, b)</h1>
-
-This definition uses the refers to `&` as defined by <a href="http://www.ecma-international.org/ecma-262/6.0/#sec-binary-bitwise-operators">ES2015 12.11 (Binary Bitwise Operators)</a>.
+<p>This definition uses the refers to `&` as defined by <a href="http://www.ecma-international.org/ecma-262/6.0/#sec-binary-bitwise-operators">ES2015 12.11 (Binary Bitwise Operators)</a>.</p>
 
 This operation exists only on integer and boolean SIMD types.
 
@@ -1003,8 +1004,7 @@ This operation exists only on integer and boolean SIMD types.
 
 <emu-clause id="simd-xor">
 <h1>_SIMD_Constructor.xor(a, b)</h1>
-
-This definition uses the refers to `^` as defined by <a href="http://www.ecma-international.org/ecma-262/6.0/#sec-binary-bitwise-operators">ES2015 12.11 (Binary Bitwise Operators)</a>.
+<p>This definition uses the refers to `^` as defined by <a href="http://www.ecma-international.org/ecma-262/6.0/#sec-binary-bitwise-operators">ES2015 12.11 (Binary Bitwise Operators)</a>.</p>
 
 This operation exists only on integer and boolean SIMD types.
 
@@ -1018,8 +1018,7 @@ This operation exists only on integer and boolean SIMD types.
 
 <emu-clause id="simd-or">
 <h1>_SIMD_Constructor.or(a, b)</h1>
-
-This definition uses the refers to `|` as defined by <a href="http://www.ecma-international.org/ecma-262/6.0/#sec-binary-bitwise-operators">ES2015 12.11 (Binary Bitwise Operators)</a>.
+<p>This definition uses the refers to `|` as defined by <a href="http://www.ecma-international.org/ecma-262/6.0/#sec-binary-bitwise-operators">ES2015 12.11 (Binary Bitwise Operators)</a>.</p>
 
 This operation exists only on integer and boolean SIMD types.
 
@@ -1033,8 +1032,7 @@ This operation exists only on integer and boolean SIMD types.
 
 <emu-clause id="simd-not">
 <h1>_SIMD_Constructor.not(a)</h1>
-
-This definition uses the refers to `~` as defined by <a href="http://www.ecma-international.org/ecma-262/6.0/#sec-bitwise-not-operator">ES2015 12.5.11</a> (Bitwise NOT Operator ( ~ )).
+<p>This definition uses the refers to `~` as defined by <a href="http://www.ecma-international.org/ecma-262/6.0/#sec-bitwise-not-operator">ES2015 12.5.11</a> (Bitwise NOT Operator ( ~ )).</p>
 
 This operation exists only on integer and boolean SIMD types.
 
@@ -1048,8 +1046,7 @@ This operation exists only on integer and boolean SIMD types.
 
 <emu-clause id="simd-less-than">
 <h1>_SIMD_Constructor.lessThan(a, b)</h1>
-
-This definition uses the refers to `<` as defined by <a href="http://www.ecma-international.org/ecma-262/6.0/#sec-abstract-relational-comparison">ES2015 7.2.11 (Abstract Relational Comparison)</a>.
+<p>This definition uses the refers to `<` as defined by <a href="http://www.ecma-international.org/ecma-262/6.0/#sec-abstract-relational-comparison">ES2015 7.2.11 (Abstract Relational Comparison)</a>.</p>
 
 This operation exists only on integer and floating point SIMD types.
 
@@ -1064,8 +1061,7 @@ This operation exists only on integer and floating point SIMD types.
 
 <emu-clause id="simd-less-than-or-equal">
 <h1>_SIMD_Constructor.lessThanOrEqual(a, b)</h1>
-
-This definition uses the refers to `<=` as defined by <a href="http://www.ecma-international.org/ecma-262/6.0/#sec-abstract-relational-comparison">ES2015 7.2.11 (Abstract Relational Comparison)</a>.
+<p>This definition uses the refers to `<=` as defined by <a href="http://www.ecma-international.org/ecma-262/6.0/#sec-abstract-relational-comparison">ES2015 7.2.11 (Abstract Relational Comparison)</a>.</p>
 
 This operation exists only on integer and floating point SIMD types.
 
@@ -1079,8 +1075,7 @@ This operation exists only on integer and floating point SIMD types.
 
 <emu-clause id="simd-greater-than">
 <h1>_SIMD_Constructor.greaterThan(a, b)</h1>
-
-This definition uses the refers to `>` as defined by <a href="http://www.ecma-international.org/ecma-262/6.0/#sec-abstract-relational-comparison">ES2015 7.2.11 (Abstract Relational Comparison)</a>.
+<p>This definition uses the refers to `>` as defined by <a href="http://www.ecma-international.org/ecma-262/6.0/#sec-abstract-relational-comparison">ES2015 7.2.11 (Abstract Relational Comparison)</a>.</p>
 
 This operation exists only on integer and floating point SIMD types.
 
@@ -1094,8 +1089,7 @@ This operation exists only on integer and floating point SIMD types.
 
 <emu-clause id="simd-greater-than-or-equal">
 <h1>_SIMD_Constructor.greaterThanOrEqual(a, b)</h1>
-
-This definition uses the refers to `>=` as defined by <a href="http://www.ecma-international.org/ecma-262/6.0/#sec-abstract-relational-comparison">ES2015 7.2.11 (Abstract Relational Comparison)</a>.
+<p>This definition uses the refers to `>=` as defined by <a href="http://www.ecma-international.org/ecma-262/6.0/#sec-abstract-relational-comparison">ES2015 7.2.11 (Abstract Relational Comparison)</a>.</p>
 
 This operation exists only on integer and floating point SIMD types.
 
@@ -1109,8 +1103,7 @@ This operation exists only on integer and floating point SIMD types.
 
 <emu-clause id="simd-equal">
 <h1>_SIMD_Constructor.equal(a, b)</h1>
-
-This definition uses the refers to `===` as defined by <a href="http://www.ecma-international.org/ecma-262/6.0/#sec-strict-equality-comparison">ES2015 7.2.13 (Strict Equality Comparison)</a>.
+<p>This definition uses the refers to `===` as defined by <a href="http://www.ecma-international.org/ecma-262/6.0/#sec-strict-equality-comparison">ES2015 7.2.13 (Strict Equality Comparison)</a>.</p>
 
 This operation exists only on integer and floating point SIMD types.
 
@@ -1125,8 +1118,7 @@ This operation exists only on integer and floating point SIMD types.
 
 <emu-clause id="simd-not-equal">
 <h1>_SIMD_Constructor.notEqual(a, b)</h1>
-
-This definition uses the refers to `!==` as defined by <a href="http://www.ecma-international.org/ecma-262/6.0/#sec-strict-equality-comparison">ES2015 7.2.13 (Strict Equality Comparison)</a>.
+<p>This definition uses the refers to `!==` as defined by <a href="http://www.ecma-international.org/ecma-262/6.0/#sec-strict-equality-comparison">ES2015 7.2.13 (Strict Equality Comparison)</a>.</p>
 
 This operation exists only on integer and floating point SIMD types.
 
@@ -1163,7 +1155,6 @@ This is defined on boolean SIMD types.
 
 <emu-clause id="simd-select">
 <h1>_SIMD_Constructor.select( selector, a, b )</h1>
-
 This operation exists only on integer and floating point SIMD types.
 
 <emu-alg>
@@ -1274,7 +1265,6 @@ This operation is only defined on unsigned integer SIMD types. This definition u
 
 <emu-clause id="simd-horizontal-sum">
 <h1>_SIMD_Constructor.horizontalSum( a )</h1>
-
 This operation is only defined on unsigned integer SIMD types.
 
 <emu-note>This operation is still under discussion. See <a href="https://github.com/tc39/ecmascript_simd/issues/135">this bug thread</a>.</emu-note>
@@ -1343,7 +1333,7 @@ This operation is only defined on unsigned integer SIMD types whose _SIMD_Descri
 
 <emu-clause id="simd-store-function">
 <h1>_SIMD_Constructor.store(tarray, index, simd)</h1>
-This is defined when _SIMD_Descriptor has a [[SerializeElement]] field.
+<p>This is defined when _SIMD_Descriptor has a [[SerializeElement]] field.</p>
 
 This operation exists only on integer and floating point SIMD types.
 
@@ -1363,7 +1353,7 @@ This operation exists only on integer and floating point SIMD types.
 
 <emu-clause id="simd-store1">
 <h1>_SIMD_Constructor.store1(tarray, index, simd)</h1>
-This function is defined only on SIMD types where _SIMD_Descriptor.[[VectorLength]] = 4, and when _SIMD_Descriptor has a [[SerializeElement]] field.
+<p>This function is defined only on SIMD types where _SIMD_Descriptor.[[VectorLength]] = 4, and when _SIMD_Descriptor has a [[SerializeElement]] field.</p>
 
 This operation exists only on integer and floating point SIMD types.
 <emu-alg>
@@ -1381,7 +1371,7 @@ This operation exists only on integer and floating point SIMD types.
 
 <emu-clause id="simd-store2">
 <h1>_SIMD_Constructor.store2(tarray, index, simd)</h1>
-This function is defined only on SIMD types where _SIMD_Descriptor.[[VectorLength]] = 4, and when _SIMD_Descriptor has a [[SerializeElement]] field.
+<p>This function is defined only on SIMD types where _SIMD_Descriptor.[[VectorLength]] = 4, and when _SIMD_Descriptor has a [[SerializeElement]] field.</p>
 
 This operation exists only on integer and floating point SIMD types.
 <emu-alg>
@@ -1399,7 +1389,7 @@ This operation exists only on integer and floating point SIMD types.
 
 <emu-clause id="simd-store3">
 <h1>_SIMD_Constructor.store3(tarray, index)</h1>
-This function is defined only on SIMD types where _SIMD_Descriptor.[[VectorLength]] = 4, and when _SIMD_Descriptor has a [[SerializeElement]] field.
+<p>This function is defined only on SIMD types where _SIMD_Descriptor.[[VectorLength]] = 4, and when _SIMD_Descriptor has a [[SerializeElement]] field.</p>
 
 This operation exists only on integer and floating point SIMD types.
 <emu-alg>
@@ -1417,7 +1407,7 @@ This operation exists only on integer and floating point SIMD types.
 
 <emu-clause id="simd-load-function">
 <h1>_SIMD_Constructor.load(tarray, index)</h1>
-This function is defined only on SIMD types where _SIMD_Descriptor has a [[DeserializeElement]] field.
+<p>This function is defined only on SIMD types where _SIMD_Descriptor has a [[DeserializeElement]] field.</p>
 
 This operation exists only on integer and floating point SIMD types.
 
@@ -1435,7 +1425,7 @@ This operation exists only on integer and floating point SIMD types.
 
 <emu-clause id="simd-load1">
 <h1>_SIMD_Constructor.load1(tarray, index)</h1>
-This function is defined only on SIMD types where _SIMD_Descriptor.[[VectorLength]] = 4 and _SIMD_Descriptor has a [[DeserializeElement]] field.
+<p>This function is defined only on SIMD types where _SIMD_Descriptor.[[VectorLength]] = 4 and _SIMD_Descriptor has a [[DeserializeElement]] field.</p>
 
 This operation exists only on integer and floating point SIMD types.
 <emu-alg>
@@ -1451,7 +1441,7 @@ This operation exists only on integer and floating point SIMD types.
 
 <emu-clause id="simd-load2">
 <h1>_SIMD_Constructor.load2(tarray, index)</h1>
-This function is defined only on SIMD types where _SIMD_Descriptor.[[VectorLength]] = 4 and _SIMD_Descriptor has a [[DeserializeElement]] field.
+<p>This function is defined only on SIMD types where _SIMD_Descriptor.[[VectorLength]] = 4 and _SIMD_Descriptor has a [[DeserializeElement]] field.</p>
 
 This operation exists only on integer and floating point SIMD types.
 <emu-alg>
@@ -1467,7 +1457,7 @@ This operation exists only on integer and floating point SIMD types.
 
 <emu-clause id="simd-load3">
 <h1>_SIMD_Constructor.load3(tarray, index)</h1>
-This function is defined only on SIMD types where _SIMD_Descriptor.[[VectorLength]] = 4 and _SIMD_Descriptor has a [[DeserializeElement]] field.
+<p>This function is defined only on SIMD types where _SIMD_Descriptor.[[VectorLength]] = 4 and _SIMD_Descriptor has a [[DeserializeElement]] field.</p>
 
 This operation exists only on integer and floating point SIMD types.
 <emu-alg>
@@ -1505,7 +1495,6 @@ In this definition, _TIMD_ ranges over all SIMD types for which _SIMD_Descriptor
 
 <emu-clause id="swizzle">
 <h1>_SIMD_.swizzle( a, ...lanes )</h1>
-
 This operation exists only on integer and floating point SIMD types.
 
 <emu-alg>
@@ -1526,7 +1515,6 @@ The `length` property of `_SIMD_.swizzle` is 1 + _SIMD_Descriptor.[[VectorLength
 
 <emu-clause id="shuffle">
 <h1>_SIMD_.shuffle( a, b, ...lanes )</h1>
-
 This operation exists only on integer and floating point SIMD types.
 
 <emu-alg>
@@ -1556,7 +1544,6 @@ The `length` property of `_SIMD_.shuffle` is 2 + _SIMD_Descriptor.[[VectorLength
 
 <emu-clause id="simd-proto-constructor">
 <h1>_SIMD_Constructor.prototype.constructor</h1>
-
 The initial value of _SIMD_Constructor.prototype.constructor is the intrinsic object %_SIMD_Constructor%
 </emu-clause>
 
@@ -1604,8 +1591,7 @@ The meanings of the optional parameters to this method are defined in the ECMA-4
 
 <emu-clause id="simd-to-string-tag">
 <h1>_SIMD_Constructor.prototype [ @@toStringTag ]</h1>
-
-The initial value of the @@toStringTag property is the String value `"SIMD.`_SIMD_`"`, e.g., `"SIMD.Float32x4"`.
+<p>The initial value of the @@toStringTag property is the String value `"SIMD.`_SIMD_`"`, e.g., `"SIMD.Float32x4"`.</p>
 
 This property has the attributes { [[Writable]]: *false*, [[Enumerable]]: *false*, [[Configurable]]: *true* }.
 
@@ -1628,7 +1614,7 @@ When the `@@toPrimitive` method is called with argument _hint_, the following st
 1. Return the value of _s_’s [[SIMDWrapperData]] internal slot.
 </emu-alg>
 
-The value of the `name` property of this function is `"[Symbol.toPrimitive]"`.
+<p>The value of the `name` property of this function is `"[Symbol.toPrimitive]"`.</p>
 
 This property has the attributes { [[Writable]]: *false*, [[Enumerable]]: *false*, [[Configurable]]: *true* }.
 
@@ -1638,13 +1624,12 @@ This property has the attributes { [[Writable]]: *false*, [[Enumerable]]: *false
 
 <emu-clause id="simd-descriptors">
 <h1>SIMD type descriptors</h1>
-This section describes the SIMD type descriptors, which are organized as described in the %SIMD% section.
+<p>This section describes the SIMD type descriptors, which are organized as described in the %SIMD% section.</p>
 
 In the internal algorithms in this section, preceding the first step, if _isLittleEndian_ is not present, set _isLittleEndian_ to either *true* or *false*. The choice is implementation dependent and should be the alternative that is most efficient for the implementation. An implementation must use the same value each time one of the following algorithms is executed, and it must be consistent across all algorithms.
 
 <emu-clause id="simd-float32x4">
 <h1>Float32x4Descriptor type descriptor</h1>
-
 The Float32x4Descriptor floating point SIMD type descriptor has the following fields:
 
 <ul>
@@ -1686,7 +1671,6 @@ The Float32x4Descriptor floating point SIMD type descriptor has the following fi
 
 <emu-clause id="simd-int32x4">
 <h1>Int32x4Descriptor type descriptor</h1>
-
 The Int32x4Descriptor signed integer SIMD type descriptor has the following fields:
 
 <ul>
@@ -1744,7 +1728,6 @@ The Int32x4Descriptor signed integer SIMD type descriptor has the following fiel
 
 <emu-clause id="simd-int16x8">
 <h1>Int16x8Descriptor type descriptor</h1>
-
 The Int16x8Descriptor signed integer SIMD type descriptor has the following fields:
 
 <ul>
@@ -1775,7 +1758,6 @@ The Int16x8Descriptor signed integer SIMD type descriptor has the following fiel
 
 <emu-clause id="simd-int8x16">
 <h1>Int8x16Descriptor type descriptor</h1>
-
 The Int8x16Descriptor signed integer SIMD type descriptor has the following fields:
 
 <ul>
@@ -1805,7 +1787,6 @@ The Int8x16Descriptor signed integer SIMD type descriptor has the following fiel
 
 <emu-clause id="simd-uint32x4">
 <h1>Uint32x4Descriptor type descriptor</h1>
-
 The Uint32x4Descriptor unsigned integer SIMD type descriptor has the following fields:
 
 <ul>
@@ -1835,7 +1816,6 @@ The Uint32x4Descriptor unsigned integer SIMD type descriptor has the following f
 
 <emu-clause id="simd-uint16x8">
 <h1>Uint16x8Descriptor type descriptor</h1>
-
 The Uint16x8Descriptor integer SIMD type descriptor has the following fields:
 
 <ul>
@@ -1866,7 +1846,6 @@ The Uint16x8Descriptor integer SIMD type descriptor has the following fields:
 
 <emu-clause id="simd-uint8x16">
 <h1>Uint8x16Descriptor type descriptor</h1>
-
 The Uint8x16Descriptor integer SIMD type descriptor has the following fields:
 
 <ul>
@@ -1896,7 +1875,6 @@ The Uint8x16Descriptor integer SIMD type descriptor has the following fields:
 
 <emu-clause id="simd-bool32x4">
 <h1>Bool32x4 type descriptor</h1>
-
 The Bool32x4Descriptor boolean SIMD type descriptor has the following fields:
 
 <ul>
@@ -1907,7 +1885,6 @@ The Bool32x4Descriptor boolean SIMD type descriptor has the following fields:
 
 <emu-clause id="simd-bool16x8">
 <h1>Bool16x8 type descriptor</h1>
-
 The Bool16x8Descriptor boolean SIMD type descriptor has the following fields:
 
 <ul>
@@ -1918,7 +1895,6 @@ The Bool16x8Descriptor boolean SIMD type descriptor has the following fields:
 
 <emu-clause id="simd-bool8x16">
 <h1>Bool8x16 type descriptor</h1>
-
 The Bool8x16Descriptor boolean SIMD type descriptor has the following fields:
 
 <ul>
