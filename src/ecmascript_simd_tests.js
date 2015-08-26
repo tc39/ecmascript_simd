@@ -697,7 +697,7 @@ function testLoad(type, name, count) {
     throws(function () { loadFn(buf, index); });
   }
   testIndexCheck(buf, -1);
-  // testIndexCheck(buf, bufSize / type.laneSize);
+  testIndexCheck(buf, bufSize / type.laneSize - count + 1);
   testIndexCheck(buf.buffer, 1);
   testIndexCheck(buf, "a");
 }
@@ -1039,7 +1039,6 @@ simdTypes.forEach(function(toType) {
 });
 
 // Miscellaneous test methods.
-// TODO refactor to match the other tests.
 
 test('Float32x4 Int32x4 bit conversion', function() {
   var m = SIMD.Int32x4(0x3F800000, 0x40000000, 0x40400000, 0x40800000);
@@ -1074,8 +1073,8 @@ test('Float32x4 Int32x4 bit conversion', function() {
   // Should stay unmodified across bit conversions
   m = SIMD.Int32x4(0xFFFFFFFF, 0xFFFF0000, 0x80000000, 0x0);
   var m2 = SIMD.Int32x4.fromFloat32x4Bits(SIMD.Float32x4.fromInt32x4Bits(m));
-  //equal(SIMD.Float32x4.extractLane(m, 0), m2SIMD.Float32x4.extractLane(m2, 0)); // FIXME: These get NaN-canonicalized
-  //equal(SIMD.Float32x4.extractLane(m, 1), m2SIMD.Float32x4.extractLane(m2, 1)); // FIXME: These get NaN-canonicalized
+  equal(SIMD.Int32x4.extractLane(m, 0), SIMD.Int32x4.extractLane(m2, 0));
+  equal(SIMD.Int32x4.extractLane(m, 1), SIMD.Int32x4.extractLane(m2, 1));
   equal(SIMD.Int32x4.extractLane(m, 2), SIMD.Int32x4.extractLane(m2, 2));
   equal(SIMD.Int32x4.extractLane(m, 3), SIMD.Int32x4.extractLane(m2, 3));
 });
