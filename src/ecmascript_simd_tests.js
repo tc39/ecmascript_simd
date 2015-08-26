@@ -741,7 +741,7 @@ function testStore(type, name, count) {
     throws(function () { storeFn(buf, index, type.fn()); });
   }
   testIndexCheck(buf, -1);
-  // testIndexCheck(buf, bufSize / type.laneSize);
+  testIndexCheck(buf, bufSize / type.laneSize - count + 1);
   testIndexCheck(buf.buffer, 1);
   testIndexCheck(buf, "a");
 }
