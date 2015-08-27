@@ -1,10 +1,10 @@
 <!doctype html>
 <meta charset="utf8">
-<title>SIMD.js specification v0.8.3</title>
+<title>SIMD.js specification v0.8.4</title>
 <link rel="stylesheet" href="https://bterlson.github.io/ecmarkup/elements.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/github.min.css">
 <script src="ecmarkup.js"></script>
-<h1>SIMD.js specification v0.8.3</h1>
+<h1>SIMD.js specification v0.8.4</h1>
 <emu-intro id="intro">
 <h1>Introduction</h1>
 <p>This proposal adds SIMD types and operations to ECMAScript. The proposal adds new primitive types Float32x4, etc, together with wrappers and a definition of their behavior in the language. The current proposal should form a full first draft with all functions and types included.</p>
@@ -59,6 +59,7 @@ Changelog:
 <li>v0.8.1: Minor language fixes and cleanups from review; no behavior changes</li>
 <li>v0.8.2: Remove unsignedExtractLane, remove equals, notEquals, swizzle and shuffle from boolean vectors, improve internal algorithm notation, restrict rest argument usage, toString `", "`</li>
 <li>v0.8.3: Better explanations and changes based on editor review</li>
+<li>v0.8.4: Merge signed and unsigned shifts into one function name</li>
 </ul>
 </emu-intro>
 
@@ -1233,9 +1234,9 @@ This operation is only defined on integer SIMD types. This definition uses the r
 <emu-note>Unlike ECMAScript scalar shift, there is no "wrap-around" behavior.</emu-note>
 </emu-clause>
 
-<emu-clause id="simd-shift-right-logical-by-scalar">
-<h1>_SIMD_Constructor.shiftRightLogicalByScalar( a, bits )</h1>
-This operation is only defined on signed integer SIMD types. This definition uses the refers to `>>>` as defined by <a href="http://www.ecma-international.org/ecma-262/6.0/#sec-unsigned-right-shift-operator">ES2015 12.8.5 (The Unsigned Right Shift Operator ( >>> ))</a>.
+<emu-clause id="simd-shift-right-by-scalar">
+<h1>_SIMD_Constructor.shiftRightByScalar( a, bits )</h1>
+On unsigned SIMD types, the following definition is used. This definition uses the refers to `>>>` as defined by <a href="http://www.ecma-international.org/ecma-262/6.0/#sec-unsigned-right-shift-operator">ES2015 12.8.5 (The Unsigned Right Shift Operator ( >>> ))</a>.
 <emu-alg>
 1. If _a_.[[SIMDTypeDescriptor]] is not _SIMD_Descriptor, throw a TypeError.
 1. Let _scalar_ be ToUint32(_bits_).
@@ -1246,12 +1247,7 @@ This operation is only defined on signed integer SIMD types. This definition use
 1. ReturnIfAbrupt(_result_).
 1. Return _result_.
 </emu-alg>
-<emu-note>Unlike ECMAScript scalar shift, there is no "wrap-around" behavior.</emu-note>
-</emu-clause>
-
-<emu-clause id="simd-shift-right-arithmetic-by-scalar">
-<h1>_SIMD_Constructor.shiftRightArithmeticByScalar( a, bits )</h1>
-This operation is only defined on unsigned integer SIMD types. This definition uses the refers to `>>` as defined by <a href="http://www.ecma-international.org/ecma-262/6.0/#sec-signed-right-shift-operator">ES2015 12.8.4 (The Signed Right Shift Operator ( >> ))</a>.
+On signed SIMD types, the following definition is used. This definition uses the refers to `>>` as defined by <a href="http://www.ecma-international.org/ecma-262/6.0/#sec-signed-right-shift-operator">ES2015 12.8.4 (The Signed Right Shift Operator ( >> ))</a>.
 <emu-alg>
 1. If _a_.[[SIMDTypeDescriptor]] is not _SIMD_Descriptor, throw a TypeError.
 1. Let _scalar_ be ToUint32(_bits_).
@@ -1261,7 +1257,7 @@ This operation is only defined on unsigned integer SIMD types. This definition u
 1. ReturnIfAbrupt(_result_).
 1. Return _result_.
 </emu-alg>
-<emu-note>Unlike ECMAScript scalar shift, there is no "wrap-around" behavior.</emu-note>
+<emu-note>In both definitions, unlike ECMAScript scalar shift, there is no "wrap-around" behavior.</emu-note>
 </emu-clause>
 
 <emu-clause id="simd-horizontal-sum">
