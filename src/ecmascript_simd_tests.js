@@ -956,25 +956,25 @@ simdTypes.filter(isIntType).forEach(function(type) {
 });
 
 simdTypes.filter(isSignedIntType).forEach(function(type) {
-  test(type.name + ' shiftRightArithmeticByScalar', function() {
+  test(type.name + ' shiftRightByScalar', function() {
     function shift(a, bits) {
       if (bits>>>0 >= type.laneSize * 8)
         bits = type.laneSize * 8 - 1;
       return a >> bits;
     }
-    testShiftOp(type, 'shiftRightArithmeticByScalar', shift);
+    testShiftOp(type, 'shiftRightByScalar', shift);
   });
 });
 
 simdTypes.filter(isUnsignedIntType).forEach(function(type) {
-  test(type.name + ' shiftRightLogicalByScalar', function() {
+  test(type.name + ' shiftRightByScalar', function() {
     function shift(a, bits) {
       if (bits>>>0 >= type.laneSize * 8) return 0;
       if (type.laneMask)
         a &= type.laneMask;
       return a >>> bits;
     }
-    testShiftOp(type, 'shiftRightLogicalByScalar', shift);
+    testShiftOp(type, 'shiftRightByScalar', shift);
   });
   test(type.name + ' horizontalSum', function() {
     testHorizontalSum(type);
