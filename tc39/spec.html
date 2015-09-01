@@ -1,10 +1,10 @@
 <!doctype html>
 <meta charset="utf8">
-<title>SIMD.js specification v0.8.4</title>
+<title>SIMD.js specification v0.8.5</title>
 <link rel="stylesheet" href="https://bterlson.github.io/ecmarkup/elements.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/github.min.css">
 <script src="ecmarkup.js"></script>
-<h1>SIMD.js specification v0.8.4</h1>
+<h1>SIMD.js specification v0.8.5</h1>
 <emu-intro id="intro">
 <h1>Introduction</h1>
 <p>This proposal adds SIMD types and operations to ECMAScript. The proposal adds new primitive types Float32x4, etc, together with wrappers and a definition of their behavior in the language. The current proposal should form a full first draft with all functions and types included.</p>
@@ -60,6 +60,7 @@ Changelog:
 <li>v0.8.2: Remove unsignedExtractLane, remove equals, notEquals, swizzle and shuffle from boolean vectors, improve internal algorithm notation, restrict rest argument usage, toString `", "`</li>
 <li>v0.8.3: Better explanations and changes based on editor review</li>
 <li>v0.8.4: Merge signed and unsigned shifts into one function name</li>
+<li>v0.8.5: Note to discourage NaN canonicalization</li>
 </ul>
 </emu-intro>
 
@@ -1648,6 +1649,7 @@ The Float32x4Descriptor floating point SIMD type descriptor has the following fi
 1. Set _rawBytes_ to a List containing the 4 bytes that are the result of converting value to IEEE 754-2008 binary32 format using “Round to nearest, ties to even” rounding mode. If _isLittleEndian_ is *false*, the bytes are arranged in big endian order. Otherwise, the bytes are arranged in little endian order. If value is *NaN*, _rawValue_ may be set to any implementation chosen *NaN* encoding. An implementation must always choose the same *NaN* encoding for a distinct Not-a-Number value.
 1. Store the individual bytes of _rawBytes_ into _block_, in order, starting at <var>block</var>[<var>offset</var>].
 </emu-alg>
+<emu-note>Although the specification gives flexibility for implementations to encode NaN in various ways, permitting NaN canonicalization, implementations are encouraged to preserve the NaN payload which was originally provided if the Number comes as the output of DeserializeFloat32. This means that NaN canonicalization would not take place across `load`, `store` and bitcast operations (`from<var>TIMD</var>bits`). However, across `extractLane`/`replaceLane`, it is expected that canonicalization may occur.</emu-note>
 </emu-clause>
 
 <emu-clause id="deserialize-float32" aoid="DeserializeFloat32">
