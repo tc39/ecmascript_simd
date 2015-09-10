@@ -6,6 +6,11 @@ load("ecmascript_simd.js");
 var currentName = '<global>';
 var numFails = 0;
 
+if (typeof skipValueTests === 'undefined')
+  skipValueTests = false;
+if (typeof skipFromBitsTests === 'undefined')
+  skipValueTests = true;
+
 function printIndented(str) {
   console.log(str.split('\n').map(function (s) { return '  ' + s }).join('\n'));
 }
@@ -19,7 +24,10 @@ function fail(str) {
 
 function test(name, func) {
   currentName = name;
-  if (skipValueTests && name.indexOf("value semantics") != -1) return;
+  if (typeof skipValueTests !== 'undefined' && skipValueTests &&
+      name.indexOf('value semantics') != -1) return;
+  if (typeof skipRoundTripTests !== 'undefined' && skipRoundTripTests &&
+      name.indexOf('Float32x4 Int32x4 round trip') != -1) return;
   try {
     func();
   } catch (e) {

@@ -342,8 +342,10 @@ function simdToLocaleString(type, value) {
 
 // Utility functions.
 
+// Create a value for testing, with vanilla lane values, i.e. [0, 1, 2, ..]
+// for numeric types, [false, true, true, ..] for boolean types. These test
+// values shouldn't contain NaNs or other "interesting" values.
 function createTestValue(type) {
-  // Create a value for testing.
   var lanes = [];
   for (var i = 0; i < type.lanes; i++)
     lanes.push(i);
@@ -697,7 +699,7 @@ function testLoad(type, name, count) {
     throws(function () { loadFn(buf, index); });
   }
   testIndexCheck(buf, -1);
-  // testIndexCheck(buf, bufSize / type.laneSize);
+  testIndexCheck(buf, bufSize / type.laneSize - count + 1);
   testIndexCheck(buf.buffer, 1);
   testIndexCheck(buf, "a");
 }
@@ -741,7 +743,7 @@ function testStore(type, name, count) {
     throws(function () { storeFn(buf, index, type.fn()); });
   }
   testIndexCheck(buf, -1);
-  // testIndexCheck(buf, bufSize / type.laneSize);
+  testIndexCheck(buf, bufSize / type.laneSize - count + 1);
   testIndexCheck(buf.buffer, 1);
   testIndexCheck(buf, "a");
 }
@@ -787,25 +789,42 @@ function testOperators(type) {
 // Tests value semantics for a given type.
 // TODO: more complete tests for Object wrappers, sameValue, sameValueZero, etc.
 function testValueSemantics(type) {
-  var y = createTestValue(type);
-  for (var x of [ {}, "", 0, 1, undefined, null, NaN, Infinity]) {
-      equal(y == x, false);
-      equal(x == y, false);
-      equal(y != x, true);
-      equal(x != y, true);
-      equal(y === x, false);
-      equal(x === y, false);
-      equal(y !== x, true);
-      equal(x !== y, true);
+  // Create a vanilla test value.
+  var x = createTestValue(type);
+
+  // Check against non-SIMD types.
+  var otherTypeValues = [0, 1.275, NaN, Infinity, "string", null, undefined,
+                         {}, function() {}];
+  for (var other of simdTypes) {
+    if (type !== other)
+      otherTypeValues.push(createTestValue(other));
   }
-  equal(y == type.fn(), true);
-  equal(y == type.fn(1), false);
-  equal(y != type.fn(), false);
-  equal(y != type.fn(1), true);
-  equal(y === type.fn(0), true);
-  equal(y === type.fn(1), false);
-  equal(y !== type.fn(0), false);
-  equal(y !== type.fn(1), true);
+  otherTypeValues.forEach(function(y) {
+    equal(y == x, false);
+    equal(x == y, false);
+    equal(y != x, true);
+    equal(x != y, true);
+    equal(y === x, false);
+    equal(x === y, false);
+    equal(y !== x, true);
+    equal(x !== y, true);
+  });
+
+  // Test that f(a, b) is the same as f(SIMD(a), SIMD(b)) for equality and
+  // strict equality, at every lane.
+  function test(a, b) {
+    for (var i = 0; i < type.lanes; i++) {
+      var aval = type.fn.replaceLane(x, i, a);
+      var bval = type.fn.replaceLane(x, i, b);
+      equal(a == b, aval == bval);
+      equal(a === b, aval === bval);
+    }
+  }
+  for (var a of type.interestingValues) {
+    for (var b of type.interestingValues) {
+      test(a, b);
+    }
+  }
 }
 
 
@@ -956,25 +975,25 @@ simdTypes.filter(isIntType).forEach(function(type) {
 });
 
 simdTypes.filter(isSignedIntType).forEach(function(type) {
-  test(type.name + ' shiftRightArithmeticByScalar', function() {
+  test(type.name + ' shiftRightByScalar', function() {
     function shift(a, bits) {
       if (bits>>>0 >= type.laneSize * 8)
         bits = type.laneSize * 8 - 1;
       return a >> bits;
     }
-    testShiftOp(type, 'shiftRightArithmeticByScalar', shift);
+    testShiftOp(type, 'shiftRightByScalar', shift);
   });
 });
 
 simdTypes.filter(isUnsignedIntType).forEach(function(type) {
-  test(type.name + ' shiftRightLogicalByScalar', function() {
+  test(type.name + ' shiftRightByScalar', function() {
     function shift(a, bits) {
       if (bits>>>0 >= type.laneSize * 8) return 0;
       if (type.laneMask)
         a &= type.laneMask;
       return a >>> bits;
     }
-    testShiftOp(type, 'shiftRightLogicalByScalar', shift);
+    testShiftOp(type, 'shiftRightByScalar', shift);
   });
   test(type.name + ' horizontalSum', function() {
     testHorizontalSum(type);
@@ -1039,7 +1058,6 @@ simdTypes.forEach(function(toType) {
 });
 
 // Miscellaneous test methods.
-// TODO refactor to match the other tests.
 
 test('Float32x4 Int32x4 bit conversion', function() {
   var m = SIMD.Int32x4(0x3F800000, 0x40000000, 0x40400000, 0x40800000);
@@ -1071,11 +1089,13 @@ test('Float32x4 Int32x4 bit conversion', function() {
   equal(10.0, SIMD.Float32x4.extractLane(n, 1));
   equal(11.0, SIMD.Float32x4.extractLane(n, 2));
   equal(12.0, SIMD.Float32x4.extractLane(n, 3));
-  // Should stay unmodified across bit conversions
+});
+
+test('Float32x4 Int32x4 round trip', function() {
+  // NaNs should stay unmodified across bit conversions
   m = SIMD.Int32x4(0xFFFFFFFF, 0xFFFF0000, 0x80000000, 0x0);
   var m2 = SIMD.Int32x4.fromFloat32x4Bits(SIMD.Float32x4.fromInt32x4Bits(m));
-  //equal(SIMD.Float32x4.extractLane(m, 0), m2SIMD.Float32x4.extractLane(m2, 0)); // FIXME: These get NaN-canonicalized
-  //equal(SIMD.Float32x4.extractLane(m, 1), m2SIMD.Float32x4.extractLane(m2, 1)); // FIXME: These get NaN-canonicalized
-  equal(SIMD.Int32x4.extractLane(m, 2), SIMD.Int32x4.extractLane(m2, 2));
-  equal(SIMD.Int32x4.extractLane(m, 3), SIMD.Int32x4.extractLane(m2, 3));
+  // NaNs may be canonicalized, so these tests may fail in some implementations.
+  equal(SIMD.Int32x4.extractLane(m, 0), SIMD.Int32x4.extractLane(m2, 0));
+  equal(SIMD.Int32x4.extractLane(m, 1), SIMD.Int32x4.extractLane(m2, 1));
 });
