@@ -26,7 +26,7 @@ function test(name, func) {
   currentName = name;
   if (typeof skipValueTests !== 'undefined' && skipValueTests &&
       name.indexOf('value semantics') != -1) return;
-  if (typeof skipFromBitsTests !== 'undefined' && skipFromBitsTests &&
+  if (typeof skipRoundTripTests !== 'undefined' && skipRoundTripTests &&
       name.indexOf('Float32x4 Int32x4 round trip') != -1) return;
   try {
     func();
