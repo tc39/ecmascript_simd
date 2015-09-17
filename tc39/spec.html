@@ -68,7 +68,7 @@ Changelog:
 
 <emu-clause id="primitive-def">
 <h1>primitive value (<a href="http://www.ecma-international.org/ecma-262/6.0/index.html#sec-primitive-value">4.3.2</a>)</h1>
-member of one of the types Undefined, Null, Boolean, Number, Symbol, or String, <ins>or one of the SIMD types</ins> as defined in clause 6
+member of one of the types Undefined, Null, Boolean, Number, Symbol, String, <ins>or one of the SIMD types</ins> as defined in clause 6
 </emu-clause>
 
 <emu-clause id="simd-meta-var-def">
@@ -109,7 +109,7 @@ A SIMD type whose values are booleans, namely Bool32x4, Bool16x8 and Bool8x16.
 
 <emu-clause id="simd-integer-type">
 <h1>SIMD integer type</h1>
-A SIMD type whose values are booleans, namely Int32x4, Int16x8, Int8x16, Uint32x4, Uint16x8, and Uint8x16.
+A SIMD type whose values are integers, namely Int32x4, Int16x8, Int8x16, Uint32x4, Uint16x8, and Uint8x16.
 </emu-clause>
 
 <emu-clause id="simd-floating-point-type">
@@ -267,19 +267,19 @@ A SIMD type whose values are unsigned integers, namely Uint32x4, Uint16x8, and U
 
 <emu-clause id="bool32x4" aoid="Bool32x4">
 <h1>Bool32x4</h1>
-`Bool32x4` is a SIMD type representing two boolean values, as an intermediate value in manipulating 128-bit vectors. Bool32x4 values can be created using the [[Call]] operation on the <a href="#simd-constructor">SIMD.Bool32x4</a> object. Its behavior as a SIMD type is defined by the <a href="#simd-bool32x4">Bool32x4 SIMD type descriptor</a>.
+`Bool32x4` is a SIMD type representing four boolean values, as an intermediate value in manipulating 128-bit vectors. Bool32x4 values can be created using the [[Call]] operation on the <a href="#simd-constructor">SIMD.Bool32x4</a> object. Its behavior as a SIMD type is defined by the <a href="#simd-bool32x4">Bool32x4 SIMD type descriptor</a>.
 
 </emu-clause>
 
 <emu-clause id="bool16x8" aoid="Bool16x8">
 <h1>Bool16x8</h1>
-`Bool16x8` is a SIMD type representing two boolean values, as an intermediate value in manipulating 128-bit vectors. Bool16x8 values can be created using the [[Call]] operation on the <a href="#simd-constructor">SIMD.Bool16x8</a> object. Its behavior as a SIMD type is defined by the <a href="#simd-bool16x8">Bool16x8 SIMD type descriptor</a>.
+`Bool16x8` is a SIMD type representing sixteen boolean values, as an intermediate value in manipulating 128-bit vectors. Bool16x8 values can be created using the [[Call]] operation on the <a href="#simd-constructor">SIMD.Bool16x8</a> object. Its behavior as a SIMD type is defined by the <a href="#simd-bool16x8">Bool16x8 SIMD type descriptor</a>.
 
 </emu-clause>
 
 <emu-clause id="bool8x16" aoid="Bool8x16">
 <h1>Bool8x16</h1>
-`Bool8x16` is a SIMD type representing two boolean values, as an intermediate value in manipulating 128-bit vectors. Bool8x16 values can be created using the [[Call]] operation on the <a href="#simd-constructor">SIMD.Bool8x16</a> object. Its behavior as a SIMD type is defined by the <a href="#simd-bool8x16">Bool8x16 SIMD type descriptor</a>.
+`Bool8x16` is a SIMD type representing eight boolean values, as an intermediate value in manipulating 128-bit vectors. Bool8x16 values can be created using the [[Call]] operation on the <a href="#simd-constructor">SIMD.Bool8x16</a> object. Its behavior as a SIMD type is defined by the <a href="#simd-bool8x16">Bool8x16 SIMD type descriptor</a>.
 
 </emu-clause>
 
@@ -657,7 +657,7 @@ The second option:
 <h1>SIMDUnaryOp( a, op [ , flushDenormal ] )</h1>
 <emu-alg>
 1. Let _descriptor_ be _a_.[[SIMDTypeDescriptor]].
-1. If _flushDenormal_ is not provided, let _flushDenormal_true be *true*.
+1. If _flushDenormal_ is not provided, let _flushDenormal_ be *true*.
 1. Let _list_ be a new List of length _descriptor_.[[VectorLength]].
 1. ReturnIfAbrupt(_block_).
 1. For _i_ from 0 to _descriptor_.[[VectorLength]],
@@ -694,7 +694,7 @@ The second option:
 1. Assert: _byteOffset_ is an integer greater than or equal to zero, and less than or equal to the size of _dataBlock_ - _descriptor_.[[ElementSize]] &times; _length_.
 1. Let _list_ be a List of length _descriptor_.[[VectorLength]], initialized to all 0.
 1. For _i_ from 0 to _length_ - 1,
-  1. Set <var>list</var>[<var>i</var>] to <var>descriptor</var>.[[DeserializeElement]](<var>dataBlock</var>, _byteOffset_).
+  1. Set <var>list</var>[<var>i</var>] to <var>descriptor</var>.[[DeserializeElement]](<var>dataBlock</var>, _byteOffset_ + _i_ &times; _descriptor_.[[ElementSize]]).
 1. Return the record { [[SIMDTypeDescriptor]]: _descriptor_, [[SIMDElements]]: _list_ }.
 </emu-alg>
 </emu-clause>
@@ -726,7 +726,7 @@ The second option:
 <emu-clause id="simd-int-type" aoid="SIMDBoolType">
 <h1>SIMDBoolType( descriptor )</h1>
 <emu-alg>
-1. Assert: _descriptor_.[[VectorLength]] &times; _descriptor.[[ElementSize]] = 128. Otherwise, in a future extension to the spec, different boolean descriptors will be returned.
+1. Assert: _descriptor_.[[VectorLength]] &times; _descriptor_.[[ElementSize]] = 128. Otherwise, in a future extension to the spec, different boolean descriptors will be returned.
 1. Let _length_ be _descriptor_.[[VectorLength]].
 1. If _length_ = 4, return Bool32x4Descriptor.
 1. If _length_ = 8, return Bool16x8Descriptor.
