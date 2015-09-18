@@ -120,6 +120,12 @@ function simdCreate(type) {
   return type.fn.apply(type.fn, lanes);
 }
 
+function simdCreateFromBuffer(type, buffer) {
+  var newValue = type.fn.apply(type.fn, lanes);
+  newValue.s_ = new type.view(buffer);
+  return newValue;
+}
+
 function simdToString(type, a) {
   a = type.fn.check(a);
   var str = "SIMD." + type.name + "(";
@@ -170,11 +176,13 @@ function simdFrom(toType, fromType, a) {
 
 function simdFromBits(toType, fromType, a) {
   a = fromType.fn.check(a);
+/*
   for (var i = 0; i < fromType.lanes; i++)
     fromType.buffer[i] = fromType.fn.extractLane(a, i);
   for (var i = 0; i < toType.lanes; i++)
     lanes[i] = toType.buffer[i];
-  return simdCreate(toType);
+*/
+  return simdCreateFromBuffer(toType, a.s_.buffer);
 }
 
 function simdSelect(type, selector, a, b) {
@@ -374,7 +382,7 @@ if (typeof SIMD.Float32x4 === "undefined" ||
     if (!(this instanceof SIMD.Float32x4)) {
       return new SIMD.Float32x4(s0, s1, s2, s3);
     }
-    this.s_ = convertArray(_f32x4, [s0, s1, s2, s3]);
+    this.s_ = convertArray(_f32x4, new Float32Array([s0, s1, s2, s3]));
   }
 
   SIMD.Float32x4.extractLane = function(v, i) {
@@ -405,7 +413,7 @@ if (typeof SIMD.Int32x4 === "undefined" ||
     if (!(this instanceof SIMD.Int32x4)) {
       return new SIMD.Int32x4(s0, s1, s2, s3);
     }
-    this.s_ = convertArray(_i32x4, [s0, s1, s2, s3]);
+    this.s_ = convertArray(_i32x4, new Int32Array([s0, s1, s2, s3]));
   }
 
   SIMD.Int32x4.extractLane = function(v, i) {
@@ -434,7 +442,7 @@ if (typeof SIMD.Int16x8 === "undefined" ||
     if (!(this instanceof SIMD.Int16x8)) {
       return new SIMD.Int16x8(s0, s1, s2, s3, s4, s5, s6, s7);
     }
-    this.s_ = convertArray(_i16x8, [s0, s1, s2, s3, s4, s5, s6, s7]);
+    this.s_ = convertArray(_i16x8, new Int16Array([s0, s1, s2, s3, s4, s5, s6, s7]));
   }
 
   SIMD.Int16x8.extractLane = function(v, i) {
@@ -465,8 +473,8 @@ if (typeof SIMD.Int8x16 === "undefined" ||
       return new SIMD.Int8x16(s0, s1, s2, s3, s4, s5, s6, s7,
                               s8, s9, s10, s11, s12, s13, s14, s15);
     }
-    this.s_ = convertArray(_i8x16, [s0, s1, s2, s3, s4, s5, s6, s7,
-                                    s8, s9, s10, s11, s12, s13, s14, s15]);
+    this.s_ = convertArray(_i8x16, new Int8Array([s0, s1, s2, s3, s4, s5, s6, s7,
+                                    s8, s9, s10, s11, s12, s13, s14, s15]));
   }
 
   SIMD.Int8x16.extractLane = function(v, i) {
@@ -499,7 +507,7 @@ if (typeof SIMD.Uint32x4 === "undefined" ||
     if (!(this instanceof SIMD.Uint32x4)) {
       return new SIMD.Uint32x4(s0, s1, s2, s3);
     }
-    this.s_ = convertArray(_ui32x4, [s0, s1, s2, s3]);
+    this.s_ = convertArray(_ui32x4, new Uint32Array([s0, s1, s2, s3]));
   }
 
   SIMD.Uint32x4.extractLane = function(v, i) {
@@ -528,7 +536,7 @@ if (typeof SIMD.Uint16x8 === "undefined" ||
     if (!(this instanceof SIMD.Uint16x8)) {
       return new SIMD.Uint16x8(s0, s1, s2, s3, s4, s5, s6, s7);
     }
-    this.s_ = convertArray(_ui16x8, [s0, s1, s2, s3, s4, s5, s6, s7]);
+    this.s_ = convertArray(_ui16x8, new Uint16Array([s0, s1, s2, s3, s4, s5, s6, s7]));
   }
 
   SIMD.Uint16x8.extractLane = function(v, i) {
@@ -559,8 +567,8 @@ if (typeof SIMD.Uint8x16 === "undefined" ||
       return new SIMD.Uint8x16(s0, s1, s2, s3, s4, s5, s6, s7,
                                s8, s9, s10, s11, s12, s13, s14, s15);
     }
-    this.s_ = convertArray(_ui8x16, [s0, s1, s2, s3, s4, s5, s6, s7,
-                                     s8, s9, s10, s11, s12, s13, s14, s15]);
+    this.s_ = convertArray(_ui8x16, Uint8Array([s0, s1, s2, s3, s4, s5, s6, s7,
+                                     s8, s9, s10, s11, s12, s13, s14, s15]));
   }
 
   SIMD.Uint8x16.extractLane = function(v, i) {
@@ -854,7 +862,7 @@ if (typeof simdPhase2 !== 'undefined') {
       if (!(this instanceof SIMD.Float64x2)) {
         return new SIMD.Float64x2(s0, s1);
       }
-      this.s_ = convertArray(_f64x2, [s0, s1]);
+      this.s_ = convertArray(_f64x2, new Float64Array([s0, s1]));
     }
 
     SIMD.Float64x2.extractLane = function(v, i) {
