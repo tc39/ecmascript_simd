@@ -584,8 +584,8 @@ Each <var>SIMD</var>Constructor has the following properties:
 This operation is only defined on integer and floating point SIMD types. 
 
 <emu-alg><ol><li>If <var>a</var>.[[SIMDTypeDescriptor]] is not <var>SIMD</var>Descriptor or <var>b</var>.[[SIMDTypeDescriptor]] is not <var>SIMD</var>Descriptor, throw a TypeError.</li><li>Let <var>result</var> be <a href="#simd-binary">SIMDBinaryOp</a>(<var>a</var>, <var>b</var>, <code>+</code>).</li><li><a href="http://www.ecma-international.org/ecma-262/6.0/index.html#sec-returnifabrupt">ReturnIfAbrupt</a>(<var>result</var>).</li><li>Return <var>result</var>.</li></ol></emu-alg>
-<emu-note><span class="note">Note 1</span>On <code>Float32x4</code>, in this specification, the math is done on two 64-bit values which have a precise representation as a 32-bit float, and then rounded to a Float32. This is equivalent to doing the math on two 32-bit values and storing the result in a 32-bit float. For more information, see   <a href="http://dl.acm.org/citation.cfm?id=221334">When is Double Rounding Innocuous? </a>. <emu-note><span class="note">Note 2</span>
-</emu-note></emu-note></emu-clause>
+<emu-note><span class="note">Note</span>On <code>Float32x4</code>, in this specification, the math is done on two 64-bit values which have a precise representation as a 32-bit float, and then rounded to a Float32. This is equivalent to doing the math on two 32-bit values and storing the result in a 32-bit float. For more information, see   <a href="http://dl.acm.org/citation.cfm?id=221334">When is Double Rounding Innocuous? </a>. </emu-note>
+</emu-clause>
 
 <emu-clause id="simd-sub">
 <h1><span class="secnum">6.2.5 </span><var>SIMD</var>Constructor.sub(a, b) <span class="utils"><span class="anchor"><a href="#simd-sub"># </a></span></span></h1>
@@ -594,8 +594,8 @@ This operation is only defined on integer and floating point SIMD types.
 This operation is only defined on integer and floating point SIMD types. 
 
 <emu-alg><ol><li>If <var>a</var>.[[SIMDTypeDescriptor]] is not <var>SIMD</var>Descriptor or <var>b</var>.[[SIMDTypeDescriptor]] is not <var>SIMD</var>Descriptor, throw a TypeError.</li><li>Let <var>result</var> be <a href="#simd-binary">SIMDBinaryOp</a>(<var>a</var>, <var>b</var>, <code>-</code>).</li><li><a href="http://www.ecma-international.org/ecma-262/6.0/index.html#sec-returnifabrupt">ReturnIfAbrupt</a>(<var>result</var>).</li><li>Return <var>result</var>.</li></ol></emu-alg>
-<emu-note><span class="note">Note 1</span>On <code>Float32x4</code>, in this specification, the math is done on two 64-bit values which have a precise representation as a 32-bit float, and then rounded to a Float32. This is equivalent to doing the math on two 32-bit values and storing the result in a 32-bit float. For more information, see   <a href="http://dl.acm.org/citation.cfm?id=221334">When is Double Rounding Innocuous? </a>. <emu-note><span class="note">Note 2</span>
-</emu-note></emu-note></emu-clause>
+<emu-note><span class="note">Note</span>On <code>Float32x4</code>, in this specification, the math is done on two 64-bit values which have a precise representation as a 32-bit float, and then rounded to a Float32. This is equivalent to doing the math on two 32-bit values and storing the result in a 32-bit float. For more information, see   <a href="http://dl.acm.org/citation.cfm?id=221334">When is Double Rounding Innocuous? </a>. </emu-note>
+</emu-clause>
 
 <emu-clause id="simd-mul">
 <h1><span class="secnum">6.2.6 </span><var>SIMD</var>Constructor.mul(a, b) <span class="utils"><span class="anchor"><a href="#simd-mul"># </a></span></span></h1>
@@ -604,8 +604,8 @@ This operation is only defined on integer and floating point SIMD types.
 This operation is only defined on integer and floating point SIMD types. 
 
 <emu-alg><ol><li>If <var>a</var>.[[SIMDTypeDescriptor]] is not <var>SIMD</var>Descriptor or <var>b</var>.[[SIMDTypeDescriptor]] is not <var>SIMD</var>Descriptor, throw a TypeError.</li><li>If <var>SIMD</var>Type is an integer SIMD type, let <var>op</var> be %Math_imul%; otherwise, <var>SIMD</var>Type is a floating point SIMD type, and let <var>op</var> be <a href="http://www.ecma-international.org/ecma-262/6.0/#sec-applying-the-mul-operator"><code>*</code></a>.</li><li>Let <var>result</var> be <a href="#simd-binary">SIMDBinaryOp</a>(<var>a</var>, <var>b</var>, <var>op</var>).</li><li><a href="http://www.ecma-international.org/ecma-262/6.0/index.html#sec-returnifabrupt">ReturnIfAbrupt</a>(<var>result</var>).</li><li>Return <var>result</var>.</li></ol></emu-alg>
-<emu-note><span class="note">Note 1</span>On <code>Float32x4</code>, in this specification, the math is done on two 64-bit values which have a precise representation as a 32-bit float, and then rounded to a Float32. This is equivalent to doing the math on two 32-bit values and storing the result in a 32-bit float. For more information, see   <a href="http://dl.acm.org/citation.cfm?id=221334">When is Double Rounding Innocuous? </a>. <emu-note><span class="note">Note 2</span>
-</emu-note></emu-note></emu-clause>
+<emu-note><span class="note">Note</span>On <code>Float32x4</code>, in this specification, the math is done on two 64-bit values which have a precise representation as a 32-bit float, and then rounded to a Float32. This is equivalent to doing the math on two 32-bit values and storing the result in a 32-bit float. For more information, see   <a href="http://dl.acm.org/citation.cfm?id=221334">When is Double Rounding Innocuous? </a>. </emu-note>
+</emu-clause>
 
 <emu-clause id="simd-div">
 <h1><span class="secnum">6.2.7 </span><var>SIMD</var>Constructor.div(a, b) <span class="utils"><span class="anchor"><a href="#simd-div"># </a></span></span></h1>
@@ -614,8 +614,8 @@ This operation is only defined on integer and floating point SIMD types.
 This function is defined only on floating point SIMD types. 
 
 <emu-alg><ol><li>If <var>a</var>.[[SIMDTypeDescriptor]] is not <var>SIMD</var>Descriptor or <var>b</var>.[[SIMDTypeDescriptor]] is not <var>SIMD</var>Descriptor, throw a TypeError.</li><li>Let <var>result</var> be <a href="#simd-binary">SIMDBinaryOp</a>(<var>a</var>, <var>b</var>, <a href="http://www.ecma-international.org/ecma-262/6.0/#sec-applying-the-div-operator"><code>/</code></a>).</li><li><a href="http://www.ecma-international.org/ecma-262/6.0/index.html#sec-returnifabrupt">ReturnIfAbrupt</a>(<var>result</var>).</li><li>Return <var>result</var>.</li></ol></emu-alg>
-<emu-note><span class="note">Note 1</span>On <code>Float32x4</code>, in this specification, the math is done on two 64-bit values which have a precise representation as a 32-bit float, and then rounded to a Float32. This is equivalent to doing the math on two 32-bit values and storing the result in a 32-bit float. For more information, see   <a href="http://dl.acm.org/citation.cfm?id=221334">When is Double Rounding Innocuous? </a>. <emu-note><span class="note">Note 2</span>
-</emu-note></emu-note></emu-clause>
+<emu-note><span class="note">Note</span>On <code>Float32x4</code>, in this specification, the math is done on two 64-bit values which have a precise representation as a 32-bit float, and then rounded to a Float32. This is equivalent to doing the math on two 32-bit values and storing the result in a 32-bit float. For more information, see   <a href="http://dl.acm.org/citation.cfm?id=221334">When is Double Rounding Innocuous? </a>. </emu-note>
+</emu-clause>
 
 <emu-clause id="simd-max">
 <h1><span class="secnum">6.2.8 </span><var>SIMD</var>Constructor.max(a, b) <span class="utils"><span class="anchor"><a href="#simd-max"># </a></span></span></h1>
