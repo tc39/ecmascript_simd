@@ -120,12 +120,6 @@ function simdCreate(type) {
   return type.fn.apply(type.fn, lanes);
 }
 
-function simdCreateFromBuffer(type, buffer) {
-  var newValue = type.fn.apply(type.fn, lanes);
-  newValue.s_ = new type.view(buffer);
-  return newValue;
-}
-
 function simdToString(type, a) {
   a = type.fn.check(a);
   var str = "SIMD." + type.name + "(";
@@ -176,7 +170,9 @@ function simdFrom(toType, fromType, a) {
 
 function simdFromBits(toType, fromType, a) {
   a = fromType.fn.check(a);
-  return simdCreateFromBuffer(toType, a.s_.buffer);
+  var newValue = new toType.fn();
+  newValue.s_ = new toType.view(a.s_.buffer);
+  return newValue;
 }
 
 function simdSelect(type, selector, a, b) {
