@@ -60,6 +60,7 @@ Changelog:
 <li>v0.8.2: Remove unsignedExtractLane, remove equals, notEquals, swizzle and shuffle from boolean vectors, improve internal algorithm notation, restrict rest argument usage, toString `", "`</li>
 <li>v0.8.3: Better explanations and changes based on editor review</li>
 <li>v0.8.4: Merge signed and unsigned shifts into one function name</li>
+<li>v0.9: Remove horizontalSum/absoluteDifference; improve wording based on reviews</li>
 </ul>
 </emu-intro>
 
@@ -206,7 +207,7 @@ A SIMD type whose values are unsigned integers, namely Uint32x4, Uint16x8, and U
 <br/>
 <strong>Global name</strong>: `Math.sqrt`
 <br/>
-<strong>ECMAScript Language Association</strong>: The initial value of the "max" data property of the intrinsic %Math% object (<a href="http://www.ecma-international.org/ecma-262/6.0/#sec-math.sqrt">ES2015 20.2.2.32</a>)
+<strong>ECMAScript Language Association</strong>: The initial value of the "sqrt" data property of the intrinsic %Math% object (<a href="http://www.ecma-international.org/ecma-262/6.0/#sec-math.sqrt">ES2015 20.2.2.32</a>)
 </p>
 
 <p>
@@ -330,10 +331,10 @@ While it would be possible to make the zero-vector false as a boolean, there are
 1. Let _elements_ be an Array containing the contents of _argument_.[[SIMDElements]]
 1. Let _t_ be the string `"`<var>SIMD</var>`"`, e.g., `"Float32x4"`.
 1. Let e be Call(%ArrayPrototype_join%, _elements_, «", "»).
-1. Return a new String value computed by concatenating the previous value of "SIMD.", _t_, "(", _e_, and ")".
+1. Return a new String value computed by concatenating the values "SIMD.", _t_, "(", _e_, and ")".
 </emu-alg>
 
-<emu-note>On a SIMD vector, `eval(vector.toString()) == vector` in the initial global environment.</emu-note>
+<emu-note>On a SIMD vector v, `eval(v.toString()) == v` in the initial global environment, except that NaNs may be canonicalizethat NaNs may be canonicalizedd.</emu-note>
 </emu-clause>
 
 <emu-clause id="to-object">
@@ -375,7 +376,6 @@ While it would be possible to make the zero-vector false as a boolean, there are
   1. If _x_ and _y_ are both the same Symbol value, return true; otherwise, return false.
 1. <ins>For each SIMD type _SIMD_Type:</ins>
   1. <ins>If Type(_x_) is _SIMD_Type:</ins>
-    1. <ins>Assert Type(_y_) is _SIMD_Type.</ins>
     1. <ins>For _i_ from 0 to _SIMD_Descriptor.[[VectorLength]] - 1:</ins>
       1. <ins>If SameValue(SIMDExtractLane(_x_, _i_), SIMDExtractLane(_y_, _i_)) is *false*, return *false*.</ins>
     1. <ins>return *true*</ins>
@@ -406,7 +406,6 @@ Add an extra step at the bottom of the definition of SameValueZero for the new c
   1. If _x_ and _y_ are both the same Symbol value, return true; otherwise, return false.
 1. <ins>For each SIMD type _SIMD_Type:</ins>
   1. <ins>If Type(_x_) is _SIMD_Type:</ins>
-    1. <ins>Assert Type(_y_) is _SIMD_Type.</ins>
     1. <ins>For _i_ from 0 to _SIMD_Descriptor.[[VectorLength]] - 1:</ins>
       1. <ins>If SameValueZero(SIMDExtractLane(_x_, _i_), SIMDExtractLane(_y_, _i_)) is *false*, return *false*.</ins>
     1. <ins>return *true*</ins>
@@ -463,7 +462,6 @@ Add a new step 9, before the existing step 9:
   1. If _x_ and _y_ are both the same Symbol value, return true; otherwise, return false.
 1. <ins>For each SIMD type _SIMD_Type:</ins>
   1. <ins>If Type(_x_) is _SIMD_Type:</ins>
-    1. <ins>Assert Type(_y_) is _SIMD_Type.</ins>
     1. <ins>For _i_ from 0 to _SIMD_Descriptor.[[VectorLength]] - 1:</ins>
       1. <ins>If SIMDExtractLane(_x_, _i_) === SIMDExtractLane(_y_, _i_) is *false*, return *false*.</ins>
     1. <ins>return *true*</ins>
@@ -572,6 +570,8 @@ The [[ElementMax]], [[ElementMin]], [[ElementSize]], [[SerializeElement]] and [[
 <emu-clause id="simd-create" aoid="SIMDCreate">
 <h1>SIMDCreate( descriptor, fields )</h1>
 <emu-alg>
+1. Assert: _descriptor_ is a SIMD type descriptor.
+1. Assert: _fields_ is a List of Numbers or Booleans.
 1. Assert: The length of _fields_ = _descriptor_.[[VectorLength]].
 1. Let _list_ be a new List of length _descriptor_.[[VectorLength]].
 1. For _i_ from 0 to _descriptor_.[[VectorLength]],
@@ -619,8 +619,8 @@ The [[ElementMax]], [[ElementMin]], [[ElementSize]], [[SerializeElement]] and [[
 </emu-clause>
 
 <emu-clause id="maybe-flush-denormal" aoid="MaybeFlushDenormal">
-<h1>MaybeFlushDenormal( n )</h1>
-<p>Two possible internal algorithms are provided. The choice is implementation dependent and should be the alternative that is most efficient for the implementation. An implementation must use the same value each time this step is executed.</p>
+<h1>MaybeFlushDenormal( n, descriptor )</h1>
+<p>Two possible internal algorithms are provided. The choice is implementation dependent and should be the alternative that is most efficient for the implementation. An implementation must use the same choice each time this step is executed.</p>
 
 The first option:
 
@@ -629,7 +629,10 @@ The first option:
 </emu-alg>
 The second option:
 <emu-alg>
-1. If _n_ is a subnormal floating point number,
+1. Let _subnormal_ be false.
+1. If _descriptor_ is Float32x4Descriptor, and if _n_ rounded (ties to even) to a float32 is a subnormal value, let _subnormal_ be true.
+1. Otherwise, assert _descriptor_ is not a floating point SIMD type descriptor.
+1. If _subnormal_ is true,
   1. If _n_ > 0, return +0.
   1. Otherwise, return -0.
 1. Otherwise, return _n_.
@@ -644,10 +647,11 @@ The second option:
 1. If _outputDescriptor_ is not provided, let _outputDescriptor_ be _descriptor_.
 1. Let _list_ be a new List of length _descriptor_.[[VectorLength]].
 1. For _i_ from 0 to _descriptor_.[[VectorLength]],
-  1. Let _ax_ = MaybeFlushDenormal(SIMDExtractLane(_a_, _i_)).
-  1. Let _bx_ = MaybeFlushDenormal(SIMDExtractLane(_b_, _i_)).
-  1. Let _res_ = MaybeFlushDenormal(op(_ax_, _bx_)).
+  1. Let _ax_ = MaybeFlushDenormal(SIMDExtractLane(_a_, _i_), _descriptor_).
+  1. Let _bx_ = MaybeFlushDenormal(SIMDExtractLane(_b_, _i_), _descriptor_).
+  1. Let _res_ = op(_ax_, _bx_);
   1. ReturnIfAbrupt(_res_).
+  1. Let _res_ = MaybeFlushDenormal(_res_, _outputDescriptor_).
   1. Set <var>list</var>[<var>i</var>] to _res_.
 1. Return SIMDCreate(_outputDescriptor_, _list_).
 </emu-alg>
@@ -662,10 +666,10 @@ The second option:
 1. ReturnIfAbrupt(_block_).
 1. For _i_ from 0 to _descriptor_.[[VectorLength]],
   1. Let _ax_ = SIMDExtractLane(_a_, _i_).
-  1. If _flushDenormal_, let _ax_ be MaybeFlushDenormal(_ax_).
+  1. If _flushDenormal_, let _ax_ be MaybeFlushDenormal(_ax_, _descriptor_).
   1. Let _res_ = op(_ax_).
-  1. If _flushDenormal_, let _res_ be MaybeFlushDenormal(_res_).
   1. ReturnIfAbrupt(_res_).
+  1. If _flushDenormal_, let _res_ be MaybeFlushDenormal(_res_, _descriptor_).
   1. Set <var>list</var>[<var>i</var>] to _res_.
 1. Return SIMDCreate(_descriptor_, _list_).
 </emu-alg>
@@ -794,6 +798,7 @@ This operation is only defined on integer and floating point SIMD types.
 1. ReturnIfAbrupt(_result_).
 1. Return _result_.
 </emu-alg>
+<emu-note>On `Float32x4`, in this specification, the math is done on two 64-bit values which have a precise representation as a 32-bit float, and then rounded to a Float32. This is equivalent to doing the math on two 32-bit values and storing the result in a 32-bit float. For more information, see <a href="http://dl.acm.org/citation.cfm?id=221334">When is Double Rounding Innocuous?</a>.<emu-note>
 </emu-clause>
 
 <emu-clause id="simd-sub">
@@ -808,6 +813,7 @@ This operation is only defined on integer and floating point SIMD types.
 1. ReturnIfAbrupt(_result_).
 1. Return _result_.
 </emu-alg>
+<emu-note>On `Float32x4`, in this specification, the math is done on two 64-bit values which have a precise representation as a 32-bit float, and then rounded to a Float32. This is equivalent to doing the math on two 32-bit values and storing the result in a 32-bit float. For more information, see <a href="http://dl.acm.org/citation.cfm?id=221334">When is Double Rounding Innocuous?</a>.<emu-note>
 </emu-clause>
 
 <emu-clause id="simd-mul">
@@ -823,6 +829,7 @@ This operation is only defined on integer and floating point SIMD types.
 1. ReturnIfAbrupt(_result_).
 1. Return _result_.
 </emu-alg>
+<emu-note>On `Float32x4`, in this specification, the math is done on two 64-bit values which have a precise representation as a 32-bit float, and then rounded to a Float32. This is equivalent to doing the math on two 32-bit values and storing the result in a 32-bit float. For more information, see <a href="http://dl.acm.org/citation.cfm?id=221334">When is Double Rounding Innocuous?</a>.<emu-note>
 </emu-clause>
 
 <emu-clause id="simd-div">
@@ -837,6 +844,7 @@ This function is defined only on floating point SIMD types.
 1. ReturnIfAbrupt(_result_).
 1. Return _result_.
 </emu-alg>
+<emu-note>On `Float32x4`, in this specification, the math is done on two 64-bit values which have a precise representation as a 32-bit float, and then rounded to a Float32. This is equivalent to doing the math on two 32-bit values and storing the result in a 32-bit float. For more information, see <a href="http://dl.acm.org/citation.cfm?id=221334">When is Double Rounding Innocuous?</a>.<emu-note>
 </emu-clause>
 
 <emu-clause id="simd-max">
@@ -851,8 +859,8 @@ This property is defined only on floating point SIMD types.
 </emu-clause>
 
 <emu-clause id="simd-min">
-This property is defined only on floating point SIMD types.
 <h1>_SIMD_Constructor.min(a, b)</h1>
+This property is defined only on floating point SIMD types.
 <emu-alg>
 1. If _a_.[[SIMDTypeDescriptor]] is not _SIMD_Descriptor or _b_.[[SIMDTypeDescriptor]] is not _SIMD_Descriptor, throw a TypeError.
 1. Let _result_ be SIMDBinaryOp(_a_, _b_, %Math_min%).
@@ -1260,58 +1268,6 @@ On signed SIMD types, the following definition is used. This definition uses the
 <emu-note>In both definitions, unlike ECMAScript scalar shift, there is no "wrap-around" behavior.</emu-note>
 </emu-clause>
 
-<emu-clause id="simd-horizontal-sum">
-<h1>_SIMD_Constructor.horizontalSum( a )</h1>
-This operation is only defined on unsigned integer SIMD types.
-
-<emu-note>This operation is still under discussion. See <a href="https://github.com/tc39/ecmascript_simd/issues/135">this bug thread</a>.</emu-note>
-<emu-alg>
-1. If _a_.[[SIMDTypeDescriptor]] is not _SIMD_Descriptor, throw a TypeError.
-1. Let _sum_ be 0.
-1. For _i_ from 0 to _SIMD_Descriptor.[[VectorLength]] - 1,
-  1. Let _sum_ be _sum_ + <var>a</var>.[[SIMDElements]][<var>i</var>].
-1. Return _sum_.
-</emu-alg>
-</emu-clause>
-
-<emu-clause id="absolute-difference" aoid="AbsoluteDifference">
-<h1>AbsoluteDifference( a, b )</h1>
-<emu-alg>
-1. Return Call(%Math_abs%, %Math%, «_a_ - _b_»).
-</emu-alg>
-</emu-clause>
-
-<emu-clause id="simd-absolute-difference">
-<h1>_SIMD_Constructor.absoluteDifference( a, b )</h1>
-This operation is only defined on unsigned integer SIMD types whose _SIMD_Descriptor.[[ElementSize]] &le; 2.
-<emu-note>This operation is still under discussion. See <a href="https://github.com/tc39/ecmascript_simd/issues/135">this bug thread</a>.</emu-note>
-<emu-alg>
-1. If _a_.[[SIMDTypeDescriptor]] is not _SIMD_Descriptor or _b_.[[SIMDTypeDescriptor]] is not _SIMD_Descriptor, throw a TypeError.
-1. Let _result_ be SIMDBinaryOp(_a_, _b_, AbsoluteDifference).
-1. ReturnIfAbrupt(_result_).
-1. Return _result_.
-</emu-alg>
-</emu-clause>
-
-<emu-clause id="simd-widened-absolute-difference">
-<h1>_SIMD_Constructor.widenedAbsoluteDifference( a, b )</h1>
-This operation is only defined on unsigned integer SIMD types whose _SIMD_Descriptor.[[ElementSize]] &le; 2.
-<emu-note>This operation is still under discussion. See <a href="https://github.com/tc39/ecmascript_simd/issues/135">this bug thread</a>. To use this operation and get at the upper half of a vector, a shuffle is required.</emu-note>
-<emu-alg>
-1. If _a_.[[SIMDTypeDescriptor]] is not _SIMD_Descriptor or _b_.[[SIMDTypeDescriptor]] is not _SIMD_Descriptor, throw a TypeError.
-1. If _SIMD_Descriptor is `Int8x16`, then let _outputDescriptor_ be `Int16x8`.
-1. Else, Assert _SIMD_Descriptor is `Int16x8`; let _outputDescriptor_ be `Int32x4`.
-1. Let _list_ be a new List of length _descriptor_.[[VectorLength]].
-1. For _i_ from 0 to _outputDescriptor_.[[VectorLength]],
-  1. Let _ax_ = SIMDExtractLane(_a_, _i_).
-  1. Let _bx_ = SIMDExtractLane(_b_, _i_).
-  1. Let _res_ = AbsoluteDifference(_ax_, _bx_).
-  1. ReturnIfAbrupt(_res_).
-  1. Set <var>list</var>[<var>i</var>] to _res_.
-1. Return SIMDCreate(_outputDescriptor_, _list_).
-</emu-alg>
-</emu-clause>
-
 <emu-clause id="simd-extract-lane">
 <h1>_SIMD_Constructor.extractLane( simd, lane )</h1>
 <emu-alg>
@@ -1491,7 +1447,7 @@ In this definition, _TIMD_ ranges over all SIMD types for which _SIMD_Descriptor
 </emu-clause>
 
 <emu-clause id="swizzle">
-<h1>_SIMD_.swizzle( a, ...lanes )</h1>
+<h1>_SIMD_Constructor.swizzle( a, ...lanes )</h1>
 This operation exists only on integer and floating point SIMD types.
 
 <emu-alg>
@@ -1511,7 +1467,7 @@ The `length` property of `_SIMD_.swizzle` is 1 + _SIMD_Descriptor.[[VectorLength
 </emu-clause>
 
 <emu-clause id="shuffle">
-<h1>_SIMD_.shuffle( a, b, ...lanes )</h1>
+<h1>_SIMD_Constructor.shuffle( a, b, ...lanes )</h1>
 This operation exists only on integer and floating point SIMD types.
 
 <emu-alg>
