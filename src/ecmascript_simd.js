@@ -176,12 +176,6 @@ function simdFrom(toType, fromType, a) {
 
 function simdFromBits(toType, fromType, a) {
   a = fromType.fn.check(a);
-/*
-  for (var i = 0; i < fromType.lanes; i++)
-    fromType.buffer[i] = fromType.fn.extractLane(a, i);
-  for (var i = 0; i < toType.lanes; i++)
-    lanes[i] = toType.buffer[i];
-*/
   return simdCreateFromBuffer(toType, a.s_.buffer);
 }
 
