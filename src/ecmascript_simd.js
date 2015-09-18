@@ -567,7 +567,7 @@ if (typeof SIMD.Uint8x16 === "undefined" ||
       return new SIMD.Uint8x16(s0, s1, s2, s3, s4, s5, s6, s7,
                                s8, s9, s10, s11, s12, s13, s14, s15);
     }
-    this.s_ = convertArray(_ui8x16, Uint8Array([s0, s1, s2, s3, s4, s5, s6, s7,
+    this.s_ = convertArray(_ui8x16, new Uint8Array([s0, s1, s2, s3, s4, s5, s6, s7,
                                      s8, s9, s10, s11, s12, s13, s14, s15]));
   }
 
