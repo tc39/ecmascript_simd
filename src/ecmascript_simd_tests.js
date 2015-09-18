@@ -251,12 +251,6 @@ uint32x4.fromBits = [float32x4, int32x4, int16x8, int8x16, uint16x8, uint8x16];
 uint16x8.fromBits = [float32x4, int32x4, int16x8, int8x16, uint32x4, uint8x16];
 uint8x16.fromBits = [float32x4, int32x4, int16x8, int8x16, uint32x4, uint16x8];
 
-// Simd widening types.
-int16x8.wideType = int32x4;
-int8x16.wideType = int16x8;
-uint16x8.wideType = uint32x4;
-uint8x16.wideType = uint16x8;
-
 var simdTypes = [float32x4,
                  int32x4, int16x8, int8x16,
                  uint32x4, uint16x8, uint8x16,
@@ -462,20 +456,6 @@ function testBinaryOp(type, op, refOp) {
   }
 }
 
-function testWideningBinaryOp(type, op, refOp) {
-  equal('function', typeof type.fn[op]);
-  var zero = type.fn();
-  for (var av of type.interestingValues) {
-    for (var bv of type.interestingValues) {
-      var expected = simdConvert(type, refOp(simdConvert(type, av), simdConvert(type, bv)));
-      var a = type.fn.splat(av);
-      var b = type.fn.splat(bv);
-      var result = type.fn[op](a, b);
-      checkValue(type.wideType, result, function(index) { return expected; });
-    }
-  }
-}
-
 // Compare relational op's behavior to ref op at each lane with the Cartesian
 // product of the given values.
 function testRelationalOp(type, op, refOp) {
@@ -504,17 +484,6 @@ function testShiftOp(type, op, refOp) {
       var result = type.fn[op](a, bits);
       checkValue(type, result, function(index) { return expected; });
     }
-  }
-}
-
-function testHorizontalSum(type) {
-  equal('function', typeof type.fn.horizontalSum);
-  var zero = type.fn();
-  for (var av of type.interestingValues) {
-    var expected = type.lanes * av;
-    var a = type.fn.splat(av);
-    var result = type.fn.horizontalSum(a);
-    equal(result, expected);
   }
 }
 
@@ -994,18 +963,6 @@ simdTypes.filter(isUnsignedIntType).forEach(function(type) {
       return a >>> bits;
     }
     testShiftOp(type, 'shiftRightByScalar', shift);
-  });
-  test(type.name + ' horizontalSum', function() {
-    testHorizontalSum(type);
-  });
-});
-
-simdTypes.filter(isSmallUnsignedIntType).forEach(function(type) {
-  test(type.name + ' absoluteDifference', function() {
-    testBinaryOp(type, 'absoluteDifference', function(a, b) { return Math.abs(a - b); });
-  });
-  test(type.name + ' widenedAbsoluteDifference', function() {
-    testWideningBinaryOp(type, 'widenedAbsoluteDifference', function(a, b) { return Math.abs(a - b); });
   });
 });
 

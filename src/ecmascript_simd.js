@@ -227,7 +227,6 @@ function binaryAdd(a, b) { return a + b; }
 function binarySub(a, b) { return a - b; }
 function binaryMul(a, b) { return a * b; }
 function binaryDiv(a, b) { return a / b; }
-function binaryAbsDiff(a, b) { return Math.abs(a - b); }
 
 var binaryImul;
 if (typeof Math.imul !== 'undefined') {
@@ -299,14 +298,6 @@ function simdShiftOp(type, op, a, bits) {
   for (var i = 0; i < type.lanes; i++)
     lanes[i] = op(type.fn.extractLane(a, i), bits);
   return simdCreate(type);
-}
-
-function simdHorizontalSum(type, a) {
-  a = type.fn.check(a);
-  var result = 0;
-  for (var i = 0; i < type.lanes; i++)
-    result += type.fn.extractLane(a, i);
-  return result;
 }
 
 function simdLoad(type, tarray, index, count) {
@@ -733,7 +724,6 @@ var uint32x4 = {
         "and", "or", "xor", "not",
         "add", "sub", "mul", "min", "max",
         "shiftLeftByScalar", "shiftRightByScalar",
-        "horizontalSum",
         "load", "load1", "load2", "load3", "store", "store1", "store2", "store3"],
 }
 
@@ -754,7 +744,6 @@ var uint16x8 = {
         "and", "or", "xor", "not",
         "add", "sub", "mul", "min", "max",
         "shiftLeftByScalar", "shiftRightByScalar",
-        "horizontalSum", "absoluteDifference", "widenedAbsoluteDifference",
         "addSaturate", "subSaturate",
         "load", "store"],
 }
@@ -776,7 +765,6 @@ var uint8x16 = {
         "and", "or", "xor", "not",
         "add", "sub", "mul", "min", "max",
         "shiftLeftByScalar", "shiftRightByScalar",
-        "horizontalSum", "absoluteDifference", "widenedAbsoluteDifference",
         "addSaturate", "subSaturate",
         "load", "store"],
 }
@@ -1249,27 +1237,6 @@ var simdFns = {
             bits = type.laneSize * 8 - 1;
           return simdShiftOp(type, binaryShiftRightArithmetic, a, bits);
         }
-      }
-    },
-
-  absoluteDifference:
-    function(type) {
-      return function(a, b) {
-        return simdBinaryOp(type, binaryAbsDiff, a, b);
-      }
-    },
-
-  horizontalSum:
-    function(type) {
-      return function(a) {
-        return simdHorizontalSum(type, a);
-      }
-    },
-
-  widenedAbsoluteDifference:
-    function(type) {
-      return function(a, b) {
-        return simdWideningBinaryOp(type, binaryAbsDiff, a, b);
       }
     },
 
