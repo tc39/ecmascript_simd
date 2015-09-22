@@ -407,7 +407,7 @@ The [[ElementMax]], [[ElementMin]], [[ElementSize]], [[SerializeElement]] and [[
 <br/>
 <strong>Result</strong>:
 <emu-alg>
-1. Let _elements_ be an Array containing the contents of _argument_.[[SIMDElements]]
+1. Let _elements_ be CreateArrayFromList(_argument_.[[SIMDElements]]).
 1. Let _t_ be the string `"`<var>SIMD</var>`"`, e.g., `"Float32x4"`.
 1. Let e be ArrayJoin(_elements_, ", ").
 1. Return a new String value computed by concatenating the values "SIMD.", _t_, "(", _e_, and ")".
@@ -1598,7 +1598,7 @@ The meanings of the optional parameters to this method are defined in the ECMA-4
   1. Let _R_ be ToString(Invoke(_element_, "toLocaleString")).
   1. ReturnIfAbrupt(_R_).
   1. Append _R_ to _list_.
-1. Let _results_ be an Array containing the contents of _list_.
+1. Let _results_ be CreateArrayFromList(_list_).
 1. Let _t_ be the string `"`<var>SIMD</var>`"`, e.g., `"Float32x4"`.
 1. Let _e_ be ArrayJoin(_results_, _separator_).
 1. Return a new String value computed by concatenating the previous value of _t_, "(", _e_, and ")".
