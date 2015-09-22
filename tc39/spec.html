@@ -581,7 +581,7 @@ Add a new step 9, before the existing step 9:
 <h1>SIMDCreate( descriptor, vectorElements )</h1>
 <emu-alg>
 1. Assert: _descriptor_ is a SIMD type descriptor.
-1. Assert: _vectorElements_ is a List where all elements are either Numbers or Booleans.
+1. Assert: _vectorElements_ is a List.
 1. Assert: The length of _vectorElements_ = _descriptor_.[[VectorLength]].
 1. Let _list_ be a new List of length _descriptor_.[[VectorLength]].
 1. For _i_ from 0 to _descriptor_.[[VectorLength]],
