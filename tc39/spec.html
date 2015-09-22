@@ -301,7 +301,7 @@ SIMD type descriptors are records with the following fields:
 <li>[[ElementMin]]: The minimum value included in the range representable by the element type</li>
 </ul>
 
-<p>Each SIMD type descriptor is listed in <a href="#simd-descriptor-table">this table</a>. All SIMD types are either integer SIMD types, boolean SIMD types or or floating point SIMD types. Certain operations are defined on either integer, boolean or floating point types, and integer types are be signed or unsigned, and this is noted in the table.</p>
+<p>Each SIMD type descriptor is listed in <a href="#simd-descriptor-table">this table</a>. All SIMD types are either <a href="#simd-integer-type">integer SIMD types</a>, <a href="#simd-boolean-type">boolean SIMD types</a> or or <a href="#simd-floating-point-type">floating point SIMD types</a>. Certain operations are defined on either integer, boolean or floating point types, and integer types are be signed or unsigned, and this is noted in the table.</p>
 
 The [[ElementMax]], [[ElementMin]], [[ElementSize]], [[SerializeElement]] and [[DeserializeElement]] fields are optional, and defined only on certain SIMD types. Operations which use these fields have been defined only on the types which have them.
 
@@ -453,11 +453,10 @@ The [[ElementMax]], [[ElementMin]], [[ElementSize]], [[SerializeElement]] and [[
   1. If _x_ and _y_ are both true or both false, return true; otherwise, return false.
 1. If Type(_x_) is Symbol, then
   1. If _x_ and _y_ are both the same Symbol value, return true; otherwise, return false.
-1. <ins>For each SIMD type _SIMD_Type:</ins>
-  1. <ins>If Type(_x_) is _SIMD_Type:</ins>
-    1. <ins>For _i_ from 0 to _SIMD_Descriptor.[[VectorLength]] - 1:</ins>
-      1. <ins>If SameValue(SIMDExtractLane(_x_, _i_), SIMDExtractLane(_y_, _i_)) is *false*, return *false*.</ins>
-    1. <ins>return *true*</ins>
+1. <ins>If Type(_x_) is a SIMD type _SIMD_Type:</ins>
+  1. <ins>For _i_ from 0 to _SIMD_Descriptor.[[VectorLength]] - 1:</ins>
+    1. <ins>If SameValue(SIMDExtractLane(_x_, _i_), SIMDExtractLane(_y_, _i_)) is *false*, return *false*.</ins>
+  1. <ins>return *true*</ins>
 1. Return *true* if _x_ and _y_ are the same Object value. Otherwise, return *false*.
 </emu-alg>
 </emu-clause>
@@ -483,11 +482,10 @@ Add an extra step at the bottom of the definition of SameValueZero for the new c
   1. If _x_ and _y_ are both true or both false, return true; otherwise, return false.
 1. If Type(_x_) is Symbol, then
   1. If _x_ and _y_ are both the same Symbol value, return true; otherwise, return false.
-1. <ins>For each SIMD type _SIMD_Type:</ins>
-  1. <ins>If Type(_x_) is _SIMD_Type:</ins>
-    1. <ins>For _i_ from 0 to _SIMD_Descriptor.[[VectorLength]] - 1:</ins>
-      1. <ins>If SameValueZero(SIMDExtractLane(_x_, _i_), SIMDExtractLane(_y_, _i_)) is *false*, return *false*.</ins>
-    1. <ins>return *true*</ins>
+1. <ins>If Type(_x_) is a SIMD type _SIMD_Type:</ins>
+  1. <ins>For _i_ from 0 to _SIMD_Descriptor.[[VectorLength]] - 1:</ins>
+    1. <ins>If SameValueZero(SIMDExtractLane(_x_, _i_), SIMDExtractLane(_y_, _i_)) is *false*, return *false*.</ins>
+  1. <ins>return *true*</ins>
 1. Return *true* if _x_ and _y_ are the same Object value. Otherwise, return *false*.
 </emu-alg>
 </emu-clause>
@@ -534,11 +532,10 @@ Add a new step 9, before the existing step 9:
   1. If _x_ and _y_ are both true or both false, return true; otherwise, return false.
 1. If Type(_x_) is Symbol, then
   1. If _x_ and _y_ are both the same Symbol value, return true; otherwise, return false.
-1. <ins>For each SIMD type _SIMD_Type:</ins>
-  1. <ins>If Type(_x_) is _SIMD_Type:</ins>
-    1. <ins>For _i_ from 0 to _SIMD_Descriptor.[[VectorLength]] - 1:</ins>
-      1. <ins>If SIMDExtractLane(_x_, _i_) === SIMDExtractLane(_y_, _i_) is *false*, return *false*.</ins>
-    1. <ins>return *true*</ins>
+1. <ins>If Type(_x_) is SIMD type _SIMD_Type:</ins>
+  1. <ins>For _i_ from 0 to _SIMD_Descriptor.[[VectorLength]] - 1:</ins>
+    1. <ins>If SIMDExtractLane(_x_, _i_) === SIMDExtractLane(_y_, _i_) is *false*, return *false*.</ins>
+  1. <ins>return *true*</ins>
 1. Return *true* if _x_ and _y_ are the same Object value. Otherwise, return *false*.
 </emu-alg>
 </emu-clause>
@@ -712,9 +709,10 @@ The second option:
 </emu-clause>
 
 <emu-clause id="simd-load-from-tarray" aoid="SIMDLoadFromTypedArray">
-<h1>SIMDLoadFromTypedArray( tarray, index, descriptor, length )</h1>
+<h1>SIMDLoadFromTypedArray( tarray, index, descriptor [, length] )</h1>
 <emu-alg>
 1. If _tarray_ does not have a [[ViewedArrayBuffer]] internal slot, throw a TypeError exception.
+1. If _length_ is not provided, let _length_ be _descriptor_.[[VectorLength]]. Otherwise, assert _length_ &le; _descriptor_.[[VectorLength]].
 1. If IsDetachedBuffer(_tarray_.[[ViewedArrayBuffer]]) is *true*, throw a TypeError exception.
 1. Let _block_ be _tarray_.[[ViewedArrayBuffer]].[[ArrayBufferData]]
 1. If _index_ &ne; ToLength(_index_), throw a TypeError exception.
@@ -737,9 +735,10 @@ The second option:
 </emu-clause>
 
 <emu-clause id="simd-store-in-tarray" aoid="SIMDStoreInTypedArray">
-<h1>SIMDStoreInTypedArray( tarray, index, descriptor, n, length )</h1>
+<h1>SIMDStoreInTypedArray( tarray, index, descriptor, n [, length] )</h1>
 <emu-alg>
 1. If _n_.[[SIMDTypeDescriptor]] is not _SIMD_Descriptor, throw a TypeError exception.
+1. If _length_ is not provided, let _length_ be _descriptor_.[[VectorLength]]. Otherwise, assert _length_ &le; _descriptor_.[[VectorLength]].
 1. If IsDetachedBuffer(_tarray_.[[ViewedArrayBuffer]]) is *true*, throw a TypeError exception.
 1. If _tarray_ does not have a [[ViewedArrayBuffer]] field, throw a TypeError exception.
 1. Let _block_ be _tarray_.[[ViewedArrayBuffer]].[[ArrayBufferData]]
@@ -998,7 +997,7 @@ Each _SIMD_Constructor has the following properties:
 <h1>_SIMD_Constructor.add(a, b)</h1>
 <p>This definition uses `+` to refer to the abstract operation defined by <a href="http://www.ecma-international.org/ecma-262/6.0/#sec-addition-operator-plus">ES2015 12.7.3 (The Addition operator ( + ))</a>.</p>
 
-This operation is only defined on integer and floating point SIMD types.
+This operation is only defined on <a href="#simd-integer-type">integer</a> and <a href="#simd-floating-point-type">floating point</a> SIMD types.
 
 <emu-alg>
 1. If _a_.[[SIMDTypeDescriptor]] is not _SIMD_Descriptor or _b_.[[SIMDTypeDescriptor]] is not _SIMD_Descriptor, throw a TypeError exception.
@@ -1013,7 +1012,7 @@ This operation is only defined on integer and floating point SIMD types.
 <h1>_SIMD_Constructor.sub(a, b)</h1>
 <p>This definition uses `-` to refer to the abstract operation defined by <a href="http://www.ecma-international.org/ecma-262/6.0/#sec-subtraction-operator-minus">ES2015 12.7.4 (The Subtraction operator ( - ))</a>.</p>
 
-This operation is only defined on integer and floating point SIMD types.
+This operation is only defined on <a href="#simd-integer-type">integer</a> and <a href="#simd-floating-point-type">floating point</a> SIMD types.
 
 <emu-alg>
 1. If _a_.[[SIMDTypeDescriptor]] is not _SIMD_Descriptor or _b_.[[SIMDTypeDescriptor]] is not _SIMD_Descriptor, throw a TypeError exception.
@@ -1028,7 +1027,7 @@ This operation is only defined on integer and floating point SIMD types.
 <h1>_SIMD_Constructor.mul(a, b)</h1>
 <p>This definition uses `*` to refer to the abstract operation defined by <a href="http://www.ecma-international.org/ecma-262/6.0/#sec-applying-the-mul-operator">ES2015 12.6.3.1 (Applying the * Operator)</a>.</p>
 
-This operation is only defined on integer and floating point SIMD types.
+This operation is only defined on <a href="#simd-integer-type">integer</a> and <a href="#simd-floating-point-type">floating point</a> SIMD types.
 
 <emu-alg>
 1. If _a_.[[SIMDTypeDescriptor]] is not _SIMD_Descriptor or _b_.[[SIMDTypeDescriptor]] is not _SIMD_Descriptor, throw a TypeError exception.
@@ -1044,7 +1043,7 @@ This operation is only defined on integer and floating point SIMD types.
 <h1>_SIMD_Constructor.div(a, b)</h1>
 <p>This definition uses `/` to refer to the abstract operation defined by <a href="http://www.ecma-international.org/ecma-262/6.0/#sec-applying-the-div-operator">ES2015 12.6.3.2 (Applying the / Operator)</a>.</p>
 
-This function is defined only on floating point SIMD types.
+This operation is only defined on <a href="#simd-floating-point-type">floating point</a> SIMD types.
 
 <emu-alg>
 1. If _a_.[[SIMDTypeDescriptor]] is not _SIMD_Descriptor or _b_.[[SIMDTypeDescriptor]] is not _SIMD_Descriptor, throw a TypeError exception.
@@ -1057,7 +1056,7 @@ This function is defined only on floating point SIMD types.
 
 <emu-clause id="simd-max">
 <h1>_SIMD_Constructor.max(a, b)</h1>
-This property is defined only on floating point SIMD types.
+This operation is only defined on <a href="#simd-floating-point-type">floating point</a> SIMD types.
 <emu-alg>
 1. If _a_.[[SIMDTypeDescriptor]] is not _SIMD_Descriptor or _b_.[[SIMDTypeDescriptor]] is not _SIMD_Descriptor, throw a TypeError exception.
 1. Let _result_ be SIMDBinaryOp(_a_, _b_, MathMax).
@@ -1079,7 +1078,7 @@ This property is defined only on floating point SIMD types.
 
 <emu-clause id="simd-max-num">
 <h1>_SIMD_Constructor.maxNum(a, b)</h1>
-This property is defined only on floating point SIMD types.
+This operation is only defined on <a href="#simd-floating-point-type">floating point</a> SIMD types.
 <emu-alg>
 1. If _a_.[[SIMDTypeDescriptor]] is not _SIMD_Descriptor or _b_.[[SIMDTypeDescriptor]] is not _SIMD_Descriptor, throw a TypeError exception.
 1. Let _result_ be SIMDBinaryOp(_a_, _b_, MaxNum).
@@ -1090,7 +1089,7 @@ This property is defined only on floating point SIMD types.
 
 <emu-clause id="simd-min-num">
 <h1>_SIMD_Constructor.minNum(a, b)</h1>
-This property is defined only on floating point SIMD types.
+This operation is only defined on <a href="#simd-floating-point-type">floating point</a> SIMD types.
 <emu-alg>
 1. If _a_.[[SIMDTypeDescriptor]] is not _SIMD_Descriptor or _b_.[[SIMDTypeDescriptor]] is not _SIMD_Descriptor, throw a TypeError exception.
 1. Let _result_ be SIMDBinaryOp(_a_, _b_, MinNum).
@@ -1103,7 +1102,7 @@ This property is defined only on floating point SIMD types.
 <h1>_SIMD_Constructor.neg(a)</h1>
 <p>This definition uses unary `-` to refer to the abstract operation defined by <a href="http://www.ecma-international.org/ecma-262/6.0/#sec-unary-minus-operator">ES2015 12.5.10 (Unary - Operator)</a>.</p>
 
-This operation is only defined on signed integer and floating point SIMD types.
+This operation is only defined on <a href="#simd-integer-type">integer</a> and <a href="#simd-floating-point-type">floating point</a> SIMD types.
 
 <emu-alg>
 1. If _a_.[[SIMDTypeDescriptor]] is not _SIMD_Descriptor, throw a TypeError exception.
@@ -1115,7 +1114,7 @@ This operation is only defined on signed integer and floating point SIMD types.
 
 <emu-clause id="simd-sqrt">
 <h1>_SIMD_Constructor.sqrt(a)</h1>
-This property is defined only on floating point SIMD types.
+This operation is only defined on <a href="#simd-floating-point-type">floating point</a> SIMD types.
 <emu-alg>
 1. If _a_.[[SIMDTypeDescriptor]] is not _SIMD_Descriptor, throw a TypeError exception.
 1. Let _result_ be SIMDUnaryOp(_a_, MathSqrt).
@@ -1126,7 +1125,7 @@ This property is defined only on floating point SIMD types.
 
 <emu-clause id="simd-reciprocal-approximation">
 <h1>_SIMD_Constructor.reciprocalApproximation(a, b)</h1>
-This property is defined only on floating point SIMD types.
+This operation is only defined on <a href="#simd-floating-point-type">floating point</a> SIMD types.
 <emu-alg>
 1. If _a_.[[SIMDTypeDescriptor]] is not _SIMD_Descriptor, throw a TypeError exception.
 1. Let _result_ be SIMDUnaryOp(_a_, ReciprocalApproximation).
@@ -1137,7 +1136,7 @@ This property is defined only on floating point SIMD types.
 
 <emu-clause id="simd-reciprocal-sqrt-approximation">
 <h1>_SIMD_Constructor.reciprocalSqrtApproximation(a)</h1>
-This property is defined only on floating point SIMD types.
+This operation is only defined on <a href="#simd-floating-point-type">floating point</a> SIMD types.
 <emu-alg>
 1. If _a_.[[SIMDTypeDescriptor]] is not _SIMD_Descriptor, throw a TypeError exception.
 1. Let _result_ be SIMDUnaryOp(_a_, ReciprocalSqrtApproximation).
@@ -1148,7 +1147,7 @@ This property is defined only on floating point SIMD types.
 
 <emu-clause id="simd-abs">
 <h1>_SIMD_Constructor.abs(a)</h1>
-This operation exists only on floating point SIMD types.
+This operation is only defined on <a href="#simd-floating-point-type">floating point</a> SIMD types.
 <emu-alg>
 1. If _a_.[[SIMDTypeDescriptor]] is not _SIMD_Descriptor, throw a TypeError exception.
 1. Let _result_ be SIMDUnaryOp(_a_, MathAbs, *false*).
@@ -1159,11 +1158,7 @@ This operation exists only on floating point SIMD types.
 
 <emu-clause id="simd-and">
 <h1>_SIMD_Constructor.and(a, b)</h1>
-<p>This definition uses `&` to refer to the abstract operation defined by <a href="http://www.ecma-international.org/ecma-262/6.0/#sec-binary-bitwise-operators">ES2015 12.11 (Binary Bitwise Operators)</a>.</p>
-
-This operation exists only on integer and boolean SIMD types.
-
-<emu-note>On boolean types, this could have been specified as using && rather than &. However, the behavior is the same, as `ToBoolean(x&y)` is the same as `x && y` for boolean `x` and `y`. The same goes for `or` below.</emu-note>
+This operation is only defined on <a href="#simd-integer-type">integer</a> and <a href="#simd-boolean-type">boolean</a> SIMD types.
 <emu-alg>
 1. If _a_.[[SIMDTypeDescriptor]] is not _SIMD_Descriptor or _b_.[[SIMDTypeDescriptor]] is not _SIMD_Descriptor, throw a TypeError exception.
 1. Let _result_ be SIMDBinaryOp(_a_, _b_, BitwiseOp(&)).
@@ -1174,9 +1169,7 @@ This operation exists only on integer and boolean SIMD types.
 
 <emu-clause id="simd-xor">
 <h1>_SIMD_Constructor.xor(a, b)</h1>
-<p>This definition uses `^` to refer to the abstract operation defined by <a href="http://www.ecma-international.org/ecma-262/6.0/#sec-binary-bitwise-operators">ES2015 12.11 (Binary Bitwise Operators)</a>.</p>
-
-This operation exists only on integer and boolean SIMD types.
+This operation is only defined on <a href="#simd-integer-type">integer</a> and <a href="#simd-boolean-type">boolean</a> SIMD types.
 
 <emu-alg>
 1. If _a_.[[SIMDTypeDescriptor]] is not _SIMD_Descriptor or _b_.[[SIMDTypeDescriptor]] is not _SIMD_Descriptor, throw a TypeError exception.
@@ -1188,7 +1181,7 @@ This operation exists only on integer and boolean SIMD types.
 
 <emu-clause id="simd-or">
 <h1>_SIMD_Constructor.or(a, b)</h1>
-This operation exists only on integer and boolean SIMD types.
+This operation is only defined on <a href="#simd-integer-type">integer</a> and <a href="#simd-boolean-type">boolean</a> SIMD types.
 
 <emu-alg>
 1. If _a_.[[SIMDTypeDescriptor]] is not _SIMD_Descriptor or _b_.[[SIMDTypeDescriptor]] is not _SIMD_Descriptor, throw a TypeError exception.
@@ -1200,9 +1193,7 @@ This operation exists only on integer and boolean SIMD types.
 
 <emu-clause id="simd-not">
 <h1>_SIMD_Constructor.not(a)</h1>
-<p>This definition uses `~` to refer to the abstract operation defined by <a href="http://www.ecma-international.org/ecma-262/6.0/#sec-bitwise-not-operator-runtime-semantics-evaluation">ES2015 12.5.11.1</a> (Bitwise NOT Operator ( ~ )).</p>
-
-This operation exists only on integer and boolean SIMD types.
+This operation is only defined on <a href="#simd-integer-type">integer</a> and <a href="#simd-boolean-type">boolean</a> SIMD types.
 
 <emu-alg>
 1. If _a_.[[SIMDTypeDescriptor]] is not _SIMD_Descriptor, throw a TypeError exception.
@@ -1216,7 +1207,7 @@ This operation exists only on integer and boolean SIMD types.
 <h1>_SIMD_Constructor.lessThan(a, b)</h1>
 <p>This definition uses `<` to refer to the abstract operation defined by <a href="http://www.ecma-international.org/ecma-262/6.0/#sec-abstract-relational-comparison">ES2015 7.2.11 (Abstract Relational Comparison)</a>.</p>
 
-This operation exists only on integer and floating point SIMD types.
+This operation is only defined on <a href="#simd-integer-type">integer</a> and <a href="#simd-floating-point-type">floating point</a> SIMD types.
 
 <emu-alg>
 1. If _a_.[[SIMDTypeDescriptor]] is not _SIMD_Descriptor or _b_.[[SIMDTypeDescriptor]] is not _SIMD_Descriptor, throw a TypeError exception.
@@ -1245,7 +1236,7 @@ This operation exists only on integer and floating point SIMD types.
 <h1>_SIMD_Constructor.greaterThan(a, b)</h1>
 <p>This definition uses `>` to refer to the abstract operation defined by <a href="http://www.ecma-international.org/ecma-262/6.0/#sec-abstract-relational-comparison">ES2015 7.2.11 (Abstract Relational Comparison)</a>.</p>
 
-This operation exists only on integer and floating point SIMD types.
+This operation is only defined on <a href="#simd-integer-type">integer</a> and <a href="#simd-floating-point-type">floating point</a> SIMD types.
 
 <emu-alg>
 1. If _a_.[[SIMDTypeDescriptor]] is not _SIMD_Descriptor or _b_.[[SIMDTypeDescriptor]] is not _SIMD_Descriptor, throw a TypeError exception.
@@ -1259,7 +1250,7 @@ This operation exists only on integer and floating point SIMD types.
 <h1>_SIMD_Constructor.greaterThanOrEqual(a, b)</h1>
 <p>This definition uses `>=` to refer to the abstract operation defined by <a href="http://www.ecma-international.org/ecma-262/6.0/#sec-abstract-relational-comparison">ES2015 7.2.11 (Abstract Relational Comparison)</a>.</p>
 
-This operation exists only on integer and floating point SIMD types.
+This operation is only defined on <a href="#simd-integer-type">integer</a> and <a href="#simd-floating-point-type">floating point</a> SIMD types.
 
 <emu-alg>
 1. If _a_.[[SIMDTypeDescriptor]] is not _SIMD_Descriptor or _b_.[[SIMDTypeDescriptor]] is not _SIMD_Descriptor, throw a TypeError exception.
@@ -1273,7 +1264,7 @@ This operation exists only on integer and floating point SIMD types.
 <h1>_SIMD_Constructor.equal(a, b)</h1>
 <p>This definition uses `===` to refer to the abstract operation defined by <a href="http://www.ecma-international.org/ecma-262/6.0/#sec-strict-equality-comparison">ES2015 7.2.13 (Strict Equality Comparison)</a>.</p>
 
-This operation exists only on integer and floating point SIMD types.
+This operation is only defined on <a href="#simd-integer-type">integer</a> and <a href="#simd-floating-point-type">floating point</a> SIMD types.
 
 <emu-alg>
 1. If _a_.[[SIMDTypeDescriptor]] is not _SIMD_Descriptor or _b_.[[SIMDTypeDescriptor]] is not _SIMD_Descriptor, throw a TypeError exception.
@@ -1288,7 +1279,7 @@ This operation exists only on integer and floating point SIMD types.
 <h1>_SIMD_Constructor.notEqual(a, b)</h1>
 <p>This definition uses `!==` to refer to the abstract operation defined by <a href="http://www.ecma-international.org/ecma-262/6.0/#sec-strict-equality-comparison">ES2015 7.2.13 (Strict Equality Comparison)</a>.</p>
 
-This operation exists only on integer and floating point SIMD types.
+This operation is only defined on <a href="#simd-integer-type">integer</a> and <a href="#simd-floating-point-type">floating point</a> SIMD types.
 
 <emu-alg>
 1. If _a_.[[SIMDTypeDescriptor]] is not _SIMD_Descriptor or _b_.[[SIMDTypeDescriptor]] is not _SIMD_Descriptor, throw a TypeError exception.
@@ -1301,7 +1292,7 @@ This operation exists only on integer and floating point SIMD types.
 
 <emu-clause id="simd-any-true">
 <h1>_SIMD_Constructor.anyTrue(a)</h1>
-This is defined on boolean SIMD types.
+This operation is only defined on <a href="#simd-boolean-type">boolean</a> SIMD types.
 <emu-alg>
 1. If _a_.[[SIMDTypeDescriptor]] is not _SIMD_Descriptor, throw a TypeError exception.
 1. For _i_ from 0 to _SIMD_Descriptor.[[VectorLength]] - 1,
@@ -1312,7 +1303,7 @@ This is defined on boolean SIMD types.
 
 <emu-clause id="simd-all-true">
 <h1>_SIMD_Constructor.allTrue(a)</h1>
-This is defined on boolean SIMD types.
+This operation is only defined on <a href="#simd-boolean-type">boolean</a> SIMD types.
 <emu-alg>
 1. If _a_.[[SIMDTypeDescriptor]] is not _SIMD_Descriptor, throw a TypeError exception.
 1. For _i_ from 0 to _SIMD_Descriptor.[[VectorLength]] - 1,
@@ -1323,7 +1314,7 @@ This is defined on boolean SIMD types.
 
 <emu-clause id="simd-select">
 <h1>_SIMD_Constructor.select( selector, a, b )</h1>
-This operation exists only on integer and floating point SIMD types.
+This operation is only defined on <a href="#simd-integer-type">integer</a> and <a href="#simd-floating-point-type">floating point</a> SIMD types.
 
 <emu-alg>
 1. If _a_.[[SIMDTypeDescriptor]] is not _SIMD_Descriptor or _b_.[[SIMDTypeDescriptor]] is not _SIMD_Descriptor, throw a TypeError exception.
@@ -1339,7 +1330,7 @@ This operation exists only on integer and floating point SIMD types.
 
 <emu-clause id="simd-add-saturate">
 <h1>_SIMD_Constructor.addSaturate( a, b )</h1>
-This operation is only defined on integer SIMD types whose _SIMD_Descriptor.[[ElementSize]] &le; 2.
+This operation is only defined on <a href="#simd-integer-type">integer</a> SIMD types whose _SIMD_Descriptor.[[ElementSize]] &le; 2.
 <emu-alg>
 1. If _a_.[[SIMDTypeDescriptor]] is not _SIMD_Descriptor or _b_.[[SIMDTypeDescriptor]] is not _SIMD_Descriptor, throw a TypeError exception.
 1. Let _result_ be SIMDBinaryOp(_a_, _b_, AddSaturate(_a_.[[SIMDTypeDescriptor]])).
@@ -1351,7 +1342,7 @@ This operation is only defined on integer SIMD types whose _SIMD_Descriptor.[[El
 
 <emu-clause id="simd-sub-saturate">
 <h1>_SIMD_Constructor.subSaturate( a, b )</h1>
-This operation is only defined on integer SIMD types whose _SIMD_Descriptor.[[ElementSize]] &le; 2.
+This operation is only defined on <a href="#simd-integer-type">integer</a> SIMD types whose _SIMD_Descriptor.[[ElementSize]] &le; 2.
 <emu-alg>
 1. If _a_.[[SIMDTypeDescriptor]] is not _SIMD_Descriptor or _b_.[[SIMDTypeDescriptor]] is not _SIMD_Descriptor, throw a TypeError exception.
 1. Let _result_ be SIMDBinaryOp(_a_, _b_, SubSaturate(_a_.[[SIMDTypeDescriptor]])).
@@ -1363,7 +1354,7 @@ This operation is only defined on integer SIMD types whose _SIMD_Descriptor.[[El
 
 <emu-clause id="simd-shift-left-by-scalar">
 <h1>_SIMD_Constructor.shiftLeftByScalar( a, bits )</h1>
-This operation is only defined on integer SIMD types. This definition uses `<<` to refer to the abstract operation defined by <a href="http://www.ecma-international.org/ecma-262/6.0/#sec-left-shift-operator">ES2015 12.8.3 (The Left Shift Operator ( << ))</a>.
+This operation is only defined on <a href="#simd-integer-type">integer</a> SIMD types. This definition uses `<<` to refer to the abstract operation defined by <a href="http://www.ecma-international.org/ecma-262/6.0/#sec-left-shift-operator">ES2015 12.8.3 (The Left Shift Operator ( << ))</a>.
 <emu-alg>
 1. If _a_.[[SIMDTypeDescriptor]] is not _SIMD_Descriptor, throw a TypeError exception.
 1. Let _scalar_ be ToUint32(_bits_).
@@ -1379,7 +1370,9 @@ This operation is only defined on integer SIMD types. This definition uses `<<` 
 
 <emu-clause id="simd-shift-right-by-scalar">
 <h1>_SIMD_Constructor.shiftRightByScalar( a, bits )</h1>
-On unsigned SIMD types, the following definition is used. This definition uses `>>>` to refer to the abstract operation defined by <a href="http://www.ecma-international.org/ecma-262/6.0/#sec-unsigned-right-shift-operator">ES2015 12.8.5 (The Unsigned Right Shift Operator ( >>> ))</a>.
+This operation is only defined on <a href="#simd-integer-type">integer</a> SIMD types. 
+
+On <a href="#simd-unsigned-integer-type">unsigned</a> SIMD types, the following definition is used. This definition uses `>>>` to refer to the abstract operation defined by <a href="http://www.ecma-international.org/ecma-262/6.0/#sec-unsigned-right-shift-operator">ES2015 12.8.5 (The Unsigned Right Shift Operator ( >>> ))</a>.
 <emu-alg>
 1. If _a_.[[SIMDTypeDescriptor]] is not _SIMD_Descriptor, throw a TypeError exception.
 1. Let _scalar_ be ToUint32(_bits_).
@@ -1390,7 +1383,7 @@ On unsigned SIMD types, the following definition is used. This definition uses `
 1. ReturnIfAbrupt(_result_).
 1. Return _result_.
 </emu-alg>
-On signed SIMD types, the following definition is used. This definition uses `>>` to refer to the abstract operation defined by <a href="http://www.ecma-international.org/ecma-262/6.0/#sec-signed-right-shift-operator">ES2015 12.8.4 (The Signed Right Shift Operator ( >> ))</a>.
+On <a href="#simd-signed-integer-type">signed</a> SIMD types, the following definition is used. This definition uses `>>` to refer to the abstract operation defined by <a href="http://www.ecma-international.org/ecma-262/6.0/#sec-signed-right-shift-operator">ES2015 12.8.4 (The Signed Right Shift Operator ( >> ))</a>.
 <emu-alg>
 1. If _a_.[[SIMDTypeDescriptor]] is not _SIMD_Descriptor, throw a TypeError exception.
 1. Let _scalar_ be ToUint32(_bits_).
@@ -1426,7 +1419,7 @@ On signed SIMD types, the following definition is used. This definition uses `>>
 This operation exists only on integer and floating point SIMD types.
 
 <emu-alg>
-1. Return SIMDStoreInTypedArray(_tarray_, _index_, _SIMD_Descriptor, _simd_, _SIMD_Descriptor.[[VectorLength]]).
+1. Return SIMDStoreInTypedArray(_tarray_, _index_, _SIMD_Descriptor, _simd_).
 </emu-alg>
 </emu-clause>
 
@@ -1469,7 +1462,7 @@ This operation exists only on integer and floating point SIMD types.
 
 <emu-note>`load` takes a TypedArray of any element type as an argument. One way to use it is to pass in a `Uint8Array` regardless of SIMD type, which is useful because it allows the compiler to eliminate the shift in going from the index to the pointer offset. Other options considered were to use an ArrayBuffer (but this is not idiomatic, to take an ArrayBuffer directly as an argument to read off of) or a DataView (but DataViews don't tend to expose platform-dependent endianness, which is important here, and they tend to use methods on `DataView.prototype`, which are harder to optimize in an asm.js context).</emu-note>
 <emu-alg>
-1. Return SIMDLoadFromTypedArray(_tarray_, _index_, _SIMD_Descriptor, _SIMD_Descriptor.[[VectorLength]]).
+1. Return SIMDLoadFromTypedArray(_tarray_, _index_, _SIMD_Descriptor).
 </emu-alg>
 </emu-clause>
 
@@ -1733,7 +1726,7 @@ In the internal algorithms in this section, preceding the first step, if _isLitt
 
 <tr>
 <td>Float32x4</td>
-<td>floating-point</td>
+<td><a href="#simd-floating-point-type">floating-point</a></td>
 <td>4</td>
 <td>4</td>
 <td>ToFloat32</td>
@@ -1745,7 +1738,7 @@ In the internal algorithms in this section, preceding the first step, if _isLitt
 
 <tr>
 <td>Int32x4</td>
-<td>signed integer</td>
+<td><a href="#simd-signed-integer-type">signed integer</a></td>
 <td>4</td>
 <td>4</td>
 <td>ToInt32</td>
@@ -1757,7 +1750,7 @@ In the internal algorithms in this section, preceding the first step, if _isLitt
 
 <tr>
 <td>Int16x8</td>
-<td>signed integer</td>
+<td><a href="#simd-signed-integer-type">signed integer</a></td>
 <td>8</li>
 <td>2</li>
 <td>ToInt16</li>
@@ -1769,7 +1762,7 @@ In the internal algorithms in this section, preceding the first step, if _isLitt
 
 <tr>
 <td>Int8x16</td>
-<td>signed integer</td>
+<td><a href="#simd-signed-integer-type">signed integer</a></td>
 <td>16</li>
 <td>1</li>
 <td>ToInt8</li>
@@ -1781,7 +1774,7 @@ In the internal algorithms in this section, preceding the first step, if _isLitt
 
 <tr>
 <td>Uint32x4</td>
-<td>unsigned integer</td>
+<td><a href="#simd-unsigned-integer-type">unsigned integer</a></td>
 <td>4</li>
 <td>4</li>
 <td>ToUint32</li>
@@ -1793,7 +1786,7 @@ In the internal algorithms in this section, preceding the first step, if _isLitt
 
 <tr>
 <td>Uint16x8</td>
-<td>unsigned integer</td>
+<td><a href="#simd-unsigned-integer-type">unsigned integer</a></td>
 <td>8</li>
 <td>2</li>
 <td>ToUint16</li>
@@ -1805,7 +1798,7 @@ In the internal algorithms in this section, preceding the first step, if _isLitt
 
 <tr>
 <td>Uint8x16</td>
-<td>unsigned integer</td>
+<td><a href="#simd-unsigned-integer-type">unsigned integer</a></td>
 <td>16</li>
 <td>1</li>
 <td>ToUint8</li>
@@ -1817,7 +1810,7 @@ In the internal algorithms in this section, preceding the first step, if _isLitt
 
 <tr>
 <td>Bool32x4</td>
-<td>boolean</td>
+<td><a href="#simd-boolean-type">boolean</a></td>
 <td>4</li>
 <td></td>
 <td>ToBoolean</li>
@@ -1829,7 +1822,7 @@ In the internal algorithms in this section, preceding the first step, if _isLitt
 
 <tr>
 <td>Bool16x8</td>
-<td>boolean</td>
+<td><a href="#simd-boolean-type">boolean</a></td>
 <td>8</li>
 <td></td>
 <td>ToBoolean</li>
@@ -1841,7 +1834,7 @@ In the internal algorithms in this section, preceding the first step, if _isLitt
 
 <tr>
 <td>Bool8x16</td>
-<td>boolean</td>
+<td><a href="#simd-boolean-type">boolean</a></td>
 <td>16</li>
 <td></td>
 <td>ToBoolean</li>
