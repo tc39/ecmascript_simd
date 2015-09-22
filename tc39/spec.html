@@ -272,12 +272,6 @@ A SIMD type whose values are unsigned integers, namely Uint32x4, Uint16x8, and U
 <td>The initial value of the prototype data property of <a href="#simd-constructor">%SIMD.Bool8x16%</a></td>
 </tr>
 
-<tr>
-<td>%ArrayPrototype_join%</td>
-<td>`Array.prototype.join`</td>
-<td>The initial value of the "join" data property of the intrinsic %ArrayPrototype% object (<a href="http://www.ecma-international.org/ecma-262/6.0/#sec-array.prototype.join">ES2015 2.1.3.12</a>)</td>
-</tr>
-
 </table>
 </emu-caption>
 
@@ -415,7 +409,7 @@ The [[ElementMax]], [[ElementMin]], [[ElementSize]], [[SerializeElement]] and [[
 <emu-alg>
 1. Let _elements_ be an Array containing the contents of _argument_.[[SIMDElements]]
 1. Let _t_ be the string `"`<var>SIMD</var>`"`, e.g., `"Float32x4"`.
-1. Let e be Call(%ArrayPrototype_join%, _elements_, «", "»).
+1. Let e be ArrayJoin(_elements_, ", ").
 1. Return a new String value computed by concatenating the values "SIMD.", _t_, "(", _e_, and ")".
 </emu-alg>
 
@@ -926,6 +920,32 @@ Returns an implementation-dependent approximation to the reciprocal of the squar
 1. Let rnum be ToInt32(_rval_).
 1. ReturnIfAbrupt(_rnum_).
 1. Return the result of applying the bitwise operator @ to _lnum_ and _rnum_. The result is a signed 32 bit integer.
+</emu-alg>
+</emu-clause>
+
+<emu-clause id="array-join" aoid="ArrayJoin">
+<h1>ArrayJoin( array, separator )</h1>
+<emu-alg>
+1. Let _O_ be ToObject(_array_).
+1. ReturnIfAbrupt(_O_).
+1. Let len be ToLength(Get(_O_, "length")).
+1. ReturnIfAbrupt(_len_).
+1. If _separator_ is undefined, let _separator_ be the single-element String ",".
+1. Let _sep_ be ToString(_separator_).
+1. ReturnIfAbrupt(_sep_).
+1. If _len_ is zero, return the empty String.
+1. Let _element0_ be Get(_O_, "0").
+1. If _element0_ is undefined or null, let _R_ be the empty String; otherwise, let R be ToString(_element0_).
+1. ReturnIfAbrupt(_R_).
+1. Let _k_ be 1.
+1. Repeat, while _k_ < _len_
+  1. Let _S_ be the String value produced by concatenating _R_ and _sep_.
+  1. Let _element_ be Get(_O_, ToString(_k_)).
+  1. If _element_ is undefined or null, let _next_ be the empty String; otherwise, let _next_ be ToString(_element_).
+  1. ReturnIfAbrupt(_next_).
+  1. Let _R_ be a String value produced by concatenating _S_ and _next_.
+  1. Increase _k_ by 1.
+1. Return _R_.
 </emu-alg>
 </emu-clause>
 
@@ -1580,7 +1600,7 @@ The meanings of the optional parameters to this method are defined in the ECMA-4
   1. Append _R_ to _list_.
 1. Let _results_ be an Array containing the contents of _list_.
 1. Let _t_ be the string `"`<var>SIMD</var>`"`, e.g., `"Float32x4"`.
-1. Let _e_ be Call(%ArrayPrototype_join%, _results_, «_separator_»).
+1. Let _e_ be ArrayJoin(_results_, _separator_).
 1. Return a new String value computed by concatenating the previous value of _t_, "(", _e_, and ")".
 </emu-alg>
 </emu-clause>
