@@ -795,8 +795,8 @@ Returns the absolute value of x; the result has the same magnitude as x but has 
 </ul>
 </emu-clause>
 
-<emu-clause id="fround" aoid="MathFround">
-<h1>MathFround( x )</h1>
+<emu-clause id="fround" aoid="ToFloat32">
+<h1>ToFloat32( x )</h1>
 <emu-alg>
 1. If x is NaN, return NaN.
 1. If x is one of +0, −0, +∞, −∞, return x.
@@ -967,6 +967,14 @@ The definitions of the constructor and properties of the constructor to follow c
 </emu-alg>
 The `length` property of `_SIMD_Constructor` is _SIMD_Descriptor.[[VectorLength]].
 </emu-clause>
+</emu-clause>
+
+<emu-clause id="constructor-properties">
+<h1>Properties of the _SIMD_Constructor constructors</h1>
+
+<p>The value of the [[Prototype]] internal slot of _SIMD_Constructor is the intrinsic object %FunctionPrototype% (19.2.3).</p>
+
+<p>The `length` property of _SIMD_Constructor is _SIMD_Descriptor.[[VectorLength]].</p>
 
 Each _SIMD_Constructor has the following properties:
 
@@ -1728,7 +1736,7 @@ In the internal algorithms in this section, preceding the first step, if _isLitt
 <td>floating-point</td>
 <td>4</td>
 <td>4</td>
-<td>MathFround</td>
+<td>ToFloat32</td>
 <td>SerializeFloat32</td>
 <td>DeserializeFloat32</td>
 <td></td>
