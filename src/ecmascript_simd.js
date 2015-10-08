@@ -1295,11 +1295,14 @@ simdTypes.forEach(function(type) {
 });
 
 // If we're in a browser, the global namespace is named 'window'. If we're
-// in node, it's named 'global'. If we're in a shell, 'this' might work.
+// in node, it's named 'global'. If we're in a web worker, it's named
+// 'self'. If we're in a shell, 'this' might work.
 })(typeof window !== "undefined"
    ? window
    : (typeof process === 'object' &&
       typeof require === 'function' &&
       typeof global === 'object')
      ? global
-     : this);
+     : typeof self === 'object'
+       ? self
+       : this);
