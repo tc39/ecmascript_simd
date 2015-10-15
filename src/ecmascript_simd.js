@@ -308,17 +308,14 @@ function simdLoad(type, tarray, index, count) {
   if (index < 0 || (index * bpe + bytes) > tarray.byteLength)
     throw new RangeError("The value of index is invalid.");
 
-  var buf = type.buffer;
-  var array = bpe == 1 ? _i8x16 :
-              bpe == 2 ? _i16x8 :
-              bpe == 4 ? (tarray instanceof Float32Array ? _f32x4 : _i32x4) :
-              _f64x2;
-  var n = bytes / bpe;
-  for (var i = 0; i < n; i++)
-    array[i] = tarray[index + i];
-  for (i = 0; i < count; i++) lanes[i] = buf[i];
-  for (; i < type.lanes; i++) lanes[i] = 0;
-  return simdCreate(type);
+  var newValue = type.fn();
+  var dst = new Uint8Array(newValue.s_.buffer);
+  var src = new Uint8Array(tarray.buffer, tarray.byteOffset + index * bpe, bytes);
+
+  for (var i = 0; i < bytes; i++) {
+    dst[i] = src[i];
+  }
+  return newValue;
 }
 
 function simdStore(type, tarray, index, a, count) {
@@ -332,23 +329,13 @@ function simdStore(type, tarray, index, a, count) {
     throw new RangeError("The value of index is invalid.");
 
   a = type.fn.check(a);
-  // If count is odd and tarray's elements are 8 bytes wide, we have to create
-  // a new view.
-  if ((count % 2 != 0) && bpe == 8) {
-    var view = new type.view(tarray.buffer,
-                             tarray.byteOffset + index * 8, count);
-    for (var i = 0; i < count; i++)
-      view[i] = type.fn.extractLane(a, i);
-  } else {
-    for (var i = 0; i < count; i++)
-      type.buffer[i] = type.fn.extractLane(a, i);
-    var array = bpe == 1 ? _i8x16 :
-                bpe == 2 ? _i16x8 :
-                bpe == 4 ? (tarray instanceof Float32Array ? _f32x4 : _i32x4) :
-                _f64x2;
-    var n = bytes / bpe;
-    for (var i = 0; i < n; i++)
-      tarray[index + i] = array[i];
+
+  // The underlying buffers are copied byte by byte, to avoid float
+  // canonicalization.
+  var src = new Uint8Array(a.s_.buffer);
+  var dst = new Uint8Array(tarray.buffer, tarray.byteOffset + index * bpe, bytes);
+  for (var i = 0; i < bytes; i++) {
+    dst[i] = src[i];
   }
   return a;
 }

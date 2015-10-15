@@ -1048,11 +1048,35 @@ test('Float32x4 Int32x4 bit conversion', function() {
   equal(12.0, SIMD.Float32x4.extractLane(n, 3));
 });
 
+function equalInt32x4(a, b) {
+  equal(SIMD.Int32x4.extractLane(a, 0), SIMD.Int32x4.extractLane(b, 0));
+  equal(SIMD.Int32x4.extractLane(a, 1), SIMD.Int32x4.extractLane(b, 1));
+  equal(SIMD.Int32x4.extractLane(a, 2), SIMD.Int32x4.extractLane(b, 2));
+  equal(SIMD.Int32x4.extractLane(a, 3), SIMD.Int32x4.extractLane(b, 3));
+}
+
 test('Float32x4 Int32x4 round trip', function() {
   // NaNs should stay unmodified across bit conversions
   m = SIMD.Int32x4(0xFFFFFFFF, 0xFFFF0000, 0x80000000, 0x0);
   var m2 = SIMD.Int32x4.fromFloat32x4Bits(SIMD.Float32x4.fromInt32x4Bits(m));
   // NaNs may be canonicalized, so these tests may fail in some implementations.
-  equal(SIMD.Int32x4.extractLane(m, 0), SIMD.Int32x4.extractLane(m2, 0));
-  equal(SIMD.Int32x4.extractLane(m, 1), SIMD.Int32x4.extractLane(m2, 1));
+  equalInt32x4(m, m2);
+});
+
+test('Float32x4 Int32x4 load/store bit preservation', function() {
+   // NaNs should stay unmodified when storing and loading to Float32Array
+  var taf32 = new Float32Array(4);
+  var tai32 = new Int32Array(4);
+  var i4a, i4b;
+  i4a = SIMD.Int32x4(0x7fc00000,0x7fe00000,0x7ff00000,0x7ff80000);
+  SIMD.Int32x4.store(taf32, 0, i4a);
+  i4b = SIMD.Int32x4.load(taf32, 0);
+  equalInt32x4(i4a, i4b);
+
+  // NaNs should stay unmodified when loading as Float32x4 and storing as Int32x4
+  SIMD.Int32x4.store(taf32, 0, i4a);
+  var f4 = SIMD.Float32x4.load(taf32, 0);
+  SIMD.Float32x4.store(tai32, 0, f4);
+  i4b = SIMD.Int32x4.load(tai32, 0);
+  equalInt32x4(i4a, i4b);
 });
