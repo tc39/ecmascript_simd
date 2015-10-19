@@ -844,12 +844,6 @@ simdTypes.filter(isNumerical).forEach(function(type) {
   test(type.name + ' mul', function() {
     testBinaryOp(type, 'mul', type.mulFn);
   });
-  test(type.name + ' min', function() {
-    testBinaryOp(type, 'min', Math.min);
-  });
-  test(type.name + ' max', function() {
-    testBinaryOp(type, 'max', Math.max);
-  });
   test(type.name + ' select', function() {
     testSelect(type);
   });
@@ -912,6 +906,12 @@ simdTypes.filter(isFloatType).forEach(function(type) {
   });
   test(type.name + ' abs', function() {
     testBinaryOp(type, 'abs', Math.abs);
+  });
+  test(type.name + ' min', function() {
+    testBinaryOp(type, 'min', Math.min);
+  });
+  test(type.name + ' max', function() {
+    testBinaryOp(type, 'max', Math.max);
   });
   test(type.name + ' minNum', function() {
     testBinaryOp(type, 'minNum', minNum);
