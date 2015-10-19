@@ -1509,7 +1509,7 @@ In this definition, _TIMD_ ranges over all SIMD types for which _SIMD_Descriptor
 
 <emu-clause id="simd-to-timd-logical">
 <h1><var>SIMD</var>Constructor.from<var>TIMD</var>( value )</h1>
-In this definition, _SIMD_ and _TIMD_ are in {Float32x4, Int32x4, Uint32x4} where _SIMD_ != _TIMD_.
+In this definition, _TIMD_ ranges over all SIMD types for which _SIMD_Descriptor.[[VectorLength]] = _TIMD_Descriptor.[[VectorLength]], and where _SIMD_ and _TIMD_ are not boolean types, and where _SIMD_ and _TIMD_ are not both integer types.
 <emu-alg>
 1. If _value_.[[SIMDTypeDescriptor]] is not _TIMD_Descriptor, throw a TypeError exception.
 1. Let _list_ be a copy of _value_.[[SIMDElements]].
