@@ -61,6 +61,7 @@ Changelog:
 <li>v0.8.3: Better explanations and changes based on editor review</li>
 <li>v0.8.4: Merge signed and unsigned shifts into one function name</li>
 <li>v0.9: Remove horizontalSum/absoluteDifference; improve phrasing based on reviews</li>
+<li>v0.9.1: Throw on NaN in logical conversion. Limit logical conversion to be between Integer and Float types only</li>
 </ul>
 </emu-intro>
 
@@ -1508,14 +1509,18 @@ In this definition, _TIMD_ ranges over all SIMD types for which _SIMD_Descriptor
 
 <emu-clause id="simd-to-timd-logical">
 <h1><var>SIMD</var>Constructor.from<var>TIMD</var>( value )</h1>
-In this definition, _TIMD_ ranges over all SIMD types for which _SIMD_Descriptor.[[VectorLength]] = _TIMD_Descriptor.[[VectorLength]], and where _SIMD_ and _TIMD_ are not boolean types.
+In this definition, _TIMD_ ranges over all SIMD types for which _SIMD_Descriptor.[[VectorLength]] = _TIMD_Descriptor.[[VectorLength]], and where _SIMD_ and _TIMD_ are not boolean types, and where _SIMD_ and _TIMD_ are not both integer types.
 <emu-alg>
 1. If _value_.[[SIMDTypeDescriptor]] is not _TIMD_Descriptor, throw a TypeError exception.
 1. Let _list_ be a copy of _value_.[[SIMDElements]].
-1. For _element_ in _list_,
-  1. If _SIMD_ is an integer type and _TIMD_ is a floating point type, and _element_ is greater than the maximum value or less than the minimum value of _SIMD_, throw a *RangeError* exception.
+1. If _SIMD_ is an integer type and _TIMD_ is a floating point type, 
+  1. For _element_ in _list_,
+    1. if _element_ is *NaN* or _element_ `>` _SIMD_Descriptor.[[ElementMax]] or _element_ `<` _SIMD_Descriptor.[[ElementMin]], throw a *RangeError* exception.
 1. Return SIMDCreate(_SIMD_Descriptor, _list_).
 </emu-alg>
+<emu-note>
+This definition uses `<` and `>` to refer to the abstract operation defined by <a href="http://www.ecma-international.org/ecma-262/6.0/#sec-abstract-relational-comparison">ES2015 7.2.11 (Abstract Relational Comparison)</a>
+</emu-note>
 </emu-clause>
 
 <emu-clause id="swizzle">
