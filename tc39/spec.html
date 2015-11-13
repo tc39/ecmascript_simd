@@ -282,7 +282,7 @@ A SIMD type whose values are unsigned integers, namely Uint32x4, Uint16x8, and U
 
 <emu-clause id="simd-types">
 <h1>SIMD types</h1>
-A SIMD value is a homogeneous vector of a Numbers or Booleans, possibly from a restricted range. Each SIMD value is represented as a record with the following immutable fields:
+A SIMD value is a homogeneous vector of Numbers or Booleans, possibly from a restricted range. Each SIMD value is represented as a record with the following immutable fields:
 
 <ul>
 <li>[[SIMDTypeDescriptor]], which refers to the type descriptor for the type.</li>
@@ -290,6 +290,7 @@ A SIMD value is a homogeneous vector of a Numbers or Booleans, possibly from a r
 </ul>
 <emu-note>The [[SIMDTypeDescriptor]] field effectively determines its type. The SIMD type descriptors are defined in <a href="#simd-descriptor-table">a table</a>.</emu-note>
 <emu-note>A list which is in the [[SIMDElements]] of a SIMD value field is never modified.</emu-note>
+<emu-note>[[SIMDElements]] is a list of Number values for integer and floating point SIMD types, and Boolean values for boolean SIMD types.</emu-note>
 
 SIMD type descriptors are records with the following fields:
 <ul>
