@@ -797,8 +797,10 @@ Returns the absolute value of x; the result has the same magnitude as x but has 
 </emu-clause>
 
 <emu-clause id="fround" aoid="ToFloat32">
-<h1>ToFloat32( x )</h1>
+<h1>ToFloat32( argument )</h1>
 <emu-alg>
+1. Let x be ToNumber(argument).
+1. ReturnIfAbrupt(x).
 1. If x is NaN, return NaN.
 1. If x is one of +0, −0, +∞, −∞, return x.
 1. Let x32 be the result of converting x to a value in IEEE 754-2008 binary32 format using roundTiesToEven.
