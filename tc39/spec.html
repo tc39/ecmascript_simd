@@ -1502,7 +1502,7 @@ This operation exists only on integer and floating point SIMD types.
 
 <emu-clause id="simd-to-timd">
 <h1><var>SIMD</var>Constructor.from<var>TIMD</var>Bits( value )</h1>
-In this definition, _TIMD_ ranges over all SIMD types for which _SIMD_Descriptor.[[ElementSize]] &times; _SIMD_Descriptor.[[VectorLength]] = _TIMD_Descriptor.[[ElementSize]] &times; _TIMD_Descriptor.[[VectorLength]], unless one descriptor does not have a [[SerializeElement]] field.
+In this definition, _TIMD_ is not _SIMD_, and _TIMD_ ranges over all SIMD types for which _SIMD_Descriptor.[[ElementSize]] &times; _SIMD_Descriptor.[[VectorLength]] = _TIMD_Descriptor.[[ElementSize]] &times; _TIMD_Descriptor.[[VectorLength]], unless one descriptor does not have a [[SerializeElement]] field.
 <emu-note>All of the SIMD types described in this spec are 16 bytes, but Booleans have no serialization, so all pairs of types which do not include Booleans are included.</emu-note>
 <emu-alg>
 1. If _value_.[[SIMDTypeDescriptor]] is not _TIMD_Descriptor, throw a TypeError exception.
@@ -1512,7 +1512,7 @@ In this definition, _TIMD_ ranges over all SIMD types for which _SIMD_Descriptor
 
 <emu-clause id="simd-to-timd-logical">
 <h1><var>SIMD</var>Constructor.from<var>TIMD</var>( value )</h1>
-In this definition, _TIMD_ ranges over all SIMD types for which _SIMD_Descriptor.[[VectorLength]] = _TIMD_Descriptor.[[VectorLength]], and where _SIMD_ and _TIMD_ are not boolean types, and where _SIMD_ and _TIMD_ are not both integer types.
+In this definition, _TIMD_ is not _SIMD_, _TIMD_ ranges over all SIMD types for which _SIMD_Descriptor.[[VectorLength]] = _TIMD_Descriptor.[[VectorLength]], neither of _SIMD_ and _TIMD_ are of boolean type, and _SIMD_ and _TIMD_ are not both integer types.
 <emu-alg>
 1. If _value_.[[SIMDTypeDescriptor]] is not _TIMD_Descriptor, throw a TypeError exception.
 1. Let _list_ be a copy of _value_.[[SIMDElements]].
