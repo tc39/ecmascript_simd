@@ -249,15 +249,6 @@ function simdBinaryOp(type, op, a, b) {
   return simdCreate(type);
 }
 
-function simdWideningBinaryOp(type, op, a, b) {
-  a = type.fn.check(a);
-  b = type.fn.check(b);
-  for (var i = 0; i < type.wideType.lanes; i++)
-    lanes[i] = op(type.fn.extractLane(a, i),
-                  type.fn.extractLane(b, i));
-  return simdCreate(type.wideType);
-}
-
 function binaryEqual(a, b) { return a == b; }
 function binaryNotEqual(a, b) { return a != b; }
 function binaryLess(a, b) { return a < b; }
@@ -807,10 +798,6 @@ int8x16.fromBits = [float32x4, int32x4, int16x8, uint32x4, uint16x8, uint8x16];
 uint32x4.fromBits = [float32x4, int32x4, int16x8, int8x16, uint16x8, uint8x16];
 uint16x8.fromBits = [float32x4, int32x4, int16x8, int8x16, uint32x4, uint8x16];
 uint8x16.fromBits = [float32x4, int32x4, int16x8, int8x16, uint32x4, uint16x8];
-
-// SIMD widening types.
-uint16x8.wideType = uint32x4;
-uint8x16.wideType = uint16x8;
 
 var simdTypes = [float32x4,
                  int32x4, int16x8, int8x16,
