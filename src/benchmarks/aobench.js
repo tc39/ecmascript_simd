@@ -292,7 +292,7 @@
 
         var x = SIMD.Float32x4.mul(cosphi, theta);
         var y = SIMD.Float32x4.mul(sinphi, theta);
-        var z = SIMD.Float32x4.sqrt(SIMD.Float32x4.sub(SIMD.Float32x4.splat(1), SIMD.Float32x4.mul(theta, theta)));
+        var z = SIMD.Float32x4.sqrt(SIMD.Float32x4.sub(SIMD.Float32x4.splat(1.0), SIMD.Float32x4.mul(theta, theta)));
 
         var dirx = SIMD.Float32x4.add(SIMD.Float32x4.mul(x, SIMD.Float32x4.splat(basis[0].x)),
                             SIMD.Float32x4.add(SIMD.Float32x4.mul(y, SIMD.Float32x4.splat(basis[1].x)),
@@ -310,7 +310,7 @@
 
         var occIsectA = {
           t: SIMD.Float32x4.splat(1e17),
-          hit: SIMD.Int32x4.splat(0)
+          hit: SIMD.Bool32x4.splat(false)
         };
         var occIsectB = {
           p: {
@@ -332,9 +332,8 @@
 
         occlusionx4 = SIMD.Float32x4.add(
                         occlusionx4,
-                        SIMD.Float32x4.fromInt32x4Bits(
-                          SIMD.Int32x4.and(
-                            occIsectA.hit, SIMD.Int32x4.fromFloat32x4Bits(SIMD.Float32x4.splat(1)))));
+                        SIMD.Float32x4.select(occIsectA.hit, SIMD.Float32x4.splat(1.0),
+                                                             SIMD.Float32x4.splat(0.0)));
 
       }
     }
@@ -367,53 +366,29 @@
     var D = SIMD.Float32x4.sub(SIMD.Float32x4.mul(B, B), C);
 
     var cond1 = SIMD.Float32x4.greaterThan(D, SIMD.Float32x4.splat(0.0));
-    if (cond1.signMask) {
-      var t2 = SIMD.Float32x4.fromInt32x4Bits(SIMD.Int32x4.and(cond1, SIMD.Int32x4.fromFloat32x4Bits(SIMD.Float32x4.sub(SIMD.Float32x4.neg(B), SIMD.Float32x4.sqrt(D)))));
-      var cond2 = SIMD.Int32x4.and(SIMD.Float32x4.greaterThan(t2, SIMD.Float32x4.splat(0.0)),
-                                   SIMD.Float32x4.lessThan(t2, isectA.t));
-      if (cond2.signMask) {
-        isectA.t = SIMD.Float32x4.fromInt32x4Bits(
-                     SIMD.Int32x4.or(
-                       SIMD.Int32x4.and(
-                         cond2,
-                         SIMD.Int32x4.fromFloat32x4Bits(t2)),
-                       SIMD.Int32x4.and(
-                         SIMD.Int32x4.not(cond2),
-                         SIMD.Int32x4.fromFloat32x4Bits(isectA.t))));
-        isectA.hit = SIMD.Int32x4.or(cond2, isectA.hit);
-        isectB.p.x = SIMD.Float32x4.fromInt32x4Bits(
-                       SIMD.Int32x4.or(SIMD.Int32x4.and(cond2, SIMD.Int32x4.fromFloat32x4Bits(SIMD.Float32x4.add(orgx, SIMD.Float32x4.mul(dirx, isectA.t)))),
-                       SIMD.Int32x4.and(SIMD.Int32x4.not(cond2), SIMD.Int32x4.fromFloat32x4Bits(isectB.p.x))));
-        isectB.p.y = SIMD.Float32x4.fromInt32x4Bits(
-                       SIMD.Int32x4.or(SIMD.Int32x4.and(cond2, SIMD.Int32x4.fromFloat32x4Bits(SIMD.Float32x4.add(orgx, SIMD.Float32x4.mul(diry, isectA.t)))),
-                       SIMD.Int32x4.and(SIMD.Int32x4.not(cond2), SIMD.Int32x4.fromFloat32x4Bits(isectB.p.y))));
-        isectB.p.z = SIMD.Float32x4.fromInt32x4Bits(
-                       SIMD.Int32x4.or(SIMD.Int32x4.and(cond2, SIMD.Int32x4.fromFloat32x4Bits(SIMD.Float32x4.add(orgx, SIMD.Float32x4.mul(dirz, isectA.t)))),
-                       SIMD.Int32x4.and(SIMD.Int32x4.not(cond2), SIMD.Int32x4.fromFloat32x4Bits(isectB.p.z))));
+    if (SIMD.Bool32x4.anyTrue(cond1)) {
+      var t2 = SIMD.Float32x4.select(cond1, SIMD.Float32x4.sub(SIMD.Float32x4.neg(B), SIMD.Float32x4.sqrt(D)), SIMD.Float32x4.splat(0.0));
+      var cond2 = SIMD.Bool32x4.and(SIMD.Float32x4.greaterThan(t2, SIMD.Float32x4.splat(0.0)),
+                                    SIMD.Float32x4.lessThan(t2, isectA.t));
+      if (SIMD.Bool32x4.anyTrue(cond2)) {
+        isectA.t = SIMD.Float32x4.select(cond2, t2, isectA.t);
+        isectA.hit = SIMD.Bool32x4.or(cond2, isectA.hit);
 
-        isectB.n.x = SIMD.Float32x4.fromInt32x4Bits(
-                       SIMD.Int32x4.or(SIMD.Int32x4.and(cond2, SIMD.Int32x4.fromFloat32x4Bits(SIMD.Float32x4.sub(isectB.p.x, SIMD.Float32x4.splat(sphere.center.x)))),
-                       SIMD.Int32x4.and(SIMD.Int32x4.not(cond2), SIMD.Int32x4.fromFloat32x4Bits(isectB.n.x))));
-        isectB.n.y = SIMD.Float32x4.fromInt32x4Bits(
-                       SIMD.Int32x4.or(SIMD.Int32x4.and(cond2, SIMD.Int32x4.fromFloat32x4Bits(SIMD.Float32x4.sub(isectB.p.y, SIMD.Float32x4.splat(sphere.center.y)))),
-                       SIMD.Int32x4.and(SIMD.Int32x4.not(cond2), SIMD.Int32x4.fromFloat32x4Bits(isectB.n.y))));
-        isectB.n.z = SIMD.Float32x4.fromInt32x4Bits(
-                       SIMD.Int32x4.or(SIMD.Int32x4.and(cond2, SIMD.Int32x4.fromFloat32x4Bits(SIMD.Float32x4.sub(isectB.p.z, SIMD.Float32x4.splat(sphere.center.z)))),
-                       SIMD.Int32x4.and(SIMD.Int32x4.not(cond2), SIMD.Int32x4.fromFloat32x4Bits(isectB.n.z))));
+        isectB.p.x = SIMD.Float32x4.select(cond2, SIMD.Float32x4.add(orgx, SIMD.Float32x4.mul(dirx, isectA.t)), isectB.p.x);
+        isectB.p.y = SIMD.Float32x4.select(cond2, SIMD.Float32x4.add(orgx, SIMD.Float32x4.mul(diry, isectA.t)), isectB.p.y);
+        isectB.p.z = SIMD.Float32x4.select(cond2, SIMD.Float32x4.add(orgx, SIMD.Float32x4.mul(dirz, isectA.t)), isectB.p.z);
+
+        isectB.n.x = SIMD.Float32x4.select(cond2, SIMD.Float32x4.sub(isectB.p.x, SIMD.Float32x4.splat(sphere.center.x)), isectB.n.x);
+        isectB.n.y = SIMD.Float32x4.select(cond2, SIMD.Float32x4.sub(isectB.p.y, SIMD.Float32x4.splat(sphere.center.y)), isectB.n.y);
+        isectB.n.z = SIMD.Float32x4.select(cond2, SIMD.Float32x4.sub(isectB.p.z, SIMD.Float32x4.splat(sphere.center.z)), isectB.n.z);
 
         var lengths = SIMD.Float32x4.sqrt(SIMD.Float32x4.add(SIMD.Float32x4.mul(isectB.n.x, isectB.n.x),
                                           SIMD.Float32x4.add(SIMD.Float32x4.mul(isectB.n.y, isectB.n.y),
                                                              SIMD.Float32x4.mul(isectB.n.z, isectB.n.z))));
         var cond3 = SIMD.Float32x4.greaterThan(SIMD.Float32x4.abs(lengths), SIMD.Float32x4.splat(1e-17));
-        isectB.n.x = SIMD.Float32x4.fromInt32x4Bits(
-                       SIMD.Int32x4.or(SIMD.Int32x4.and(cond3, SIMD.Int32x4.fromFloat32x4Bits(SIMD.Float32x4.div(isectB.n.x, lengths))),
-                       SIMD.Int32x4.and(SIMD.Int32x4.not(cond3), SIMD.Int32x4.fromFloat32x4Bits(isectB.n.x))));
-        isectB.n.y = SIMD.Float32x4.fromInt32x4Bits(
-                       SIMD.Int32x4.or(SIMD.Int32x4.and(cond3, SIMD.Int32x4.fromFloat32x4Bits(SIMD.Float32x4.div(isectB.n.y, lengths))),
-                       SIMD.Int32x4.and(SIMD.Int32x4.not(cond3), SIMD.Int32x4.fromFloat32x4Bits(isectB.n.y))));
-        isectB.n.z = SIMD.Float32x4.fromInt32x4Bits(
-                       SIMD.Int32x4.or(SIMD.Int32x4.and(cond3, SIMD.Int32x4.fromFloat32x4Bits(SIMD.Float32x4.div(isectB.n.z, lengths))),
-                       SIMD.Int32x4.and(SIMD.Int32x4.not(cond3), SIMD.Int32x4.fromFloat32x4Bits(isectB.n.z))));
+        isectB.n.x = SIMD.Float32x4.select(cond3, SIMD.Float32x4.div(isectB.n.x, lengths), isectB.n.x);
+        isectB.n.y = SIMD.Float32x4.select(cond3, SIMD.Float32x4.div(isectB.n.y, lengths), isectB.n.y);
+        isectB.n.z = SIMD.Float32x4.select(cond3, SIMD.Float32x4.div(isectB.n.z, lengths), isectB.n.z);
       }
     }
   }
@@ -430,31 +405,19 @@
     var dp = SIMD.Float32x4.add(SIMD.Float32x4.mul(orgx, SIMD.Float32x4.splat(plane.n.x)),
                       SIMD.Float32x4.add(SIMD.Float32x4.mul(orgy, SIMD.Float32x4.splat(plane.n.y)),
                                SIMD.Float32x4.mul(orgz, SIMD.Float32x4.splat(plane.n.z))));
-    var t2 = SIMD.Float32x4.fromInt32x4Bits(SIMD.Int32x4.and(cond1, SIMD.Int32x4.fromFloat32x4Bits(SIMD.Float32x4.div(SIMD.Float32x4.neg(SIMD.Float32x4.add(dp, d)), v))));
-    var cond2 = SIMD.Int32x4.and(SIMD.Float32x4.greaterThan(t2, SIMD.Float32x4.splat(0.0)), SIMD.Float32x4.lessThan(t2, isectA.t));
-    if (cond2.signMask) {
-      isectA.t = SIMD.Float32x4.fromInt32x4Bits(SIMD.Int32x4.or(SIMD.Int32x4.and(cond2, SIMD.Int32x4.fromFloat32x4Bits(t2)),
-                                             SIMD.Int32x4.and(SIMD.Int32x4.not(cond2), SIMD.Int32x4.fromFloat32x4Bits(isectA.t))));
-      isectA.hit = SIMD.Int32x4.or(cond2, isectA.hit);
-      isectB.p.x = SIMD.Float32x4.fromInt32x4Bits(
-                     SIMD.Int32x4.or(SIMD.Int32x4.and(cond2, SIMD.Int32x4.fromFloat32x4Bits(SIMD.Float32x4.add(orgx, SIMD.Float32x4.mul(dirx, isectA.t)))),
-                     SIMD.Int32x4.and(SIMD.Int32x4.not(cond2), SIMD.Int32x4.fromFloat32x4Bits(isectB.p.x))));
-      isectB.p.y = SIMD.Float32x4.fromInt32x4Bits(
-                     SIMD.Int32x4.or(SIMD.Int32x4.and(cond2, SIMD.Int32x4.fromFloat32x4Bits(SIMD.Float32x4.add(orgx, SIMD.Float32x4.mul(diry, isectA.t)))),
-                     SIMD.Int32x4.and(SIMD.Int32x4.not(cond2), SIMD.Int32x4.fromFloat32x4Bits(isectB.p.y))));
-      isectB.p.z = SIMD.Float32x4.fromInt32x4Bits(
-                     SIMD.Int32x4.or(SIMD.Int32x4.and(cond2, SIMD.Int32x4.fromFloat32x4Bits(SIMD.Float32x4.add(orgx, SIMD.Float32x4.mul(dirz, isectA.t)))),
-                     SIMD.Int32x4.and(SIMD.Int32x4.not(cond2), SIMD.Int32x4.fromFloat32x4Bits(isectB.p.z))));
+    var t2 = SIMD.Float32x4.select(cond1, SIMD.Float32x4.div(SIMD.Float32x4.neg(SIMD.Float32x4.add(dp, d)), v), SIMD.Float32x4.splat(0.0));
+    var cond2 = SIMD.Bool32x4.and(SIMD.Float32x4.greaterThan(t2, SIMD.Float32x4.splat(0.0)), SIMD.Float32x4.lessThan(t2, isectA.t));
+    if (SIMD.Bool32x4.anyTrue(cond2)) {
+      isectA.t = SIMD.Float32x4.select(cond2, t2, isectA.t);
+      isectA.hit = SIMD.Bool32x4.or(cond2, isectA.hit);
 
-      isectB.n.x = SIMD.Float32x4.fromInt32x4Bits(
-                     SIMD.Int32x4.or(SIMD.Int32x4.and(cond2, SIMD.Int32x4.fromFloat32x4Bits(Float32x4.splat(plane.n.x))),
-                     SIMD.Int32x4.and(SIMD.Int32x4.not(cond2), SIMD.Int32x4.fromFloat32x4Bits(isectB.n.x))));
-      isectB.n.y = SIMD.Float32x4.fromInt32x4Bits(
-                     SIMD.Int32x4.or(SIMD.Int32x4.and(cond2, SIMD.Int32x4.fromFloat32x4Bits(Float32x4.splat(plane.n.y))),
-                     SIMD.Int32x4.and(SIMD.Int32x4.not(cond2), SIMD.Int32x4.fromFloat32x4Bits(isectB.n.y))));
-      isectB.n.z = SIMD.Float32x4.fromInt32x4Bits(
-                     SIMD.Int32x4.or(SIMD.Int32x4.and(cond2, SIMD.Int32x4.fromFloat32x4Bits(Float32x4.splat(plane.n.z))),
-                     SIMD.Int32x4.and(SIMD.Int32x4.not(cond2), SIMD.Int32x4.fromFloat32x4Bits(isectB.n.z))));
+      isectB.p.x = SIMD.Float32x4.select(cond2, SIMD.Float32x4.add(orgx, SIMD.Float32x4.mul(dirx, isectA.t)), isectB.p.x);
+      isectB.p.y = SIMD.Float32x4.select(cond2, SIMD.Float32x4.add(orgy, SIMD.Float32x4.mul(diry, isectA.t)), isectB.p.y);
+      isectB.p.z = SIMD.Float32x4.select(cond2, SIMD.Float32x4.add(orgz, SIMD.Float32x4.mul(dirz, isectA.t)), isectB.p.z);
+
+      isectB.n.x = SIMD.Float32x4.select(cond2, Float32x4.splat(plane.n.x), isectB.n.x);
+      isectB.n.y = SIMD.Float32x4.select(cond2, Float32x4.splat(plane.n.y), isectB.n.y);
+      isectB.n.z = SIMD.Float32x4.select(cond2, Float32x4.splat(plane.n.z), isectB.n.z);
     }
   }
 

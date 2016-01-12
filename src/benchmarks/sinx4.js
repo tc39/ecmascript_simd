@@ -117,6 +117,7 @@
 
     var emm0;
     var emm2;
+    var emm2mask;
 
     sign_bit = x;
     x        = SIMD.Float32x4.fromInt32x4Bits(SIMD.Int32x4.and(SIMD.Int32x4.fromFloat32x4Bits(x), _ps_inv_sign_mask));
@@ -133,7 +134,8 @@
     emm0     = SIMD.Int32x4.shiftLeftByScalar(emm0, 29);
 
     emm2     = SIMD.Int32x4.and(emm2, _pi32_2);
-    emm2     = SIMD.Int32x4.equal(emm2, SIMD.Int32x4.splat(0));
+    emm2mask = SIMD.Int32x4.equal(emm2, SIMD.Int32x4.splat(0));
+    emm2     = SIMD.Int32x4.select(emm2mask, SIMD.Int32x4.splat(-1), SIMD.Int32x4.splat(0));
 
     swap_sign_bit = SIMD.Float32x4.fromInt32x4Bits(emm0);
     poly_mask     = SIMD.Float32x4.fromInt32x4Bits(emm2);
