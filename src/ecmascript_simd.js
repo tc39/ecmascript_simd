@@ -306,6 +306,10 @@ function simdLoad(type, tarray, index, count) {
   for (var i = 0; i < bytes; i++) {
     dst[i] = src[i];
   }
+  var typeBytes = type.lanes * type.laneSize;
+  for (var i = bytes; i < typeBytes; i++) {
+    dst[i] = 0;
+  }
   return newValue;
 }
 
