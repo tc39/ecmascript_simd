@@ -891,13 +891,6 @@ if (typeof simdPhase2 !== 'undefined') {
   float64x2.fromBits = [float32x4, int32x4, int16x8, int8x16,
                         uint32x4, uint16x8, uint8x16];
 
-  int32x4.fromBits = [float32x4, int16x8, int8x16, uint32x4, uint16x8, uint8x16];
-  int16x8.fromBits = [float32x4, int32x4, int8x16, uint32x4, uint16x8, uint8x16];
-  int8x16.fromBits = [float32x4, int32x4, int16x8, uint32x4, uint16x8, uint8x16];
-  uint32x4.fromBits = [float32x4, int32x4, int16x8, int8x16, uint16x8, uint8x16];
-  uint16x8.fromBits = [float32x4, int32x4, int16x8, int8x16, uint32x4, uint8x16];
-  uint8x16.fromBits = [float32x4, int32x4, int16x8, int8x16, uint32x4, uint16x8];
-
   simdTypes.push(float64x2);
   simdTypes.push(bool64x2);
 }
