@@ -62,6 +62,7 @@ Changelog:
 <li>v0.8.4: Merge signed and unsigned shifts into one function name</li>
 <li>v0.9: Remove horizontalSum/absoluteDifference; improve phrasing based on reviews</li>
 <li>v0.9.1: Throw on NaN in logical conversion. Limit logical conversion to be between Integer and Float types only</li>
+<li>v0.9.2: Changed the *shiftByScalar semantics to used the same masked semantics that the scalar shifts are using</li>
 </ul>
 </emu-intro>
 
@@ -1362,14 +1363,19 @@ This operation is only defined on <a href="#simd-integer-type">integer</a> SIMD 
 <emu-alg>
 1. If _a_.[[SIMDTypeDescriptor]] is not _SIMD_Descriptor, throw a TypeError exception.
 1. Let _scalar_ be ToUint32(_bits_).
-1. If _scalar_ &ge; _SIMD_Descriptor.[[ElementSize]] &times; 8, then
-  1. Let _list_ be a list of length _SIMD_Descriptor.[[VectorLength]], filled with 0.
-  1. return SIMDCreate(_SIMD_Descriptor, _list_).
-1. Let _result_ be SIMDScalarOp(_a_, _scalar_, `<<`).
+1. If _SIMD_Descriptor.[[ElementSize]] is 64, then
+  1. Let _shiftCount_ be the result of masking out all but the least significant 6 bits of _scalar_, that is, compute _scalar_ & 0x3F.
+1. If _SIMD_Descriptor.[[ElementSize]] is 32, then
+  1. Let _shiftCount_ be the result of masking out all but the least significant 5 bits of _scalar_, that is, compute _scalar_ & 0x1F.
+1. If _SIMD_Descriptor.[[ElementSize]] is 16, then
+  1. Let _shiftCount_ be the result of masking out all but the least significant 4 bits of _scalar_, that is, compute _scalar_ & 0x0F.
+1. If _SIMD_Descriptor.[[ElementSize]] is 8, then
+  1. Let _shiftCount_ be the result of masking out all but the least significant 3 bits of _scalar_, that is, compute _scalar_ & 0x07.
+1. Let _result_ be SIMDScalarOp(_a_, _shiftCount_, `<<`).
 1. ReturnIfAbrupt(_result_).
 1. Return _result_.
 </emu-alg>
-<emu-note>Unlike ECMAScript scalar shift, there is no "wrap-around" behavior.</emu-note>
+<emu-note>The "masked" shift count semantics matches the ECMAScript scalar shift semantics.</emu-note>
 </emu-clause>
 
 <emu-clause id="simd-shift-right-by-scalar">
@@ -1380,10 +1386,15 @@ On <a href="#simd-unsigned-integer-type">unsigned</a> SIMD types, the following 
 <emu-alg>
 1. If _a_.[[SIMDTypeDescriptor]] is not _SIMD_Descriptor, throw a TypeError exception.
 1. Let _scalar_ be ToUint32(_bits_).
-1. If _scalar_ &ge; _SIMD_Descriptor.[[ElementSize]] &times; 8, then
-  1. Let _list_ be a list of length _SIMD_Descriptor.[[VectorLength]], filled with 0.
-  1. return SIMDCreate(_SIMD_Descriptor, _list_).
-1. Let _result_ be SIMDScalarOp(_a_, _scalar_, `>>>`).
+1. If _SIMD_Descriptor.[[ElementSize]] is 64, then
+  1. Let _shiftCount_ be the result of masking out all but the least significant 6 bits of _scalar_, that is, compute _scalar_ & 0x3F.
+1. If _SIMD_Descriptor.[[ElementSize]] is 32, then
+  1. Let _shiftCount_ be the result of masking out all but the least significant 5 bits of _scalar_, that is, compute _scalar_ & 0x1F.
+1. If _SIMD_Descriptor.[[ElementSize]] is 16, then
+  1. Let _shiftCount_ be the result of masking out all but the least significant 4 bits of _scalar_, that is, compute _scalar_ & 0x0F.
+1. If _SIMD_Descriptor.[[ElementSize]] is 8, then
+  1. Let _shiftCount_ be the result of masking out all but the least significant 3 bits of _scalar_, that is, compute _scalar_ & 0x07.
+1. Let _result_ be SIMDScalarOp(_a_, _shiftCount_, `>>>`).
 1. ReturnIfAbrupt(_result_).
 1. Return _result_.
 </emu-alg>
@@ -1391,13 +1402,19 @@ On <a href="#simd-signed-integer-type">signed</a> SIMD types, the following defi
 <emu-alg>
 1. If _a_.[[SIMDTypeDescriptor]] is not _SIMD_Descriptor, throw a TypeError exception.
 1. Let _scalar_ be ToUint32(_bits_).
-1. If _scalar_ &ge; _SIMD_Descriptor.[[ElementSize]] &times; 8, then
-  1. Let _scalar_ be _SIMD_Descriptor.[[ElementSize]] &times; 8 - 1.
-1. Let _result_ be SIMDScalarOp(_a_, _scalar_, `>>`).
+1. If _SIMD_Descriptor.[[ElementSize]] is 64, then
+  1. Let _shiftCount_ be the result of masking out all but the least significant 6 bits of _scalar_, that is, compute _scalar_ & 0x3F.
+1. If _SIMD_Descriptor.[[ElementSize]] is 32, then
+  1. Let _shiftCount_ be the result of masking out all but the least significant 5 bits of _scalar_, that is, compute _scalar_ & 0x1F.
+1. If _SIMD_Descriptor.[[ElementSize]] is 16, then
+  1. Let _shiftCount_ be the result of masking out all but the least significant 4 bits of _scalar_, that is, compute _scalar_ & 0x0F.
+1. If _SIMD_Descriptor.[[ElementSize]] is 8, then
+  1. Let _shiftCount_ be the result of masking out all but the least significant 3 bits of _scalar_, that is, compute _scalar_ & 0x07.
+1. Let _result_ be SIMDScalarOp(_a_, _shiftCount_, `>>`).
 1. ReturnIfAbrupt(_result_).
 1. Return _result_.
 </emu-alg>
-<emu-note>In both definitions, unlike ECMAScript scalar shift, there is no "wrap-around" behavior.</emu-note>
+<emu-note>The "masked" shift count semantics matches the ECMAScript scalar shift semantics.</emu-note>
 </emu-clause>
 
 <emu-clause id="simd-extract-lane">
