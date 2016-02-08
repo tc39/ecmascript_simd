@@ -1363,14 +1363,7 @@ This operation is only defined on <a href="#simd-integer-type">integer</a> SIMD 
 <emu-alg>
 1. If _a_.[[SIMDTypeDescriptor]] is not _SIMD_Descriptor, throw a TypeError exception.
 1. Let _scalar_ be ToUint32(_bits_).
-1. If _SIMD_Descriptor.[[ElementSize]] is 64, then
-  1. Let _shiftCount_ be the result of masking out all but the least significant 6 bits of _scalar_, that is, compute _scalar_ & 0x3F.
-1. If _SIMD_Descriptor.[[ElementSize]] is 32, then
-  1. Let _shiftCount_ be the result of masking out all but the least significant 5 bits of _scalar_, that is, compute _scalar_ & 0x1F.
-1. If _SIMD_Descriptor.[[ElementSize]] is 16, then
-  1. Let _shiftCount_ be the result of masking out all but the least significant 4 bits of _scalar_, that is, compute _scalar_ & 0x0F.
-1. If _SIMD_Descriptor.[[ElementSize]] is 8, then
-  1. Let _shiftCount_ be the result of masking out all but the least significant 3 bits of _scalar_, that is, compute _scalar_ & 0x07.
+1. Let _shiftCount_ be _scalar_ modulo (_SIMD_Descriptor.[[ElementSize]] &times; 8)
 1. Let _result_ be SIMDScalarOp(_a_, _shiftCount_, `<<`).
 1. ReturnIfAbrupt(_result_).
 1. Return _result_.
@@ -1386,14 +1379,7 @@ On <a href="#simd-unsigned-integer-type">unsigned</a> SIMD types, the following 
 <emu-alg>
 1. If _a_.[[SIMDTypeDescriptor]] is not _SIMD_Descriptor, throw a TypeError exception.
 1. Let _scalar_ be ToUint32(_bits_).
-1. If _SIMD_Descriptor.[[ElementSize]] is 64, then
-  1. Let _shiftCount_ be the result of masking out all but the least significant 6 bits of _scalar_, that is, compute _scalar_ & 0x3F.
-1. If _SIMD_Descriptor.[[ElementSize]] is 32, then
-  1. Let _shiftCount_ be the result of masking out all but the least significant 5 bits of _scalar_, that is, compute _scalar_ & 0x1F.
-1. If _SIMD_Descriptor.[[ElementSize]] is 16, then
-  1. Let _shiftCount_ be the result of masking out all but the least significant 4 bits of _scalar_, that is, compute _scalar_ & 0x0F.
-1. If _SIMD_Descriptor.[[ElementSize]] is 8, then
-  1. Let _shiftCount_ be the result of masking out all but the least significant 3 bits of _scalar_, that is, compute _scalar_ & 0x07.
+1. Let _shiftCount_ be _scalar_ modulo (_SIMD_Descriptor.[[ElementSize]] &times; 8)
 1. Let _result_ be SIMDScalarOp(_a_, _shiftCount_, `>>>`).
 1. ReturnIfAbrupt(_result_).
 1. Return _result_.
@@ -1402,14 +1388,7 @@ On <a href="#simd-signed-integer-type">signed</a> SIMD types, the following defi
 <emu-alg>
 1. If _a_.[[SIMDTypeDescriptor]] is not _SIMD_Descriptor, throw a TypeError exception.
 1. Let _scalar_ be ToUint32(_bits_).
-1. If _SIMD_Descriptor.[[ElementSize]] is 64, then
-  1. Let _shiftCount_ be the result of masking out all but the least significant 6 bits of _scalar_, that is, compute _scalar_ & 0x3F.
-1. If _SIMD_Descriptor.[[ElementSize]] is 32, then
-  1. Let _shiftCount_ be the result of masking out all but the least significant 5 bits of _scalar_, that is, compute _scalar_ & 0x1F.
-1. If _SIMD_Descriptor.[[ElementSize]] is 16, then
-  1. Let _shiftCount_ be the result of masking out all but the least significant 4 bits of _scalar_, that is, compute _scalar_ & 0x0F.
-1. If _SIMD_Descriptor.[[ElementSize]] is 8, then
-  1. Let _shiftCount_ be the result of masking out all but the least significant 3 bits of _scalar_, that is, compute _scalar_ & 0x07.
+1. Let _shiftCount_ be _scalar_ modulo (_SIMD_Descriptor.[[ElementSize]] &times; 8)
 1. Let _result_ be SIMDScalarOp(_a_, _shiftCount_, `>>`).
 1. ReturnIfAbrupt(_result_).
 1. Return _result_.
