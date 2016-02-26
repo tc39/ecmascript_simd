@@ -908,7 +908,7 @@ simdTypes.filter(isFloatType).forEach(function(type) {
     testBinaryOp(type, 'div', function(a, b) { return a / b; });
   });
   test(type.name + ' abs', function() {
-    testBinaryOp(type, 'abs', Math.abs);
+    testUnaryOp(type, 'abs', Math.abs);
   });
   test(type.name + ' min', function() {
     testBinaryOp(type, 'min', Math.min);
