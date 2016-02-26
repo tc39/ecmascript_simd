@@ -1186,8 +1186,7 @@ var simdFns = {
   shiftLeftByScalar:
     function(type) {
       return function(a, bits) {
-        if (bits>>>0 >= type.laneSize * 8)
-          return type.fn.splat(0);
+        bits &= type.laneSize * 8 - 1;
         return simdShiftOp(type, binaryShiftLeft, a, bits);
       }
     },
@@ -1196,14 +1195,12 @@ var simdFns = {
     function(type) {
       if (type.unsigned) {
         return function(a, bits) {
-          if (bits>>>0 >= type.laneSize * 8)
-            return type.fn.splat(0);
+          bits &= type.laneSize * 8 - 1;
           return simdShiftOp(type, binaryShiftRightLogical, a, bits);
         }
       } else {
         return function(a, bits) {
-          if (bits>>>0 >= type.laneSize * 8)
-            bits = type.laneSize * 8 - 1;
+          bits &= type.laneSize * 8 - 1;
           return simdShiftOp(type, binaryShiftRightArithmetic, a, bits);
         }
       }
