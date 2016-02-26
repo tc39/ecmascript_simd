@@ -160,7 +160,7 @@ function simdFrom(toType, fromType, a) {
   for (var i = 0; i < fromType.lanes; i++) {
     var v = fromType.fn.extractLane(a, i);
     if (toType.minVal !== undefined &&
-        (v < toType.minVal || v > toType.maxVal)) {
+        !(toType.minVal <= v && v <= toType.maxVal)) {
       throw new RangeError("Can't convert value");
     }
     lanes[i] = v;

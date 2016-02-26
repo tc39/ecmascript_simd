@@ -496,7 +496,7 @@ function testFrom(toType, fromType, name) {
     var fromValue = createSplatValue(fromType, v);
     v = simdConvert(fromType, v);
     if (toType.minVal !== undefined &&
-        (v < toType.minVal || v > toType.maxVal)) {
+        !(toType.minVal <= v && v <= toType.maxVal)) {
       throws(function() { toType.fn[name](fromValue) });
     } else {
       v = simdConvert(toType, v);
