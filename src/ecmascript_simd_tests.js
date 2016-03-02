@@ -75,7 +75,7 @@ var float32x4 = {
   numerical: true,
   lanes: 4,
   laneSize: 4,
-  interestingValues: [0, -0, 1, -1, 1.414, 0x7F, -0x80, -0x8000, -0x80000000, 0x7FFF, 0x7FFFFFFF, Infinity, -Infinity, NaN],
+  interestingValues: [0, -0, 1, -1, 0.9, -0.9, 1.414, 0x7F, -0x80, -0x8000, -0x80000000, 0x7FFF, 0x7FFFFFFF, Infinity, -Infinity, NaN],
   view: Float32Array,
   buffer: _f32x4,
   mulFn: binaryMul,
@@ -494,7 +494,7 @@ function testFrom(toType, fromType, name) {
   equal('function', typeof toType.fn[name]);
   for (var v of fromType.interestingValues) {
     var fromValue = createSplatValue(fromType, v);
-    v = simdConvert(fromType, v);
+    v = Math.trunc(simdConvert(fromType, v));
     if (toType.minVal !== undefined &&
         !(toType.minVal <= v && v <= toType.maxVal)) {
       throws(function() { toType.fn[name](fromValue) });

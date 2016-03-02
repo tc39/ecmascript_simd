@@ -158,7 +158,7 @@ function simdReplaceLane(type, a, i, s) {
 function simdFrom(toType, fromType, a) {
   a = fromType.fn.check(a);
   for (var i = 0; i < fromType.lanes; i++) {
-    var v = fromType.fn.extractLane(a, i);
+    var v = Math.trunc(fromType.fn.extractLane(a, i));
     if (toType.minVal !== undefined &&
         !(toType.minVal <= v && v <= toType.maxVal)) {
       throw new RangeError("Can't convert value");

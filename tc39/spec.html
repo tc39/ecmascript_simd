@@ -1514,7 +1514,9 @@ In this definition, _TIMD_ is not _SIMD_, _TIMD_ ranges over all SIMD types for 
 1. Let _list_ be a copy of _value_.[[SIMDElements]].
 1. If _SIMD_ is an integer type and _TIMD_ is a floating point type,
   1. For _element_ in _list_,
-    1. if _element_ is *NaN* or _element_ `>` _SIMD_Descriptor.[[ElementMax]] or _element_ `<` _SIMD_Descriptor.[[ElementMin]], throw a *RangeError* exception.
+    1. If _element_ is *NaN*, throw a *RangeError* exception.
+    1. Let _intElement_ be ToInteger(_element_).
+    1. If _intElement_ `>` _SIMD_Descriptor.[[ElementMax]] or _intElement_ `<` _SIMD_Descriptor.[[ElementMin]], throw a *RangeError* exception.
 1. Return SIMDCreate(_SIMD_Descriptor, _list_).
 </emu-alg>
 <emu-note>
