@@ -393,10 +393,12 @@ function testCheck(type) {
   // Other SIMD types shouldn't check for this type.
   var a = type.fn();
   for (var otherType of simdTypes) {
-    if (otherType === type)
-      equal(a, type.fn.check(a));
-    else
+    if (otherType === type) {
+      var result = type.fn.check(a);
+      checkValue(type, result, function(index) { return type.fn.extractLane(a, index); });
+    } else {
       throws(function() { otherType.check(a); });
+    }
   }
   // Neither should other types.
   for (var x of [ {}, "", 0, 1, true, false, undefined, null, NaN, Infinity]) {
