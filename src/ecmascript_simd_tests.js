@@ -652,6 +652,18 @@ function testLoad(type, name, count) {
     var a = loadFn(buf, i);
     checkValue(type, a, function(index) { return index < count ? i + index : 0; });
   }
+
+  // Test index coercions.
+  // Unlike typedArray[index], non-canonical strings are allowed here.
+  checkValue(type, loadFn(buf, "0"),      function(index) { return index < count ? index : 0; });
+  checkValue(type, loadFn(buf, " -0.0 "), function(index) { return index < count ? index : 0; });
+  checkValue(type, loadFn(buf, "00"),     function(index) { return index < count ? index : 0; });
+  checkValue(type, loadFn(buf, false),    function(index) { return index < count ? index : 0; });
+  checkValue(type, loadFn(buf, null),     function(index) { return index < count ? index : 0; });
+  checkValue(type, loadFn(buf, "01"),     function(index) { return index < count ? 1 + index : 0; });
+  checkValue(type, loadFn(buf, " +1e0"),  function(index) { return index < count ? 1 + index : 0; });
+  checkValue(type, loadFn(buf, true),     function(index) { return index < count ? 1 + index : 0; });
+
   // Test the 2 possible over-alignments.
   var f64 = new Float64Array(ab);
   var stride = 8 / type.laneSize;
@@ -673,6 +685,9 @@ function testLoad(type, name, count) {
     throws(function () { loadFn(buf, index); });
   }
   testIndexCheck(buf, -1);
+  testIndexCheck(buf, 0.7);
+  testIndexCheck(buf, -0.1);
+  testIndexCheck(buf, NaN);
   testIndexCheck(buf, bufSize / type.laneSize - count + 1);
   testIndexCheck(buf.buffer, 1);
   testIndexCheck(buf, "a");
@@ -696,6 +711,16 @@ function testStore(type, name, count) {
     storeFn(buf, i, a);
     ok(checkBuffer(i));
   }
+
+  // Test index coercions.
+  storeFn(buf, "0", a);      ok(checkBuffer(0));
+  storeFn(buf, "01", a);     ok(checkBuffer(1));
+  storeFn(buf, " -0.0 ", a); ok(checkBuffer(0));
+  storeFn(buf, " +1e0", a);  ok(checkBuffer(1));
+  storeFn(buf, false, a);    ok(checkBuffer(0));
+  storeFn(buf, true, a);     ok(checkBuffer(1));
+  storeFn(buf, null, a);     ok(checkBuffer(0));
+
   // Test the 2 over-alignments.
   var f64 = new Float64Array(ab);
   var stride = 8 / type.laneSize;

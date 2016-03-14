@@ -106,6 +106,13 @@ function clamp(a, min, max) {
 
 // SIMD implementation functions
 
+function simdCoerceIndex(index) {
+    index = +index;
+    if (index != Math.floor(index))
+        throw new RangeError("SIMD index must be an integer");
+    return index;
+}
+
 function simdCheckLaneIndex(index, lanes) {
   if (!isInt32(index))
     throw new TypeError('Lane index must be an int32');
@@ -292,8 +299,7 @@ function simdShiftOp(type, op, a, bits) {
 function simdLoad(type, tarray, index, count) {
   if (!isTypedArray(tarray))
     throw new TypeError("The 1st argument must be a typed array.");
-  if (!isInt32(index))
-    throw new TypeError("The 2nd argument must be an Int32.");
+  index = simdCoerceIndex(index);
   var bpe = tarray.BYTES_PER_ELEMENT;
   var bytes = count * type.laneSize;
   if (index < 0 || (index * bpe + bytes) > tarray.byteLength)
@@ -316,8 +322,7 @@ function simdLoad(type, tarray, index, count) {
 function simdStore(type, tarray, index, a, count) {
   if (!isTypedArray(tarray))
     throw new TypeError("The 1st argument must be a typed array.");
-  if (!isInt32(index))
-    throw new TypeError("The 2nd argument must be an Int32.");
+  index = simdCoerceIndex(index);
   var bpe = tarray.BYTES_PER_ELEMENT;
   var bytes = count * type.laneSize;
   if (index < 0 || (index * bpe + bytes) > tarray.byteLength)
