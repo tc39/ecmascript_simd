@@ -420,15 +420,30 @@ function testReplaceLane(type) {
     }
   }
 
+  // Test lane index coercion.
+  // ToNumber (index) must be an integer in range.
+  function validLaneIndex(testIndex, intIndex) {
+    var v = simdConvert(type.interestingValues[type.interestingValues.length - 1]);
+    var result = type.fn.replaceLane(a, testIndex, v);
+    checkValue(type, result,
+               function(i) {
+                 return i == testIndex ? v :type.fn.extractLane(a, i);
+               });
+  }
+  validLaneIndex(null, 0);
+  validLaneIndex(false, 0);
+  validLaneIndex(true, 1);
+  validLaneIndex("0", 0);
+  validLaneIndex("00", 0);
+  validLaneIndex(" +1e0", 1);
+
   function testIndexCheck(index) {
     throws(function() { type.fn.replaceLane(a, index, 0); });
   }
   testIndexCheck(type.lanes);
   testIndexCheck(13.37);
-  testIndexCheck(null);
   testIndexCheck(undefined);
   testIndexCheck({});
-  testIndexCheck(true);
   testIndexCheck('yo');
   testIndexCheck(-1);
   testIndexCheck(128);
@@ -578,22 +593,29 @@ function testSwizzle(type) {
   var result = type.fn.swizzle.apply(type.fn, [a].concat(indices));
   checkValue(type, result, function(index) { return type.fn.extractLane(a, type.lanes - index - 1); });
 
-  function testIndexCheck(index) {
+  function testIndexCheck(expectValid, index) {
     for (var i = 0; i < type.lanes; i++) {
       var args = [a].concat(indices);
       args[i + 1] = index;
-      throws(function() { type.fn.swizzle.apply(type.fn, args); });
+      if (expectValid)
+        type.fn.swizzle.apply(type.fn, args);
+      else
+        throws(function() { type.fn.swizzle.apply(type.fn, args); });
     }
   }
-  testIndexCheck(type.lanes);
-  testIndexCheck(13.37);
-  testIndexCheck(null);
-  testIndexCheck(undefined);
-  testIndexCheck({});
-  testIndexCheck(true);
-  testIndexCheck('yo');
-  testIndexCheck(-1);
-  testIndexCheck(128);
+  testIndexCheck(true, null);
+  testIndexCheck(true, true);
+  testIndexCheck(true, false);
+  testIndexCheck(true, "0");
+  testIndexCheck(true, "00");
+  testIndexCheck(true, " +1e0");
+  testIndexCheck(false, type.lanes);
+  testIndexCheck(false, 13.37);
+  testIndexCheck(false, undefined);
+  testIndexCheck(false, {});
+  testIndexCheck(false, 'yo');
+  testIndexCheck(false, -1);
+  testIndexCheck(false, 128);
 }
 
 function testShuffle(type) {
@@ -621,22 +643,29 @@ function testShuffle(type) {
   var result = type.fn.shuffle.apply(type.fn, [a, b].concat(indices));
   checkValue(type, result, function(index) { return type.fn.extractLane(b, index); });
 
-  function testIndexCheck(index) {
+  function testIndexCheck(expectValid, index) {
     for (var i = 0; i < type.lanes; i++) {
       var args = [a, b].concat(indices);
       args[i + 2] = index;
-      throws(function() { type.fn.shuffle.apply(type.fn, args); });
+      if (expectValid)
+        type.fn.shuffle.apply(type.fn, args);
+      else
+        throws(function() { type.fn.shuffle.apply(type.fn, args); });
     }
   }
-  testIndexCheck(2 * type.lanes);
-  testIndexCheck(13.37);
-  testIndexCheck(null);
-  testIndexCheck(undefined);
-  testIndexCheck({});
-  testIndexCheck(true);
-  testIndexCheck('yo');
-  testIndexCheck(-1);
-  testIndexCheck(128);
+  testIndexCheck(true, null);
+  testIndexCheck(true, true);
+  testIndexCheck(true, false);
+  testIndexCheck(true, "0");
+  testIndexCheck(true, "00");
+  testIndexCheck(true, " +1e0");
+  testIndexCheck(false, 2 * type.lanes);
+  testIndexCheck(false, 13.37);
+  testIndexCheck(false, undefined);
+  testIndexCheck(false, {});
+  testIndexCheck(false, 'yo');
+  testIndexCheck(false, -1);
+  testIndexCheck(false, 128);
 }
 
 function testLoad(type, name, count) {
