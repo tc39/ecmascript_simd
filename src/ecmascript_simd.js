@@ -110,11 +110,9 @@ function simdCoerceIndex(index) {
 }
 
 function simdCoerceLaneIndex(index, lanes) {
-  index = +index;
+  index = simdCoerceIndex(index);
   if (!(index >= 0 && index < lanes))
     throw new RangeError('Lane index must be in bounds');
-  if (index != Math.floor(index))
-    throw new RangeError('Lane index must be an integer');
   return index;
 }
 
