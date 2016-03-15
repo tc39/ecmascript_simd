@@ -422,7 +422,7 @@ function testReplaceLane(type) {
 
   // Test lane index coercion.
   // ToNumber (index) must be an integer in range.
-  function validLaneIndex(testIndex, intIndex) {
+  function validLaneIndex(testIndex) {
     var v = simdConvert(type.interestingValues[type.interestingValues.length - 1]);
     var result = type.fn.replaceLane(a, testIndex, v);
     checkValue(type, result,
@@ -430,12 +430,12 @@ function testReplaceLane(type) {
                  return i == testIndex ? v :type.fn.extractLane(a, i);
                });
   }
-  validLaneIndex(null, 0);
-  validLaneIndex(false, 0);
-  validLaneIndex(true, 1);
-  validLaneIndex("0", 0);
-  validLaneIndex("00", 0);
-  validLaneIndex(" +1e0", 1);
+  validLaneIndex(null);
+  validLaneIndex(false);
+  validLaneIndex(true);
+  validLaneIndex("0");
+  validLaneIndex("00");
+  validLaneIndex(" +1e0");
 
   function testIndexCheck(index) {
     throws(function() { type.fn.replaceLane(a, index, 0); });
