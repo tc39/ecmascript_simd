@@ -825,8 +825,8 @@ Returns an implementation-dependent approximation to the square root of x.
 <emu-clause id="imul" aoid="MathImul">
 <h1>MathImul(n, m)</h1>
 <emu-alg>
-1. Let _a_ be ToUint32(_x_).
-1. Let _b_ be ToUint32(_y_).
+1. Let _a_ be ToUint32(_n_).
+1. Let _b_ be ToUint32(_m_).
 1. Let _product_ be (_a_ × b) modulo 2<sup>32</sup>.
 1. If _product_ ≥ 2<sup>31</sup>, return _product_ − 2<sup>32</sup>, otherwise return _product_.
 </emu-alg>
