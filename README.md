@@ -13,6 +13,8 @@ implementers have found that implementing and optimizing for this case
 reliably creates a lot of complexity, and have made the decision to
 focus instead on delivering WebAssembly and SIMD instructions in WASM.
 
+See https://github.com/WebAssembly/simd for current development.
+
 This repository retains a historical snapshot of the SIMD.js specification work:
 *  The authoritative API reference documentation is generated from tc39/spec.html. You can view a rendered copy at http://tc39.github.io/ecmascript_simd/ .
 *  A polyfill at src/ecmascript_simd.js, which can't implement value semantics, but includes a correct implementation of all functions
