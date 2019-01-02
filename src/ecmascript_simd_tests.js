@@ -18,18 +18,6 @@
   3. This notice may not be removed or altered from any source distribution.
 */
 
-function minNum(x, y) {
-  return x != x ? y :
-         y != y ? x :
-         Math.min(x, y);
-}
-
-function maxNum(x, y) {
-  return x != x ? y :
-         y != y ? x :
-         Math.max(x, y);
-}
-
 function sameValue(x, y) {
   if (x == y)
     return x != 0 || y != 0 || (1/x == 1/y);
@@ -942,12 +930,6 @@ simdTypes.filter(isFloatType).forEach(function(type) {
   });
   test(type.name + ' max', function() {
     testBinaryOp(type, 'max', Math.max);
-  });
-  test(type.name + ' minNum', function() {
-    testBinaryOp(type, 'minNum', minNum);
-  });
-  test(type.name + ' maxNum', function() {
-    testBinaryOp(type, 'maxNum', maxNum);
   });
   test(type.name + ' sqrt', function() {
     testUnaryOp(type, 'sqrt', function(a) { return Math.sqrt(a); });
