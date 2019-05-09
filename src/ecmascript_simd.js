@@ -792,12 +792,12 @@ int8x16.boolType = uint8x16.boolType = bool8x16;
 
 // SIMD from<type> types.
 float32x4.from = [int32x4, uint32x4];
-int32x4.from = [float32x4, uint32x4];
-int16x8.from = [uint16x8];
-int8x16.from = [uint8x16];
-uint32x4.from = [float32x4, int32x4];
-uint16x8.from = [int16x8];
-uint8x16.from = [int8x16];
+int32x4.from = [float32x4];
+int16x8.from = [];
+int8x16.from = [];
+uint32x4.from = [float32x4];
+uint16x8.from = [];
+uint8x16.from = [];
 
 // SIMD from<type>Bits types.
 float32x4.fromBits = [int32x4, int16x8, int8x16, uint32x4, uint16x8, uint8x16];
