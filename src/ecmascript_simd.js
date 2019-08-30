@@ -68,10 +68,6 @@ function convertArray(buffer, array) {
 
 // Utility functions.
 
-function isInt32(o) {
-  return (o | 0) === o;
-}
-
 function isTypedArray(o) {
   return (o instanceof Int8Array) ||
          (o instanceof Uint8Array) ||
@@ -107,17 +103,17 @@ function clamp(a, min, max) {
 // SIMD implementation functions
 
 function simdCoerceIndex(index) {
-    index = +index;
-    if (index != Math.floor(index))
-        throw new RangeError("SIMD index must be an integer");
-    return index;
+  index = +index;
+  if (index != Math.floor(index))
+    throw new RangeError("SIMD index must be an integer");
+  return index;
 }
 
-function simdCheckLaneIndex(index, lanes) {
-  if (!isInt32(index))
-    throw new TypeError('Lane index must be an int32');
-  if (index < 0 || index >= lanes)
+function simdCoerceLaneIndex(index, lanes) {
+  index = simdCoerceIndex(index);
+  if (!(index >= 0 && index < lanes))
     throw new RangeError('Lane index must be in bounds');
+  return index;
 }
 
 // Global lanes array for constructing SIMD values.
@@ -155,7 +151,7 @@ function simdSplat(type, s) {
 
 function simdReplaceLane(type, a, i, s) {
   a = type.fn.check(a);
-  simdCheckLaneIndex(i, type.lanes);
+  i = simdCoerceLaneIndex(i, type.lanes);
   for (var j = 0; j < type.lanes; j++)
     lanes[j] = type.fn.extractLane(a, j);
   lanes[i] = s;
@@ -196,8 +192,8 @@ function simdSelect(type, selector, a, b) {
 function simdSwizzle(type, a, indices) {
   a = type.fn.check(a);
   for (var i = 0; i < indices.length; i++) {
-    simdCheckLaneIndex(indices[i], type.lanes);
-    lanes[i] = type.fn.extractLane(a, indices[i]);
+    var idx = simdCoerceLaneIndex(indices[i], type.lanes);
+    lanes[i] = type.fn.extractLane(a, idx);
   }
   return simdCreate(type);
 }
@@ -206,10 +202,10 @@ function simdShuffle(type, a, b, indices) {
   a = type.fn.check(a);
   b = type.fn.check(b);
   for (var i = 0; i < indices.length; i++) {
-    simdCheckLaneIndex(indices[i], 2 * type.lanes);
-    lanes[i] = indices[i] < type.lanes ?
-               type.fn.extractLane(a, indices[i]) :
-               type.fn.extractLane(b, indices[i] - type.lanes);
+    var idx = simdCoerceLaneIndex(indices[i], 2 * type.lanes);
+    lanes[i] = idx < type.lanes ?
+               type.fn.extractLane(a, idx) :
+               type.fn.extractLane(b, idx - type.lanes);
   }
   return simdCreate(type);
 }
@@ -355,7 +351,7 @@ if (typeof SIMD.Float32x4 === "undefined" ||
 
   SIMD.Float32x4.extractLane = function(v, i) {
     v = SIMD.Float32x4.check(v);
-    simdCheckLaneIndex(i, 4);
+    i = simdCoerceLaneIndex(i, 4);
     return v.s_[i];
   }
 }
@@ -386,7 +382,7 @@ if (typeof SIMD.Int32x4 === "undefined" ||
 
   SIMD.Int32x4.extractLane = function(v, i) {
     v = SIMD.Int32x4.check(v);
-    simdCheckLaneIndex(i, 4);
+    i = simdCoerceLaneIndex(i, 4);
     return v.s_[i];
   }
 }
@@ -415,7 +411,7 @@ if (typeof SIMD.Int16x8 === "undefined" ||
 
   SIMD.Int16x8.extractLane = function(v, i) {
     v = SIMD.Int16x8.check(v);
-    simdCheckLaneIndex(i, 8);
+    i = simdCoerceLaneIndex(i, 8);
     return v.s_[i];
   }
 }
@@ -447,7 +443,7 @@ if (typeof SIMD.Int8x16 === "undefined" ||
 
   SIMD.Int8x16.extractLane = function(v, i) {
     v = SIMD.Int8x16.check(v);
-    simdCheckLaneIndex(i, 16);
+    i = simdCoerceLaneIndex(i, 16);
     return v.s_[i];
   }
 }
@@ -480,7 +476,7 @@ if (typeof SIMD.Uint32x4 === "undefined" ||
 
   SIMD.Uint32x4.extractLane = function(v, i) {
     v = SIMD.Uint32x4.check(v);
-    simdCheckLaneIndex(i, 4);
+    i = simdCoerceLaneIndex(i, 4);
     return v.s_[i];
   }
 }
@@ -509,7 +505,7 @@ if (typeof SIMD.Uint16x8 === "undefined" ||
 
   SIMD.Uint16x8.extractLane = function(v, i) {
     v = SIMD.Uint16x8.check(v);
-    simdCheckLaneIndex(i, 8);
+    i = simdCoerceLaneIndex(i, 8);
     return v.s_[i];
   }
 }
@@ -541,7 +537,7 @@ if (typeof SIMD.Uint8x16 === "undefined" ||
 
   SIMD.Uint8x16.extractLane = function(v, i) {
     v = SIMD.Uint8x16.check(v);
-    simdCheckLaneIndex(i, 16);
+    i = simdCoerceLaneIndex(i, 16);
     return v.s_[i];
   }
 }
@@ -574,7 +570,7 @@ if (typeof SIMD.Bool32x4 === "undefined" ||
 
   SIMD.Bool32x4.extractLane = function(v, i) {
     v = SIMD.Bool32x4.check(v);
-    simdCheckLaneIndex(i, 4);
+    i = simdCoerceLaneIndex(i, 4);
     return v.s_[i];
   }
 }
@@ -591,7 +587,7 @@ if (typeof SIMD.Bool16x8 === "undefined" ||
 
   SIMD.Bool16x8.extractLane = function(v, i) {
     v = SIMD.Bool16x8.check(v);
-    simdCheckLaneIndex(i, 8);
+    i = simdCoerceLaneIndex(i, 8);
     return v.s_[i];
   }
 }
@@ -611,7 +607,7 @@ if (typeof SIMD.Bool8x16 === "undefined" ||
 
   SIMD.Bool8x16.extractLane = function(v, i) {
     v = SIMD.Bool8x16.check(v);
-    simdCheckLaneIndex(i, 16);
+    i = simdCoerceLaneIndex(i, 16);
     return v.s_[i];
   }
 }
@@ -828,7 +824,7 @@ if (typeof simdPhase2 !== 'undefined') {
 
     SIMD.Float64x2.extractLane = function(v, i) {
       v = SIMD.Float64x2.check(v);
-      simdCheckLaneIndex(i, 2);
+      i = simdCoerceLaneIndex(i, 2);
       return v.s_[i];
     }
   }
@@ -857,7 +853,7 @@ if (typeof simdPhase2 !== 'undefined') {
 
     SIMD.Bool64x2.extractLane = function(v, i) {
       v = SIMD.Bool64x2.check(v);
-      simdCheckLaneIndex(i, 2);
+      i = simdCoerceLaneIndex(i, 2);
       return v.s_[i];
     }
   }
