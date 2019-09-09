@@ -715,9 +715,10 @@ The second option:
 1. If _length_ is not provided, let _length_ be _descriptor_.[[VectorLength]]. Otherwise, assert _length_ &le; _descriptor_.[[VectorLength]].
 1. If IsDetachedBuffer(_tarray_.[[ViewedArrayBuffer]]) is *true*, throw a TypeError exception.
 1. Let _block_ be _tarray_.[[ViewedArrayBuffer]].[[ArrayBufferData]]
-1. If _index_ &ne; ToLength(_index_), throw a TypeError exception.
+1. Let _numberIndex_ be ToNumber(_index_).
+1. If _numberIndex_ &ne; ToInteger(_numberIndex_), throw a RangeError exception.
 1. Let _elementLength_ be _tarray_.[[ByteLength]] &divide; _tarray_.[[ArrayLength]].
-1. Let _byteIndex_ be _index_ &times; _elementLength_.
+1. Let _byteIndex_ be _numberIndex_ &times; _elementLength_.
 1. If _byteIndex_ + _descriptor_.[[ElementSize]] &times; length > _tarray_.[[ByteLength]] or _byteIndex_ < 0, throw a RangeError exception.
 1. Return SIMDLoad(_block_, _descriptor_, _byteIndex_, length).
 </emu-alg>
@@ -742,9 +743,10 @@ The second option:
 1. If IsDetachedBuffer(_tarray_.[[ViewedArrayBuffer]]) is *true*, throw a TypeError exception.
 1. If _tarray_ does not have a [[ViewedArrayBuffer]] field, throw a TypeError exception.
 1. Let _block_ be _tarray_.[[ViewedArrayBuffer]].[[ArrayBufferData]]
-1. If _index_ &ne; ToLength(_index_), throw a TypeError exception.
-1. Let _elementLength_ be _tarray_.[[ByteLength]] &divide; _tarray.[[ArrayLength]].
-1. Let _byteIndex_ be _index_ &times; _elementLength_.
+1. Let _numberIndex_ be ToNumber(_index_).
+1. If _numberIndex_ &ne; ToInteger(_numberIndex_), throw a RangeError exception.
+1. Let _elementLength_ be _tarray_.[[ByteLength]] &divide; _tarray_.[[ArrayLength]].
+1. Let _byteIndex_ be _numberIndex_ &times; _elementLength_.
 1. If _byteIndex_ + _SIMD_Descriptor.[[ElementSize]] &times; _length_ > _tarray_.[[ByteLength]] or _byteIndex_ < 0, throw a RangeError exception.
 1. SIMDStore(_block_, _SIMD_Descriptor, _byteIndex_, _simd_, _length_).
 1. Return _n_.
