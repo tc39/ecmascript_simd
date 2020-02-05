@@ -924,7 +924,7 @@ simdTypes.filter(isLogical).forEach(function(type) {
   });
 });
 
-simdTypes.filter(isSigned).forEach(function(type) {
+simdTypes.filter(isNumerical).forEach(function(type) {
   test(type.name + ' neg', function() {
     testUnaryOp(type, 'neg', function(a) { return -a; });
   });
